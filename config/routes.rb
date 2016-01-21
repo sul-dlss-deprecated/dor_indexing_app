@@ -1,4 +1,10 @@
 Rails.application.routes.draw do
+
+  namespace :dor do
+    # TODO: Deprecate GET when caml POST can be implemented
+    match 'reindex/:pid', action: :reindex, via: [:get, :post, :put]
+  end
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
