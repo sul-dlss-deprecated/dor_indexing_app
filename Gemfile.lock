@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/sul-dlss/dor-services.git
-  revision: db4f8719e6d73b8d6b2657c6352deab48cc87a0a
+  revision: 034ab63655e3b11e90f6e1ad2a13100871ae5943
   branch: indexing-service
   specs:
     dor-services (5.3.2)
