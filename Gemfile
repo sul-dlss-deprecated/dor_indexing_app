@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'config'
-gem 'rails', '~> 4'
+gem 'rails', '~> 4.2.5'
 gem 'sqlite3'
 
 gem 'dor-services', '~> 5.0', :git => 'https://github.com/sul-dlss/dor-services.git', :branch => 'indexing-service'
