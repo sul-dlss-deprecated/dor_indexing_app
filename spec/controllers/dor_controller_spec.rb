@@ -2,9 +2,31 @@ require 'rails_helper'
 
 RSpec.describe DorController, type: :controller do
   describe '#reindex' do
-    it 'not yet implemented' do
-      pending('')
-      fail
+    before :each do
+      @mock_druid     = 'asdf:1234'
+      @mock_logger    = double(Logger)
+      @mock_solr_conn = double(Dor::SearchService.solr)
+      @mock_solr_doc  = {id: @mock_druid, text_field_tesim: 'a field to be searched'}
+
+      expect(Dor::IndexingService).to receive(:generate_index_logger).and_return(@mock_logger)
+    end
+
+    it 'should reindex an object' do
+      expect(Dor::IndexingService).to receive(:reindex_pid)
+        .with(@mock_druid, @mock_logger).and_return(@mock_solr_doc)
+      expect(Dor::SearchService).to receive(:solr).and_return(@mock_solr_conn)
+      expect(@mock_solr_conn).to receive(:commit)
+      get :reindex, pid: @mock_druid
+      expect(response.body).to eq "Successfully updated index for #{@mock_druid}"
+      expect(response.code).to eq '200'
+    end
+
+    it 'should give the right status if an object is not found' do
+      expect(Dor::IndexingService).to receive(:reindex_pid)
+        .with(@mock_druid, @mock_logger).and_raise(ActiveFedora::ObjectNotFoundError)
+      get :reindex, pid: @mock_druid
+      expect(response.body).to eq 'Object does not exist in Fedora.'
+      expect(response.code).to eq '404'
     end
   end
 end
