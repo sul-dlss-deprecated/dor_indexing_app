@@ -314,7 +314,7 @@ DEPENDENCIES
   config
   coveralls
   dor-services (~> 5.0)!
-  rails (~> 4)
+  rails (~> 4.2.5)
   rspec-rails (~> 3.0)
   sqlite3
 
