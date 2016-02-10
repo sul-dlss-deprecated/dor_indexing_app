@@ -13,3 +13,8 @@ group :test do
   gem 'coveralls', require: false
 end
 
+group :deployment do
+  gem 'capistrano', '~> 3.0'
+  gem 'capistrano-bundler'
+  gem 'dlss-capistrano', '~> 3.0'
+end
