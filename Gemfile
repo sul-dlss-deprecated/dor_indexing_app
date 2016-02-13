@@ -5,7 +5,7 @@ gem 'rails', '~> 4.2.5'
 gem 'squash_rails'
 gem 'squash_ruby'
 
-gem 'dor-services', '~> 5.0', :git => 'https://github.com/sul-dlss/dor-services.git', :branch => 'indexing-service'
+gem 'dor-services', '~> 5.0', '>= 5.3.4'
 
 group :development, :test do
   gem 'rspec-rails', '~> 3.0'
