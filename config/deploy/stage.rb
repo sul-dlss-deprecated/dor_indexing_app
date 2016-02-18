@@ -1,4 +1,8 @@
-server 'dor-indexing-app-stage.stanford.edu', user: fetch(:user), roles: %w(web db app)
+set :deploy_host, 'dor-indexing-app-stage'
+server_extensions = ['a', 'b']
+server_extensions.each do |extension|
+  server "#{fetch(:deploy_host)}-#{extension}.stanford.edu", user: fetch(:user), roles: %w{web app}
+end
 
 set :rails_env, 'production'
 set :bundle_without, %w(test development).join(' ')
