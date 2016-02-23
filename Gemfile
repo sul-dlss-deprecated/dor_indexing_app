@@ -15,16 +15,14 @@ gem 'active-fedora'
 gem 'dor-services', '~> 5.14'
 gem 'okcomputer' # for monitoring
 
-group :development, :test do
-  gem 'rspec-rails', '~> 3.0'
-end
-
 group :production do
   gem 'newrelic_rpm'
 end
 
-group :test do
+group :development, :test do
+  gem 'rspec-rails', '~> 3.0'
   gem 'coveralls', require: false
+  gem 'simplecov', require: false
 end
 
 group :deployment do
