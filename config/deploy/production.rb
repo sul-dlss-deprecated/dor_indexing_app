@@ -1,6 +1,5 @@
 set :deploy_host, 'dor-indexing-app-prod'
-server_extensions = ['a', 'b']
-server_extensions.each do |extension|
+%w(a b).each do |extension|
   server "#{fetch(:deploy_host)}-#{extension}.stanford.edu", user: fetch(:user), roles: %w{web app}
 end
 
