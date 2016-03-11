@@ -63,7 +63,6 @@ WORKFLOW:
 # URLs
 DOR_SERVICES_URL: 'https://user:password@dor-services.example.com'
 FEDORA_URL: 'https://user:password@fedora.example.com:1000/fedora'
-SDR_URL: 'https://user:pass@sdr.example.com/sdr'
 SOLRIZER_URL: 'https://solr.example.com/solr/collection'
 STATUS_INDEXER_URL: 'https://status.example.com/render/?format=json&other=params'
 WORKFLOW_URL: 'https://workflow.example.com/workflow'
