@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  root to: redirect('/is_it_working')
 
   namespace :dor do
     # TODO: Deprecate GET when caml POST can be implemented
