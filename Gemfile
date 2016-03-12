@@ -1,11 +1,11 @@
 source 'https://rubygems.org'
 
 gem 'config'
-gem 'rails', '~> 4.2.5'
+gem 'rails', '~> 4.2.5.2'
 gem 'squash_rails'
 gem 'squash_ruby'
 
-gem 'dor-services', '~> 5.0', '>= 5.3.4'
+gem 'dor-services', '~> 5.6', '>= 5.6.0'
 gem 'is_it_working-cbeer'
 
 group :development, :test do
