@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'config'
-gem 'rails', '~> 4.2.5.2'
+gem 'rails', '4.2.6'
 gem 'squash_rails'
 gem 'squash_ruby'
 
