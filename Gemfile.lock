@@ -97,15 +97,15 @@ GEM
       capistrano-releaseboard
     docile (1.1.5)
     docopt (0.5.0)
-    domain_name (0.5.20160310)
+    domain_name (0.5.20160615)
       unf (>= 0.0.5, < 1.0.0)
-    dor-rights-auth (1.1.0)
+    dor-rights-auth (1.2.0)
       nokogiri
-    dor-services (5.8.2)
+    dor-services (5.9.1)
       active-fedora (~> 6.0)
       activesupport (>= 3.2.18)
       confstruct (~> 0.2.7)
-      dor-rights-auth (~> 1.0, >= 1.0.2)
+      dor-rights-auth (~> 1.0, >= 1.2.0)
       dor-workflow-service (~> 2.0, >= 2.0.1)
       druid-tools (~> 0.4, >= 0.4.1)
       equivalent-xml (~> 0.5, >= 0.5.1)
@@ -186,7 +186,7 @@ GEM
       net-ssh (>= 2.6.5)
     net-sftp (2.1.2)
       net-ssh (>= 2.6.5)
-    net-ssh (3.1.1)
+    net-ssh (3.2.0)
     netrc (0.11.0)
     nokogiri (1.6.8)
       mini_portile2 (~> 2.1.0)
@@ -340,7 +340,7 @@ DEPENDENCIES
   config
   coveralls
   dlss-capistrano (~> 3.0)
-  dor-services (~> 5.8, >= 5.8.2)
+  dor-services (~> 5.9, >= 5.9.1)
   is_it_working-cbeer
   rails (= 4.2.6)
   rspec-rails (~> 3.0)
