@@ -5,7 +5,7 @@ gem 'rails', '4.2.7.1'
 gem 'squash_rails'
 gem 'squash_ruby'
 
-gem 'dor-services', '~> 5.9', '>= 5.9.1'
+gem 'dor-services', '~> 5.10', '>= 5.10.1'
 gem 'is_it_working-cbeer'
 
 group :development, :test do
