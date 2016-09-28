@@ -4,6 +4,7 @@ gem 'config'
 gem 'rails', '4.2.7.1'
 gem 'squash_rails'
 gem 'squash_ruby'
+gem 'rack-timeout'
 
 gem 'dor-services', '>= 5.10.3', '< 6'
 gem 'is_it_working-cbeer'
