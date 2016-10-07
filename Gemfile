@@ -6,7 +6,7 @@ gem 'squash_rails'
 gem 'squash_ruby'
 gem 'rack-timeout'
 
-gem 'dor-services', '>= 5.10.3', '< 6'
+gem 'dor-services', '>= 5.11.1', '< 6'
 gem 'is_it_working-cbeer'
 
 group :development, :test do
