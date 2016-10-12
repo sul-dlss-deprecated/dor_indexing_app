@@ -11,4 +11,4 @@ set :home_directory, "/opt/app/#{fetch(:user)}"
 set :deploy_to, "#{fetch(:home_directory)}/#{fetch(:application)}"
 
 set :linked_dirs, %w(log config/settings tmp/pids tmp/cache tmp/sockets vendor/bundle)
-set :linked_files, %w(config/secrets.yml config/honeybadger.yml)
+set :linked_files, %w(config/secrets.yml config/honeybadger.yml config/newrelic.yml)
