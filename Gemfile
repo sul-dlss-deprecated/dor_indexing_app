@@ -12,6 +12,10 @@ group :development, :test do
   gem 'rspec-rails', '~> 3.0'
 end
 
+group :production do
+  gem 'newrelic_rpm'
+end
+
 group :test do
   gem 'coveralls', require: false
 end

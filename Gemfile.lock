@@ -193,6 +193,7 @@ GEM
       net-ssh (>= 2.6.5)
     net-ssh (3.2.0)
     netrc (0.11.0)
+    newrelic_rpm (3.16.3.323)
     nokogiri (1.6.8)
       mini_portile2 (~> 2.1.0)
       pkg-config (~> 1.1.7)
@@ -344,9 +345,10 @@ DEPENDENCIES
   dor-services (>= 5.11.1, < 6)
   honeybadger (~> 2.0)
   is_it_working-cbeer
+  newrelic_rpm
   rack-timeout
   rails (= 4.2.7.1)
   rspec-rails (~> 3.0)
 
 BUNDLED WITH
-   1.13.2
+   1.13.3
