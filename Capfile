@@ -23,6 +23,7 @@ require 'capistrano/deploy'
 require 'capistrano/bundler'
 # require 'capistrano/rails'  # most rails apps need this, but this one doesn't because there's no db to migrate, and there are no assets to precompile (https://github.com/capistrano/rails#usage)
 require 'capistrano/passenger'
+require 'capistrano/shared_configs'
 require 'dlss/capistrano'
 
 # Loads custom tasks from `lib/capistrano/tasks' if you have any defined.

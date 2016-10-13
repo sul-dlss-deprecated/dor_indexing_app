@@ -15,3 +15,6 @@ set :linked_files, %w(config/secrets.yml config/honeybadger.yml config/newrelic.
 
 # honeybadger_env otherwise defaults to rails_env
 set :honeybadger_env, fetch(:stage)
+
+# update shared_configs before restarting app
+before 'deploy:restart', 'shared_configs:update'
