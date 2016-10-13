@@ -2,6 +2,7 @@ source 'https://rubygems.org'
 
 gem 'config'
 gem 'rails', '4.2.7.1'
+gem 'activemodel', '4.2.7.1'
 gem 'honeybadger', '~> 2.0'
 gem 'rack-timeout'
 
