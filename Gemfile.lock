@@ -351,6 +351,7 @@ DEPENDENCIES
   capistrano-bundler
   capistrano-passenger
   capistrano-rails
+  capistrano-shared_configs
   config
   coveralls
   dlss-capistrano (~> 3.0)
