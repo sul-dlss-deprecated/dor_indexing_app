@@ -7,7 +7,7 @@ gem 'honeybadger', '~> 2.0'
 gem 'rack-timeout'
 
 gem 'dor-services', '>= 5.11.1', '< 6'
-gem 'is_it_working-cbeer'
+gem 'okcomputer' # for monitoring
 
 group :development, :test do
   gem 'rspec-rails', '~> 3.0'
