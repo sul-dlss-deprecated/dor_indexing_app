@@ -20,7 +20,7 @@ OkComputer::Registry.register 'version', VersionCheck.new
 ##
 # EXTERNAL Services
 
-OkComputer::Registry.register 'external-solr', OkComputer::SolrCheck.new(Dor::SearchService.solr.uri.to_s)
+OkComputer::Registry.register 'external-solr', OkComputer::SolrCheck.new(Dor::SearchService.solr.uri.to_s.gsub(/\/$/, ''))
 
 # Simple check to ping the Fedora server by asking it to describe the repository
 class FedoraCheck < OkComputer::Check
