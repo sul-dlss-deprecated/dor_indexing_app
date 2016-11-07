@@ -11,6 +11,7 @@ gem 'okcomputer' # for monitoring
 
 group :development, :test do
   gem 'rspec-rails', '~> 3.0'
+  gem 'dlss_cops'
 end
 
 group :production do
