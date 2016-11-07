@@ -6,12 +6,12 @@ RSpec.describe DorController, type: :controller do
       @mock_druid     = 'asdf:1234'
       @mock_logger    = double(Logger)
       @mock_solr_conn = double(Dor::SearchService.solr)
-      @mock_solr_doc  = {id: @mock_druid, text_field_tesim: 'a field to be searched'}
+      @mock_solr_doc  = { id: @mock_druid, text_field_tesim: 'a field to be searched' }
 
       expect(Dor::IndexingService).to receive(:generate_index_logger).and_return(@mock_logger)
     end
 
-    it 'should reindex an object' do
+    it 'reindexes an object' do
       expect(Dor::IndexingService).to receive(:reindex_pid)
         .with(@mock_druid, logger: @mock_logger, add_attributes: { commitWithin: 1000 }).and_return(@mock_solr_doc)
       expect(Dor::SearchService).to receive(:solr).and_return(@mock_solr_conn)
@@ -30,7 +30,7 @@ RSpec.describe DorController, type: :controller do
       expect(response.code).to eq '200'
     end
 
-    it 'should give the right status if an object is not found' do
+    it 'gives the right status if an object is not found' do
       expect(Dor::IndexingService).to receive(:reindex_pid)
         .with(@mock_druid, logger: @mock_logger, add_attributes: { commitWithin: 1000 }).and_raise(ActiveFedora::ObjectNotFoundError)
       get :reindex, pid: @mock_druid

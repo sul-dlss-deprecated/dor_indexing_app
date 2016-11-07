@@ -1,16 +1,16 @@
 require File.expand_path('../boot', __FILE__)
 
-require "rails"
+require 'rails'
 # Pick the frameworks you want:
-require "active_model/railtie"
-#require "active_job/railtie"
-#NOTE: if active_record is added back, uncomment config.active_record.raise_in_transactional_callbacks
+require 'active_model/railtie'
+# require "active_job/railtie"
+# NOTE: if active_record is added back, uncomment config.active_record.raise_in_transactional_callbacks
 # below, and ActiveRecord::Migration.maintain_test_schema! in spec/rails_helper.rb
-#require "active_record/railtie"
-require "action_controller/railtie"
-#NOTE: if action_mailer is added back, re-enable commented action_mailer config line in config/environments/test.rb
-#require "action_mailer/railtie"
-require "action_view/railtie"
+# require "active_record/railtie"
+require 'action_controller/railtie'
+# NOTE: if action_mailer is added back, re-enable commented action_mailer config line in config/environments/test.rb
+# require "action_mailer/railtie"
+require 'action_view/railtie'
 # require "sprockets/railtie"
 # require "rails/test_unit/railtie"
 
@@ -34,6 +34,6 @@ module DorIndexingApp
 
     # NOTE: only commented out because dor_indexing_app needs no DB yet.  uncomment this if that changes.
     # Do not swallow errors in after_commit/after_rollback callbacks.
-    #config.active_record.raise_in_transactional_callbacks = true
+    # config.active_record.raise_in_transactional_callbacks = true
   end
 end

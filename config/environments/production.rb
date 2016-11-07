@@ -24,7 +24,6 @@ Rails.application.configure do
   # Apache or NGINX already handles this.
   config.serve_static_files = ENV['RAILS_SERVE_STATIC_FILES'].present?
 
-
   # Specifies the header that your server uses for sending files.
   # config.action_dispatch.x_sendfile_header = 'X-Sendfile' # for Apache
   # config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for NGINX
@@ -37,7 +36,7 @@ Rails.application.configure do
   config.log_level = :debug
 
   # Prepend all log lines with the following tags.
-  config.log_tags = [ :subdomain, :uuid, proc {Time.zone.now.strftime(Settings.DATE_FORMAT_STR)} ]
+  config.log_tags = [:subdomain, :uuid, proc { Time.zone.now.strftime(Settings.DATE_FORMAT_STR) }]
 
   # Use a different logger for distributed setups.
   # config.logger = ActiveSupport::TaggedLogging.new(SyslogLogger.new)
@@ -63,6 +62,6 @@ Rails.application.configure do
   config.log_formatter = ::Logger::Formatter.new
 
   # Do not dump schema after migrations.
-  #NOTE: not used since this app doesn't use a db
+  # NOTE: not used since this app doesn't use a db
   # config.active_record.dump_schema_after_migration = false
 end
