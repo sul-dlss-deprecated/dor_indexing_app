@@ -54,6 +54,8 @@ WORKFLOW:
   LOGFILE: 'log/workflow_service.log'
   SHIFT_AGE: 'weekly'
 
+MESSAGE_QUEUES: []
+
 # URLs
 DOR_SERVICES_URL: 'https://user:password@dor-services.example.com'
 FEDORA_URL: 'https://user:password@fedora.example.com:1000/fedora'

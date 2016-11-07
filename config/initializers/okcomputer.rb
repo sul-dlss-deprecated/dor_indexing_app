@@ -35,3 +35,7 @@ class FedoraCheck < OkComputer::Check
 end
 
 OkComputer::Registry.register 'external-fedora', FedoraCheck.new
+
+OkComputer::Registry.register 'external-queue-size', (OkComputer::SizeThresholdCheck.new('Total queue size', 50000) do
+  QueueStatus.all.queue_size
+end)

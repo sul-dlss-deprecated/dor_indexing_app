@@ -5,6 +5,7 @@ gem 'rails', '4.2.7.1'
 gem 'activemodel', '4.2.7.1'
 gem 'honeybadger', '~> 2.0'
 gem 'rack-timeout'
+gem 'faraday'
 
 gem 'dor-services', '>= 5.11.1', '< 6'
 gem 'okcomputer' # for monitoring
