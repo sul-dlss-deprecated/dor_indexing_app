@@ -9,6 +9,7 @@ gem 'puma', '~> 3.0'
 gem 'config'
 gem 'honeybadger', '~> 2.0'
 gem 'rack-timeout'
+gem 'faraday'
 
 gem 'dor-services', '>= 5.11.1', '< 6'
 gem 'okcomputer' # for monitoring

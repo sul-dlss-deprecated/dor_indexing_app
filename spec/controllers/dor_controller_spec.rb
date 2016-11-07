@@ -38,4 +38,13 @@ RSpec.describe DorController, type: :controller do
       expect(response.code).to eq '404'
     end
   end
+
+  describe '#queue_size' do
+    let(:mock_status) { instance_double(QueueStatus::All, queue_size: 15) }
+    it 'retrives the size of the backing message queues' do
+      expect(QueueStatus).to receive(:all).and_return(mock_status)
+      get :queue_size
+      expect(JSON.parse(response.body)).to include('value' => 15)
+    end
+  end
 end

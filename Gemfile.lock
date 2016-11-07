@@ -363,6 +363,7 @@ DEPENDENCIES
   coveralls
   dlss-capistrano (~> 3.0)
   dor-services (>= 5.11.1, < 6)
+  faraday
   honeybadger (~> 2.0)
   newrelic_rpm
   okcomputer
