@@ -6,4 +6,8 @@ class DorController < ApplicationController
   rescue ActiveFedora::ObjectNotFoundError # => e
     render status: 404, text: 'Object does not exist in Fedora.'
   end
+
+  def queue_size
+    render status: 200, json: { value: QueueStatus.all.queue_size }
+  end
 end
