@@ -157,7 +157,6 @@ GEM
     http-cookie (1.0.3)
       domain_name (~> 0.5)
     i18n (0.7.0)
-    is_it_working-cbeer (1.0.16)
     iso-639 (0.2.8)
     json (1.8.3)
     link_header (0.0.8)
@@ -208,6 +207,7 @@ GEM
       activesupport (>= 3.2.18)
       i18n
       nokogiri
+    okcomputer (1.13.0)
     om (3.1.1)
       activemodel
       activesupport
@@ -357,11 +357,11 @@ DEPENDENCIES
   dlss-capistrano (~> 3.0)
   dor-services (>= 5.11.1, < 6)
   honeybadger (~> 2.0)
-  is_it_working-cbeer
   newrelic_rpm
+  okcomputer
   rack-timeout
   rails (= 4.2.7.1)
   rspec-rails (~> 3.0)
 
 BUNDLED WITH
-   1.13.3
+   1.13.6
