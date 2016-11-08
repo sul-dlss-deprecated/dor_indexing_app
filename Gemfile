@@ -11,7 +11,7 @@ gem 'honeybadger', '~> 2.0'
 gem 'rack-timeout'
 gem 'faraday'
 
-gem 'active-fedora', '~> 6.8' # stay on 6.x until we can test further
+gem 'active-fedora'
 gem 'dor-services', '~> 5.14'
 gem 'okcomputer' # for monitoring
 
