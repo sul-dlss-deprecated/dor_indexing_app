@@ -2,10 +2,11 @@ require 'rails_helper'
 
 RSpec.describe QueueStatus do
   let(:queue_size_url) { 'http://example.com/queue/size' }
-  let(:mock_response) { { 'value' => 123 }.to_json }
+  let(:mock_response) { instance_double(Faraday::Response, body: { 'value' => 123 }.to_json) }
+  let(:mock_client) { instance_double(Faraday::Connection, get: mock_response) }
 
   before do
-    allow(Faraday.default_connection).to receive(:get).with(queue_size_url).and_return(mock_response)
+    allow(Faraday).to receive(:new).with(queue_size_url).and_return(mock_client)
   end
   subject(:queue_status) { QueueStatus.new(queue_size_url: queue_size_url) }
 
