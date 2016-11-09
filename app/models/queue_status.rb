@@ -17,8 +17,8 @@ class QueueStatus
   end
 
   def queue_size
-    response = Faraday.get(queue_size_url)
-    data = JSON.parse(response)
+    client = Faraday.new(queue_size_url)
+    data = JSON.parse(client.get.body)
     data['value']
   end
   
