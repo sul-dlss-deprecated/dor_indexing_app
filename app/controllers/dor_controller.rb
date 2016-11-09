@@ -7,6 +7,13 @@ class DorController < ApplicationController
     render status: 404, plain: 'Object does not exist in Fedora.'
   end
 
+  def delete_from_index
+    Dor::SearchService.solr.delete_by_id(params[:pid], commitWithin: params.fetch(:commitWithin, 1000).to_i)
+    Dor::SearchService.solr.commit unless params[:commitWithin]
+    render plain: params[:pid]
+  end
+
+
   def queue_size
     render status: 200, json: { value: QueueStatus.all.queue_size }
   end
