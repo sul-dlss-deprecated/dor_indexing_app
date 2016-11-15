@@ -13,6 +13,7 @@ gem 'faraday'
 
 gem 'active-fedora'
 gem 'dor-services', '~> 5.14'
+gem 'rsolr', '~> 2.0.0.pre'
 gem 'okcomputer' # for monitoring
 
 group :production do
