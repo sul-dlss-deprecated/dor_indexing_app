@@ -32,7 +32,6 @@ Dor.configure do
   end
 
   metadata do
-    exist.url   Settings.METADATA.EXIST_URL
     catalog.url Settings.METADATA.CATALOG_URL
   end
 
@@ -54,11 +53,9 @@ Dor.configure do
   end
 
   stacks do
-    document_cache_storage_root Settings.STACKS.DOCUMENT_CACHE_STORAGE_ROOT
     document_cache_host         Settings.STACKS.DOCUMENT_CACHE_HOST
     document_cache_user         Settings.STACKS.DOCUMENT_CACHE_USER
     local_workspace_root        Settings.STACKS.LOCAL_WORKSPACE_ROOT
-    storage_root                Settings.STACKS.STORAGE_ROOT
     host                        Settings.STACKS.HOST
     user                        Settings.STACKS.USER
   end
