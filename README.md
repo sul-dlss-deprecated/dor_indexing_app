@@ -1,9 +1,15 @@
 [![Build Status](https://travis-ci.org/sul-dlss/dor_indexing_app.svg?branch=master)](https://travis-ci.org/sul-dlss/dor_indexing_app) | [![Coverage Status](https://coveralls.io/repos/github/sul-dlss/dor_indexing_app/badge.svg?branch=master)](https://coveralls.io/github/sul-dlss/dor_indexing_app?branch=master)
 
 
-# Dor Indexing App 
+# Dor Indexing App
 
 The dor_indexing_app is the primary API for indexing DOR objects into the DOR Index in the Solr cloud.
+
+## Developer setup
+In order to run dor_indexing_app on your laptop (e.g. while running Argo), you need to
+
+* Create the directory `config/certs` and (preferably) create symbolic links to dor_indexing_app's shared_configs certs.
+* Create a symbolic link to development.local.yml within `config/settings/` (also found in shared_configs). 
 
 ## Reindexing API
 
@@ -96,4 +102,3 @@ The responses are always in JSON and it holds a single `value` of integer for th
 
 - `200` OK
 - `500` Server Error (from an unexpected exception)
-
