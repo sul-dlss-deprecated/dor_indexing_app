@@ -1,19 +1,20 @@
 source 'https://rubygems.org'
 
-gem 'rails', '~> 5.0.0', '>= 5.0.0.1'
-gem 'activemodel', '~> 5.0.0'
+gem 'rails', '~> 5.1.0'
 
 # Use Puma as the app server
 gem 'puma', '~> 3.0'
 
+gem 'erubis'
+
 gem 'config'
-gem 'honeybadger', '~> 2.0'
+gem 'honeybadger', '~> 3.0'
 gem 'rack-timeout'
 gem 'faraday'
 
 gem 'active-fedora'
 gem 'dor-services', '~> 5.14'
-gem 'rsolr', '~> 2.0.0.pre'
+gem 'rsolr', '~> 2.0'
 gem 'okcomputer' # for monitoring
 
 group :production do
