@@ -58,7 +58,7 @@ GEM
     airbrussh (1.3.0)
       sshkit (>= 1.6.1, != 1.7.0)
     arel (8.0.0)
-    bagit (0.4.0)
+    bagit (0.4.1)
       docopt (~> 0.5.0)
       validatable (~> 1.6)
     bcp47 (0.3.3)
@@ -113,7 +113,7 @@ GEM
       unf (>= 0.0.5, < 1.0.0)
     dor-rights-auth (1.3.0)
       nokogiri
-    dor-services (5.24.0)
+    dor-services (5.25.0)
       active-fedora (>= 6.0, < 9.a)
       activesupport (>= 3.2.18)
       confstruct (~> 0.2.7)
@@ -209,7 +209,7 @@ GEM
     mime-types-data (3.2016.0521)
     mini_portile2 (2.2.0)
     minitest (5.10.2)
-    moab-versioning (2.0.0)
+    moab-versioning (2.1.0)
       confstruct
       json
       nokogiri
@@ -237,7 +237,7 @@ GEM
     nio4r (2.1.0)
     nokogiri (1.8.0)
       mini_portile2 (~> 2.2.0)
-    nokogiri-happymapper (0.5.9)
+    nokogiri-happymapper (0.6.0)
       nokogiri (~> 1.5)
     nom-xml (0.6.0)
       activesupport (>= 3.2.18)
@@ -442,7 +442,7 @@ DEPENDENCIES
   config
   coveralls
   dlss-capistrano (~> 3.0)
-  dor-services (~> 5.14)
+  dor-services (~> 5.25)
   erubis
   faraday
   honeybadger (~> 3.0)
@@ -456,4 +456,4 @@ DEPENDENCIES
   simplecov
 
 BUNDLED WITH
-   1.14.6
+   1.15.4
