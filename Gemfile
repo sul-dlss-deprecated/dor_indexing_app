@@ -13,7 +13,7 @@ gem 'rack-timeout'
 gem 'faraday'
 
 gem 'active-fedora'
-gem 'dor-services', '~> 5.14'
+gem 'dor-services', '~> 5.25'
 gem 'rsolr', '~> 2.0'
 gem 'okcomputer' # for monitoring
 
