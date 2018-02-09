@@ -11,6 +11,8 @@ gem 'config'
 gem 'honeybadger', '~> 3.0'
 gem 'rack-timeout'
 gem 'faraday'
+# net-http-persistent 3.x seems to keep sockets open way longer than necessary, until the system runs out of file handles
+gem 'net-http-persistent', '~> 2.9'
 
 gem 'active-fedora'
 gem 'dor-services', '~> 5.25'
