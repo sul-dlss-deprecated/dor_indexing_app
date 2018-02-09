@@ -88,7 +88,6 @@ GEM
       deep_merge (~> 1.1.1)
       dry-validation (>= 0.10.4)
     confstruct (0.2.7)
-    connection_pool (2.2.1)
     coveralls (0.8.21)
       json (>= 1.8, < 3)
       simplecov (~> 0.14.1)
@@ -231,8 +230,7 @@ GEM
       nokogiri
       roo (= 2.5.1)
     multipart-post (2.0.0)
-    net-http-persistent (3.0.0)
-      connection_pool (~> 2.2)
+    net-http-persistent (2.9.4)
     net-scp (1.2.1)
       net-ssh (>= 2.6.5)
     net-sftp (2.1.2)
@@ -405,6 +403,7 @@ DEPENDENCIES
   erubis
   faraday
   honeybadger (~> 3.0)
+  net-http-persistent (~> 2.9)
   newrelic_rpm
   okcomputer
   puma (~> 3.0)
