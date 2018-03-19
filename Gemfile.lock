@@ -196,7 +196,7 @@ GEM
     iso-639 (0.2.8)
     json (2.1.0)
     link_header (0.0.8)
-    loofah (2.2.0)
+    loofah (2.2.1)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     lyber-utils (0.1.2)
