@@ -1,1 +1,1 @@
-Rack::Timeout.service_timeout = 60  # seconds
+ENV['RACK_TIMEOUT_SERVICE_TIMEOUT'] = '60' # seconds
