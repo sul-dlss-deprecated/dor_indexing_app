@@ -237,7 +237,7 @@ GEM
       activesupport
       nokogiri (>= 1.4.2)
       solrizer (~> 3.3)
-    puma (3.11.4)
+    puma (3.12.0)
     rack (2.0.5)
     rack-test (1.0.0)
       rack (>= 1.0, < 3)
