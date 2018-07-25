@@ -239,7 +239,7 @@ GEM
       solrizer (~> 3.3)
     puma (3.12.0)
     rack (2.0.5)
-    rack-test (1.0.0)
+    rack-test (1.1.0)
       rack (>= 1.0, < 3)
     rack-timeout (0.5.1)
     rails (5.1.6)
@@ -395,4 +395,4 @@ DEPENDENCIES
   simplecov
 
 BUNDLED WITH
-   1.16.1
+   1.16.2
