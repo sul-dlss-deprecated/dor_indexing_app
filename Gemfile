@@ -15,7 +15,7 @@ gem 'faraday'
 gem 'net-http-persistent', '~> 2.9'
 
 gem 'active-fedora'
-gem 'dor-services', '~> 6.0'
+gem 'dor-services', '~> 6.3'
 gem 'rsolr', '~> 2.0'
 gem 'okcomputer' # for monitoring
 
