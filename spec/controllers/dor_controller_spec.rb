@@ -2,39 +2,37 @@ require 'rails_helper'
 
 RSpec.describe DorController, type: :controller do
   describe '#reindex' do
-    let(:mock_logger) { instance_double(Logger, :formatter= => true) }
-
     before do
-      @mock_druid     = 'asdf:1234'
-      @mock_solr_conn = double(Dor::SearchService.solr)
-      @mock_solr_doc  = { id: @mock_druid, text_field_tesim: 'a field to be searched' }
-
       expect(Logger).to receive(:new).and_return(mock_logger)
+      allow(Dor::SearchService).to receive(:solr).and_return(mock_solr_conn)
+      allow(Dor).to receive(:find).with(mock_druid).and_return(mock_af_doc)
     end
 
-    it 'should reindex an object' do
-      expect(Dor::IndexingService).to receive(:reindex_pid)
-        .with(@mock_druid, logger: mock_logger, add_attributes: { commitWithin: 1000 }).and_return(@mock_solr_doc)
-      expect(Dor::SearchService).to receive(:solr).and_return(@mock_solr_conn)
-      expect(@mock_solr_conn).to receive(:commit)
-      get :reindex, params: { pid: @mock_druid }
-      expect(response.body).to eq "Successfully updated index for #{@mock_druid}"
+    let(:mock_logger) { instance_double(Logger, :formatter= => true, info: true) }
+    let(:mock_solr_conn) { double(Dor::SearchService.solr, add: true, commit: true) }
+    let(:mock_af_doc) { instance_double(Dor::Item, to_solr: mock_solr_doc) }
+    let(:mock_druid) { 'asdf:1234' }
+    let(:mock_solr_doc) { { id: mock_druid, text_field_tesim: 'a field to be searched' } }
+
+    it 'reindexes an object' do
+      get :reindex, params: { pid: mock_druid }
+      expect(mock_solr_conn).to have_received(:add)
+      expect(mock_solr_conn).to have_received(:commit)
+      expect(response.body).to eq "Successfully updated index for #{mock_druid}"
       expect(response.code).to eq '200'
     end
 
     it 'can be used with asynchronous commits' do
-      expect(Dor::IndexingService).to receive(:reindex_pid)
-        .with(@mock_druid, logger: mock_logger, add_attributes: { commitWithin: 2 }).and_return(@mock_solr_doc)
-      expect(Dor::SearchService).not_to receive(:solr)
-      get :reindex, params: { pid: @mock_druid, commitWithin: 2 }
-      expect(response.body).to eq "Successfully updated index for #{@mock_druid}"
+      get :reindex, params: { pid: mock_druid, commitWithin: 2 }
+      expect(mock_solr_conn).to have_received(:add)
+      expect(mock_solr_conn).not_to have_received(:commit)
+      expect(response.body).to eq "Successfully updated index for #{mock_druid}"
       expect(response.code).to eq '200'
     end
 
-    it 'should give the right status if an object is not found' do
-      expect(Dor::IndexingService).to receive(:reindex_pid)
-        .with(@mock_druid, logger: mock_logger, add_attributes: { commitWithin: 1000 }).and_raise(ActiveFedora::ObjectNotFoundError)
-      get :reindex, params: { pid: @mock_druid }
+    it 'gives the right status if an object is not found' do
+      allow(Dor).to receive(:find).and_raise(ActiveFedora::ObjectNotFoundError)
+      get :reindex, params: { pid: mock_druid }
       expect(response.body).to eq 'Object does not exist in Fedora.'
       expect(response.code).to eq '404'
     end
