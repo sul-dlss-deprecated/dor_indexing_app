@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '~> 5.1.0'
+gem 'rails', '~> 5.2.3'
 
 # Use Puma as the app server
 gem 'puma', '~> 3.0'
@@ -13,6 +13,9 @@ gem 'rack-timeout', '~> 0.5.1'
 gem 'faraday'
 # net-http-persistent 3.x seems to keep sockets open way longer than necessary, until the system runs out of file handles
 gem 'net-http-persistent', '~> 2.9'
+
+# Reduces boot times through caching; required in config/boot.rb
+gem 'bootsnap', '>= 1.1.0', require: false
 
 gem 'active-fedora'
 gem 'dor-services', '~> 6.3'
