@@ -19,9 +19,9 @@ ARGF.lines do |line|
     record = [
       druid,
       load_real,
-      "%0.3f" % (100 * (load_real.to_f - load_cpu.to_f)/(load_real.to_f)),
+      "%0.3f" % (100 * (load_real.to_f - load_cpu.to_f) / (load_real.to_f)),
       solr_real,
-      "%0.3f" % (100 * (solr_real.to_f - solr_cpu.to_f)/(solr_real.to_f)),
+      "%0.3f" % (100 * (solr_real.to_f - solr_cpu.to_f) / (solr_real.to_f)),
       "%0.6f" % (load_real.to_f + solr_real.to_f)
     ]
     puts record.join(',')

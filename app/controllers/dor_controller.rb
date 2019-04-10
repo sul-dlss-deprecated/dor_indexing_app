@@ -13,7 +13,6 @@ class DorController < ApplicationController
     render plain: params[:pid]
   end
 
-
   def queue_size
     render status: 200, json: { value: QueueStatus.all.queue_size }
   end

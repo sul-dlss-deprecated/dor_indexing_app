@@ -6,7 +6,7 @@ RSpec.describe DorController, type: :controller do
       @mock_druid     = 'asdf:1234'
       @mock_logger    = double(Logger)
       @mock_solr_conn = double(Dor::SearchService.solr)
-      @mock_solr_doc  = {id: @mock_druid, text_field_tesim: 'a field to be searched'}
+      @mock_solr_doc  = { id: @mock_druid, text_field_tesim: 'a field to be searched' }
 
       expect(Dor::IndexingService).to receive(:generate_index_logger).and_return(@mock_logger)
     end
