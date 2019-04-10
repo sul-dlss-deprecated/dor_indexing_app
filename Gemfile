@@ -32,6 +32,11 @@ group :development, :test do
   gem 'simplecov', require: false
 end
 
+group :development do
+  gem 'rubocop', '~> 0.67.2'
+  gem 'rubocop-rspec'
+end
+
 group :deployment do
   gem 'capistrano', '~> 3.0'
   gem 'capistrano-rails'

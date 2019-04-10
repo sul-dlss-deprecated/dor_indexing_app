@@ -11,12 +11,11 @@ RSpec.describe QueueStatus do
   subject(:queue_status) { QueueStatus.new(queue_size_url: queue_size_url) }
 
   describe '#queue_size' do
-
     it 'retrieves the queue size' do
       expect(subject.queue_size).to eq 123
     end
   end
-  
+
   describe '.all' do
     subject { QueueStatus.all }
 

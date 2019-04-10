@@ -1,2 +1,16 @@
+require: rubocop-rspec
+inherit_from: .rubocop_todo.yml
+
+
+AllCops:
+  DisplayCopNames: true
+  TargetRubyVersion: 2.3
+
 Rails:
   Enabled: true
+
+RSpec/MultipleExpectations:
+  Enabled: false
+
+RSpec/ExampleLength:
+  Max: 10
