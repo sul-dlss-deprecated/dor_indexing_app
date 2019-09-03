@@ -4,12 +4,12 @@ RSpec.describe DorController, type: :controller do
   describe '#reindex' do
     before do
       expect(Logger).to receive(:new).and_return(mock_logger)
-      allow(Dor::SearchService).to receive(:solr).and_return(mock_solr_conn)
+      allow(ActiveFedora.solr).to receive(:conn).and_return(mock_solr_conn)
       allow(Dor).to receive(:find).with(mock_druid).and_return(mock_af_doc)
     end
 
     let(:mock_logger) { instance_double(Logger, :formatter= => true, info: true) }
-    let(:mock_solr_conn) { double(Dor::SearchService.solr, add: true, commit: true) }
+    let(:mock_solr_conn) { instance_double(RSolr::Client, add: true, commit: true) }
     let(:mock_af_doc) { instance_double(Dor::Item, to_solr: mock_solr_doc) }
     let(:mock_druid) { 'asdf:1234' }
     let(:mock_solr_doc) { { id: mock_druid, text_field_tesim: 'a field to be searched' } }

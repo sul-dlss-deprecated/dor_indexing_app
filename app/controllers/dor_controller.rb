@@ -54,6 +54,6 @@ class DorController < ApplicationController
   end
 
   def solr
-    Dor::SearchService.solr
+    ActiveFedora.solr.conn
   end
 end
