@@ -45,7 +45,7 @@ class DorController < ApplicationController
     # benchmark how long it takes to convert the object to a Solr document
     to_solr_stats = Benchmark.measure('to_solr') do
       solr_doc = obj.to_solr
-      solr.add(solr_doc, add_attributes)
+      solr.add(solr_doc, add_attributes: add_attributes)
     end.format('%n realtime %rs total CPU %ts').gsub(/[\(\)]/, '')
 
     logger.info "successfully updated index for #{pid} (metrics: #{load_stats}; #{to_solr_stats})"
