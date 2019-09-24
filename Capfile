@@ -26,7 +26,11 @@ install_plugin Capistrano::SCM::Git
 
 require 'capistrano/bundler'
 require 'capistrano/honeybadger'
-# require 'capistrano/rails'  # most rails apps need this, but this one doesn't because there's no db to migrate, and there are no assets to precompile (https://github.com/capistrano/rails#usage)
+# most rails apps need this, but this one doesn't because there's no db to
+# migrate, and there are no assets to precompile
+# (https://github.com/capistrano/rails#usage)
+#
+# require 'capistrano/rails'
 require 'capistrano/passenger'
 require 'capistrano/shared_configs'
 require 'dlss/capistrano'

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# A plain-old-Ruby-object representing queue statuses
 class QueueStatus
   def self.all
     All.new(find_each)
@@ -25,6 +26,7 @@ class QueueStatus
     data['value']
   end
 
+  # Act on all queues
   class All
     def initialize(queues = [])
       @queues = queues.to_a

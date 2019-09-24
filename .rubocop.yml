@@ -3,6 +3,25 @@ require:
   - rubocop-rails
   - rubocop-rspec
 
+inherit_from: .rubocop_todo.yml
+
 AllCops:
   DisplayCopNames: true
   TargetRubyVersion: 2.3
+  Exclude:
+    - 'bin/**/*'
+    - 'vendor/bundle/**/*'
+
+# Exclusions below this line live here, rather than in `.rubocop_todo.yml`, because `--auto-gen-config` wants to set maximum values for the entire application which allows these violations to spread across the application. These exclusions are more constrained. And we don't hand-edit `.rubocop_todo.yml`.
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*.rb'
+    - 'config/dor_config.rb'
+
+Metrics/AbcSize:
+  Exclude:
+    - 'app/controllers/dor_controller.rb'
+
+Metrics/MethodLength:
+  Exclude:
+    - 'app/controllers/dor_controller.rb'
