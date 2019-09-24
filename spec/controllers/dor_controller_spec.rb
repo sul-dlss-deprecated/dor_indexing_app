@@ -50,14 +50,14 @@ RSpec.describe DorController, type: :controller do
 
   describe '#delete_from_index' do
     it 'removes an object from the index' do
-      expect(Dor::SearchService.solr).to receive(:delete_by_id).with('asdf:1234', commitWithin: 1000)
-      expect(Dor::SearchService.solr).to receive(:commit)
+      expect(ActiveFedora.solr.conn).to receive(:delete_by_id).with('asdf:1234', commitWithin: 1000)
+      expect(ActiveFedora.solr.conn).to receive(:commit)
       get :delete_from_index, params: { pid: 'asdf:1234' }
     end
 
     it 'passes through the commitWithin parameter' do
-      expect(Dor::SearchService.solr).to receive(:delete_by_id).with('asdf:1234', commitWithin: 5000)
-      expect(Dor::SearchService.solr).not_to receive(:commit)
+      expect(ActiveFedora.solr.conn).to receive(:delete_by_id).with('asdf:1234', commitWithin: 5000)
+      expect(ActiveFedora.solr.conn).not_to receive(:commit)
       get :delete_from_index, params: { pid: 'asdf:1234', commitWithin: 5000 }
     end
   end
