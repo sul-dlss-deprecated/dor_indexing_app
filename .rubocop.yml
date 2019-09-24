@@ -1,6 +1,4 @@
 require: rubocop-rspec
-inherit_from: .rubocop_todo.yml
-
 
 AllCops:
   DisplayCopNames: true
@@ -9,8 +7,8 @@ AllCops:
 Rails:
   Enabled: true
 
-RSpec/MultipleExpectations:
-  Enabled: false
+# RSpec/MultipleExpectations:
+#   Enabled: false
 
-RSpec/ExampleLength:
-  Max: 10
+# RSpec/ExampleLength:
+#   Max: 10
