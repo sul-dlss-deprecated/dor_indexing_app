@@ -1,6 +1,10 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe QueueStatus do
+  subject(:queue_status) { described_class.new(queue_size_url: queue_size_url) }
+
   let(:queue_size_url) { 'http://example.com/queue/size' }
   let(:mock_response) { instance_double(Faraday::Response, body: { 'value' => 123 }.to_json) }
   let(:mock_client) { instance_double(Faraday::Connection, get: mock_response) }
@@ -8,7 +12,6 @@ RSpec.describe QueueStatus do
   before do
     allow(Faraday).to receive(:new).with(queue_size_url).and_return(mock_client)
   end
-  subject(:queue_status) { QueueStatus.new(queue_size_url: queue_size_url) }
 
   describe '#queue_size' do
     it 'retrieves the queue size' do
@@ -17,7 +20,7 @@ RSpec.describe QueueStatus do
   end
 
   describe '.all' do
-    subject { QueueStatus.all }
+    subject { described_class.all }
 
     let(:queue) { double(QUEUE_SIZE_URL: queue_size_url) }
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class QueueStatus
   def self.all
     All.new(find_each)

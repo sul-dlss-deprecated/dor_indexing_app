@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe DorController, type: :controller do
@@ -23,8 +25,8 @@ RSpec.describe DorController, type: :controller do
     end
 
     it 'reindexes an object with specified commitWithin param and no hard commit' do
-      get :reindex, params: { pid: mock_druid, commitWithin: 10000 }
-      expect(mock_solr_conn).to have_received(:add).with({ id: 'asdf:1234', text_field_tesim: 'a field to be searched' }, add_attributes: { commitWithin: 10000 })
+      get :reindex, params: { pid: mock_druid, commitWithin: 10_000 }
+      expect(mock_solr_conn).to have_received(:add).with({ id: 'asdf:1234', text_field_tesim: 'a field to be searched' }, add_attributes: { commitWithin: 10_000 })
       expect(mock_solr_conn).not_to have_received(:commit)
       expect(response.body).to eq "Successfully updated index for #{mock_druid}"
       expect(response.code).to eq '200'
@@ -62,6 +64,7 @@ RSpec.describe DorController, type: :controller do
 
   describe '#queue_size' do
     let(:mock_status) { instance_double(QueueStatus::All, queue_size: 15) }
+
     it 'retrives the size of the backing message queues' do
       expect(QueueStatus).to receive(:all).and_return(mock_status)
       get :queue_size

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DorController < ApplicationController
   def reindex
     @solr_doc = reindex_pid params[:pid], logger: generate_index_logger(request.uuid), add_attributes: { commitWithin: params.fetch(:commitWithin, 1000).to_i }
