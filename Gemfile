@@ -32,7 +32,9 @@ group :development, :test do
 end
 
 group :development do
-  gem 'rubocop', '~> 0.67.2'
+  gem 'rubocop', '~> 0.74.0'
+  gem 'rubocop-performance'
+  gem 'rubocop-rails'
   gem 'rubocop-rspec'
 end
 
