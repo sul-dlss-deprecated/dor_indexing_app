@@ -14,10 +14,18 @@ RSpec.describe DorController, type: :controller do
     let(:mock_druid) { 'asdf:1234' }
     let(:mock_solr_doc) { { id: mock_druid, text_field_tesim: 'a field to be searched' } }
 
-    it 'reindexes an object' do
+    it 'reindexes an object with default commitWithin param and a hard commit' do
       get :reindex, params: { pid: mock_druid }
-      expect(mock_solr_conn).to have_received(:add)
+      expect(mock_solr_conn).to have_received(:add).with({ id: 'asdf:1234', text_field_tesim: 'a field to be searched' }, add_attributes: { commitWithin: 1000 })
       expect(mock_solr_conn).to have_received(:commit)
+      expect(response.body).to eq "Successfully updated index for #{mock_druid}"
+      expect(response.code).to eq '200'
+    end
+
+    it 'reindexes an object with specified commitWithin param and no hard commit' do
+      get :reindex, params: { pid: mock_druid, commitWithin: 10000 }
+      expect(mock_solr_conn).to have_received(:add).with({ id: 'asdf:1234', text_field_tesim: 'a field to be searched' }, add_attributes: { commitWithin: 10000 })
+      expect(mock_solr_conn).not_to have_received(:commit)
       expect(response.body).to eq "Successfully updated index for #{mock_druid}"
       expect(response.code).to eq '200'
     end
