@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe DorController, type: :controller do
@@ -23,8 +25,8 @@ RSpec.describe DorController, type: :controller do
     end
 
     it 'reindexes an object with specified commitWithin param and no hard commit' do
-      get :reindex, params: { pid: mock_druid, commitWithin: 10000 }
-      expect(mock_solr_conn).to have_received(:add).with({ id: 'asdf:1234', text_field_tesim: 'a field to be searched' }, add_attributes: { commitWithin: 10000 })
+      get :reindex, params: { pid: mock_druid, commitWithin: 10_000 }
+      expect(mock_solr_conn).to have_received(:add).with({ id: 'asdf:1234', text_field_tesim: 'a field to be searched' }, add_attributes: { commitWithin: 10_000 })
       expect(mock_solr_conn).not_to have_received(:commit)
       expect(response.body).to eq "Successfully updated index for #{mock_druid}"
       expect(response.code).to eq '200'
@@ -48,20 +50,21 @@ RSpec.describe DorController, type: :controller do
 
   describe '#delete_from_index' do
     it 'removes an object from the index' do
-      expect(Dor::SearchService.solr).to receive(:delete_by_id).with('asdf:1234', commitWithin: 1000)
-      expect(Dor::SearchService.solr).to receive(:commit)
+      expect(ActiveFedora.solr.conn).to receive(:delete_by_id).with('asdf:1234', commitWithin: 1000)
+      expect(ActiveFedora.solr.conn).to receive(:commit)
       get :delete_from_index, params: { pid: 'asdf:1234' }
     end
 
     it 'passes through the commitWithin parameter' do
-      expect(Dor::SearchService.solr).to receive(:delete_by_id).with('asdf:1234', commitWithin: 5000)
-      expect(Dor::SearchService.solr).not_to receive(:commit)
+      expect(ActiveFedora.solr.conn).to receive(:delete_by_id).with('asdf:1234', commitWithin: 5000)
+      expect(ActiveFedora.solr.conn).not_to receive(:commit)
       get :delete_from_index, params: { pid: 'asdf:1234', commitWithin: 5000 }
     end
   end
 
   describe '#queue_size' do
     let(:mock_status) { instance_double(QueueStatus::All, queue_size: 15) }
+
     it 'retrives the size of the backing message queues' do
       expect(QueueStatus).to receive(:all).and_return(mock_status)
       get :queue_size
