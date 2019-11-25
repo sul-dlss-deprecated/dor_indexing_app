@@ -16,7 +16,7 @@ AllCops:
 Metrics/BlockLength:
   Exclude:
     - 'spec/**/*.rb'
-    - 'config/dor_config.rb'
+    - 'config/initializers/dor_config.rb'
 
 Metrics/AbcSize:
   Exclude:

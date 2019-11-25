@@ -17,11 +17,6 @@ INDEXER:
   # the interval at which the indexer log is rotated
   LOG_ROTATION_INTERVAL: 'daily'
 
-# Metadata
-METADATA:
-  EXIST_URL: 'https://user:password@metadata.example.com/exist/rest'
-  CATALOG_URL: 'https://catalog.example.com/catalog/mods'
-
 # SSL
 SSL:
   CERT_FILE: 'cert_name.crt'
@@ -30,16 +25,9 @@ SSL:
 
 # Stacks
 STACKS:
-  DOCUMENT_CACHE_STORAGE_ROOT: '/foo/document_cache'
   DOCUMENT_CACHE_HOST: 'cache.example.com'
-  DOCUMENT_CACHE_USER: 'user'
   LOCAL_WORKSPACE_ROOT: '/foo/workspace'
   STORAGE_ROOT: '/bar'
-  HOST: 'stacks.example.com'
-  USER: 'user'
-
-# Stomp
-STOMP_CLIENT_ID: 'fedora_stomper'
 
 # Suri
 SURI:
@@ -57,8 +45,6 @@ WORKFLOW:
 MESSAGE_QUEUES: []
 
 # URLs
-DOR_SERVICES_URL: 'https://user:password@dor-services.example.com'
 FEDORA_URL: 'https://user:password@fedora.example.com:1000/fedora'
 SOLRIZER_URL: 'https://solr.example.com/solr/collection'
-STATUS_INDEXER_URL: 'https://status.example.com/render/?format=json&other=params'
 WORKFLOW_URL: 'https://workflow.example.com/workflow'
