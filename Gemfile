@@ -17,7 +17,7 @@ gem 'rack-timeout', '~> 0.5.1'
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false
 
-gem 'dor-services', '~> 7.0'
+gem 'dor-services', '~> 8.0'
 gem 'okcomputer' # for monitoring
 gem 'rsolr', '~> 2.0'
 
