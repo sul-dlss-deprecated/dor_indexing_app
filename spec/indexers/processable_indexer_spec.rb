@@ -11,8 +11,8 @@ RSpec.describe ProcessableIndexer do
     end
 
     it "trims off parens but doesn't harm the strings otherwise" do
-      expect(indexer.send(:simplified_status_code_disp_txt, 2)).to eq('In accessioning')
-      expect(indexer.send(:simplified_status_code_disp_txt, 3)).to eq('In accessioning')
+      expect(indexer.send(:simplified_status_code_disp_txt, 'In accessioning (described)')).to eq('In accessioning')
+      expect(indexer.send(:simplified_status_code_disp_txt, 'In accessioning (described, published)')).to eq('In accessioning')
     end
   end
 
@@ -32,6 +32,7 @@ RSpec.describe ProcessableIndexer do
       end
       let(:obj) do
         instance_double(Dor::Item,
+                        pid: '99',
                         rights: 'World',
                         modified_date: '1999-12-20',
                         current_version: '7',
@@ -45,8 +46,12 @@ RSpec.describe ProcessableIndexer do
           ).new(resource: obj)
         end
 
+        let(:status) do
+          instance_double(Dor::Workflow::Client::Status, milestones: {}, info: { status_code: 0 }, display: 'blah')
+        end
+
         before do
-          allow_any_instance_of(Dor::StatusService).to receive(:milestones).and_return({})
+          allow(Dor::Config.workflow.client).to receive(:status).and_return(status)
         end
 
         it 'includes a rights facet' do
@@ -79,26 +84,30 @@ RSpec.describe ProcessableIndexer do
       </versionMetadata>
       '
       end
-      let(:xml) do
-        Nokogiri::XML('<?xml version="1.0" encoding="UTF-8"?>
-        <lifecycle objectId="druid:gv054hp4128">
-        <milestone date="2012-01-26T21:06:54-0800" version="2">published</milestone>
-        <milestone date="2012-10-29T16:30:07-0700" version="2">opened</milestone>
-        <milestone date="2012-11-06T16:18:24-0800" version="2">submitted</milestone>
-        <milestone date="2012-11-06T16:19:07-0800" version="2">published</milestone>
-        <milestone date="2012-11-06T16:19:10-0800" version="2">accessioned</milestone>
-        <milestone date="2012-11-06T16:19:15-0800" version="2">described</milestone>
-        <milestone date="2012-11-06T16:21:02-0800">opened</milestone>
-        <milestone date="2012-11-06T16:30:03-0800">submitted</milestone>
-        <milestone date="2012-11-06T16:35:00-0800">described</milestone>
-        <milestone date="2012-11-06T16:59:39-0800" version="3">published</milestone>
-        <milestone date="2012-11-06T16:59:39-0800">published</milestone>
-        </lifecycle>')
+
+      let(:milestones) do
+        [
+          { milestone: 'published', at: Time.zone.parse('2012-01-26 21:06:54 -0800'), version: '2' },
+          { milestone: 'opened', at: Time.zone.parse('2012-10-29 16:30:07 -0700'), version: '2' },
+          { milestone: 'submitted', at: Time.zone.parse('2012-11-06 16:18:24 -0800'), version: '2' },
+          { milestone: 'published', at: Time.zone.parse('2012-11-06 16:19:07 -0800'), version: '2' },
+          { milestone: 'accessioned', at: Time.zone.parse('2012-11-06 16:19:10 -0800'), version: '2' },
+          { milestone: 'described', at: Time.zone.parse('2012-11-06 16:19:15 -0800'), version: '2' },
+          { milestone: 'opened', at: Time.zone.parse('2012-11-06 16:21:02 -0800'), version: nil },
+          { milestone: 'submitted', at: Time.zone.parse('2012-11-06 16:30:03 -0800'), version: nil },
+          { milestone: 'described', at: Time.zone.parse('2012-11-06 16:35:00 -0800'), version: nil },
+          { milestone: 'published', at: Time.zone.parse('2012-11-06 16:59:39 -0800'), version: '3' },
+          { milestone: 'published', at: Time.zone.parse('2012-11-06 16:59:39 -0800'), version: nil }
+        ]
       end
       let(:version_metadata) { Dor::VersionMetadataDS.from_xml(dsxml) }
 
+      let(:status) do
+        instance_double(Dor::Workflow::Client::Status, milestones: milestones, info: { status_code: 4 }, display: 'v4 In accessioning (described, published)')
+      end
+
       before do
-        allow(Dor::Config.workflow.client.lifecycle_routes).to receive(:query_lifecycle).and_return(xml)
+        allow(Dor::Config.workflow.client).to receive(:status).and_return(status)
         allow(obj).to receive(:versionMetadata).and_return(version_metadata)
       end
 
@@ -117,15 +126,17 @@ RSpec.describe ProcessableIndexer do
         expect(solr_doc['opened_latest_dttsi']).to eq('2012-11-07T00:21:02Z') #  2012-11-06T16:21:02-0800
       end
 
-      it 'skips the versioning related steps if a new version has not been opened' do
-        allow(Dor::Config.workflow.client.lifecycle_routes).to receive(:query_lifecycle).and_return(Nokogiri::XML('<?xml version="1.0" encoding="UTF-8"?>
-        <lifecycle objectId="druid:gv054hp4128">
-        <milestone date="2012-11-06T16:30:03-0800">submitted</milestone>
-        <milestone date="2012-11-06T16:35:00-0800">described</milestone>
-        <milestone date="2012-11-06T16:59:39-0800" version="3">published</milestone>
-        <milestone date="2012-11-06T16:59:39-0800">published</milestone>
-        </lifecycle>'))
-        expect(solr_doc['opened_dttsim']).to be_nil
+      context 'when a new version has not been opened' do
+        let(:milestones) do
+          [{ milestone: 'submitted', at: Time.zone.parse('2012-11-06 16:30:03 -0800'), version: nil },
+           { milestone: 'described', at: Time.zone.parse('2012-11-06 16:35:00 -0800'), version: nil },
+           { milestone: 'published', at: Time.zone.parse('2012-11-06 16:59:39 -0800'), version: '3' },
+           { milestone: 'published', at: Time.zone.parse('2012-11-06 16:59:39 -0800'), version: nil }]
+        end
+
+        it 'skips the versioning related steps if a new version has not been opened' do
+          expect(solr_doc['opened_dttsim']).to be_nil
+        end
       end
 
       it 'creates a modified_latest date field' do

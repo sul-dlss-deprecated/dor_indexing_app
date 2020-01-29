@@ -6,7 +6,6 @@ class ProcessableIndexer
   attr_reader :resource
   def initialize(resource:)
     @resource = resource
-    @status_service = Dor::StatusService.new(resource)
   end
 
   # @return [Hash] the partial solr document for processable concerns
@@ -22,7 +21,9 @@ class ProcessableIndexer
 
   private
 
-  attr_reader :status_service
+  def status_service
+    @status_service ||= Dor::Config.workflow.client.status(druid: resource.pid, version: resource.current_version)
+  end
 
   def current_version
     @current_version ||= begin
@@ -33,10 +34,10 @@ class ProcessableIndexer
   end
 
   def add_status(solr_doc)
-    solr_doc['status_ssi'] = status_service.status # status is singular (i.e. the current one)
-    status_info_hash = status_service.status_info
+    solr_doc['status_ssi'] = status_service.display
+    status_info_hash = status_service.info
     status_code = status_info_hash[:status_code]
-    add_solr_value(solr_doc, 'processing_status_text', simplified_status_code_disp_txt(status_code), :string, [:stored_sortable])
+    add_solr_value(solr_doc, 'processing_status_text', simplified_status_code_disp_txt(status_service.display), :string, [:stored_sortable])
     solr_doc['processing_status_code_isi'] = status_code
   end
 
@@ -91,7 +92,7 @@ class ProcessableIndexer
 
   # @return [String] text translation of the status code, minus any trailing parenthetical explanation
   # e.g. 'In accessioning (described)' and 'In accessioning (described, published)' both return 'In accessioning'
-  def simplified_status_code_disp_txt(status_code)
-    Dor::StatusService::STATUS_CODE_DISP_TXT[status_code].gsub(/\(.*\)$/, '').strip
+  def simplified_status_code_disp_txt(display)
+    display.gsub(/\(.*\)$/, '').strip
   end
 end
