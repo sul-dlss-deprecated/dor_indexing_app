@@ -26,9 +26,11 @@ group :production do
 end
 
 group :development, :test do
+  gem 'byebug'
   gem 'coveralls', require: false
   gem 'rspec-rails', '~> 3.0'
   gem 'simplecov', require: false
+  gem 'webmock'
 end
 
 group :development do

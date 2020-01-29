@@ -47,4 +47,4 @@ MESSAGE_QUEUES: []
 # URLs
 FEDORA_URL: 'https://user:password@fedora.example.com:1000/fedora'
 SOLRIZER_URL: 'https://solr.example.com/solr/collection'
-WORKFLOW_URL: 'https://workflow.example.com/workflow'
+WORKFLOW_URL: 'https://workflow.example.edu/'

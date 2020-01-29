@@ -1,3 +1,4 @@
+
 require:
   - rubocop-performance
   - rubocop-rails
@@ -25,3 +26,6 @@ Metrics/AbcSize:
 Metrics/MethodLength:
   Exclude:
     - 'app/controllers/dor_controller.rb'
+
+Naming/PredicateName:
+  NamePrefixBlacklist: is_
