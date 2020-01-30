@@ -54,6 +54,7 @@ class Indexer
     Dor::AdminPolicyObject => ADMIN_POLICY_INDEXER,
     Dor::Collection => COLLECTION_INDEXER,
     Dor::Etd => ETD_INDEXER,
+    Hydrus::Item => ITEM_INDEXER,
     Dor::Item => ITEM_INDEXER,
     Dor::Set => SET_INDEXER
   }.freeze
