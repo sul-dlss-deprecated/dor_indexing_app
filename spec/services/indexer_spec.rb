@@ -11,6 +11,12 @@ RSpec.describe Indexer do
     it { is_expected.to be_instance_of CompositeIndexer::Instance }
   end
 
+  context 'when the model is a hydrus item' do
+    let(:model) { Hydrus::Item.new }
+
+    it { is_expected.to be_instance_of CompositeIndexer::Instance }
+  end
+
   context 'when the model is a collection' do
     let(:model) { Dor::Collection.new }
 
