@@ -20,6 +20,7 @@ RSpec.describe CompositeIndexer do
   end
   let(:obj) do
     instance_double(Dor::Item,
+                    pid: 'druid:mx123ms3333',
                     stanford_mods: mods,
                     datastreams: datastreams,
                     label: 'obj label',
@@ -47,11 +48,15 @@ RSpec.describe CompositeIndexer do
   end
 
   describe 'to_solr' do
-    before do
-      allow_any_instance_of(Dor::StatusService).to receive(:milestones).and_return({})
+    let(:status) do
+      instance_double(Dor::Workflow::Client::Status, milestones: {}, info: {}, display: 'bad')
     end
 
     let(:doc) { indexer.new(resource: obj).to_solr }
+
+    before do
+      allow(Dor::Config.workflow.client).to receive(:status).and_return(status)
+    end
 
     it 'searchworks date-fu: temporal periods and pub_dates' do
       expect(doc).to match a_hash_including(
