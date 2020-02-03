@@ -22,6 +22,7 @@ class IdentifiableIndexer
   def to_solr
     solr_doc = {}
     solr_doc[INDEX_VERSION_FIELD] = Dor::VERSION
+    solr_doc['indexer_host_ssi'] = Socket.gethostname
     solr_doc['indexed_at_dtsi'] = Time.now.utc.xmlschema
     resource.datastreams.values.each do |ds|
       # This is used to draw the table of datastreams in Argo
