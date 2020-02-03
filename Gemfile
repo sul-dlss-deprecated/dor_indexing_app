@@ -18,7 +18,7 @@ gem 'rack-timeout', '~> 0.5.1'
 gem 'bootsnap', '>= 1.1.0', require: false
 
 gem 'dor-services', '~> 8.3'
-gem 'dor-workflow-client', '~> 3.19'
+gem 'dor-workflow-client', '~> 3.20'
 gem 'okcomputer' # for monitoring
 gem 'rsolr', '~> 2.0'
 
