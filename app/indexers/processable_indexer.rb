@@ -37,7 +37,7 @@ class ProcessableIndexer
     solr_doc['status_ssi'] = status_service.display
     status_info_hash = status_service.info
     status_code = status_info_hash[:status_code]
-    add_solr_value(solr_doc, 'processing_status_text', simplified_status_code_disp_txt(status_service.display), :string, [:stored_sortable])
+    add_solr_value(solr_doc, 'processing_status_text', simplified_status_code_disp_txt(status_code), :string, [:stored_sortable])
     solr_doc['processing_status_code_isi'] = status_code
   end
 
@@ -92,7 +92,7 @@ class ProcessableIndexer
 
   # @return [String] text translation of the status code, minus any trailing parenthetical explanation
   # e.g. 'In accessioning (described)' and 'In accessioning (described, published)' both return 'In accessioning'
-  def simplified_status_code_disp_txt(display)
-    display.gsub(/\(.*\)$/, '').strip
+  def simplified_status_code_disp_txt(status_code)
+    Dor::Workflow::Client::Status::STATUS_CODE_DISP_TXT[status_code].gsub(/\(.*\)$/, '').strip
   end
 end

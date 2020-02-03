@@ -11,8 +11,8 @@ RSpec.describe ProcessableIndexer do
     end
 
     it "trims off parens but doesn't harm the strings otherwise" do
-      expect(indexer.send(:simplified_status_code_disp_txt, 'In accessioning (described)')).to eq('In accessioning')
-      expect(indexer.send(:simplified_status_code_disp_txt, 'In accessioning (described, published)')).to eq('In accessioning')
+      expect(indexer.send(:simplified_status_code_disp_txt, 2)).to eq('In accessioning')
+      expect(indexer.send(:simplified_status_code_disp_txt, 3)).to eq('In accessioning')
     end
   end
 
