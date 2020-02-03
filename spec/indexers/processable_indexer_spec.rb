@@ -111,11 +111,13 @@ RSpec.describe ProcessableIndexer do
         allow(obj).to receive(:versionMetadata).and_return(version_metadata)
       end
 
+      # rubocop:disable RSpec/MultipleExpectations
       it 'includes the semicolon delimited version, an earliest published date and a status' do
         # lifecycle_display should have the semicolon delimited version
         expect(solr_doc['lifecycle_ssim']).to include('published:2012-01-27T05:06:54Z;2')
         # published date should be the first published date
-        expect(solr_doc).to match a_hash_including('status_ssi' => 'v4 In accessioning (described, published)')
+        expect(solr_doc['status_ssi']).to eq 'v4 In accessioning (described, published)'
+        expect(solr_doc['processing_status_text_ssi']).to eq 'In accessioning'
         expect(solr_doc).to match a_hash_including('opened_dttsim' => including('2012-11-07T00:21:02Z'))
         expect(solr_doc['published_earliest_dttsi']).to eq('2012-01-27T05:06:54Z')
         expect(solr_doc['published_latest_dttsi']).to eq('2012-11-07T00:59:39Z')
@@ -125,6 +127,7 @@ RSpec.describe ProcessableIndexer do
         expect(solr_doc['opened_earliest_dttsi']).to eq('2012-10-29T23:30:07Z') #  2012-10-29T16:30:07-0700
         expect(solr_doc['opened_latest_dttsi']).to eq('2012-11-07T00:21:02Z') #  2012-11-06T16:21:02-0800
       end
+      # rubocop:enable RSpec/MultipleExpectations
 
       context 'when a new version has not been opened' do
         let(:milestones) do
