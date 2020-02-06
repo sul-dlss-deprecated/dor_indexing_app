@@ -43,8 +43,10 @@ RSpec.describe ProcessableIndexer do
             display_simplified: 'blah')
         end
 
+        let(:workflow_client) { instance_double(Dor::Workflow::Client, status: status) }
+
         before do
-          allow(Dor::Config.workflow.client).to receive(:status).and_return(status)
+          allow(Dor::Workflow::Client).to receive(:new).and_return(workflow_client)
         end
 
         it 'includes a rights facet' do
@@ -103,8 +105,10 @@ RSpec.describe ProcessableIndexer do
           display_simplified: 'In accessioning')
       end
 
+      let(:workflow_client) { instance_double(Dor::Workflow::Client, status: status) }
+
       before do
-        allow(Dor::Config.workflow.client).to receive(:status).and_return(status)
+        allow(Dor::Workflow::Client).to receive(:new).and_return(workflow_client)
         allow(obj).to receive(:versionMetadata).and_return(version_metadata)
       end
 

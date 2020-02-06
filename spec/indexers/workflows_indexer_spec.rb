@@ -114,16 +114,19 @@ RSpec.describe WorkflowsIndexer do
         { 'name' => 'start-accession' }
       ] }
     end
+    let(:workflow_client) { instance_double(Dor::Workflow::Client, workflow_routes: workflow_routes) }
+    let(:workflow_routes) do
+      instance_double(Dor::Workflow::Client::WorkflowRoutes, all_workflows: Dor::Workflow::Response::Workflows.new(xml: xml))
+    end
 
     before do
-      allow(Dor::Config.workflow.client).to receive(:workflow_template).with('accessionWF').and_return(accession_json)
-      allow(Dor::Config.workflow.client).to receive(:workflow_template).with('assemblyWF').and_return(assembly_json)
-      allow(Dor::Config.workflow.client).to receive(:workflow_template).with('disseminationWF').and_return(dissemination_json)
-      allow(Dor::Config.workflow.client).to receive(:workflow_template).with('hydrusAssemblyWF').and_return(hydrus_json)
-      allow(Dor::Config.workflow.client).to receive(:workflow_template).with('versioningWF').and_return(versioning_json)
+      allow(Dor::Workflow::Client).to receive(:new).and_return(workflow_client)
 
-      allow(Dor::Config.workflow.client.workflow_routes).to receive(:all_workflows)
-        .and_return(Dor::Workflow::Response::Workflows.new(xml: xml))
+      allow(workflow_client).to receive(:workflow_template).with('accessionWF').and_return(accession_json)
+      allow(workflow_client).to receive(:workflow_template).with('assemblyWF').and_return(assembly_json)
+      allow(workflow_client).to receive(:workflow_template).with('disseminationWF').and_return(dissemination_json)
+      allow(workflow_client).to receive(:workflow_template).with('hydrusAssemblyWF').and_return(hydrus_json)
+      allow(workflow_client).to receive(:workflow_template).with('versioningWF').and_return(versioning_json)
     end
 
     describe 'workflow_status_ssim' do
