@@ -5,17 +5,6 @@ require 'rails_helper'
 RSpec.describe ProcessableIndexer do
   let(:indexer) { described_class.new(resource: obj) }
 
-  describe '#simplified_status_code_disp_txt' do
-    let(:obj) do
-      instance_double(Dor::Item)
-    end
-
-    it "trims off parens but doesn't harm the strings otherwise" do
-      expect(indexer.send(:simplified_status_code_disp_txt, 'In accessioning (described)')).to eq('In accessioning')
-      expect(indexer.send(:simplified_status_code_disp_txt, 'In accessioning (described, published)')).to eq('In accessioning')
-    end
-  end
-
   describe '#to_solr' do
     let(:obj) do
       instance_double(Dor::Item,
@@ -47,7 +36,11 @@ RSpec.describe ProcessableIndexer do
         end
 
         let(:status) do
-          instance_double(Dor::Workflow::Client::Status, milestones: {}, info: { status_code: 0 }, display: 'blah')
+          instance_double(Dor::Workflow::Client::Status,
+            milestones: {},
+            info: { status_code: 0 },
+            display: 'v1 blah (parenthetical)',
+            display_simplified: 'blah')
         end
 
         before do
@@ -103,7 +96,11 @@ RSpec.describe ProcessableIndexer do
       let(:version_metadata) { Dor::VersionMetadataDS.from_xml(dsxml) }
 
       let(:status) do
-        instance_double(Dor::Workflow::Client::Status, milestones: milestones, info: { status_code: 4 }, display: 'v4 In accessioning (described, published)')
+        instance_double(Dor::Workflow::Client::Status,
+          milestones: milestones,
+          info: { status_code: 4 },
+          display: 'v4 In accessioning (described, published)',
+          display_simplified: 'In accessioning')
       end
 
       before do
@@ -111,7 +108,6 @@ RSpec.describe ProcessableIndexer do
         allow(obj).to receive(:versionMetadata).and_return(version_metadata)
       end
 
-      # rubocop:disable RSpec/MultipleExpectations
       it 'includes the semicolon delimited version, an earliest published date and a status' do
         # lifecycle_display should have the semicolon delimited version
         expect(solr_doc['lifecycle_ssim']).to include('published:2012-01-27T05:06:54Z;2')
@@ -127,7 +123,6 @@ RSpec.describe ProcessableIndexer do
         expect(solr_doc['opened_earliest_dttsi']).to eq('2012-10-29T23:30:07Z') #  2012-10-29T16:30:07-0700
         expect(solr_doc['opened_latest_dttsi']).to eq('2012-11-07T00:21:02Z') #  2012-11-06T16:21:02-0800
       end
-      # rubocop:enable RSpec/MultipleExpectations
 
       context 'when a new version has not been opened' do
         let(:milestones) do

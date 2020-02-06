@@ -423,7 +423,7 @@ DEPENDENCIES
   coveralls
   dlss-capistrano (~> 3.0)
   dor-services (~> 8.3)
-  dor-workflow-client (~> 3.19)
+  dor-workflow-client (~> 3.20)
   erubis
   faraday
   honeybadger (~> 3.0)

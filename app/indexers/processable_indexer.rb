@@ -39,11 +39,8 @@ class ProcessableIndexer
     status_code = status_info_hash[:status_code]
     return unless status_code
 
-    # TODO: move this to Dor::Workflow::Client::Status
-    readable_status_without_version = Dor::Workflow::Client::Status::STATUS_CODE_DISP_TXT[status_code]
-
     # This is used for Argo's "Processing Status" facet
-    add_solr_value(solr_doc, 'processing_status_text', simplified_status_code_disp_txt(readable_status_without_version), :string, [:stored_sortable])
+    add_solr_value(solr_doc, 'processing_status_text', status_service.display_simplified, :string, [:stored_sortable])
 
     solr_doc['processing_status_code_isi'] = status_code
   end
@@ -95,11 +92,5 @@ class ProcessableIndexer
       add_solr_value(solr_doc, 'versions', new_val, :string, [:displayable])
       current_version_num -= 1
     end
-  end
-
-  # @return [String] text translation of the status code, minus any trailing parenthetical explanation
-  # e.g. 'In accessioning (described)' and 'In accessioning (described, published)' both return 'In accessioning'
-  def simplified_status_code_disp_txt(display)
-    display.gsub(/\(.*\)$/, '').strip
   end
 end
