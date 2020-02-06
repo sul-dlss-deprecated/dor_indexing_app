@@ -15,11 +15,11 @@ RSpec.describe ReleasableIndexer do
         'test_nontarget' => { 'release' => false }
       }
     end
-    let(:service) { instance_double(Dor::ReleaseTagService, released_for: released_for_info) }
+    let(:service) { instance_double(Dor::ReleaseTags::IdentityMetadata, released_for: released_for_info) }
     let(:released_to_field_name) { Solrizer.solr_name('released_to', :symbol) }
 
     before do
-      allow(Dor::ReleaseTagService).to receive(:for).and_return(service)
+      allow(Dor::ReleaseTags::IdentityMetadata).to receive(:for).and_return(service)
     end
 
     it 'indexes release tags' do

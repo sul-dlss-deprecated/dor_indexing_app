@@ -27,6 +27,6 @@ class ReleasableIndexer
   private
 
   def released_for
-    Dor::ReleaseTagService.for(resource).released_for(skip_live_purl: true)
+    Dor::ReleaseTags::IdentityMetadata.for(resource).released_for({})
   end
 end
