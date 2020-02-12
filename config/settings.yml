@@ -48,3 +48,7 @@ MESSAGE_QUEUES: []
 FEDORA_URL: 'https://user:password@fedora.example.com:1000/fedora'
 SOLRIZER_URL: 'https://solr.example.com/solr/collection'
 WORKFLOW_URL: 'https://workflow.example.edu/'
+
+dor_services:
+  url: 'http://localhost:3003'
+  token: 'not-a-real-token'

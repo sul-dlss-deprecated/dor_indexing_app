@@ -4,6 +4,7 @@ class ReleasableIndexer
   include SolrDocHelper
 
   attr_reader :resource
+
   def initialize(resource:)
     @resource = resource
   end
@@ -27,6 +28,10 @@ class ReleasableIndexer
   private
 
   def released_for
-    Dor::ReleaseTags::IdentityMetadata.for(resource).released_for({})
+    object_client.release_tags.list
+  end
+
+  def object_client
+    Dor::Services::Client.object(resource.pid)
   end
 end
