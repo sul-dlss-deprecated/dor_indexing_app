@@ -36,6 +36,7 @@ group :development, :test do
 end
 
 group :development do
+  gem 'listen', '~> 3.0.5'
   gem 'rubocop', '~> 0.74.0'
   gem 'rubocop-performance'
   gem 'rubocop-rails'
