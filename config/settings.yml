@@ -19,9 +19,9 @@ INDEXER:
 
 # SSL
 SSL:
-  CERT_FILE: 'cert_name.crt'
-  KEY_FILE: 'key_name.key'
-  KEY_PASS: 'password'
+  CERT_FILE: ~
+  KEY_FILE: ~
+  KEY_PASS: ~
 
 # Stacks
 STACKS:

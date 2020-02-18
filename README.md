@@ -9,7 +9,7 @@ The dor_indexing_app is the primary API for indexing DOR objects into the DOR In
 In order to run dor_indexing_app on your laptop (e.g. while running Argo), you need to
 
 * Create the directory `config/certs` and (preferably) create symbolic links to dor_indexing_app's shared_configs certs.
-* Create a symbolic link to development.local.yml within `config/settings/` (also found in shared_configs). 
+* Create a symbolic link to development.local.yml within `config/settings/` (also found in shared_configs).
 
 ## Known Consumers
 * There is a Karaf job that runs on a single node: `sulmq-prod-a:/opt/app/karaf/current/deploy/dor_prod_reindexing.xml` that queries solr for the least-recently-indexed items and indexes them
@@ -106,3 +106,16 @@ The responses are always in JSON and it holds a single `value` of integer for th
 
 - `200` OK
 - `500` Server Error (from an unexpected exception)
+
+
+### Docker
+
+Build image:
+```
+docker image build -t suldlss/dor-indexing-app:latest .
+```
+
+Publish:
+```
+docker push suldlss/dor-indexing-app:latest
+```
