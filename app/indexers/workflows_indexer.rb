@@ -27,6 +27,6 @@ class WorkflowsIndexer
   # TODO: remove Dor::Workflow::Document
   # @return [Workflow::Response::Workflows]
   def all_workflows
-    @all_workflows ||= Dor::Config.workflow.client.workflow_routes.all_workflows pid: resource.pid
+    @all_workflows ||= WorkflowClientFactory.build.workflow_routes.all_workflows pid: resource.pid
   end
 end

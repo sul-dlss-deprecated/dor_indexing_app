@@ -22,7 +22,7 @@ class ProcessableIndexer
   private
 
   def status_service
-    @status_service ||= Dor::Config.workflow.client.status(druid: resource.pid, version: resource.current_version)
+    @status_service ||= WorkflowClientFactory.build.status(druid: resource.pid, version: resource.current_version)
   end
 
   def current_version
