@@ -11,7 +11,7 @@ gem 'erubis'
 
 gem 'config'
 gem 'faraday'
-gem 'honeybadger', '~> 3.0'
+gem 'honeybadger', '~> 4.5'
 gem 'rack-timeout', '~> 0.5.1'
 
 # Reduces boot times through caching; required in config/boot.rb
