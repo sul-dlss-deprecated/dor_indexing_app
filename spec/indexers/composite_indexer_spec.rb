@@ -51,11 +51,11 @@ RSpec.describe CompositeIndexer do
     let(:status) do
       instance_double(Dor::Workflow::Client::Status, milestones: {}, info: {}, display: 'bad')
     end
-
+    let(:workflow_client) { instance_double(Dor::Workflow::Client, status: status) }
     let(:doc) { indexer.new(resource: obj).to_solr }
 
     before do
-      allow(Dor::Config.workflow.client).to receive(:status).and_return(status)
+      allow(Dor::Workflow::Client).to receive(:new).and_return(workflow_client)
     end
 
     it 'searchworks date-fu: temporal periods and pub_dates' do

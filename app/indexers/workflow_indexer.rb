@@ -28,7 +28,7 @@ class WorkflowIndexer
 
   def definition_process_names
     @definition_process_names ||= begin
-      definition = Dor::Config.workflow.client.workflow_template(workflow_name)
+      definition = WorkflowClientFactory.build.workflow_template(workflow_name)
       definition['processes'].map { |p| p['name'] }
     end
   end

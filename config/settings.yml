@@ -25,7 +25,6 @@ SSL:
 
 # Stacks
 STACKS:
-  DOCUMENT_CACHE_HOST: 'cache.example.com'
   LOCAL_WORKSPACE_ROOT: '/foo/workspace'
   STORAGE_ROOT: '/bar'
 
@@ -41,6 +40,7 @@ SURI:
 WORKFLOW:
   LOGFILE: 'log/workflow_service.log'
   SHIFT_AGE: 'weekly'
+  TIMEOUT: 60
 
 MESSAGE_QUEUES: []
 

@@ -15,12 +15,6 @@ Dor.configure do
     url Settings.SOLRIZER_URL
   end
 
-  workflow do
-    url Settings.WORKFLOW_URL
-    logfile Settings.WORKFLOW.LOGFILE
-    shift_age Settings.WORKFLOW.SHIFT_AGE
-  end
-
   suri do
     mint_ids     Settings.SURI.MINT_IDS
     id_namespace Settings.SURI.ID_NAMESPACE
@@ -30,7 +24,6 @@ Dor.configure do
   end
 
   stacks do
-    document_cache_host         Settings.STACKS.DOCUMENT_CACHE_HOST
-    local_workspace_root        Settings.STACKS.LOCAL_WORKSPACE_ROOT
+    local_workspace_root Settings.STACKS.LOCAL_WORKSPACE_ROOT
   end
 end
