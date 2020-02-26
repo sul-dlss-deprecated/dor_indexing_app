@@ -28,7 +28,7 @@ RSpec.describe IdentifiableIndexer do
     XML
   end
 
-  let(:obj) { Dor::Abstract.new }
+  let(:obj) { Dor::Abstract.new(pid: 'druid:rt923jk342') }
 
   let(:indexer) do
     described_class.new(resource: obj)
