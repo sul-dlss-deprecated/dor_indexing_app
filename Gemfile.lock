@@ -63,7 +63,7 @@ GEM
       sshkit (>= 1.6.1, != 1.7.0)
     arel (9.0.0)
     ast (2.4.0)
-    bootsnap (1.4.5)
+    bootsnap (1.4.6)
       msgpack (~> 1.0)
     builder (3.2.4)
     bundler-audit (0.6.1)
@@ -89,7 +89,7 @@ GEM
       capistrano (~> 3.1)
       capistrano-bundler (~> 1.1)
     capistrano-shared_configs (0.2.2)
-    cocina-models (0.22.2)
+    cocina-models (0.25.0)
       dry-struct (~> 1.0)
       dry-types (~> 1.1)
       zeitwerk (~> 2.1)
@@ -137,9 +137,9 @@ GEM
       solrizer (~> 3.0)
       stanford-mods (>= 2.3.1)
       stanford-mods-normalizer (~> 0.1)
-    dor-services-client (4.14.0)
+    dor-services-client (4.15.0)
       activesupport (>= 4.2, < 7)
-      cocina-models (~> 0.22.2)
+      cocina-models (~> 0.25.0)
       deprecation
       faraday (~> 0.15)
       moab-versioning (~> 4.0)
@@ -212,7 +212,7 @@ GEM
     haml (5.1.2)
       temple (>= 0.8.0)
       tilt
-    hashdiff (1.0.0)
+    hashdiff (1.0.1)
     honeybadger (4.5.6)
     hooks (0.4.1)
       uber (~> 0.0.14)
@@ -279,10 +279,10 @@ GEM
       nokogiri (>= 1.4.2)
       solrizer (~> 3.3)
     parallel (1.19.1)
-    parser (2.7.0.2)
+    parser (2.7.0.3)
       ast (~> 2.4.0)
     public_suffix (4.0.3)
-    puma (3.12.2)
+    puma (3.12.3)
     rack (2.2.2)
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
@@ -385,10 +385,11 @@ GEM
       nokogiri
       rest-client
     safe_yaml (1.0.5)
-    simplecov (0.18.3)
+    simplecov (0.17.1)
       docile (~> 1.1)
-      simplecov-html (~> 0.11)
-    simplecov-html (0.12.1)
+      json (>= 1.8, < 3)
+      simplecov-html (~> 0.10.0)
+    simplecov-html (0.10.2)
     solrizer (3.4.1)
       activesupport
       daemons
@@ -469,7 +470,7 @@ DEPENDENCIES
   rubocop-performance
   rubocop-rails
   rubocop-rspec
-  simplecov
+  simplecov (~> 0.17.1)
   webmock
 
 BUNDLED WITH
