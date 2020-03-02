@@ -12,9 +12,6 @@ gem 'erubis'
 gem 'config'
 gem 'faraday'
 gem 'honeybadger', '~> 4.5'
-# iso-639 0.3.0 isn't compatible with ruby 2.5.  This declaration can be dropped when we upgrade to ruby 2.6
-# see https://github.com/alphabetum/iso-639/issues/12
-gem 'iso-639', '~> 0.2.10'
 gem 'rack-timeout', '~> 0.5.1'
 
 # Reduces boot times through caching; required in config/boot.rb
