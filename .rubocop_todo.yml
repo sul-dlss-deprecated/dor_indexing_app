@@ -36,6 +36,7 @@ Metrics/ParameterLists:
 # Configuration parameters: Max.
 RSpec/ExampleLength:
   Exclude:
+    - 'spec/indexers/administrative_tag_indexer_spec.rb'
     - 'spec/indexers/composite_indexer_spec.rb'
     - 'spec/indexers/describable_indexer_spec.rb'
     - 'spec/indexers/identifiable_indexer_spec.rb'

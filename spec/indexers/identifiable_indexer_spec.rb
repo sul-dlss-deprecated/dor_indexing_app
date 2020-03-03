@@ -95,10 +95,11 @@ RSpec.describe IdentifiableIndexer do
       end
 
       context 'when related collection and APOs are found' do
-        let(:mock_obj) { instance_double(Dor::Item, full_title: 'Test object', tags: '') }
+        let(:mock_obj) { instance_double(Dor::Item, full_title: 'Test object') }
 
         before do
           allow(Dor).to receive(:find).with(mock_rel_druid).and_return(mock_obj)
+          allow(indexer).to receive(:related_object_tags).and_return([])
         end
 
         it 'generate collections and apo title fields' do
@@ -114,6 +115,31 @@ RSpec.describe IdentifiableIndexer do
 
     it 'indexes metadata source' do
       expect(doc).to match a_hash_including('metadata_source_ssi' => 'Symphony')
+    end
+  end
+
+  describe '#related_object_tags' do
+    context 'with a nil' do
+      let(:object) { nil }
+
+      it 'returns an empty array' do
+        expect(indexer.send(:related_object_tags, object)).to eq([])
+      end
+    end
+
+    context 'with an object that responds to #pid' do
+      before do
+        allow(Dor::Services::Client).to receive(:object).with(object.pid).and_return(fake_object_client)
+      end
+
+      let(:fake_object_client) { instance_double(Dor::Services::Client::Object, administrative_tags: fake_tags_client) }
+      let(:fake_tags_client) { instance_double(Dor::Services::Client::AdministrativeTags, list: nil) }
+      let(:object) { obj }
+
+      it 'makes a dor-services-client call' do
+        indexer.send(:related_object_tags, object)
+        expect(fake_tags_client).to have_received(:list).once
+      end
     end
   end
 

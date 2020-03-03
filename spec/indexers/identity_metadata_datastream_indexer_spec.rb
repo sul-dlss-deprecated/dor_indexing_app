@@ -47,23 +47,12 @@ RSpec.describe IdentityMetadataDatastreamIndexer do
         'catkey_id_ssim' => ['129483625'],
         'dor_id_tesim' => %w[STANFORD_342837261527 36105049267078 129483625
                              7f3da130-7b02-11de-8a39-0800200c9a66],
-        'exploded_tag_ssim' => ['Google Books', 'Google Books : Phase 1', 'Google Books',
-                                'Google Books : Scan source STANFORD', 'Project', 'Project : Beautiful Books',
-                                'Registered By', 'Registered By : blalbrit', 'DPG', 'DPG : Beautiful Books',
-                                'DPG : Beautiful Books : Octavo', 'DPG : Beautiful Books : Octavo : newpri',
-                                'Remediated By', 'Remediated By : 4.15.4'],
         'identifier_ssim' => ['google:STANFORD_342837261527', 'barcode:36105049267078',
                               'catkey:129483625', 'uuid:7f3da130-7b02-11de-8a39-0800200c9a66'],
         'identifier_tesim' => ['google:STANFORD_342837261527', 'barcode:36105049267078',
                                'catkey:129483625', 'uuid:7f3da130-7b02-11de-8a39-0800200c9a66'],
         'objectType_ssim' => ['item'],
-        'project_tag_ssim' => ['Beautiful Books'],
-        'registered_by_tag_ssim' => ['blalbrit'],
-        'source_id_ssim' => ['google:STANFORD_342837261527'],
-        'tag_ssim' => ['Google Books : Phase 1', 'Google Books : Scan source STANFORD',
-                       'Project : Beautiful Books', 'Registered By : blalbrit',
-                       'DPG : Beautiful Books : Octavo : newpri',
-                       'Remediated By : 4.15.4']
+        'source_id_ssim' => ['google:STANFORD_342837261527']
       )
     end
   end
