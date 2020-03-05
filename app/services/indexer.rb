@@ -3,6 +3,15 @@
 class Indexer
   ADMIN_POLICY_INDEXER = CompositeIndexer.new(
     DataIndexer,
+    RoleMetadataDatastreamIndexer,
+    AdministrativeMetadataDatastreamIndexer,
+    DefaultObjectRightsDatastreamIndexer,
+    ProvenanceMetadataDatastreamIndexer,
+    RightsMetadataDatastreamIndexer,
+    EventsDatastreamIndexer,
+    VersionMetadataDatastreamIndexer,
+    IdentityMetadataDatastreamIndexer,
+    DescriptiveMetadataDatastreamIndexer,
     DescribableIndexer,
     EditableIndexer,
     IdentifiableIndexer,
@@ -12,6 +21,12 @@ class Indexer
 
   COLLECTION_INDEXER = CompositeIndexer.new(
     DataIndexer,
+    ProvenanceMetadataDatastreamIndexer,
+    RightsMetadataDatastreamIndexer,
+    EventsDatastreamIndexer,
+    VersionMetadataDatastreamIndexer,
+    IdentityMetadataDatastreamIndexer,
+    DescriptiveMetadataDatastreamIndexer,
     DescribableIndexer,
     IdentifiableIndexer,
     ProcessableIndexer,
@@ -20,11 +35,27 @@ class Indexer
   )
 
   ETD_INDEXER = CompositeIndexer.new(
-    DataIndexer
+    DataIndexer,
+    ProvenanceMetadataDatastreamIndexer,
+    RightsMetadataDatastreamIndexer,
+    EventsDatastreamIndexer,
+    VersionMetadataDatastreamIndexer,
+    IdentityMetadataDatastreamIndexer,
+    DescriptiveMetadataDatastreamIndexer,
+    EmbargoMetadataDatastreamIndexer,
+    ContentMetadataDatastreamIndexer
   )
 
   ITEM_INDEXER = CompositeIndexer.new(
     DataIndexer,
+    ProvenanceMetadataDatastreamIndexer,
+    RightsMetadataDatastreamIndexer,
+    EventsDatastreamIndexer,
+    VersionMetadataDatastreamIndexer,
+    IdentityMetadataDatastreamIndexer,
+    DescriptiveMetadataDatastreamIndexer,
+    EmbargoMetadataDatastreamIndexer,
+    ContentMetadataDatastreamIndexer,
     DescribableIndexer,
     IdentifiableIndexer,
     ProcessableIndexer,
@@ -34,6 +65,12 @@ class Indexer
 
   SET_INDEXER = CompositeIndexer.new(
     DataIndexer,
+    ProvenanceMetadataDatastreamIndexer,
+    RightsMetadataDatastreamIndexer,
+    EventsDatastreamIndexer,
+    VersionMetadataDatastreamIndexer,
+    IdentityMetadataDatastreamIndexer,
+    DescriptiveMetadataDatastreamIndexer,
     DescribableIndexer,
     IdentifiableIndexer,
     ProcessableIndexer,
