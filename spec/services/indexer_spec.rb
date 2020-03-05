@@ -6,9 +6,55 @@ RSpec.describe Indexer do
   subject(:indexer) { described_class.for(model) }
 
   context 'when the model is an item' do
-    let(:model) { Dor::Item.new }
+    let(:model) { Dor::Item.new(pid: 'druid:xx999xx9999') }
 
     it { is_expected.to be_instance_of CompositeIndexer::Instance }
+
+    describe '#to_solr' do
+      subject { indexer.to_solr }
+
+      let(:processable) do
+        instance_double(ProcessableIndexer, to_solr: { 'milestones_ssim' => %w[foo bar] })
+      end
+      let(:releasable) do
+        instance_double(ReleasableIndexer, to_solr: { 'released_to_ssim' => %w[searchworks earthworks] })
+      end
+      let(:workflows) do
+        instance_double(WorkflowsIndexer, to_solr: { 'wf_ssim' => ['accessionWF'] })
+      end
+
+      before do
+        allow(ProcessableIndexer).to receive(:new).and_return(processable)
+        allow(ReleasableIndexer).to receive(:new).and_return(releasable)
+        allow(WorkflowsIndexer).to receive(:new).and_return(workflows)
+      end
+
+      it { is_expected.to include('milestones_ssim', 'released_to_ssim', 'wf_ssim') }
+    end
+  end
+
+  context 'when the model is an admin policy' do
+    let(:model) { Dor::AdminPolicyObject.new(pid: 'druid:xx999xx9999') }
+
+    it { is_expected.to be_instance_of CompositeIndexer::Instance }
+
+    describe '#to_solr' do
+      subject { indexer.to_solr }
+
+      let(:processable) do
+        instance_double(ProcessableIndexer, to_solr: { 'milestones_ssim' => %w[foo bar] })
+      end
+      let(:workflows) do
+        instance_double(WorkflowsIndexer, to_solr: { 'wf_ssim' => ['accessionWF'] })
+      end
+
+      before do
+        allow(ProcessableIndexer).to receive(:new).and_return(processable)
+        allow(WorkflowsIndexer).to receive(:new).and_return(workflows)
+      end
+
+      it { is_expected.to include('milestones_ssim', 'wf_ssim') }
+    end
   end
 
   context 'when the model is a hydrus item' do
@@ -18,9 +64,27 @@ RSpec.describe Indexer do
   end
 
   context 'when the model is a hydrus apo' do
-    let(:model) { Hydrus::AdminPolicyObject.new }
+    let(:model) { Hydrus::AdminPolicyObject.new(pid: 'druid:xx999xx9999') }
 
     it { is_expected.to be_instance_of CompositeIndexer::Instance }
+
+    describe '#to_solr' do
+      subject { indexer.to_solr }
+
+      let(:processable) do
+        instance_double(ProcessableIndexer, to_solr: { 'milestones_ssim' => %w[foo bar] })
+      end
+      let(:workflows) do
+        instance_double(WorkflowsIndexer, to_solr: { 'wf_ssim' => ['accessionWF'] })
+      end
+
+      before do
+        allow(ProcessableIndexer).to receive(:new).and_return(processable)
+        allow(WorkflowsIndexer).to receive(:new).and_return(workflows)
+      end
+
+      it { is_expected.to include('milestones_ssim', 'wf_ssim') }
+    end
   end
 
   context 'when the model is a collection' do
