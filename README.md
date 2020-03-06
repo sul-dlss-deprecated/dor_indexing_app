@@ -3,7 +3,8 @@
 
 # Dor Indexing App
 
-The dor_indexing_app is the primary API for indexing DOR objects into the DOR Index in the Solr cloud.
+The dor_indexing_app is the primary API for indexing DOR objects into the Argo index.
+For more information about the fields and their purpose see: https://docs.google.com/spreadsheets/d/1_uYZvh-oihcxAM_Q24qJ_3nSaqAybmS362SYlDYwYqg/edit#gid=0
 
 ## Developer setup
 In order to run dor_indexing_app on your laptop (e.g. while running Argo), you need to
