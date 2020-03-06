@@ -10,12 +10,12 @@ class IdentityMetadataDatastreamIndexer
 
   # @return [Hash] the partial solr document for identityMetadata
   def to_solr
-    # TODO: We probably don't need *all* the fields returned by this next line:
-    solr_doc = Dor::IdentityMetadataDS.solrize(resource.identityMetadata, {})
+    solr_doc = {}
+    solr_doc['objectType_ssim'] = resource.identityMetadata.objectType
+    solr_doc['tag_ssim'] = resource.identityMetadata.tag
 
     if resource.identityMetadata.sourceId.present?
       (name, id) = resource.identityMetadata.sourceId.split(/:/, 2)
-      # TODO: I don't think we need this next line:
       add_solr_value(solr_doc, 'dor_id', id, :symbol, [:stored_searchable])
       add_solr_value(solr_doc, 'identifier', resource.identityMetadata.sourceId, :symbol, [:stored_searchable])
       add_solr_value(solr_doc, 'source_id', resource.identityMetadata.sourceId, :symbol, [])
@@ -23,9 +23,10 @@ class IdentityMetadataDatastreamIndexer
     resource.identityMetadata.otherId.compact.each do |qid|
       # this section will solrize barcode and catkey, which live in otherId
       (name, id) = qid.split(/:/, 2)
-      # TODO: I don't think we need this next line:
       add_solr_value(solr_doc, 'dor_id', id, :symbol, [:stored_searchable])
       add_solr_value(solr_doc, 'identifier', qid, :symbol, [:stored_searchable])
+      next unless %w[barcode catkey].include?(name)
+
       add_solr_value(solr_doc, "#{name}_id", id, :symbol, [])
     end
 
