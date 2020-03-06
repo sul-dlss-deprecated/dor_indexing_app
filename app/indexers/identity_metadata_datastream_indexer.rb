@@ -14,22 +14,39 @@ class IdentityMetadataDatastreamIndexer
     solr_doc['objectType_ssim'] = resource.identityMetadata.objectType
     solr_doc['tag_ssim'] = resource.identityMetadata.tag
 
-    if resource.identityMetadata.sourceId.present?
-      (name, id) = resource.identityMetadata.sourceId.split(/:/, 2)
-      add_solr_value(solr_doc, 'dor_id', id, :symbol, [:stored_searchable])
-      add_solr_value(solr_doc, 'identifier', resource.identityMetadata.sourceId, :symbol, [:stored_searchable])
-      add_solr_value(solr_doc, 'source_id', resource.identityMetadata.sourceId, :symbol, [])
+    plain_identifiers = []
+    ns_identifiers = []
+    if source_id.present?
+      (name, id) = source_id.split(/:/, 2)
+      plain_identifiers << id
+      ns_identifiers << source_id
+      solr_doc['source_id_ssim'] = [source_id]
     end
+
     resource.identityMetadata.otherId.compact.each do |qid|
       # this section will solrize barcode and catkey, which live in otherId
       (name, id) = qid.split(/:/, 2)
-      add_solr_value(solr_doc, 'dor_id', id, :symbol, [:stored_searchable])
-      add_solr_value(solr_doc, 'identifier', qid, :symbol, [:stored_searchable])
+      plain_identifiers << id
+      ns_identifiers << qid
       next unless %w[barcode catkey].include?(name)
 
-      add_solr_value(solr_doc, "#{name}_id", id, :symbol, [])
+      solr_doc["#{name}_id_ssim"] = [id]
     end
+    solr_doc['dor_id_tesim'] = plain_identifiers
+    solr_doc['identifier_tesim'] = ns_identifiers
+    solr_doc['identifier_ssim'] = ns_identifiers
 
+    add_tags(solr_doc)
+    solr_doc
+  end
+
+  private
+
+  def source_id
+    @source_id ||= resource.identityMetadata.sourceId
+  end
+
+  def add_tags(solr_doc)
     # do some stuff to make tags in general and project tags specifically more easily searchable and facetable
     # rubocop:disable Rails/DynamicFindBy
     resource.identityMetadata.find_by_terms(:tag).each do |tag|
