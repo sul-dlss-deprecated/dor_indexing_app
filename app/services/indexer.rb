@@ -36,6 +36,7 @@ class Indexer
 
   ETD_INDEXER = CompositeIndexer.new(
     DataIndexer,
+    EtdPropertiesDatastreamIndexer,
     ProvenanceMetadataDatastreamIndexer,
     RightsMetadataDatastreamIndexer,
     EventsDatastreamIndexer,
