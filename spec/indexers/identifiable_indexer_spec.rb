@@ -31,8 +31,9 @@ RSpec.describe IdentifiableIndexer do
   let(:obj) { Dor::Abstract.new(pid: 'druid:rt923jk342') }
 
   let(:indexer) do
-    described_class.new(resource: obj)
+    described_class.new(resource: obj, cocina: cocina)
   end
+  let(:cocina) { instance_double(Cocina::Models::DRO) }
 
   before do
     obj.identityMetadata.content = xml

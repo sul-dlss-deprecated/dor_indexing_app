@@ -3,10 +3,12 @@
 require 'rails_helper'
 
 RSpec.describe Indexer do
-  subject(:indexer) { described_class.for(model) }
+  subject(:indexer) { described_class.for(fedora: fedora, cocina: cocina) }
+
+  let(:cocina) { instance_double(Cocina::Models::DRO) }
 
   context 'when the model is an item' do
-    let(:model) { Dor::Item.new(pid: 'druid:xx999xx9999') }
+    let(:fedora) { Dor::Item.new(pid: 'druid:xx999xx9999') }
 
     it { is_expected.to be_instance_of CompositeIndexer::Instance }
 
@@ -34,7 +36,7 @@ RSpec.describe Indexer do
   end
 
   context 'when the model is an admin policy' do
-    let(:model) { Dor::AdminPolicyObject.new(pid: 'druid:xx999xx9999') }
+    let(:fedora) { Dor::AdminPolicyObject.new(pid: 'druid:xx999xx9999') }
 
     it { is_expected.to be_instance_of CompositeIndexer::Instance }
 
@@ -58,13 +60,13 @@ RSpec.describe Indexer do
   end
 
   context 'when the model is a hydrus item' do
-    let(:model) { Hydrus::Item.new }
+    let(:fedora) { Hydrus::Item.new }
 
     it { is_expected.to be_instance_of CompositeIndexer::Instance }
   end
 
   context 'when the model is a hydrus apo' do
-    let(:model) { Hydrus::AdminPolicyObject.new(pid: 'druid:xx999xx9999') }
+    let(:fedora) { Hydrus::AdminPolicyObject.new(pid: 'druid:xx999xx9999') }
 
     it { is_expected.to be_instance_of CompositeIndexer::Instance }
 
@@ -88,13 +90,13 @@ RSpec.describe Indexer do
   end
 
   context 'when the model is a collection' do
-    let(:model) { Dor::Collection.new }
+    let(:fedora) { Dor::Collection.new }
 
     it { is_expected.to be_instance_of CompositeIndexer::Instance }
   end
 
   context 'when the model is an agreement' do
-    let(:model) { Dor::Agreement.new }
+    let(:fedora) { Dor::Agreement.new }
 
     it { is_expected.to be_instance_of CompositeIndexer::Instance }
   end

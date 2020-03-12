@@ -38,6 +38,7 @@ class DorController < ApplicationController
   # doesn't commit automatically.
   def reindex_pid(pid, logger:, add_attributes:)
     obj = nil
+    cocina = nil
     solr_doc = nil
 
     # benchmark how long it takes to load the object
@@ -47,11 +48,12 @@ class DorController < ApplicationController
       # This hack overrides that behavior and ensures Etds can be indexed.
       models = ActiveFedora::ContentModel.models_asserted_by(obj)
       obj = obj.adapt_to(Etd) if models.include?('info:fedora/afmodel:Etd')
+      cocina = Dor::Services::Client.object(pid).find
     end.format('%n realtime %rs total CPU %ts').gsub(/[\(\)]/, '')
 
     # benchmark how long it takes to convert the object to a Solr document
     to_solr_stats = Benchmark.measure('to_solr') do
-      indexer = Indexer.for(obj)
+      indexer = Indexer.for(fedora: obj, cocina: cocina)
       solr_doc = indexer.to_solr
       solr.add(solr_doc, add_attributes: add_attributes)
     end.format('%n realtime %rs total CPU %ts').gsub(/[\(\)]/, '')

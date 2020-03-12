@@ -3,14 +3,17 @@
 require 'rails_helper'
 
 RSpec.describe EditableIndexer do
+  subject(:indexer) do
+    described_class.new(resource: obj, cocina: cocina)
+  end
+
   let(:obj) do
     instance_double(Dor::AdminPolicyObject,
                     default_rights: 'world',
                     use_license: 'by-nc-sa')
   end
-  let(:indexer) do
-    described_class.new(resource: obj)
-  end
+
+  let(:cocina) { instance_double(Cocina::Models::DRO) }
 
   describe '#default_rights_for_indexing' do
     it 'uses the OM template if the ds is empty' do
@@ -22,7 +25,7 @@ RSpec.describe EditableIndexer do
     let(:indexer) do
       CompositeIndexer.new(
         described_class
-      ).new(resource: obj)
+      ).new(resource: obj, cocina: cocina)
     end
     let(:doc) { indexer.to_solr }
 

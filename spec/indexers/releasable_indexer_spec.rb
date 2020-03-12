@@ -4,9 +4,10 @@ require 'rails_helper'
 
 RSpec.describe ReleasableIndexer do
   let(:obj) { instance_double(Dor::Abstract, pid: 'druid:pz263ny9658') }
+  let(:cocina) { instance_double(Cocina::Models::DRO) }
 
   describe 'to_solr' do
-    let(:doc) { described_class.new(resource: obj).to_solr }
+    let(:doc) { described_class.new(resource: obj, cocina: cocina).to_solr }
     let(:released_for_info) do
       {
         'Project' => { 'release' => true },

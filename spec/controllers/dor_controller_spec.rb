@@ -8,9 +8,13 @@ RSpec.describe DorController, type: :controller do
       expect(Logger).to receive(:new).and_return(mock_logger)
       allow(ActiveFedora.solr).to receive(:conn).and_return(mock_solr_conn)
       allow(Dor).to receive(:find).with(mock_druid).and_return(mock_af_doc)
-      allow(Indexer).to receive(:for).with(mock_af_doc).and_return(mock_indexer)
+      allow(Dor::Services::Client).to receive(:object).with(mock_druid).and_return(object_client)
+
+      allow(Indexer).to receive(:for).with(fedora: mock_af_doc, cocina: cocina_model).and_return(mock_indexer)
     end
 
+    let(:object_client) { instance_double(Dor::Services::Client::Object, find: cocina_model) }
+    let(:cocina_model) { instance_double(Cocina::Models::DRO) }
     let(:mock_logger) { instance_double(Logger, :formatter= => true, info: true) }
     let(:mock_solr_conn) { instance_double(RSolr::Client, add: true, commit: true) }
     let(:mock_af_doc) { Dor::Item.new }

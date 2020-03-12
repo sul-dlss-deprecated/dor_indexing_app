@@ -6,9 +6,10 @@ RSpec.describe ObjectProfileIndexer do
   let(:obj) do
     Dor::Item.new
   end
+  let(:cocina) { instance_double(Cocina::Models::DRO) }
 
   let(:indexer) do
-    described_class.new(resource: obj)
+    described_class.new(resource: obj, cocina: cocina)
   end
 
   let(:rubydora_obj) do
@@ -27,7 +28,7 @@ RSpec.describe ObjectProfileIndexer do
     let(:indexer) do
       CompositeIndexer.new(
         described_class
-      ).new(resource: obj)
+      ).new(resource: obj, cocina: cocina)
     end
     let(:doc) { indexer.to_solr }
 

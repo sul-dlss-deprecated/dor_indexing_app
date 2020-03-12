@@ -94,7 +94,7 @@ class Indexer
     Dor::Set => SET_INDEXER
   }.freeze
 
-  def self.for(obj)
-    INDEXERS.fetch(obj.class).new(resource: obj)
+  def self.for(fedora:, cocina:)
+    INDEXERS.fetch(fedora.class).new(resource: fedora, cocina: cocina)
   end
 end

@@ -8,14 +8,15 @@ RSpec.describe DataIndexer do
   end
 
   let(:indexer) do
-    described_class.new(resource: obj)
+    described_class.new(resource: obj, cocina: cocina)
   end
+  let(:cocina) { instance_double(Cocina::Models::DRO) }
 
   describe '#to_solr' do
     let(:indexer) do
       CompositeIndexer.new(
         described_class
-      ).new(resource: obj)
+      ).new(resource: obj, cocina: cocina)
     end
     let(:doc) { indexer.to_solr }
 

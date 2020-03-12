@@ -46,13 +46,14 @@ RSpec.describe CompositeIndexer do
       ProcessableIndexer
     )
   end
+  let(:cocina) { instance_double(Cocina::Models::DRO) }
 
   describe 'to_solr' do
     let(:status) do
       instance_double(Dor::Workflow::Client::Status, milestones: {}, info: {}, display: 'bad')
     end
     let(:workflow_client) { instance_double(Dor::Workflow::Client, status: status) }
-    let(:doc) { indexer.new(resource: obj).to_solr }
+    let(:doc) { indexer.new(resource: obj, cocina: cocina).to_solr }
 
     before do
       allow(Dor::Workflow::Client).to receive(:new).and_return(workflow_client)

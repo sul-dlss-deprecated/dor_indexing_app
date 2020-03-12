@@ -2,9 +2,9 @@
 
 # Indexes the objects position in workflows
 class WorkflowsIndexer
-  attr_reader :resource
-  def initialize(resource:)
-    @resource = resource
+  attr_reader :cocina
+  def initialize(resource:, cocina:)
+    @cocina = cocina
   end
 
   # @return [Hash] the partial solr document for workflow concerns
@@ -27,6 +27,6 @@ class WorkflowsIndexer
   # TODO: remove Dor::Workflow::Document
   # @return [Workflow::Response::Workflows]
   def all_workflows
-    @all_workflows ||= WorkflowClientFactory.build.workflow_routes.all_workflows pid: resource.pid
+    @all_workflows ||= WorkflowClientFactory.build.workflow_routes.all_workflows pid: cocina.externalIdentifier
   end
 end

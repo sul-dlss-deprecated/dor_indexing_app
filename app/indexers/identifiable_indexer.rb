@@ -9,7 +9,7 @@ class IdentifiableIndexer
               'rdf' => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#' }.freeze
 
   attr_reader :resource
-  def initialize(resource:)
+  def initialize(resource:, cocina:)
     @resource = resource
   end
 

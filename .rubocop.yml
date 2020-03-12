@@ -29,3 +29,6 @@ Metrics/MethodLength:
 
 Naming/PredicateName:
   NamePrefixBlacklist: is_
+
+Lint/UnusedMethodArgument:
+  AllowUnusedKeywordArguments: true
