@@ -43,10 +43,6 @@ class DorController < ApplicationController
     # benchmark how long it takes to load the object
     load_stats = Benchmark.measure('load_instance') do
       obj = Dor.find pid
-      # Etds are not mapping to Etd by default (see adapt_to_cmodel in Dor::Abstract)
-      # This hack overrides that behavior and ensures Etds can be indexed.
-      models = ActiveFedora::ContentModel.models_asserted_by(obj)
-      obj = obj.adapt_to(Etd) if models.include?('info:fedora/afmodel:Etd')
     end.format('%n realtime %rs total CPU %ts').gsub(/[\(\)]/, '')
 
     # benchmark how long it takes to convert the object to a Solr document

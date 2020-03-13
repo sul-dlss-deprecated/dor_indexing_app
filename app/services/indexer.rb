@@ -36,20 +36,6 @@ class Indexer
     WorkflowsIndexer
   )
 
-  ETD_INDEXER = CompositeIndexer.new(
-    DataIndexer,
-    EtdPropertiesDatastreamIndexer,
-    ProvenanceMetadataDatastreamIndexer,
-    RightsMetadataDatastreamIndexer,
-    EventsDatastreamIndexer,
-    VersionMetadataDatastreamIndexer,
-    ObjectProfileIndexer,
-    IdentityMetadataDatastreamIndexer,
-    DescriptiveMetadataDatastreamIndexer,
-    EmbargoMetadataDatastreamIndexer,
-    ContentMetadataDatastreamIndexer
-  )
-
   ITEM_INDEXER = CompositeIndexer.new(
     DataIndexer,
     ProvenanceMetadataDatastreamIndexer,
@@ -87,7 +73,6 @@ class Indexer
     Dor::Agreement => ITEM_INDEXER, # Agreement uses same indexer as Dor::Item
     Dor::AdminPolicyObject => ADMIN_POLICY_INDEXER,
     Dor::Collection => COLLECTION_INDEXER,
-    Etd => ETD_INDEXER,
     Hydrus::Item => ITEM_INDEXER,
     Hydrus::AdminPolicyObject => ADMIN_POLICY_INDEXER,
     Dor::Item => ITEM_INDEXER,
