@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe EtdPropertiesDatastreamIndexer do
   let(:obj) do
-    Etd.new.tap do |obj|
+    Dor::Etd.new.tap do |obj|
       obj.properties.title = 'hello'
     end
   end

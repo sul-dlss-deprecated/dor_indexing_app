@@ -87,7 +87,7 @@ class Indexer
     Dor::Agreement => ITEM_INDEXER, # Agreement uses same indexer as Dor::Item
     Dor::AdminPolicyObject => ADMIN_POLICY_INDEXER,
     Dor::Collection => COLLECTION_INDEXER,
-    Etd => ETD_INDEXER,
+    Dor::Etd => ETD_INDEXER,
     Hydrus::Item => ITEM_INDEXER,
     Hydrus::AdminPolicyObject => ADMIN_POLICY_INDEXER,
     Dor::Item => ITEM_INDEXER,
