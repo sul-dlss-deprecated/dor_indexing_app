@@ -17,7 +17,7 @@ gem 'rack-timeout', '~> 0.5.1'
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false
 
-gem 'dor-services', '~> 9.0'
+gem 'dor-services', '~> 9.0', '>= 9.2.1' # must be 9.2.1 to get fix from https://github.com/sul-dlss/dor-services/pull/695
 gem 'dor-services-client', '~> 4.11'
 gem 'dor-workflow-client', '~> 3.20'
 gem 'okcomputer' # for monitoring
