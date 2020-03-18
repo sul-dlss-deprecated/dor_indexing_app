@@ -22,10 +22,10 @@ RSpec.describe QueueStatus do
   describe '.all' do
     subject { described_class.all }
 
-    let(:queue) { double(QUEUE_SIZE_URL: queue_size_url) }
+    let(:queue) { double(queue_size_url: queue_size_url) }
 
     before do
-      allow(Settings).to receive(:MESSAGE_QUEUES).and_return([queue, queue])
+      allow(Settings).to receive(:message_queues).and_return([queue, queue])
     end
 
     describe '#queue_size' do

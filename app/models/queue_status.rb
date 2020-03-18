@@ -9,8 +9,8 @@ class QueueStatus
   def self.find_each
     return to_enum(:find_each) unless block_given?
 
-    Settings.MESSAGE_QUEUES.each do |mq|
-      yield new(queue_size_url: mq.QUEUE_SIZE_URL)
+    Settings.message_queues.each do |mq|
+      yield new(queue_size_url: mq.queue_size_url)
     end
   end
 
