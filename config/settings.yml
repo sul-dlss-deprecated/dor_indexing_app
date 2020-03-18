@@ -1,53 +1,53 @@
 # General
-DATE_FORMAT_STR: '%Y-%m-%d %H:%M:%S.%L'
+date_format_str: '%Y-%m-%d %H:%M:%S.%L'
 
 # Content
-CONTENT:
-  USER: 'user'
-  BASE_DIR: '/foo/bar/'
-  SERVER_HOST: 'example-bar'
-  SDR_SERVER_URL: 'https://sdr.example.com'
-  SDR_USER: 'user'
-  SDR_PASSWORD: 'password'
+content:
+  user: 'user'
+  base_dir: '/foo/bar/'
+  server_host: 'example-bar'
+  sdr_server_url: 'https://sdr.example.com'
+  sdr_user: 'user'
+  sdr_password: 'password'
 
 # Indexer
-INDEXER:
+indexer:
   # the file to which the indexer log is written
-  LOG: 'log/indexer.log'
+  log: 'log/indexer.log'
   # the interval at which the indexer log is rotated
-  LOG_ROTATION_INTERVAL: 'daily'
+  log_rotation_interval: 'daily'
 
 # SSL
-SSL:
-  CERT_FILE: ~
-  KEY_FILE: ~
-  KEY_PASS: ~
+ssl:
+  cert_file: ~
+  key_file: ~
+  key_pass: ~
 
 # Stacks
-STACKS:
-  LOCAL_WORKSPACE_ROOT: '/foo/workspace'
-  STORAGE_ROOT: '/bar'
+stacks:
+  local_workspace_root: '/foo/workspace'
+  storage_root: '/bar'
 
 # Suri
-SURI:
-  MINT_IDS: true
-  ID_NAMESPACE: 'druid'
-  URL: 'https://suri.example.com'
-  USER: 'user'
-  PASS: 'pass'
+suri:
+  mint_ids: true
+  id_namespace: 'druid'
+  url: 'https://suri.example.com'
+  user: 'user'
+  pass: 'pass'
 
 # Workflow
-WORKFLOW:
-  LOGFILE: 'log/workflow_service.log'
-  SHIFT_AGE: 'weekly'
-  TIMEOUT: 60
+workflow:
+  logfile: 'log/workflow_service.log'
+  shift_age: 'weekly'
+  timeout: 60
 
-MESSAGE_QUEUES: []
+message_queues: []
 
 # URLs
-FEDORA_URL: 'https://user:password@fedora.example.com:1000/fedora'
-SOLRIZER_URL: 'https://solr.example.com/solr/collection'
-WORKFLOW_URL: 'https://workflow.example.edu/'
+fedora_url: 'https://user:password@fedora.example.com:1000/fedora'
+solrizer_url: 'https://solr.example.com/solr/collection'
+workflow_url: 'https://workflow.example.edu/'
 
 dor_services:
   url: 'http://localhost:3003'

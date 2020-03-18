@@ -40,7 +40,7 @@ Rails.application.configure do
   config.log_level = :debug
 
   # Prepend all log lines with the following tags.
-  config.log_tags = [:subdomain, :request_id, proc { Time.zone.now.strftime(Settings.DATE_FORMAT_STR) }]
+  config.log_tags = [:subdomain, :request_id, proc { Time.zone.now.strftime(Settings.date_format_str) }]
 
   # Use a different cache store in production.
   # config.cache_store = :mem_cache_store

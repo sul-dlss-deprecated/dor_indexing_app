@@ -26,9 +26,9 @@ class DorController < ApplicationController
   # Returns a Logger instance for recording info about indexing attempts
   # @param [String] entry_id an extra identifier for the log entry.
   def generate_index_logger(entry_id)
-    index_logger = Logger.new(Settings.INDEXER.LOG, Settings.INDEXER.LOG_ROTATION_INTERVAL)
+    index_logger = Logger.new(Settings.indexer.log, Settings.indexer.log_rotation_interval)
     index_logger.formatter = proc do |_severity, datetime, _progname, msg|
-      date_format_str = Settings.DATE_FORMAT_STR
+      date_format_str = Settings.date_format_str
       "[#{entry_id}] [#{datetime.utc.strftime(date_format_str)}] #{msg}\n"
     end
     index_logger
