@@ -63,6 +63,12 @@ class IdentifiableIndexer
 
   private
 
+  def related_object_tags(object)
+    return [] unless object
+
+    Dor::Services::Client.object(object.pid).administrative_tags.list
+  end
+
   def solrize_related_obj_titles(solr_doc, relationships, title_hash, union_field_name, nonhydrus_field_name, hydrus_field_name)
     # TODO: if you wanted to get a little fancier, you could also solrize a 2 level hierarchy and display using hierarchial facets, like
     # ["SOURCE", "SOURCE : TITLE"] (e.g. ["Hydrus", "Hydrus : Special Collections"], see (exploded) tags in IdentityMetadataDS#to_solr).
@@ -79,7 +85,7 @@ class IdentifiableIndexer
         begin
           related_obj = Dor.find(rel_druid)
           related_obj_title = related_obj_display_title(related_obj, rel_druid)
-          is_from_hydrus = (related_obj&.tags&.include?('Project : Hydrus'))
+          is_from_hydrus = related_object_tags(related_obj).include?('Project : Hydrus')
           title_hash[rel_druid] = { 'related_obj_title' => related_obj_title, 'is_from_hydrus' => is_from_hydrus }
         rescue ActiveFedora::ObjectNotFoundError
           # This may happen if the given APO or Collection does not exist (bad data)
