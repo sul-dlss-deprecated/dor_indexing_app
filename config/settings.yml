@@ -1,42 +1,17 @@
 # General
 date_format_str: '%Y-%m-%d %H:%M:%S.%L'
 
-# Content
-content:
-  user: 'user'
-  base_dir: '/foo/bar/'
-  server_host: 'example-bar'
-  sdr_server_url: 'https://sdr.example.com'
-  sdr_user: 'user'
-  sdr_password: 'password'
-
-# Indexer
 indexer:
   # the file to which the indexer log is written
   log: 'log/indexer.log'
   # the interval at which the indexer log is rotated
   log_rotation_interval: 'daily'
 
-# SSL
 ssl:
   cert_file: ~
   key_file: ~
   key_pass: ~
 
-# Stacks
-stacks:
-  local_workspace_root: '/foo/workspace'
-  storage_root: '/bar'
-
-# Suri
-suri:
-  mint_ids: true
-  id_namespace: 'druid'
-  url: 'https://suri.example.com'
-  user: 'user'
-  pass: 'pass'
-
-# Workflow
 workflow:
   logfile: 'log/workflow_service.log'
   shift_age: 'weekly'
@@ -44,7 +19,6 @@ workflow:
 
 message_queues: []
 
-# URLs
 fedora_url: 'https://user:password@fedora.example.com:1000/fedora'
 solrizer_url: 'https://solr.example.com/solr/collection'
 workflow_url: 'https://workflow.example.edu/'
