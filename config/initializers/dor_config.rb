@@ -14,16 +14,4 @@ Dor.configure do
   solr do
     url Settings.solrizer_url
   end
-
-  suri do
-    mint_ids     Settings.suri.mint_ids
-    id_namespace Settings.suri.id_namespace
-    url          Settings.suri.url
-    user         Settings.suri.user
-    pass         Settings.suri.pass
-  end
-
-  stacks do
-    local_workspace_root Settings.stacks.local_workspace_root
-  end
 end
