@@ -29,3 +29,6 @@ Metrics/MethodLength:
 
 Naming/PredicateName:
   NamePrefixBlacklist: is_
+
+RSpec/ExampleLength:
+  Enabled: false
