@@ -15,7 +15,7 @@ class ObjectProfileIndexer
 
     {}.tap do |solr_doc|
       inner_object.profile.each_pair do |property, value|
-        add_solr_value(solr_doc, property.underscore, value, (property =~ /Date/ ? :date : :symbol), [:stored_searchable])
+        add_solr_value(solr_doc, property.underscore, value, (property.match?(/Date/) ? :date : :symbol), [:stored_searchable])
       end
     end
   end
