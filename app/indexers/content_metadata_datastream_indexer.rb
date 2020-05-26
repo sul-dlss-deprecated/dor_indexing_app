@@ -31,7 +31,7 @@ class ContentMetadataDatastreamIndexer
         shelved_size += file['size'].to_i if file['shelve'] == 'yes'
         if file['shelve'] == 'yes'
           counts['shelved_file'] += 1
-          first_shelved_image ||= file['id'] if file['id'] =~ /jp2$/
+          first_shelved_image ||= file['id'] if file['id'].end_with?('jp2')
         end
         mime_types << file['mimetype']
         file_roles << file['role'] if file['role']
