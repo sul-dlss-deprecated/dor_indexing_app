@@ -2,10 +2,12 @@
 
 require 'rails_helper'
 
-RSpec.describe DorController, type: :controller do
-  describe '#reindex' do
+RSpec.describe 'DOR', type: :request do
+  let(:mock_druid) { 'druid:bc123df5678' }
+
+  describe 'POST #reindex' do
     before do
-      expect(Logger).to receive(:new).and_return(mock_logger)
+      allow(Logger).to receive(:new).and_return(mock_logger)
       allow(ActiveFedora.solr).to receive(:conn).and_return(mock_solr_conn)
       allow(Dor).to receive(:find).with(mock_druid).and_return(mock_af_doc)
       allow(Indexer).to receive(:for).with(mock_af_doc).and_return(mock_indexer)
@@ -14,28 +16,27 @@ RSpec.describe DorController, type: :controller do
     let(:mock_logger) { instance_double(Logger, :formatter= => true, info: true) }
     let(:mock_solr_conn) { instance_double(RSolr::Client, add: true, commit: true) }
     let(:mock_af_doc) { Dor::Item.new }
-    let(:mock_druid) { 'asdf:1234' }
     let(:mock_indexer) { instance_double(CompositeIndexer::Instance, to_solr: mock_solr_doc) }
     let(:mock_solr_doc) { { id: mock_druid, text_field_tesim: 'a field to be searched' } }
 
     it 'reindexes an object with default commitWithin param and a hard commit' do
-      get :reindex, params: { pid: mock_druid }
-      expect(mock_solr_conn).to have_received(:add).with({ id: 'asdf:1234', text_field_tesim: 'a field to be searched' }, add_attributes: { commitWithin: 1000 })
+      post "/dor/reindex/#{mock_druid}"
+      expect(mock_solr_conn).to have_received(:add).with({ id: mock_druid, text_field_tesim: 'a field to be searched' }, add_attributes: { commitWithin: 1000 })
       expect(mock_solr_conn).to have_received(:commit)
       expect(response.body).to eq "Successfully updated index for #{mock_druid}"
       expect(response.code).to eq '200'
     end
 
     it 'reindexes an object with specified commitWithin param and no hard commit' do
-      get :reindex, params: { pid: mock_druid, commitWithin: 10_000 }
-      expect(mock_solr_conn).to have_received(:add).with({ id: 'asdf:1234', text_field_tesim: 'a field to be searched' }, add_attributes: { commitWithin: 10_000 })
+      post "/dor/reindex/#{mock_druid}", params: { commitWithin: 10_000 }
+      expect(mock_solr_conn).to have_received(:add).with({ id: mock_druid, text_field_tesim: 'a field to be searched' }, add_attributes: { commitWithin: 10_000 })
       expect(mock_solr_conn).not_to have_received(:commit)
       expect(response.body).to eq "Successfully updated index for #{mock_druid}"
       expect(response.code).to eq '200'
     end
 
     it 'can be used with asynchronous commits' do
-      get :reindex, params: { pid: mock_druid, commitWithin: 2 }
+      post "/dor/reindex/#{mock_druid}", params: { commitWithin: 2 }
       expect(mock_solr_conn).to have_received(:add)
       expect(mock_solr_conn).not_to have_received(:commit)
       expect(response.body).to eq "Successfully updated index for #{mock_druid}"
@@ -44,7 +45,7 @@ RSpec.describe DorController, type: :controller do
 
     it 'gives the right status if an object is not found' do
       allow(Dor).to receive(:find).and_raise(ActiveFedora::ObjectNotFoundError)
-      get :reindex, params: { pid: mock_druid }
+      post "/dor/reindex/#{mock_druid}"
       expect(response.body).to eq 'Object does not exist in Fedora.'
       expect(response.code).to eq '404'
     end
@@ -52,15 +53,19 @@ RSpec.describe DorController, type: :controller do
 
   describe '#delete_from_index' do
     it 'removes an object from the index' do
-      expect(ActiveFedora.solr.conn).to receive(:delete_by_id).with('asdf:1234', commitWithin: 1000)
-      expect(ActiveFedora.solr.conn).to receive(:commit)
-      get :delete_from_index, params: { pid: 'asdf:1234' }
+      allow(ActiveFedora.solr.conn).to receive(:delete_by_id)
+      allow(ActiveFedora.solr.conn).to receive(:commit)
+      post "/dor/delete_from_index/#{mock_druid}"
+      expect(ActiveFedora.solr.conn).to have_received(:delete_by_id).once.with(mock_druid, commitWithin: 1000)
+      expect(ActiveFedora.solr.conn).to have_received(:commit).once
     end
 
     it 'passes through the commitWithin parameter' do
-      expect(ActiveFedora.solr.conn).to receive(:delete_by_id).with('asdf:1234', commitWithin: 5000)
-      expect(ActiveFedora.solr.conn).not_to receive(:commit)
-      get :delete_from_index, params: { pid: 'asdf:1234', commitWithin: 5000 }
+      allow(ActiveFedora.solr.conn).to receive(:delete_by_id)
+      allow(ActiveFedora.solr.conn).to receive(:commit)
+      post "/dor/delete_from_index/#{mock_druid}", params: { commitWithin: 5000 }
+      expect(ActiveFedora.solr.conn).to have_received(:delete_by_id).once.with(mock_druid, commitWithin: 5000)
+      expect(ActiveFedora.solr.conn).not_to have_received(:commit)
     end
   end
 
@@ -68,8 +73,9 @@ RSpec.describe DorController, type: :controller do
     let(:mock_status) { instance_double(QueueStatus::All, queue_size: 15) }
 
     it 'retrives the size of the backing message queues' do
-      expect(QueueStatus).to receive(:all).and_return(mock_status)
-      get :queue_size
+      allow(QueueStatus).to receive(:all).and_return(mock_status)
+      get '/dor/queue_size'
+      expect(QueueStatus).to have_received(:all).once
       expect(JSON.parse(response.body)).to include('value' => 15)
     end
   end
