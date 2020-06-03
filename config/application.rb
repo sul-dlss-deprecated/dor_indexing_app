@@ -19,6 +19,25 @@ require 'rails/test_unit/railtie'
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
+# JSONAPIError class for returning properly formatted errors in openapi
+class JSONAPIError < Committee::ValidationError
+  def error_body
+    {
+      errors: [
+        { status: id, detail: message }
+      ]
+    }
+  end
+
+  def render
+    [
+      status,
+      { 'Content-Type' => 'application/vnd.api+json' },
+      [JSON.generate(error_body)]
+    ]
+  end
+end
+
 # Module surrounding Rails application
 module DorIndexingApp
   # Entrypoint to Rails application
@@ -30,6 +49,17 @@ module DorIndexingApp
     # Application configuration can go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded after loading
     # the framework and any gems in your application.
+
+    # Do not validate e.g. OKComputer routes using OpenAPI
+    accept_proc = proc { |request| request.path.start_with?('/dor') }
+    config.middleware.use Committee::Middleware::RequestValidation, schema_path: 'openapi.yml',
+                                                                    strict: true,
+                                                                    error_class: JSONAPIError,
+                                                                    accept_request_filter: accept_proc
+
+    # TODO: Uncomment when API returns JSON or when Committee allows validating plain-text responses
+    #
+    # config.middleware.use Committee::Middleware::ResponseValidation, schema_path: 'openapi.yml'
 
     # Only loads a smaller set of middleware suitable for API only apps.
     # Middleware like session, flash, cookies can be added back manually.

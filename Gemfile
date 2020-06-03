@@ -9,6 +9,7 @@ gem 'puma', '~> 3.0'
 
 gem 'erubis'
 
+gem 'committee' # Validates HTTP requests/responses per OpenAPI specification
 gem 'config'
 gem 'faraday'
 gem 'honeybadger', '~> 4.5'
