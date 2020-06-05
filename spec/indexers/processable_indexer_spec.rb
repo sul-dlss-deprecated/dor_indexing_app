@@ -113,8 +113,6 @@ RSpec.describe ProcessableIndexer do
       end
 
       it 'includes the semicolon delimited version, an earliest published date and a status' do
-        # lifecycle_display should have the semicolon delimited version
-        expect(solr_doc['lifecycle_ssim']).to include('published:2012-01-27T05:06:54Z;2')
         # published date should be the first published date
         expect(solr_doc['status_ssi']).to eq 'v4 In accessioning (described, published)'
         expect(solr_doc['processing_status_text_ssi']).to eq 'In accessioning'
