@@ -24,10 +24,6 @@ class IdentifiableIndexer
     solr_doc[INDEX_VERSION_FIELD] = Dor::VERSION
     solr_doc['indexer_host_ssi'] = Socket.gethostname
     solr_doc['indexed_at_dtsi'] = Time.now.utc.xmlschema
-    resource.datastreams.values.each do |ds|
-      # This is used to draw the table of datastreams in Argo
-      add_solr_value(solr_doc, 'ds_specs', ds.datastream_spec_string, :string, [:symbol]) unless ds.new?
-    end
 
     add_solr_value(solr_doc, 'title_sort', resource.label, :string, [:stored_sortable])
 
