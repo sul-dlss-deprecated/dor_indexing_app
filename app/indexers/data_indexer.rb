@@ -21,7 +21,6 @@ class DataIndexer
     Solrizer.set_field(solr_doc, 'object_state', state, :stored_sortable)
     Solrizer.set_field(solr_doc, 'active_fedora_model', has_model, :stored_sortable)
     solr_doc[SOLR_DOCUMENT_ID.to_sym] = pid
-    solrize_profile(solr_doc)
     solr_doc = solrize_relationships(solr_doc)
     solr_doc
   end
