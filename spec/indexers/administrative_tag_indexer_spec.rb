@@ -51,11 +51,8 @@ RSpec.describe AdministrativeTagIndexer do
 
     it 'indexes prefixed tags' do
       expect(document).to include(
-        'google_books_tag_ssim' => ['Phase 1', 'Scan source STANFORD'],
         'project_tag_ssim' => ['Beautiful Books'],
-        'registered_by_tag_ssim' => ['blalbrit'],
-        'dpg_tag_ssim' => ['Beautiful Books : Octavo : newpri'],
-        'remediated_by_tag_ssim' => ['4.15.4']
+        'registered_by_tag_ssim' => ['blalbrit']
       )
     end
   end
