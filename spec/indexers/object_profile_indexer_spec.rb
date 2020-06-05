@@ -4,23 +4,11 @@ require 'rails_helper'
 
 RSpec.describe ObjectProfileIndexer do
   let(:obj) do
-    Dor::Item.new
+    Dor::Item.new(label: 'test label')
   end
 
   let(:indexer) do
     described_class.new(resource: obj)
-  end
-
-  let(:rubydora_obj) do
-    instance_double(Rubydora::DigitalObject, profile: profile)
-  end
-
-  let(:profile) do
-    { 'objLabel' => 'test label' }
-  end
-
-  before do
-    allow(obj).to receive(:inner_object).and_return(rubydora_obj)
   end
 
   describe '#to_solr' do
@@ -32,7 +20,10 @@ RSpec.describe ObjectProfileIndexer do
     let(:doc) { indexer.to_solr }
 
     it 'makes a solr doc' do
-      expect(doc).to match a_hash_including('obj_label_tesim' => ['test label'])
+      expect(doc).to match a_hash_including(
+        'obj_label_tesim' => ['test label'],
+        'obj_label_ssim' => ['test label']
+      )
     end
   end
 end

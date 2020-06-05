@@ -11,19 +11,8 @@ class ObjectProfileIndexer
 
   # @return [Hash] the partial solr document for releasable concerns
   def to_solr
-    return {} unless inner_object.respond_to?(:profile) # Skip unsaved items
-
     {}.tap do |solr_doc|
-      inner_object.profile.each_pair do |property, value|
-        add_solr_value(solr_doc, property.underscore, value, (property.match?(/Date/) ? :date : :symbol), [:stored_searchable])
-      end
+      add_solr_value(solr_doc, 'obj_label', resource.label, :symbol, [:stored_searchable])
     end
   end
-
-  # rubocop:disable Lint/UselessAccessModifier
-  private
-
-  # rubocop:enable Lint/UselessAccessModifier
-
-  delegate :inner_object, to: :resource
 end
