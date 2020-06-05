@@ -20,16 +20,14 @@ class DescribableIndexer
     mods_sources = {
       sw_title_display: %w[sw_display_title_tesim],
       main_author_w_date: %w[sw_author_ssim sw_author_tesim],
-      sw_sort_author: %w[sw_author_sort_ssi],
-      sw_language_facet: %w[sw_language_ssim sw_language_tesim],
-      sw_genre: %w[sw_genre_ssim sw_genre_tesim],
-      format_main: %w[sw_format_ssim sw_format_tesim],
-      topic_facet: %w[sw_topic_ssim sw_topic_tesim],
-      era_facet: %w[sw_subject_temporal_ssim sw_subject_temporal_tesim],
-      geographic_facet: %w[sw_subject_geographic_ssim sw_subject_geographic_tesim],
-      %i[term_values typeOfResource] => %w[mods_typeOfResource_ssim mods_typeOfResource_tesim],
+      sw_language_facet: %w[sw_language_ssim],
+      sw_genre: %w[sw_genre_ssim],
+      format_main: %w[sw_format_ssim],
+      topic_facet: %w[sw_topic_ssim],
+      era_facet: %w[sw_subject_temporal_ssim],
+      geographic_facet: %w[sw_subject_geographic_ssim],
+      %i[term_values typeOfResource] => %w[mods_typeOfResource_ssim],
       pub_year_sort_str: %w[sw_pub_date_sort_ssi],
-      pub_year_int: %w[sw_pub_date_sort_isi],
       pub_year_display_str: %w[sw_pub_date_facet_ssi]
     }
 
@@ -46,12 +44,8 @@ class DescribableIndexer
     end
 
     # convert multivalued fields to single value
-    %w[sw_pub_date_sort_ssi sw_pub_date_sort_isi sw_pub_date_facet_ssi].each do |key|
+    %w[sw_pub_date_sort_ssi sw_pub_date_facet_ssi].each do |key|
       solr_doc[key] = solr_doc[key].first unless solr_doc[key].nil?
-    end
-    # some fields get explicit "(none)" placeholder values, mostly for faceting
-    %w[sw_language_tesim sw_genre_tesim sw_format_tesim].each do |key|
-      solr_doc[key] = ['(none)'] if solr_doc[key].blank?
     end
     solr_doc
   end
