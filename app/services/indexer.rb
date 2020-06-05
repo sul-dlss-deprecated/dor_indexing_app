@@ -15,7 +15,6 @@ class Indexer
     IdentityMetadataDatastreamIndexer,
     DescriptiveMetadataDatastreamIndexer,
     DescribableIndexer,
-    EditableIndexer,
     IdentifiableIndexer,
     ProcessableIndexer,
     WorkflowsIndexer
