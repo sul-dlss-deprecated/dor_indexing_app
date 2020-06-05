@@ -11,7 +11,8 @@ class ProcessableIndexer
   # @return [Hash] the partial solr document for processable concerns
   def to_solr
     {}.tap do |solr_doc|
-      add_versions(solr_doc)
+      solr_doc['current_version_isi'] = current_version.to_i # Argo Facet field "Version"
+
       add_sortable_milestones(solr_doc)
       solr_doc['modified_latest_dttsi'] = resource.modified_date.to_datetime.utc.strftime('%FT%TZ')
       add_solr_value(solr_doc, 'rights', resource.rights, :string, [:symbol]) if resource.respond_to? :rights
@@ -57,22 +58,9 @@ class ProcessableIndexer
         solr_doc["#{milestone}_dttsim"] << date unless solr_doc["#{milestone}_dttsim"].include?(date)
       end
       # fields for OAI havester to sort on: _dttsi is trie date +stored +indexed (single valued, i.e. sortable)
+      # TODO: we really only need accessioned_earliest and registered_earliest
       solr_doc["#{milestone}_earliest_dttsi"] = dates.first
       solr_doc["#{milestone}_latest_dttsi"] = dates.last
-    end
-  end
-
-  def add_versions(solr_doc)
-    current_version_num = current_version.to_i
-    solr_doc['current_version_isi'] = current_version_num
-
-    return unless resource.respond_to?('versionMetadata')
-
-    # add an entry with version id, tag and description for each version
-    while current_version_num > 0
-      new_val = "#{current_version_num};#{resource.versionMetadata.tag_for_version(current_version_num.to_s)};#{resource.versionMetadata.description_for_version(current_version_num.to_s)}"
-      add_solr_value(solr_doc, 'versions', new_val, :string, [:displayable])
-      current_version_num -= 1
     end
   end
 end

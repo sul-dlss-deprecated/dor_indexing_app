@@ -16,16 +16,12 @@ RSpec.describe ProcessableIndexer do
     let(:solr_doc) { indexer.to_solr }
 
     context 'with rights set' do
-      let(:version_metadata) do
-        instance_double(Dor::VersionMetadataDS, tag_for_version: 'tag7', description_for_version: 'desc7', current_version_id: '7')
-      end
       let(:obj) do
         instance_double(Dor::Item,
                         pid: '99',
                         rights: 'World',
                         modified_date: '1999-12-20',
-                        current_version: '7',
-                        versionMetadata: version_metadata)
+                        current_version: '7')
       end
 
       describe '#to_solr' do
@@ -142,31 +138,6 @@ RSpec.describe ProcessableIndexer do
       it 'creates a modified_latest date field' do
         # the facet field should have a date in it.
         expect(solr_doc['modified_latest_dttsi']).to match(/^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\dZ$/)
-      end
-
-      it 'creates a version field for each version, including the version number, tag and description' do
-        expect(solr_doc['versions_ssm'].length).to be > 1
-        expect(solr_doc['versions_ssm']).to include('4;2.2.0;Another typo')
-      end
-
-      it 'handles a missing description for a version' do
-        dsxml = '
-        <versionMetadata objectId="druid:ab123cd4567">
-        <version versionId="1" tag="1.0.0">
-        <description>Initial version</description>
-        </version>
-        <version versionId="2" tag="2.0.0">
-        <description>Replacing main PDF</description>
-        </version>
-        <version versionId="3" tag="2.1.0">
-        <description>Fixed title typo</description>
-        </version>
-        <version versionId="4" tag="2.2.0">
-        </version>
-        </versionMetadata>
-        '
-        allow(obj).to receive(:versionMetadata).and_return(Dor::VersionMetadataDS.from_xml(dsxml))
-        expect(solr_doc['versions_ssm']).to include('4;2.2.0;')
       end
     end
   end
