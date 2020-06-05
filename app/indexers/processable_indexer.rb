@@ -12,7 +12,7 @@ class ProcessableIndexer
   def to_solr
     {}.tap do |solr_doc|
       add_versions(solr_doc)
-      add_milestones(solr_doc)
+      add_sortable_milestones(solr_doc)
       solr_doc['modified_latest_dttsi'] = resource.modified_date.to_datetime.utc.strftime('%FT%TZ')
       add_solr_value(solr_doc, 'rights', resource.rights, :string, [:symbol]) if resource.respond_to? :rights
       add_status(solr_doc)
@@ -35,35 +35,17 @@ class ProcessableIndexer
 
   def add_status(solr_doc)
     solr_doc['status_ssi'] = status_service.display
-    status_info_hash = status_service.info
-    status_code = status_info_hash[:status_code]
-    return unless status_code
+    return unless status_service.info[:status_code]
 
     # This is used for Argo's "Processing Status" facet
     add_solr_value(solr_doc, 'processing_status_text', status_service.display_simplified, :string, [:stored_sortable])
-
-    solr_doc['processing_status_code_isi'] = status_code
-  end
-
-  def add_milestones(solr_doc)
-    status_service.milestones.each do |milestone|
-      timestamp = milestone[:at].utc.xmlschema
-      milestone[:version] ||= current_version
-      solr_doc['lifecycle_ssim'] ||= []
-      solr_doc['lifecycle_ssim'] << milestone[:milestone]
-      add_solr_value(solr_doc, 'lifecycle', "#{milestone[:milestone]}:#{timestamp};#{milestone[:version]}", :symbol)
-    end
-
-    add_sortable_milestones(solr_doc)
   end
 
   def sortable_milestones
-    sortable = {}
-    status_service.milestones.each do |milestone|
+    status_service.milestones.each_with_object({}) do |milestone, sortable|
       sortable[milestone[:milestone]] ||= []
       sortable[milestone[:milestone]] << milestone[:at].utc.xmlschema
     end
-    sortable
   end
 
   def add_sortable_milestones(solr_doc)
