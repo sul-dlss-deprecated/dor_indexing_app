@@ -15,10 +15,9 @@ class AdministrativeTagIndexer
 
   # @return [Hash] the partial solr document for administrative tags
   def to_solr
-    solr_doc = {}
+    solr_doc = { 'tag_ssim' => [], 'exploded_tag_ssim' => [] }
     administrative_tags.each do |tag|
-      (solr_doc['tag_ssim'] ||= []) << tag
-      solr_doc['exploded_tag_ssim'] ||= []
+      solr_doc['tag_ssim'] << tag
       solr_doc['exploded_tag_ssim'] += exploded_tags_from(tag)
 
       tag_prefix, rest = tag.split(TAG_PART_DELIMITER, 2)
