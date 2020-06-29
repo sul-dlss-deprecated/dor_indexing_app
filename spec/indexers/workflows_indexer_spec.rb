@@ -12,7 +12,7 @@ RSpec.describe WorkflowsIndexer do
     let(:xml) do
       <<~XML
         <workflows objectId="druid:ab123cd4567">
-          <workflow repository="dor" objectId="druid:ab123cd4567" id="accessionWF">
+          <workflow objectId="druid:ab123cd4567" id="accessionWF">
             <process version="1" priority="0" note="" lifecycle="submitted" laneId="default" elapsed="" attempts="0" datetime="2019-01-28T20:41:12+00:00" status="completed" name="start-accession"/>
             <process version="1" priority="0" note="common-accessioning-stage-a.stanford.edu" lifecycle="described" laneId="default" elapsed="0.258" attempts="0" datetime="2019-01-28T20:41:12+00:00" status="completed" name="descriptive-metadata"/>
             <process version="1" priority="0" note="common-accessioning-stage-b.stanford.edu" lifecycle="" laneId="default" elapsed="0.188" attempts="0" datetime="2019-01-28T20:41:12+00:00" status="completed" name="rights-metadata"/>
@@ -27,7 +27,7 @@ RSpec.describe WorkflowsIndexer do
             <process version="1" priority="0" note="common-accessioning-stage-b.stanford.edu" lifecycle="" laneId="default" elapsed="0.246" attempts="0" datetime="2019-01-28T20:41:12+00:00" status="completed" name="reset-workspace"/>
             <process version="1" priority="0" note="common-accessioning-stage-a.stanford.edu" lifecycle="accessioned" laneId="default" elapsed="1.196" attempts="0" datetime="2019-01-28T20:41:12+00:00" status="completed" name="end-accession"/>
           </workflow>
-          <workflow repository="dor" objectId="druid:ab123cd4567" id="assemblyWF">
+          <workflow objectId="druid:ab123cd4567" id="assemblyWF">
             <process version="1" priority="0" note="" lifecycle="pipelined" laneId="default" elapsed="" attempts="0" datetime="2019-01-28T20:40:18+00:00" status="completed" name="start-assembly"/>
             <process version="1" priority="0" note="" lifecycle="" laneId="default" elapsed="" attempts="0" datetime="2019-01-28T20:40:18+00:00" status="skipped" name="jp2-create"/>
             <process version="1" priority="0" note="sul-robots1-test.stanford.edu" lifecycle="" laneId="default" elapsed="0.25" attempts="0" datetime="2019-01-28T20:40:18+00:00" status="completed" name="checksum-compute"/>
@@ -40,10 +40,10 @@ RSpec.describe WorkflowsIndexer do
             <process version="2" priority="0" note="" lifecycle="" laneId="default" elapsed="0.0" attempts="0" datetime="2019-01-29T22:51:09+00:00" status="queued" name="exif-collect"/>
             <process version="2" priority="0" note="" lifecycle="" laneId="default" elapsed="0.0" attempts="0" datetime="2019-01-29T22:51:09+00:00" status="queued" name="accessioning-initiate"/>
           </workflow>
-          <workflow repository="dor" objectId="druid:ab123cd4567" id="disseminationWF">
+          <workflow objectId="druid:ab123cd4567" id="disseminationWF">
             <process version="1" priority="0" note="common-accessioning-stage-b.stanford.edu" lifecycle="" laneId="default" elapsed="0.826" attempts="0" datetime="2019-01-28T20:46:57+00:00" status="completed" name="cleanup"/>
           </workflow>
-          <workflow repository="dor" objectId="druid:ab123cd4567" id="hydrusAssemblyWF">
+          <workflow objectId="druid:ab123cd4567" id="hydrusAssemblyWF">
             <process version="1" priority="0" note="" lifecycle="registered" laneId="default" elapsed="" attempts="0" datetime="2019-01-28T20:37:43+00:00" status="completed" name="start-deposit"/>
             <process version="1" priority="0" note="" lifecycle="" laneId="default" elapsed="0.0" attempts="0" datetime="2019-01-28T20:37:43+00:00" status="completed" name="submit"/>
             <process version="1" priority="0" note="" lifecycle="" laneId="default" elapsed="0.0" attempts="0" datetime="2019-01-28T20:37:43+00:00" status="completed" name="approve"/>
@@ -52,7 +52,7 @@ RSpec.describe WorkflowsIndexer do
             <process version="2" priority="0" note="" lifecycle="" laneId="default" elapsed="0.0" attempts="0" datetime="2019-01-28T20:48:17+00:00" status="completed" name="approve"/>
             <process version="2" priority="0" note="" lifecycle="" laneId="default" elapsed="0.0" attempts="0" datetime="2019-01-28T20:48:18+00:00" status="completed" name="start-assembly"/>
           </workflow>
-          <workflow repository="dor" objectId="druid:ab123cd4567" id="versioningWF">
+          <workflow objectId="druid:ab123cd4567" id="versioningWF">
             <process version="2" priority="0" note="" lifecycle="opened" laneId="default" elapsed="" attempts="0" datetime="2019-01-28T20:48:16+00:00" status="completed" name="start-version"/>
             <process version="2" priority="0" note="" lifecycle="" laneId="default" elapsed="" attempts="1" datetime="2019-01-28T20:48:16+00:00" status="completed" name="submit-version"/>
             <process version="2" priority="0" note="" lifecycle="" laneId="default" elapsed="" attempts="1" datetime="2019-01-28T20:48:16+00:00" status="completed" name="start-accession"/>
@@ -132,7 +132,7 @@ RSpec.describe WorkflowsIndexer do
     describe 'workflow_status_ssim' do
       subject { solr_doc['workflow_status_ssim'] }
 
-      it { is_expected.to eq ['accessionWF|completed|0|dor', 'assemblyWF|active|1|dor', 'disseminationWF|completed|0|dor', 'hydrusAssemblyWF|completed|0|dor', 'versioningWF|completed|0|dor'] }
+      it { is_expected.to eq ['accessionWF|completed|0', 'assemblyWF|active|1', 'disseminationWF|completed|0', 'hydrusAssemblyWF|completed|0', 'versioningWF|completed|0'] }
     end
   end
 end
