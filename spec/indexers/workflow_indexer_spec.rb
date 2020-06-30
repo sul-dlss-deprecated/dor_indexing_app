@@ -27,7 +27,7 @@ RSpec.describe WorkflowIndexer do
       let(:xml) do
         <<-XML
         <?xml version="1.0" encoding="UTF-8"?>
-        <workflow repository="dor" objectId="druid:gv054hp4128" id="accessionWF">
+        <workflow objectId="druid:gv054hp4128" id="accessionWF">
           <process version="2" lifecycle="submitted" elapsed="0.0" archived="true" attempts="1"
            datetime="2012-11-06T16:18:24-0800" status="completed" name="start-accession"/>
           <process version="2" elapsed="0.0" archived="true" attempts="1"
@@ -37,7 +37,7 @@ RSpec.describe WorkflowIndexer do
       end
 
       it 'creates the workflow_status field with the workflow repository included, and indicates that the workflow is still active' do
-        expect(solr_doc[Solrizer.solr_name('workflow_status', :symbol)].first).to eq('accessionWF|active|0|dor')
+        expect(solr_doc[Solrizer.solr_name('workflow_status', :symbol)].first).to eq('accessionWF|active|0')
       end
     end
 
@@ -49,7 +49,7 @@ RSpec.describe WorkflowIndexer do
       let(:xml) do
         <<-XML
         <?xml version="1.0" encoding="UTF-8"?>
-        <workflow repository="dor" objectId="druid:gv054hp4128" id="accessionWF">
+        <workflow objectId="druid:gv054hp4128" id="accessionWF">
           <process version="2" lifecycle="submitted" elapsed="0.0" archived="true" attempts="1"
            datetime="2012-11-06T16:18:24-0800" status="completed" name="start-accession"/>
           <process version="2" elapsed="0.0" archived="true" attempts="1"
@@ -59,7 +59,7 @@ RSpec.describe WorkflowIndexer do
       end
 
       it 'indicates that the workflow is complete' do
-        expect(solr_doc[Solrizer.solr_name('workflow_status', :symbol)].first).to eq('accessionWF|completed|0|dor')
+        expect(solr_doc[Solrizer.solr_name('workflow_status', :symbol)].first).to eq('accessionWF|completed|0')
       end
     end
 
@@ -67,7 +67,7 @@ RSpec.describe WorkflowIndexer do
       let(:xml) do
         <<-XML
         <?xml version="1.0" encoding="UTF-8"?>
-        <workflow repository="dor" objectId="druid:gv054hp4128" id="accessionWF">
+        <workflow objectId="druid:gv054hp4128" id="accessionWF">
           <process version="2" elapsed="0.0" archived="true" attempts="1"
            datetime="2012-11-06T16:18:58-0800" status="skipped" name="hello"/>
           <process version="2" lifecycle="submitted" elapsed="0.0" archived="true" attempts="1"
@@ -81,7 +81,7 @@ RSpec.describe WorkflowIndexer do
       end
 
       it 'indexes the right workflow status (completed)' do
-        expect(solr_doc).to match a_hash_including('workflow_status_ssim' => ['accessionWF|completed|0|dor'])
+        expect(solr_doc).to match a_hash_including('workflow_status_ssim' => ['accessionWF|completed|0'])
       end
     end
 
@@ -89,7 +89,7 @@ RSpec.describe WorkflowIndexer do
       let(:xml) do
         <<-XML
         <?xml version="1.0" encoding="UTF-8"?>
-        <workflow repository="dor" objectId="druid:gv054hp4128" id="accessionWF">
+        <workflow objectId="druid:gv054hp4128" id="accessionWF">
           <process version="2" elapsed="0.0" archived="true" attempts="1"
            datetime="2012-11-06T16:18:57-0800" status="error" name="hello"/>
           <process version="2" lifecycle="submitted" elapsed="0.0" archived="true" attempts="1"
@@ -112,7 +112,7 @@ RSpec.describe WorkflowIndexer do
       let(:xml) do
         <<-XML
         <?xml version="1.0" encoding="UTF-8"?>
-        <workflow repository="dor" objectId="druid:gv054hp4128" id="accessionWF">
+        <workflow objectId="druid:gv054hp4128" id="accessionWF">
           <process version="2" elapsed="0.0" archived="true" attempts="1"
            datetime="" status="error" name="hello"/>
           <process version="2" lifecycle="submitted" elapsed="0.0" archived="true" attempts="1"
@@ -137,7 +137,7 @@ RSpec.describe WorkflowIndexer do
       let(:xml) do
         <<-XML
         <?xml version="1.0" encoding="UTF-8"?>
-        <workflow repository="dor" objectId="druid:gv054hp4128" id="accessionWF">
+        <workflow objectId="druid:gv054hp4128" id="accessionWF">
           <process version="2" lifecycle="submitted" elapsed="0.0" archived="true" attempts="1"
            datetime="2012-11-06T16:18:24-0800" status="completed" name="start-accession"/>
           <process version="2" elapsed="0.0" archived="true" attempts="1"
@@ -159,7 +159,7 @@ RSpec.describe WorkflowIndexer do
       let(:xml) do
         <<-XML
         <?xml version="1.0" encoding="UTF-8"?>
-        <workflow repository="dor" objectId="druid:gv054hp4128" id="accessionWF">
+        <workflow objectId="druid:gv054hp4128" id="accessionWF">
           <process version="2" lifecycle="submitted" elapsed="0.0" archived="true" attempts="1"
            datetime="2012-11-06T16:18:24-0800" status="completed" name="start-accession"/>
           <process version="2" elapsed="0.0" archived="true" attempts="1"

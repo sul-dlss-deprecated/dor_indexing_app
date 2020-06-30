@@ -17,14 +17,14 @@ class WorkflowIndexer
         ProcessIndexer.new(solr_doc: solr_doc, workflow_name: workflow_name, process: process).to_solr
         errors += 1 if process.status == 'error'
       end
-      solr_doc.status = [workflow_name, workflow_status, errors, repository].join('|')
+      solr_doc.status = [workflow_name, workflow_status, errors].join('|')
     end
   end
 
   private
 
   attr_reader :workflow
-  delegate :workflow_name, :repository, to: :workflow
+  delegate :workflow_name, to: :workflow
 
   def definition_process_names
     @definition_process_names ||= begin
