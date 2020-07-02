@@ -55,7 +55,8 @@ module DorIndexingApp
     config.middleware.use Committee::Middleware::RequestValidation, schema_path: 'openapi.yml',
                                                                     strict: true,
                                                                     error_class: JSONAPIError,
-                                                                    accept_request_filter: accept_proc
+                                                                    accept_request_filter: accept_proc,
+                                                                    parse_response_by_content_type: false
 
     # TODO: Uncomment when API returns JSON or when Committee allows validating plain-text responses
     #
