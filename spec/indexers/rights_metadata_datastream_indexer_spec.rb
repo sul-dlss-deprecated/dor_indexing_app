@@ -96,6 +96,23 @@ RSpec.describe RightsMetadataDatastreamIndexer do
         end
       end
 
+      context 'when it is controlled digital lending' do
+        let(:index_elements) do
+          {
+            primary: 'cdl_none',
+            errors: [],
+            terms: []
+          }
+        end
+
+        it 'indexes correctly into rights_descriptions_ssim' do
+          expect(doc).to match a_hash_including(
+            'rights_primary_ssi' => 'cdl_none',
+            'rights_descriptions_ssim' => ['controlled digital lending']
+          )
+        end
+      end
+
       context 'with file_rights' do
         let(:index_elements) do
           {

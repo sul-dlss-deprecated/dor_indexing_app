@@ -66,6 +66,10 @@ class RightsMetadataDatastreamIndexer
     # what the other more specific fields return, so discard them
     solr_doc['rights_descriptions_ssim'] -= %w[access_restricted access_restricted_qualified world_qualified]
     solr_doc['rights_descriptions_ssim'] += ['dark (file)'] if dra.index_elements[:terms].include? 'none_read_file'
+    if dra.index_elements[:primary].include? 'cdl_none'
+      solr_doc['rights_descriptions_ssim'] += ['controlled digital lending']
+      solr_doc['rights_descriptions_ssim'] -= ['cdl_none']
+    end
 
     solr_doc['obj_rights_locations_ssim'] = dra.index_elements[:obj_locations] if dra.index_elements[:obj_locations].present?
     solr_doc['file_rights_locations_ssim'] = dra.index_elements[:file_locations] if dra.index_elements[:file_locations].present?
