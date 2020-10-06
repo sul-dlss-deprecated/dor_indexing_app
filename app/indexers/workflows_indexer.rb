@@ -3,6 +3,7 @@
 # Indexes the objects position in workflows
 class WorkflowsIndexer
   attr_reader :resource
+
   def initialize(resource:)
     @resource = resource
   end

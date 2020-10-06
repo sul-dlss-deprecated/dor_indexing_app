@@ -21,7 +21,7 @@ class AdministrativeTagIndexer
       solr_doc['exploded_tag_ssim'] += exploded_tags_from(tag)
 
       tag_prefix, rest = tag.split(TAG_PART_DELIMITER, 2)
-      next if !TAGS_TO_INDEX.include?(tag_prefix) || rest.nil?
+      next if TAGS_TO_INDEX.exclude?(tag_prefix) || rest.nil?
 
       prefix = tag_prefix.downcase.strip.gsub(/\s/, '_')
       (solr_doc["#{prefix}_tag_ssim"] ||= []) << rest.strip

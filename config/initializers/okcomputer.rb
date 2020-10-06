@@ -22,7 +22,7 @@ OkComputer::Registry.register 'version', VersionCheck.new
 ##
 # EXTERNAL Services
 
-OkComputer::Registry.register 'external-solr', OkComputer::HttpCheck.new(ActiveFedora.solr.conn.uri.to_s.gsub(%r{/$}, '') + '/admin/ping')
+OkComputer::Registry.register 'external-solr', OkComputer::HttpCheck.new("#{ActiveFedora.solr.conn.uri.to_s.gsub(%r{/$}, '')}/admin/ping")
 
 # Simple check to ping the Fedora server by asking it to describe the repository
 class FedoraCheck < OkComputer::Check

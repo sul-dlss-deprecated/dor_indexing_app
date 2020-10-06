@@ -3,6 +3,7 @@
 # Borrowed from https://github.com/samvera/valkyrie/blob/master/lib/valkyrie/persistence/solr/composite_indexer.rb
 class CompositeIndexer
   attr_reader :indexers
+
   def initialize(*indexers)
     @indexers = indexers
   end
@@ -13,6 +14,7 @@ class CompositeIndexer
 
   class Instance
     attr_reader :indexers, :resource
+
     def initialize(indexers, resource:)
       @resource = resource
       @indexers = indexers.map { |i| i.new(resource: resource) }
