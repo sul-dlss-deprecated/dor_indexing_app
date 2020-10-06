@@ -40,6 +40,7 @@ class ProcessIndexer
   private
 
   attr_reader :process, :workflow_name, :solr_doc
+
   delegate :status, :name, :state, :error_message, :datetime, to: :process
 
   def has_time?

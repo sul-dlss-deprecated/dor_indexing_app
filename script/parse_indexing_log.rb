@@ -15,7 +15,7 @@
 puts %w[druid load:real load:pct_idle to_solr:real to_solr:pct_idle total:real].join(',')
 
 ARGF.lines do |line|
-  matches = /successfully updated index for druid:([a-z0-9]+).+metrics: load_instance realtime ([\d\.]+)s total CPU ([\d\.]+)s; to_solr realtime ([\d\.]+)s total CPU ([\d\.]+)s/.match(line)
+  matches = /successfully updated index for druid:([a-z0-9]+).+metrics: load_instance realtime ([\d.]+)s total CPU ([\d.]+)s; to_solr realtime ([\d.]+)s total CPU ([\d.]+)s/.match(line)
   if matches
     druid, load_real, load_cpu, solr_real, solr_cpu = matches[1..5]
     record = [

@@ -5,6 +5,7 @@ class DataIndexer
   include ActiveFedora::Indexing
 
   attr_reader :resource
+
   def initialize(resource:)
     @resource = resource
   end
@@ -21,8 +22,7 @@ class DataIndexer
     Solrizer.set_field(solr_doc, 'object_state', state, :stored_sortable)
     Solrizer.set_field(solr_doc, 'active_fedora_model', has_model, :stored_sortable)
     solr_doc[SOLR_DOCUMENT_ID.to_sym] = pid
-    solr_doc = solrize_relationships(solr_doc)
-    solr_doc
+    solrize_relationships(solr_doc)
   end
 
   delegate :create_date, :modified_date, :state, :pid, :inner_object,

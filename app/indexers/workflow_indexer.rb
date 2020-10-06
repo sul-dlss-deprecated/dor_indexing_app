@@ -24,6 +24,7 @@ class WorkflowIndexer
   private
 
   attr_reader :workflow
+
   delegate :workflow_name, to: :workflow
 
   def definition_process_names

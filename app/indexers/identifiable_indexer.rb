@@ -21,6 +21,7 @@ class IdentifiableIndexer
     }
   }.freeze
   attr_reader :resource
+
   def initialize(resource:)
     @resource = resource
   end

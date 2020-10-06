@@ -4,6 +4,7 @@ class ProcessableIndexer
   include SolrDocHelper
 
   attr_reader :resource
+
   def initialize(resource:)
     @resource = resource
   end
@@ -28,10 +29,10 @@ class ProcessableIndexer
 
   def current_version
     @current_version ||= begin
-                           resource.current_version
-                         rescue StandardError
-                           '1'
-                         end
+      resource.current_version
+    rescue StandardError
+      '1'
+    end
   end
 
   def add_status(solr_doc)

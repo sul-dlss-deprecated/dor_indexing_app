@@ -43,14 +43,14 @@ class DorController < ApplicationController
     # benchmark how long it takes to load the object
     load_stats = Benchmark.measure('load_instance') do
       obj = Dor.find pid
-    end.format('%n realtime %rs total CPU %ts').gsub(/[\(\)]/, '')
+    end.format('%n realtime %rs total CPU %ts').gsub(/[()]/, '')
 
     # benchmark how long it takes to convert the object to a Solr document
     to_solr_stats = Benchmark.measure('to_solr') do
       indexer = Indexer.for(obj)
       solr_doc = indexer.to_solr
       solr.add(solr_doc, add_attributes: add_attributes)
-    end.format('%n realtime %rs total CPU %ts').gsub(/[\(\)]/, '')
+    end.format('%n realtime %rs total CPU %ts').gsub(/[()]/, '')
 
     logger.info "successfully updated index for #{pid} (metrics: #{load_stats}; #{to_solr_stats})"
 
