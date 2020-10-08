@@ -2,6 +2,7 @@
 
 class Indexer
   ADMIN_POLICY_INDEXER = CompositeIndexer.new(
+    DataQualityIndexer,
     AdministrativeTagIndexer,
     DataIndexer,
     RoleMetadataDatastreamIndexer,
@@ -20,6 +21,7 @@ class Indexer
   )
 
   COLLECTION_INDEXER = CompositeIndexer.new(
+    DataQualityIndexer,
     AdministrativeTagIndexer,
     DataIndexer,
     ProvenanceMetadataDatastreamIndexer,
@@ -36,6 +38,7 @@ class Indexer
   )
 
   ITEM_INDEXER = CompositeIndexer.new(
+    DataQualityIndexer,
     AdministrativeTagIndexer,
     DataIndexer,
     ProvenanceMetadataDatastreamIndexer,
@@ -54,6 +57,7 @@ class Indexer
   )
 
   SET_INDEXER = CompositeIndexer.new(
+    DataQualityIndexer,
     AdministrativeTagIndexer,
     DataIndexer,
     ProvenanceMetadataDatastreamIndexer,

@@ -59,22 +59,5 @@ RSpec.describe IdentityMetadataDatastreamIndexer do
         expect(doc).not_to include('source_id_errors_ssim')
       end
     end
-
-    context 'with an invalid sourceId' do
-      let(:xml) do
-        <<~XML
-          <identityMetadata>
-            <sourceId source="RBC_TAN-2019F"/>
-          </identityMetadata>
-        XML
-      end
-
-      it 'draws the errors' do
-        expect(doc).to include(
-          'source_id_ssim' => ['RBC_TAN-2019F:'],
-          'source_id_errors_ssim' => 'non-comformant'
-        )
-      end
-    end
   end
 end
