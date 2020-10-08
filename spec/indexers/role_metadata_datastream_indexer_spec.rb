@@ -4,9 +4,10 @@ require 'rails_helper'
 
 RSpec.describe RoleMetadataDatastreamIndexer do
   let(:obj) { Dor::AdminPolicyObject.new }
+  let(:cocina) { Success(instance_double(Cocina::Models::DRO)) }
 
   let(:indexer) do
-    described_class.new(resource: obj)
+    described_class.new(resource: obj, cocina: cocina)
   end
 
   before do

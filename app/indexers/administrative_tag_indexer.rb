@@ -9,7 +9,7 @@ class AdministrativeTagIndexer
 
   attr_reader :resource
 
-  def initialize(resource:)
+  def initialize(resource:, cocina:)
     @resource = resource
   end
 

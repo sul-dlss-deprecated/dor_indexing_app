@@ -4,9 +4,10 @@ require 'rails_helper'
 
 RSpec.describe IdentityMetadataDatastreamIndexer do
   let(:obj) { Dor::Item.new(pid: 'druid:rt923jk342') }
+  let(:cocina) { Success(instance_double(Cocina::Models::DRO)) }
 
   let(:indexer) do
-    described_class.new(resource: obj)
+    described_class.new(resource: obj, cocina: cocina)
   end
 
   before do
