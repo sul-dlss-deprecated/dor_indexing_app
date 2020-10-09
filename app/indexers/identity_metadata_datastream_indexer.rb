@@ -5,7 +5,7 @@ class IdentityMetadataDatastreamIndexer
 
   attr_reader :resource
 
-  def initialize(resource:)
+  def initialize(resource:, cocina:)
     @resource = resource
   end
 
@@ -21,7 +21,6 @@ class IdentityMetadataDatastreamIndexer
       plain_identifiers << id
       ns_identifiers << source_id
       solr_doc['source_id_ssim'] = [source_id]
-      solr_doc['source_id_errors_ssim'] = 'non-comformant' unless /^.+:.+$/.match?(source_id)
     end
 
     resource.identityMetadata.otherId.compact.each do |qid|

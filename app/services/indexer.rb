@@ -2,6 +2,7 @@
 
 class Indexer
   ADMIN_POLICY_INDEXER = CompositeIndexer.new(
+    DataQualityIndexer,
     AdministrativeTagIndexer,
     DataIndexer,
     RoleMetadataDatastreamIndexer,
@@ -20,6 +21,7 @@ class Indexer
   )
 
   COLLECTION_INDEXER = CompositeIndexer.new(
+    DataQualityIndexer,
     AdministrativeTagIndexer,
     DataIndexer,
     ProvenanceMetadataDatastreamIndexer,
@@ -36,6 +38,7 @@ class Indexer
   )
 
   ITEM_INDEXER = CompositeIndexer.new(
+    DataQualityIndexer,
     AdministrativeTagIndexer,
     DataIndexer,
     ProvenanceMetadataDatastreamIndexer,
@@ -54,6 +57,7 @@ class Indexer
   )
 
   SET_INDEXER = CompositeIndexer.new(
+    DataQualityIndexer,
     AdministrativeTagIndexer,
     DataIndexer,
     ProvenanceMetadataDatastreamIndexer,
@@ -78,7 +82,9 @@ class Indexer
     Dor::Set => SET_INDEXER
   }.freeze
 
-  def self.for(obj)
-    INDEXERS.fetch(obj.class).new(resource: obj)
+  # @param [Dor::Abstract] obj
+  # @param [Dry::Monads::Result] cocina
+  def self.for(obj, cocina:)
+    INDEXERS.fetch(obj.class).new(resource: obj, cocina: cocina)
   end
 end

@@ -3,7 +3,8 @@
 require 'rails_helper'
 
 RSpec.describe ProcessableIndexer do
-  let(:indexer) { described_class.new(resource: obj) }
+  let(:indexer) { described_class.new(resource: obj, cocina: cocina) }
+  let(:cocina) { Success(instance_double(Cocina::Models::DRO)) }
 
   describe '#to_solr' do
     let(:obj) do
@@ -28,7 +29,7 @@ RSpec.describe ProcessableIndexer do
         let(:indexer) do
           CompositeIndexer.new(
             described_class
-          ).new(resource: obj)
+          ).new(resource: obj, cocina: cocina)
         end
 
         let(:status) do

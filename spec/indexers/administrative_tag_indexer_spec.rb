@@ -6,8 +6,10 @@ RSpec.describe AdministrativeTagIndexer do
   describe '#to_solr' do
     subject(:document) { indexer.to_solr }
 
-    let(:indexer) { described_class.new(resource: object) }
+    let(:indexer) { described_class.new(resource: object, cocina: cocina) }
     let(:object) { Dor::Abstract.new(pid: 'druid:rt923jk234') }
+    let(:cocina) { Success(instance_double(Cocina::Models::DRO)) }
+
     let(:tags) do
       [
         'Google Books : Phase 1',

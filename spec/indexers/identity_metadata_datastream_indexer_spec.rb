@@ -4,9 +4,10 @@ require 'rails_helper'
 
 RSpec.describe IdentityMetadataDatastreamIndexer do
   let(:obj) { Dor::Item.new(pid: 'druid:rt923jk342') }
+  let(:cocina) { Success(instance_double(Cocina::Models::DRO)) }
 
   let(:indexer) do
-    described_class.new(resource: obj)
+    described_class.new(resource: obj, cocina: cocina)
   end
 
   before do
@@ -56,23 +57,6 @@ RSpec.describe IdentityMetadataDatastreamIndexer do
           'source_id_ssim' => ['google:STANFORD_342837261527']
         )
         expect(doc).not_to include('source_id_errors_ssim')
-      end
-    end
-
-    context 'with an invalid sourceId' do
-      let(:xml) do
-        <<~XML
-          <identityMetadata>
-            <sourceId source="RBC_TAN-2019F"/>
-          </identityMetadata>
-        XML
-      end
-
-      it 'draws the errors' do
-        expect(doc).to include(
-          'source_id_ssim' => ['RBC_TAN-2019F:'],
-          'source_id_errors_ssim' => 'non-comformant'
-        )
       end
     end
   end

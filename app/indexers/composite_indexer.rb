@@ -8,16 +8,16 @@ class CompositeIndexer
     @indexers = indexers
   end
 
-  def new(resource:)
-    Instance.new(indexers, resource: resource)
+  def new(resource:, cocina:)
+    Instance.new(indexers, resource: resource, cocina: cocina)
   end
 
   class Instance
     attr_reader :indexers, :resource
 
-    def initialize(indexers, resource:)
+    def initialize(indexers, resource:, cocina:)
       @resource = resource
-      @indexers = indexers.map { |i| i.new(resource: resource) }
+      @indexers = indexers.map { |i| i.new(resource: resource, cocina: cocina) }
     end
 
     # @return [Hash] the merged solr document for all the sub-indexers

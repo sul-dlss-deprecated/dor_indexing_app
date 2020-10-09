@@ -3,6 +3,8 @@
 require 'rails_helper'
 
 RSpec.describe DescribableIndexer do
+  subject(:indexer) { described_class.new(resource: obj, cocina: cocina) }
+
   let(:xml) do
     <<~XML
       <?xml version="1.0" encoding="UTF-8"?>
@@ -90,9 +92,7 @@ RSpec.describe DescribableIndexer do
   end
   let(:obj) { Dor::Abstract.new }
 
-  let(:indexer) do
-    described_class.new(resource: obj)
-  end
+  let(:cocina) { Success(instance_double(Cocina::Models::DRO)) }
 
   describe '#to_solr' do
     let(:doc) { indexer.to_solr }
