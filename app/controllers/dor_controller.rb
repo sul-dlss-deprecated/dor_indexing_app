@@ -48,8 +48,7 @@ class DorController < ApplicationController
       obj = Dor.find pid
       cocina = begin
         Success(Dor::Services::Client.object(pid).find)
-      rescue StandardError => e
-        Honeybadger.notify("Unable to convert #{pid} to a cocina model. #{e.message}")
+      rescue StandardError
         Failure(:conversion_error)
       end
     end.format('%n realtime %rs total CPU %ts').gsub(/[()]/, '')
