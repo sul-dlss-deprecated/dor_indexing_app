@@ -5,7 +5,7 @@
 #       https://github.com/sul-dlss/dor-services/blob/v9.0.0/lib/dor/datastreams/identity_metadata_ds.rb#L196-L218
 class AdministrativeTagIndexer
   TAG_PART_DELIMITER = ' : '
-  TAGS_TO_INDEX = ['Project', 'Registered By'].freeze
+  TAGS_TO_INDEX = ['Project', 'Registered By', 'Process'].freeze
 
   attr_reader :resource
 
