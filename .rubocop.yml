@@ -57,6 +57,8 @@ Lint/EmptyFile: # (new in 0.90)
   Enabled: true
 Lint/FloatComparison: # (new in 0.89)
   Enabled: true
+Lint/HashCompareByIdentity: # (new in 0.93)
+  Enabled: true
 Lint/IdentityComparison: # (new in 0.91)
   Enabled: true
 Lint/MissingSuper: # (new in 0.89)
@@ -66,6 +68,8 @@ Lint/MixedRegexpCaptureTypes: # (new in 0.85)
 Lint/OutOfRangeRegexpRef: # (new in 0.89)
   Enabled: true
 Lint/RaiseException: # (new in 0.81)
+  Enabled: true
+Lint/RedundantSafeNavigation: # (new in 0.93)
   Enabled: true
 Lint/SelfAssignment: # (new in 0.89)
   Enabled: true
@@ -81,11 +85,14 @@ Lint/UselessMethodDefinition: # (new in 0.90)
   Enabled: true
 Lint/UselessTimes: # (new in 0.91)
   Enabled: true
+
 Style/AccessorGrouping: # (new in 0.87)
   Enabled: true
 Style/BisectedAttrAccessor: # (new in 0.87)
   Enabled: true
 Style/CaseLikeIf: # (new in 0.88)
+  Enabled: true
+Style/ClassEqualityComparison: # (new in 0.93)
   Enabled: true
 Style/CombinableLoops: # (new in 0.90)
   Enabled: true
@@ -129,9 +136,20 @@ Style/SoleNestedConditional: # (new in 0.89)
   Enabled: true
 Style/StringConcatenation: # (new in 0.89)
   Enabled: true
+
 Performance/AncestorsInclude: # (new in 1.7)
   Enabled: true
+Performance/ArraySemiInfiniteRangeSlice: # (new in 1.9)
+  Enabled: true
 Performance/BigDecimalWithNumericArgument: # (new in 1.7)
+  Enabled: true
+Performance/BlockGivenWithExplicitBlock: # (new in 1.9)
+  Enabled: true
+Performance/CollectionLiteralInLoop: # (new in 1.8)
+  Enabled: true
+Performance/ConstantRegexp: # (new in 1.9)
+  Enabled: true
+Performance/MethodObjectAsBlock: # (new in 1.9)
   Enabled: true
 Performance/RedundantSortBlock: # (new in 1.7)
   Enabled: true
@@ -176,4 +194,7 @@ Rails/SquishedSQLHeredocs: # (new in 2.8)
 Rails/WhereExists: # (new in 2.7)
   Enabled: true
 Rails/WhereNot: # (new in 2.8)
+  Enabled: true
+
+RSpec/StubbedMock: # (new in 1.44)
   Enabled: true
