@@ -33,7 +33,7 @@ class QueueStatus
     end
 
     def queue_size
-      @queues.map(&:queue_size).sum
+      @queues.sum(&:queue_size)
     end
   end
 end
