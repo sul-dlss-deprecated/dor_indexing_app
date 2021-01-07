@@ -1,6 +1,6 @@
-[![Build Status](https://travis-ci.com/sul-dlss/dor_indexing_app.svg?branch=master)](https://travis-ci.com/sul-dlss/dor_indexing_app)
-[![Coverage Status](https://coveralls.io/repos/github/sul-dlss/dor_indexing_app/badge.svg?branch=master)](https://coveralls.io/github/sul-dlss/dor_indexing_app?branch=master)
-[![OpenAPI Validator](http://validator.swagger.io/validator?url=https://raw.githubusercontent.com/sul-dlss/dor_indexing_app/master/openapi.yml)](http://validator.swagger.io/validator/?url=https://raw.githubusercontent.com/sul-dlss/dor_indexing_app/master/openapi.yml)
+[![Build Status](https://travis-ci.com/sul-dlss/dor_indexing_app.svg?branch=main)](https://travis-ci.com/sul-dlss/dor_indexing_app)
+[![Coverage Status](https://coveralls.io/repos/github/sul-dlss/dor_indexing_app/badge.svg?branch=main)](https://coveralls.io/github/sul-dlss/dor_indexing_app?branch=main)
+[![OpenAPI Validator](http://validator.swagger.io/validator?url=https://raw.githubusercontent.com/sul-dlss/dor_indexing_app/main/openapi.yml)](http://validator.swagger.io/validator/?url=https://raw.githubusercontent.com/sul-dlss/dor_indexing_app/main/openapi.yml)
 
 # Dor Indexing App
 
