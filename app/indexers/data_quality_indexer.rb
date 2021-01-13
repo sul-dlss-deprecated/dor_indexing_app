@@ -24,7 +24,7 @@ class DataQualityIndexer
   def source_id_message
     if source_id.present?
       'non-comformant sourceId' unless valid_source_id?
-    else
+    elsif !resource.is_a?(Dor::Collection) # Collections are not required to have a sourceId
       'missing sourceId'
     end
   end
