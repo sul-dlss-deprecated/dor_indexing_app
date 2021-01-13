@@ -47,7 +47,7 @@ RSpec.describe DataQualityIndexer do
       end
     end
 
-    context 'with an invalid sourceId' do
+    context 'with an invalid sourceId for a DRO' do
       let(:xml) do
         <<~XML
           <identityMetadata>
@@ -59,6 +59,23 @@ RSpec.describe DataQualityIndexer do
       it 'draws the errors' do
         expect(doc).to eq(
           'data_quality_ssim' => ['non-comformant sourceId']
+        )
+      end
+    end
+
+    context 'with an invalid sourceId for a Collection' do
+      let(:obj) { Dor::Collection.new(pid: 'druid:rt923jk342') }
+
+      let(:xml) do
+        <<~XML
+          <identityMetadata>
+          </identityMetadata>
+        XML
+      end
+
+      it 'draws the errors' do
+        expect(doc).to eq(
+          'data_quality_ssim' => []
         )
       end
     end
