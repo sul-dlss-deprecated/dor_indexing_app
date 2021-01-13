@@ -63,8 +63,25 @@ RSpec.describe DataQualityIndexer do
       end
     end
 
-    context 'with an invalid sourceId for a Collection' do
+    context 'without a sourceId for a Collection' do
       let(:obj) { Dor::Collection.new(pid: 'druid:rt923jk342') }
+
+      let(:xml) do
+        <<~XML
+          <identityMetadata>
+          </identityMetadata>
+        XML
+      end
+
+      it 'draws the errors' do
+        expect(doc).to eq(
+          'data_quality_ssim' => []
+        )
+      end
+    end
+
+    context 'without a sourceId for an AdminPolicy' do
+      let(:obj) { Dor::AdminPolicyObject.new(pid: 'druid:rt923jk342') }
 
       let(:xml) do
         <<~XML
