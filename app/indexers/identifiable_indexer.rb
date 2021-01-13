@@ -32,7 +32,10 @@ class IdentifiableIndexer
   @@apo_hash = {}
 
   # @return [Hash] the partial solr document for identifiable concerns
+  # rubocop:disable Metrics/AbcSize
   def to_solr
+    Rails.logger.debug "In #{self.class}"
+
     solr_doc = {}
     solr_doc[INDEX_VERSION_FIELD] = Dor::VERSION
     solr_doc['indexer_host_ssi'] = Socket.gethostname
@@ -53,6 +56,7 @@ class IdentifiableIndexer
     solr_doc['objectId_tesim'] = [resource.pid, resource.pid.split(':').last]
     solr_doc
   end
+  # rubocop:enable Metrics/AbcSize
 
   # @return [String] calculated value for Solr index
   def identity_metadata_source

@@ -13,6 +13,8 @@ class RightsMetadataDatastreamIndexer
   # rubocop:disable Metrics/MethodLength
   # rubocop:disable Metrics/PerceivedComplexity
   def to_solr
+    Rails.logger.debug "In #{self.class}"
+
     solr_doc = {
       'copyright_ssim' => resource.rightsMetadata.copyright,
       'use_statement_ssim' => resource.rightsMetadata.use_statement

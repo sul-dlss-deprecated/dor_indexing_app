@@ -11,6 +11,8 @@ class ObjectProfileIndexer
 
   # @return [Hash] the partial solr document for releasable concerns
   def to_solr
+    Rails.logger.debug "In #{self.class}"
+
     {}.tap do |solr_doc|
       add_solr_value(solr_doc, 'obj_label', resource.label, :symbol, [:stored_searchable])
     end

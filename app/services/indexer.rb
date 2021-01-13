@@ -85,6 +85,7 @@ class Indexer
   # @param [Dor::Abstract] obj
   # @param [Dry::Monads::Result] cocina
   def self.for(obj, cocina:)
+    Rails.logger.debug("Fetching indexer for #{obj.class}")
     INDEXERS.fetch(obj.class).new(resource: obj, cocina: cocina)
   end
 end
