@@ -62,60 +62,47 @@ RSpec.describe IdentifiableIndexer do
 
   describe '#to_solr' do
     let(:doc) { indexer.to_solr }
+    let(:mock_rel_druid) { 'druid:does_not_exist' }
 
-    context 'with related objects' do
-      let(:mock_rel_druid) { 'druid:does_not_exist' }
-      let(:mock_rels_ext_xml) do
-        %(<rdf:RDF xmlns:fedora-model="info:fedora/fedora-system:def/model#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-              xmlns:fedora="info:fedora/fedora-system:def/relations-external#" xmlns:hydra="http://projecthydra.org/ns/relations#">
-              <rdf:Description rdf:about="info:fedora/druid:ab123cd4567">
-                <fedora-model:hasModel rdf:resource="info:fedora/testObject"/>
-                <hydra:isGovernedBy rdf:resource="info:fedora/#{mock_rel_druid}"/>
-                <fedora:isMemberOfCollection rdf:resource="info:fedora/#{mock_rel_druid}"/>
-              </rdf:Description>
-            </rdf:RDF>)
-      end
+    before do
+      allow(obj).to receive_messages(admin_policy_object_id: mock_rel_druid, collection_ids: [mock_rel_druid])
+    end
 
+    context 'when related collection and APOs are not found' do
       before do
-        allow(obj.datastreams['RELS-EXT']).to receive(:content).and_return(mock_rels_ext_xml)
+        allow(Dor).to receive(:find).with(mock_rel_druid).and_raise(ActiveFedora::ObjectNotFoundError)
       end
 
-      context 'when related collection and APOs are not found' do
-        before do
-          allow(Dor).to receive(:find).with(mock_rel_druid).and_raise(ActiveFedora::ObjectNotFoundError)
-        end
-
-        it 'generate collections and apo title fields' do
-          expect(doc[Solrizer.solr_name('collection_title', :symbol)].first).to eq mock_rel_druid
-          expect(doc[Solrizer.solr_name('collection_title', :stored_searchable)].first).to eq mock_rel_druid
-          expect(doc[Solrizer.solr_name('apo_title', :symbol)].first).to eq mock_rel_druid
-          expect(doc[Solrizer.solr_name('apo_title', :stored_searchable)].first).to eq mock_rel_druid
-          expect(doc[Solrizer.solr_name('nonhydrus_apo_title', :symbol)].first).to eq mock_rel_druid
-          expect(doc[Solrizer.solr_name('nonhydrus_apo_title', :stored_searchable)].first).to eq mock_rel_druid
-        end
-      end
-
-      context 'when related collection and APOs are found' do
-        let(:mock_obj) { instance_double(Dor::Item, full_title: 'Test object') }
-
-        before do
-          allow(Dor).to receive(:find).with(mock_rel_druid).and_return(mock_obj)
-          allow(indexer).to receive(:related_object_tags).and_return([])
-        end
-
-        it 'generate collections and apo title fields' do
-          expect(doc[Solrizer.solr_name('collection_title', :symbol)].first).to eq 'Test object'
-          expect(doc[Solrizer.solr_name('collection_title', :stored_searchable)].first).to eq 'Test object'
-          expect(doc[Solrizer.solr_name('apo_title', :symbol)].first).to eq 'Test object'
-          expect(doc[Solrizer.solr_name('apo_title', :stored_searchable)].first).to eq 'Test object'
-          expect(doc[Solrizer.solr_name('nonhydrus_apo_title', :symbol)].first).to eq 'Test object'
-          expect(doc[Solrizer.solr_name('nonhydrus_apo_title', :stored_searchable)].first).to eq  'Test object'
-        end
+      it 'generate collections and apo title fields' do
+        expect(doc[Solrizer.solr_name('collection_title', :symbol)].first).to eq mock_rel_druid
+        expect(doc[Solrizer.solr_name('collection_title', :stored_searchable)].first).to eq mock_rel_druid
+        expect(doc[Solrizer.solr_name('apo_title', :symbol)].first).to eq mock_rel_druid
+        expect(doc[Solrizer.solr_name('apo_title', :stored_searchable)].first).to eq mock_rel_druid
+        expect(doc[Solrizer.solr_name('nonhydrus_apo_title', :symbol)].first).to eq mock_rel_druid
+        expect(doc[Solrizer.solr_name('nonhydrus_apo_title', :stored_searchable)].first).to eq mock_rel_druid
       end
     end
 
-    it 'indexes metadata source' do
-      expect(doc).to match a_hash_including('metadata_source_ssi' => 'Symphony')
+    context 'when related collection and APOs are found' do
+      let(:mock_obj) { instance_double(Dor::Item, full_title: 'Test object') }
+
+      before do
+        allow(Dor).to receive(:find).with(mock_rel_druid).and_return(mock_obj)
+        allow(indexer).to receive(:related_object_tags).and_return([])
+      end
+
+      it 'generate collections and apo title fields' do
+        expect(doc[Solrizer.solr_name('collection_title', :symbol)].first).to eq 'Test object'
+        expect(doc[Solrizer.solr_name('collection_title', :stored_searchable)].first).to eq 'Test object'
+        expect(doc[Solrizer.solr_name('apo_title', :symbol)].first).to eq 'Test object'
+        expect(doc[Solrizer.solr_name('apo_title', :stored_searchable)].first).to eq 'Test object'
+        expect(doc[Solrizer.solr_name('nonhydrus_apo_title', :symbol)].first).to eq 'Test object'
+        expect(doc[Solrizer.solr_name('nonhydrus_apo_title', :stored_searchable)].first).to eq  'Test object'
+      end
+
+      it 'indexes metadata source' do
+        expect(doc).to match a_hash_including('metadata_source_ssi' => 'Symphony')
+      end
     end
   end
 

@@ -40,11 +40,8 @@ class IdentifiableIndexer
 
     add_solr_value(solr_doc, 'title_sort', resource.label, :string, [:stored_sortable])
 
-    rels_doc = Nokogiri::XML(resource.datastreams['RELS-EXT'].content)
-    apos = rels_doc.search('//rdf:RDF/rdf:Description/hydra:isGovernedBy', NS_HASH)
-    collections = rels_doc.search('//rdf:RDF/rdf:Description/fedora:isMemberOfCollection', NS_HASH)
-    solrize_related_obj_titles(solr_doc, apos, @@apo_hash, :apo)
-    solrize_related_obj_titles(solr_doc, collections, @@collection_hash, :collection)
+    solrize_related_obj_titles(solr_doc, [resource.admin_policy_object_id], @@apo_hash, :apo)
+    solrize_related_obj_titles(solr_doc, resource.collection_ids, @@collection_hash, :collection)
     solr_doc['public_dc_relation_tesim'] ||= solr_doc['collection_title_tesim'] if solr_doc['collection_title_tesim']
     solr_doc['metadata_source_ssi'] = identity_metadata_source
     # This used to be added to the index by https://github.com/sul-dlss/dor-services/commit/11b80d249d19326ef591411ffeb634900e75c2c3
@@ -87,12 +84,7 @@ class IdentifiableIndexer
     # ["SOURCE", "SOURCE : TITLE"] (e.g. ["Hydrus", "Hydrus : Special Collections"], see (exploded) tags in IdentityMetadataDS#to_solr).
     title_type = :symbol # we'll get an _ssim because of the type
     title_attrs = [:stored_searchable] # we'll also get a _tesim from this attr
-    relationships.each do |rel_node|
-      rel_druid = rel_node['rdf:resource']
-      next unless rel_druid # TODO: warning here would also be useful
-
-      rel_druid = rel_druid.gsub('info:fedora/', '')
-
+    relationships.each do |rel_druid|
       # populate cache if necessary
       unless title_hash.key?(rel_druid)
         begin
