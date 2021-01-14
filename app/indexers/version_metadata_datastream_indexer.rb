@@ -9,6 +9,8 @@ class VersionMetadataDatastreamIndexer
 
   # @return [Hash] the partial solr document for versionMetadata
   def to_solr
+    Rails.logger.debug "In #{self.class}"
+
     resource.versionMetadata.to_solr
   end
 end

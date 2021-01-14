@@ -5,7 +5,7 @@ class DorController < ApplicationController
   include Dry::Monads[:result]
 
   def reindex
-    @solr_doc = reindex_pid params[:pid], logger: generate_index_logger(request.uuid), add_attributes: { commitWithin: params.fetch(:commitWithin, 1000).to_i }
+    @solr_doc = reindex_pid params[:pid], add_attributes: { commitWithin: params.fetch(:commitWithin, 1000).to_i }
     solr.commit unless params[:commitWithin] # reindex_pid doesn't commit, but callers of this method may expect the update to be committed immediately
     render status: 200, plain: "Successfully updated index for #{params[:pid]}"
   rescue ActiveFedora::ObjectNotFoundError # => e
@@ -24,21 +24,9 @@ class DorController < ApplicationController
 
   private
 
-  ##
-  # Returns a Logger instance for recording info about indexing attempts
-  # @param [String] entry_id an extra identifier for the log entry.
-  def generate_index_logger(entry_id)
-    index_logger = Logger.new(Settings.indexer.log, Settings.indexer.log_rotation_interval)
-    index_logger.formatter = proc do |_severity, datetime, _progname, msg|
-      date_format_str = Settings.date_format_str
-      "[#{entry_id}] [#{datetime.utc.strftime(date_format_str)}] #{msg}\n"
-    end
-    index_logger
-  end
-
   # retrieves a single Dor object by pid, indexes the object to solr, does some logging
   # doesn't commit automatically.
-  def reindex_pid(pid, logger:, add_attributes:)
+  def reindex_pid(pid, add_attributes:)
     obj = nil
     solr_doc = nil
     cocina = nil
@@ -52,11 +40,13 @@ class DorController < ApplicationController
         Failure(:conversion_error)
       end
     end.format('%n realtime %rs total CPU %ts').gsub(/[()]/, '')
-
+    logger.info 'document found, now generating document solr'
     # benchmark how long it takes to convert the object to a Solr document
     to_solr_stats = Benchmark.measure('to_solr') do
       indexer = Indexer.for(obj, cocina: cocina)
       solr_doc = indexer.to_solr
+      logger.info 'solr doc created'
+
       solr.add(solr_doc, add_attributes: add_attributes)
     end.format('%n realtime %rs total CPU %ts').gsub(/[()]/, '')
 

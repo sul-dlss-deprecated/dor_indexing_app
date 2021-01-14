@@ -1,12 +1,6 @@
 # General
 date_format_str: '%Y-%m-%d %H:%M:%S.%L'
 
-indexer:
-  # the file to which the indexer log is written
-  log: 'log/indexer.log'
-  # the interval at which the indexer log is rotated
-  log_rotation_interval: 'daily'
-
 ssl:
   cert_file: ~
   key_file: ~

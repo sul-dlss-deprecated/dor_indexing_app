@@ -11,6 +11,7 @@ class ReleasableIndexer
 
   # @return [Hash] the partial solr document for releasable concerns
   def to_solr
+    Rails.logger.debug "In #{self.class}"
     solr_doc = {}
 
     # TODO: sort of worried about the performance impact in bulk reindex
@@ -28,7 +29,10 @@ class ReleasableIndexer
   private
 
   def released_for
-    object_client.release_tags.list
+    Rails.logger.debug 'Getting releases'
+    object_client.release_tags.list.tap do
+      Rails.logger.debug 'Got releases'
+    end
   end
 
   def object_client

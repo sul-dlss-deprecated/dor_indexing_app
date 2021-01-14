@@ -11,6 +11,8 @@ class ProcessableIndexer
 
   # @return [Hash] the partial solr document for processable concerns
   def to_solr
+    Rails.logger.debug "In #{self.class}"
+
     {}.tap do |solr_doc|
       solr_doc['current_version_isi'] = current_version.to_i # Argo Facet field "Version"
 

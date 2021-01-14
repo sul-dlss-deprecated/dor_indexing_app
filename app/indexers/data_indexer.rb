@@ -13,6 +13,8 @@ class DataIndexer
   # we need to override this until https://github.com/samvera/active_fedora/pull/1371
   # has been released
   def to_solr(solr_doc = {})
+    Rails.logger.debug "In #{self.class}"
+
     c_time = create_date
     c_time = Time.parse(c_time) unless c_time.is_a?(Time)
     m_time = modified_date

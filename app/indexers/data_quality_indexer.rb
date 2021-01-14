@@ -10,6 +10,8 @@ class DataQualityIndexer
 
   # @return [Hash] the partial solr document for identityMetadata
   def to_solr
+    Rails.logger.debug "In #{self.class}"
+
     { 'data_quality_ssim' => messages }
   end
 

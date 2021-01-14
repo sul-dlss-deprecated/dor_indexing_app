@@ -15,6 +15,8 @@ class AdministrativeTagIndexer
 
   # @return [Hash] the partial solr document for administrative tags
   def to_solr
+    Rails.logger.debug "In #{self.class}"
+
     solr_doc = { 'tag_ssim' => [], 'exploded_tag_ssim' => [] }
     administrative_tags.each do |tag|
       solr_doc['tag_ssim'] << tag
