@@ -30,12 +30,6 @@ RSpec.describe Indexer do
     let(:cocina) { Success(instance_double(Cocina::Models::DRO)) }
 
     it { is_expected.to be_instance_of CompositeIndexer::Instance }
-
-    describe '#to_solr' do
-      subject { indexer.to_solr }
-
-      it { is_expected.to include('milestones_ssim', 'released_to_ssim', 'wf_ssim', 'tag_ssim') }
-    end
   end
 
   context 'when the model is an admin policy' do
@@ -43,12 +37,6 @@ RSpec.describe Indexer do
     let(:cocina) { Success(instance_double(Cocina::Models::AdminPolicy)) }
 
     it { is_expected.to be_instance_of CompositeIndexer::Instance }
-
-    describe '#to_solr' do
-      subject { indexer.to_solr }
-
-      it { is_expected.to include('milestones_ssim', 'wf_ssim', 'tag_ssim') }
-    end
   end
 
   context 'when the model is a hydrus item' do
@@ -63,12 +51,6 @@ RSpec.describe Indexer do
     let(:cocina) { Success(instance_double(Cocina::Models::AdminPolicy)) }
 
     it { is_expected.to be_instance_of CompositeIndexer::Instance }
-
-    describe '#to_solr' do
-      subject { indexer.to_solr }
-
-      it { is_expected.to include('milestones_ssim', 'wf_ssim', 'tag_ssim') }
-    end
   end
 
   context 'when the model is a collection' do
@@ -83,5 +65,45 @@ RSpec.describe Indexer do
     let(:cocina) { Success(instance_double(Cocina::Models::DRO)) }
 
     it { is_expected.to be_instance_of CompositeIndexer::Instance }
+  end
+
+  describe '#to_solr' do
+    subject { indexer.to_solr }
+
+    let(:object_client) { instance_double(Dor::Services::Client::Object) }
+    let(:apo_id) { 'druid:9999' }
+    let(:apo) do
+      instance_double(Dor::AdminPolicyObject, full_title: 'APO title', pid: apo_id)
+    end
+
+    before do
+      allow(model).to receive(:admin_policy_object_id).and_return(apo_id)
+      allow(model).to receive(:collection_ids).and_return([])
+
+      allow(Dor).to receive(:find).and_return(apo)
+      allow(Dor::Services::Client).to receive(:object).and_return(object_client)
+      allow(object_client).to receive_message_chain(:administrative_tags, :list).and_return([])
+    end
+
+    context 'when the model is an item' do
+      let(:model) { Dor::Item.new(pid: 'druid:xx999xx9999') }
+      let(:cocina) { Success(instance_double(Cocina::Models::DRO)) }
+
+      it { is_expected.to include('milestones_ssim', 'released_to_ssim', 'wf_ssim', 'tag_ssim') }
+    end
+
+    context 'when the model is an admin policy' do
+      let(:model) { Dor::AdminPolicyObject.new(pid: 'druid:xx999xx9999') }
+      let(:cocina) { Success(instance_double(Cocina::Models::AdminPolicy)) }
+
+      it { is_expected.to include('milestones_ssim', 'wf_ssim', 'tag_ssim') }
+    end
+
+    context 'when the model is a hydrus apo' do
+      let(:model) { Hydrus::AdminPolicyObject.new(pid: 'druid:xx999xx9999') }
+      let(:cocina) { Success(instance_double(Cocina::Models::AdminPolicy)) }
+
+      it { is_expected.to include('milestones_ssim', 'wf_ssim', 'tag_ssim') }
+    end
   end
 end

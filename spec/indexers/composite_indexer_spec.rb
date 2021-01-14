@@ -22,15 +22,17 @@ RSpec.describe CompositeIndexer do
     instance_double(Dor::Item,
                     pid: 'druid:mx123ms3333',
                     stanford_mods: mods,
-                    datastreams: datastreams,
                     label: 'obj label',
                     identityMetadata: identity_metadata,
                     versionMetadata: version_metadata,
                     current_version: '7',
-                    modified_date: '1999-12-30')
+                    modified_date: '1999-12-30',
+                    admin_policy_object_id: apo_id,
+                    collection_ids: [])
   end
-  let(:datastreams) do
-    { 'RELS-EXT' => double('datastream', datastream_spec_string: 'huh', new?: false, content: '') }
+  let(:apo_id) { 'druid:9999' }
+  let(:apo) do
+    instance_double(Dor::AdminPolicyObject, full_title: 'APO title', pid: apo_id)
   end
   let(:identity_metadata) do
     instance_double(Dor::IdentityMetadataDS, otherId: 'foo')
@@ -47,6 +49,13 @@ RSpec.describe CompositeIndexer do
     )
   end
   let(:cocina) { Success(instance_double(Cocina::Models::DRO)) }
+  let(:object_client) { instance_double(Dor::Services::Client::Object) }
+
+  before do
+    allow(Dor).to receive(:find).and_return(apo)
+    allow(Dor::Services::Client).to receive(:object).and_return(object_client)
+    allow(object_client).to receive_message_chain(:administrative_tags, :list).and_return([])
+  end
 
   describe 'to_solr' do
     let(:status) do
