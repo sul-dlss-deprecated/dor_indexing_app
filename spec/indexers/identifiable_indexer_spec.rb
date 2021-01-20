@@ -63,9 +63,10 @@ RSpec.describe IdentifiableIndexer do
   describe '#to_solr' do
     let(:doc) { indexer.to_solr }
     let(:mock_rel_druid) { 'druid:does_not_exist' }
+    let(:collection) { instance_double(Dor::Collection, id: mock_rel_druid) }
 
     before do
-      allow(obj).to receive_messages(admin_policy_object_id: mock_rel_druid, collection_ids: [mock_rel_druid])
+      allow(obj).to receive_messages(admin_policy_object_id: mock_rel_druid, collections: [collection])
     end
 
     context 'when related collection and APOs are not found' do

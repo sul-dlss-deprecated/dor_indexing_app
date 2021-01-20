@@ -28,7 +28,7 @@ RSpec.describe CompositeIndexer do
                     current_version: '7',
                     modified_date: '1999-12-30',
                     admin_policy_object_id: apo_id,
-                    collection_ids: [])
+                    collections: [])
   end
   let(:apo_id) { 'druid:9999' }
   let(:apo) do
