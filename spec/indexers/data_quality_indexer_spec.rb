@@ -47,6 +47,16 @@ RSpec.describe DataQualityIndexer do
       end
     end
 
+    context 'when the object is part of an ETD' do
+      before do
+        allow(obj).to receive(:relationships).and_return ['info:fedora/afmodel:Part']
+      end
+
+      it 'has none' do
+        expect(doc).to eq({})
+      end
+    end
+
     context 'with an invalid sourceId for a DRO' do
       let(:xml) do
         <<~XML
