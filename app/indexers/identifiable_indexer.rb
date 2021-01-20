@@ -43,7 +43,10 @@ class IdentifiableIndexer
     add_solr_value(solr_doc, 'title_sort', resource.label, :string, [:stored_sortable])
 
     solrize_related_obj_titles(solr_doc, [resource.admin_policy_object_id], @@apo_hash, :apo)
-    solrize_related_obj_titles(solr_doc, resource.collection_ids, @@collection_hash, :collection)
+    # There is a bug in ActiveFedora::HasAndBelongsToManyAssociation#ids_reader where it returns an empty set.
+    # We can work around by loading the association target:
+    collection_ids = resource.collections.map(&:id)
+    solrize_related_obj_titles(solr_doc, collection_ids, @@collection_hash, :collection)
     solr_doc['public_dc_relation_tesim'] ||= solr_doc['collection_title_tesim'] if solr_doc['collection_title_tesim']
     solr_doc['metadata_source_ssi'] = identity_metadata_source
     # This used to be added to the index by https://github.com/sul-dlss/dor-services/commit/11b80d249d19326ef591411ffeb634900e75c2c3
