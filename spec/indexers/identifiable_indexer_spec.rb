@@ -64,9 +64,24 @@ RSpec.describe IdentifiableIndexer do
     let(:doc) { indexer.to_solr }
     let(:mock_rel_druid) { 'druid:does_not_exist' }
     let(:collection) { instance_double(Dor::Collection, id: mock_rel_druid) }
+    let(:collections) { [collection] }
 
     before do
-      allow(obj).to receive_messages(admin_policy_object_id: mock_rel_druid, collections: [collection])
+      allow(obj).to receive_messages(admin_policy_object_id: mock_rel_druid, collections: collections)
+    end
+
+    context 'when no APO or collection is set' do
+      let(:mock_rel_druid) { nil }
+      let(:collections) { [] }
+
+      it "doesn't raise an error" do
+        expect(doc[Solrizer.solr_name('collection_title', :symbol)]).to be_nil
+        expect(doc[Solrizer.solr_name('collection_title', :stored_searchable)]).to be_nil
+        expect(doc[Solrizer.solr_name('apo_title', :symbol)]).to be_nil
+        expect(doc[Solrizer.solr_name('apo_title', :stored_searchable)]).to be_nil
+        expect(doc[Solrizer.solr_name('nonhydrus_apo_title', :symbol)]).to be_nil
+        expect(doc[Solrizer.solr_name('nonhydrus_apo_title', :stored_searchable)]).to be_nil
+      end
     end
 
     context 'when related collection and APOs are not found' do

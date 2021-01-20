@@ -42,7 +42,7 @@ class IdentifiableIndexer
 
     add_solr_value(solr_doc, 'title_sort', resource.label, :string, [:stored_sortable])
 
-    solrize_related_obj_titles(solr_doc, [resource.admin_policy_object_id], @@apo_hash, :apo)
+    solrize_related_obj_titles(solr_doc, [resource.admin_policy_object_id].compact, @@apo_hash, :apo)
     # There is a bug in ActiveFedora::HasAndBelongsToManyAssociation#ids_reader where it returns an empty set.
     # We can work around by loading the association target:
     collection_ids = resource.collections.map(&:id)
