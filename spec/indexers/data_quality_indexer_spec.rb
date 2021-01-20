@@ -48,7 +48,7 @@ RSpec.describe DataQualityIndexer do
     end
 
     context 'when the object is part of an ETD' do
-      context 'when it uses conforms_to (earlier objects)' do
+      context 'when it uses conforms_to (earlier ETD objects)' do
         before do
           allow(obj).to receive(:relationships).with(:conforms_to).and_return ['info:fedora/afmodel:Part']
         end
@@ -58,10 +58,21 @@ RSpec.describe DataQualityIndexer do
         end
       end
 
-      context 'when it uses has_model (latter objects)' do
+      context 'when it uses has_model with Part (later ETD objects)' do
         before do
           allow(obj).to receive(:relationships).with(:conforms_to).and_return []
           allow(obj).to receive(:relationships).with(:has_model).and_return ['info:fedora/afmodel:Part']
+        end
+
+        it 'has none' do
+          expect(doc).to eq({})
+        end
+      end
+
+      context 'when it uses has_model with PermissionFile (EEMs objects)' do
+        before do
+          allow(obj).to receive(:relationships).with(:conforms_to).and_return []
+          allow(obj).to receive(:relationships).with(:has_model).and_return ['info:fedora/afmodel:PermissionFile']
         end
 
         it 'has none' do
