@@ -11,19 +11,26 @@ class DataQualityIndexer
   # @return [Hash] the partial solr document for identityMetadata
   def to_solr
     Rails.logger.debug "In #{self.class}"
-    # Filter out Items that were attachments for ETDs.  These aren't getting migrated.
-    return {} if etd_part?
+    # Filter out Items that were attachments for ETDs/EEMs.  These aren't getting migrated.
+    return {} if filtered_object?
 
     { 'data_quality_ssim' => messages }
   end
 
   private
 
-  def etd_part?
-    # conforms_to is used on earlier objects and later has_model was used
-    resource.relationships(:conforms_to) == ['info:fedora/afmodel:Part'] ||
-      resource.relationships(:has_model) == ['info:fedora/afmodel:Part']
+  # @return [Boolean] true if the object is an obsolete type that was used for Eems or Etds.
+  #                        these will not be migrated as they are ephemeral and not preserved.
+  # rubocop:disable Style/MultipleComparison
+  def filtered_object?
+    # conforms_to is used on earlier ETD objects and later objects used has_model
+    return true if resource.relationships(:conforms_to) == ['info:fedora/afmodel:Part']
+
+    model = resource.relationships(:has_model)
+    # Etd used Part for everything and Eems used PermissionFile
+    model == ['info:fedora/afmodel:Part'] || model == ['info:fedora/afmodel:PermissionFile']
   end
+  # rubocop:enable Style/MultipleComparison
 
   def messages
     [source_id_message].compact.tap do |messages|
