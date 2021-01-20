@@ -12,12 +12,18 @@ class DataQualityIndexer
   def to_solr
     Rails.logger.debug "In #{self.class}"
     # Filter out Items that were attachments for ETDs.  These aren't getting migrated.
-    return {} if resource.relationships(:conforms_to) == ['info:fedora/afmodel:Part']
+    return {} if etd_part?
 
     { 'data_quality_ssim' => messages }
   end
 
   private
+
+  def etd_part?
+    # conforms_to is used on earlier objects and later has_model was used
+    resource.relationships(:conforms_to) == ['info:fedora/afmodel:Part'] ||
+      resource.relationships(:has_model) == ['info:fedora/afmodel:Part']
+  end
 
   def messages
     [source_id_message].compact.tap do |messages|
