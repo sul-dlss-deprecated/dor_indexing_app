@@ -52,8 +52,7 @@ RSpec.describe ContentMetadataDatastreamIndexer do
         'content_file_count_itsi' => 3,
         'image_resource_count_itsi' => 1,
         'first_shelved_image_ss' => 'gw177fc7976_05_0001.jp2',
-        'preserved_size_dbtsi' => 86_774_303,
-        'shelved_size_dbtsi' => 5_143_883
+        'preserved_size_dbtsi' => 86_774_303
       )
     end
   end

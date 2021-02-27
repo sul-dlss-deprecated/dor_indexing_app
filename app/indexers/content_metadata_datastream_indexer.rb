@@ -16,7 +16,6 @@ class ContentMetadataDatastreamIndexer
     return {} unless doc.root['type']
 
     preserved_size = 0
-    shelved_size = 0
     counts = Hash.new(0)                # default count is zero
     resource_type_counts = Hash.new(0)  # default count is zero
     file_roles = ::Set.new
@@ -29,7 +28,6 @@ class ContentMetadataDatastreamIndexer
       resource.xpath('file').each do |file|
         counts['content_file'] += 1
         preserved_size += file['size'].to_i if file['preserve'] == 'yes'
-        shelved_size += file['size'].to_i if file['shelve'] == 'yes'
         if file['shelve'] == 'yes'
           counts['shelved_file'] += 1
           first_shelved_image ||= file['id'] if file['id'].end_with?('jp2')
@@ -44,8 +42,7 @@ class ContentMetadataDatastreamIndexer
       'content_file_count_itsi' => counts['content_file'],
       'shelved_content_file_count_itsi' => counts['shelved_file'],
       'resource_count_itsi' => counts['resource'],
-      'preserved_size_dbtsi' => preserved_size, # double (trie) to support very large sizes
-      'shelved_size_dbtsi' => shelved_size # double (trie) to support very large sizes
+      'preserved_size_dbtsi' => preserved_size # double (trie) to support very large sizes
     }
     solr_doc['resource_types_ssim'] = resource_type_counts.keys unless resource_type_counts.empty?
     solr_doc['content_file_roles_ssim'] = file_roles.to_a unless file_roles.empty?
