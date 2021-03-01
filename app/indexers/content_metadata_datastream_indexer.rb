@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 class ContentMetadataDatastreamIndexer
-  attr_reader :resource
+  attr_reader :resource, :cocina
 
   def initialize(resource:, cocina:)
     @resource = resource
+    @cocina = cocina
   end
 
   # rubocop:disable Metrics/AbcSize
@@ -15,26 +16,23 @@ class ContentMetadataDatastreamIndexer
   def to_solr
     return {} unless doc.root['type']
 
-    preserved_size = 0
     counts = Hash.new(0)                # default count is zero
     resource_type_counts = Hash.new(0)  # default count is zero
-    file_roles = ::Set.new
-    mime_types = ::Set.new
-    first_shelved_image = nil
 
-    doc.xpath('contentMetadata/resource').sort { |a, b| a['sequence'].to_i <=> b['sequence'].to_i }.each do |resource|
-      counts['resource'] += 1
+    file_sets = cocina.value!.structural.contains
+    counts['resource'] = file_sets.size
+    files = file_sets.flat_map { |fs| fs.structural.contains }
+    counts['content_file'] = files.size
+    preserved_files = files.select { |file| file.administrative.sdrPreserve }
+    preserved_size = preserved_files.sum(&:size)
+    shelved_files = files.select { |file| file.administrative.shelve }
+    counts['shelved_file'] = shelved_files.size
+    mime_types = files.map(&:hasMimeType)
+    file_roles = files.map(&:use).compact
+    first_shelved_image = shelved_files.find { |file| file.filename.end_with?('jp2') }.filename
+
+    doc.xpath('contentMetadata/resource').each do |resource|
       resource_type_counts[resource['type']] += 1 if resource['type']
-      resource.xpath('file').each do |file|
-        counts['content_file'] += 1
-        preserved_size += file['size'].to_i if file['preserve'] == 'yes'
-        if file['shelve'] == 'yes'
-          counts['shelved_file'] += 1
-          first_shelved_image ||= file['id'] if file['id'].end_with?('jp2')
-        end
-        mime_types << file['mimetype']
-        file_roles << file['role'] if file['role']
-      end
     end
     solr_doc = {
       'content_type_ssim' => doc.root['type'],
