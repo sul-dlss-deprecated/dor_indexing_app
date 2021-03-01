@@ -28,8 +28,138 @@ RSpec.describe ContentMetadataDatastreamIndexer do
     XML
   end
 
+  let(:json) do
+    <<~JSON
+      {
+        "type": "http://cocina.sul.stanford.edu/models/map.jsonld",
+        "externalIdentifier": "druid:cs178jh7817",
+        "label": "Some more screenshots",
+        "version": 1,
+        "access": {
+          "access": "world",
+          "download": "world"
+        },
+        "administrative": {
+          "hasAdminPolicy": "druid:zx485kb6348"
+        },
+        "identification": {
+          "sourceId": "hydrus:72"
+        },
+        "structural": {
+          "contains": [
+            {
+              "type": "http://cocina.sul.stanford.edu/models/fileset.jsonld",
+              "externalIdentifier": "0001",
+              "label": "0001",
+              "version": 1,
+              "structural": {
+                "contains": [
+                  {
+                    "type": "http://cocina.sul.stanford.edu/models/file.jsonld",
+                    "externalIdentifier": "druid:cs178jh7817/gw177fc7976_05_0001.jp2",
+                    "label": "gw177fc7976_05_0001.jp2",
+                    "filename": "gw177fc7976_05_0001.jp2",
+                    "size": 5143883,
+                    "version": 1,
+                    "hasMimeType": "image/jp2",
+                    "hasMessageDigests": [
+                      {
+                        "type": "sha1",
+                        "digest": "ca1eb0edd09a21f9dd9e3a89abc790daf4d04916"
+                      },
+                      {
+                        "type": "md5",
+                        "digest": "3d3ff46d98f3d517d0bf086571e05c18"
+                      }
+                    ],
+                    "access": {
+                      "access": "world",
+                      "download": "world"
+                    },
+                    "administrative": {
+                      "sdrPreserve": true,
+                      "shelve": true
+                    },
+                    "presentation": {
+                      "height": 4580,
+                      "width": 5939
+                    }
+                  },
+                  {
+                    "type": "http://cocina.sul.stanford.edu/models/file.jsonld",
+                    "externalIdentifier": "druid:cs178jh7817/gw177fc7976_05_0001.gif",
+                    "label": "gw177fc7976_05_0001.gif",
+                    "filename": "gw177fc7976_05_0001.gif",
+                    "size": 4128877,
+                    "version": 1,
+                    "hasMimeType": "image/gif",
+                    "use": "derivative",
+                    "hasMessageDigests": [
+                      {
+                        "type": "sha1",
+                        "digest": "61940d4fad097cba98a3e9dd9f12a90dde0be1ac"
+                      },
+                      {
+                        "type": "md5",
+                        "digest": "406d5d80fdd9ecc0352d339badb4a8fb"
+                      }
+                    ],
+                    "access": {
+                      "access": "dark",
+                      "download": "none"
+                    },
+                    "administrative": {
+                      "sdrPreserve": false,
+                      "shelve": false
+                    },
+                    "presentation": {
+                      "height": 4580,
+                      "width": 5939
+                    }
+                  },
+                  {
+                    "type": "http://cocina.sul.stanford.edu/models/file.jsonld",
+                    "externalIdentifier": "druid:cs178jh7817/gw177fc7976_00_0001.tif",
+                    "label": "gw177fc7976_00_0001.tif",
+                    "filename": "gw177fc7976_00_0001.tif",
+                    "size": 81630420,
+                    "version": 1,
+                    "hasMimeType": "image/tiff",
+                    "hasMessageDigests": [
+                      {
+                        "type": "sha1",
+                        "digest": "12586b624540031bfa3d153299160c4885c3508c"
+                      },
+                      {
+                        "type": "md5",
+                        "digest": "81ccd17bccf349581b779615e82a0366"
+                      }
+                    ],
+                    "access": {
+                      "access": "dark",
+                      "download": "none"
+                    },
+                    "administrative": {
+                      "sdrPreserve": true,
+                      "shelve": false
+                    },
+                    "presentation": {
+                      "height": 4580,
+                      "width": 5939
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    JSON
+  end
+
+  let(:model) { Cocina::Models.build(JSON.parse(json)) }
   let(:obj) { Dor::Item.new }
-  let(:cocina) { Success(instance_double(Cocina::Models::DRO)) }
+  let(:cocina) { Success(model) }
 
   let(:indexer) do
     described_class.new(resource: obj, cocina: cocina)
