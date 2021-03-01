@@ -51,5 +51,5 @@ group :deployment do
   gem 'capistrano-passenger'
   gem 'capistrano-rails'
   gem 'capistrano-shared_configs'
-  gem 'dlss-capistrano', '~> 3.0'
+  gem 'dlss-capistrano', '~> 3.11'
 end
