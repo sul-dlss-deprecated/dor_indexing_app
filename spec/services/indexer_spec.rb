@@ -71,16 +71,13 @@ RSpec.describe Indexer do
   describe '#to_solr' do
     subject(:solr_doc) { indexer.to_solr }
 
-    let(:object_client) { instance_double(Dor::Services::Client::Object) }
-    let(:apo_id) { 'druid:9999' }
+    let(:object_client) { instance_double(Dor::Services::Client::Object, find: apo) }
+    let(:apo_id) { 'druid:bd999bd9999' }
     let(:apo) do
-      instance_double(Dor::AdminPolicyObject, full_title: 'APO title', pid: apo_id)
+      instance_double(Cocina::Models::AdminPolicy, label: 'APO title')
     end
 
     before do
-      allow(model).to receive(:admin_policy_object_id).and_return(apo_id)
-      allow(model).to receive(:collection_ids).and_return([])
-
       allow(Dor).to receive(:find).and_return(apo)
       allow(Dor::Services::Client).to receive(:object).and_return(object_client)
       allow(object_client).to receive_message_chain(:administrative_tags, :list).and_return([])
@@ -96,15 +93,27 @@ RSpec.describe Indexer do
       context 'when cocina fetch is successful' do
         let(:model) { Dor::Item.new(pid: druid) }
         let(:cocina) do
-          instance_double(Cocina::Models::DRO, externalIdentifier: druid, structural: structural, description: description)
+          Cocina::Models.build(
+            'externalIdentifier' => druid,
+            'type' => Cocina::Models::Vocab.image,
+            'version' => 1,
+            'label' => 'testing',
+            'access' => {},
+            'administrative' => {
+              'hasAdminPolicy' => apo_id
+            },
+            'description' => {
+              'title' => [{ 'value' => 'Test obj' }],
+              'subject' => [{ 'type' => 'topic', 'value' => 'word' }]
+            },
+            'structural' => {
+              'contains' => []
+            },
+            'identification' => {
+              'catalogLinks' => [{ 'catalog' => 'symphony', 'catalogRecordId' => '1234' }]
+            }
+          )
         end
-        let(:description) do
-          instance_double(Cocina::Models::Description, subject: [topic])
-        end
-        let(:topic) do
-          instance_double(Cocina::Models::DescriptiveValue, type: 'topic', value: 'word')
-        end
-        let(:structural) { instance_double(Cocina::Models::DROStructural, contains: []) }
 
         it { is_expected.to include('milestones_ssim', 'released_to_ssim', 'wf_ssim', 'tag_ssim') }
       end
@@ -119,12 +128,20 @@ RSpec.describe Indexer do
 
     context 'when the model is an admin policy' do
       let(:model) { Dor::AdminPolicyObject.new(pid: druid) }
-      let(:cocina) do
-        instance_double(Cocina::Models::AdminPolicy, externalIdentifier: druid, description: description)
-      end
 
-      let(:description) do
-        instance_double(Cocina::Models::Description, subject: nil)
+      let(:cocina) do
+        Cocina::Models.build(
+          'externalIdentifier' => druid,
+          'type' => Cocina::Models::Vocab.admin_policy,
+          'version' => 1,
+          'label' => 'testing',
+          'administrative' => {
+            'hasAdminPolicy' => apo_id
+          },
+          'description' => {
+            'title' => [{ 'value' => 'Test obj' }]
+          }
+        )
       end
 
       it { is_expected.to include('milestones_ssim', 'wf_ssim', 'tag_ssim') }
@@ -132,12 +149,20 @@ RSpec.describe Indexer do
 
     context 'when the model is a hydrus apo' do
       let(:model) { Hydrus::AdminPolicyObject.new(pid: druid) }
-      let(:cocina) do
-        instance_double(Cocina::Models::AdminPolicy, externalIdentifier: druid, description: description)
-      end
 
-      let(:description) do
-        instance_double(Cocina::Models::Description, subject: nil)
+      let(:cocina) do
+        Cocina::Models.build(
+          'externalIdentifier' => druid,
+          'type' => Cocina::Models::Vocab.admin_policy,
+          'version' => 1,
+          'label' => 'testing',
+          'administrative' => {
+            'hasAdminPolicy' => apo_id
+          },
+          'description' => {
+            'title' => [{ 'value' => 'Test obj' }]
+          }
+        )
       end
 
       it { is_expected.to include('milestones_ssim', 'wf_ssim', 'tag_ssim') }

@@ -4,6 +4,7 @@ require 'rails_helper'
 
 RSpec.describe CompositeIndexer do
   let(:model) { Dor::Abstract }
+  let(:druid) { 'druid:mx123ms3333' }
   let(:mods) do
     double('mods', sw_title_display: 'foo', sw_genre: ['test genre'],
                    main_author_w_date: '1999',
@@ -20,7 +21,7 @@ RSpec.describe CompositeIndexer do
   end
   let(:obj) do
     instance_double(Dor::Item,
-                    pid: 'druid:mx123ms3333',
+                    pid: druid,
                     stanford_mods: mods,
                     label: 'obj label',
                     identityMetadata: identity_metadata,
@@ -30,9 +31,9 @@ RSpec.describe CompositeIndexer do
                     admin_policy_object_id: apo_id,
                     collections: [])
   end
-  let(:apo_id) { 'druid:9999' }
+  let(:apo_id) { 'druid:gf999hb9999' }
   let(:apo) do
-    instance_double(Dor::AdminPolicyObject, full_title: 'APO title', pid: apo_id)
+    instance_double(Cocina::Models::AdminPolicy, label: 'APO title')
   end
   let(:identity_metadata) do
     instance_double(Dor::IdentityMetadataDS, otherId: 'foo')
@@ -48,11 +49,32 @@ RSpec.describe CompositeIndexer do
       ProcessableIndexer
     )
   end
-  let(:cocina) { Success(instance_double(Cocina::Models::DRO)) }
-  let(:object_client) { instance_double(Dor::Services::Client::Object) }
+
+  let(:cocina) do
+    Cocina::Models.build(
+      'externalIdentifier' => druid,
+      'type' => Cocina::Models::Vocab.image,
+      'version' => 1,
+      'label' => 'testing',
+      'access' => {},
+      'administrative' => {
+        'hasAdminPolicy' => apo_id
+      },
+      'description' => {
+        'title' => [{ 'value' => 'Test obj' }],
+        'subject' => [{ 'type' => 'topic', 'value' => 'word' }]
+      },
+      'structural' => {
+        'contains' => []
+      },
+      'identification' => {
+        'catalogLinks' => [{ 'catalog' => 'symphony', 'catalogRecordId' => '1234' }]
+      }
+    )
+  end
+  let(:object_client) { instance_double(Dor::Services::Client::Object, find: apo) }
 
   before do
-    allow(Dor).to receive(:find).and_return(apo)
     allow(Dor::Services::Client).to receive(:object).and_return(object_client)
     allow(object_client).to receive_message_chain(:administrative_tags, :list).and_return([])
   end
