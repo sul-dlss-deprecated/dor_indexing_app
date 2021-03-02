@@ -37,17 +37,12 @@ class IdentifiableIndexer
 
     solr_doc = {}
     solr_doc[INDEX_VERSION_FIELD] = Dor::VERSION
-    solr_doc['indexer_host_ssi'] = Socket.gethostname
-    solr_doc['indexed_at_dtsi'] = Time.now.utc.xmlschema
-
-    add_solr_value(solr_doc, 'title_sort', resource.label, :string, [:stored_sortable])
 
     solrize_related_obj_titles(solr_doc, [resource.admin_policy_object_id].compact, @@apo_hash, :apo)
     # There is a bug in ActiveFedora::HasAndBelongsToManyAssociation#ids_reader where it returns an empty set.
     # We can work around by loading the association target:
     collection_ids = resource.collections.map(&:id)
     solrize_related_obj_titles(solr_doc, collection_ids, @@collection_hash, :collection)
-    solr_doc['public_dc_relation_tesim'] ||= solr_doc['collection_title_tesim'] if solr_doc['collection_title_tesim']
     solr_doc['metadata_source_ssi'] = identity_metadata_source
     # This used to be added to the index by https://github.com/sul-dlss/dor-services/commit/11b80d249d19326ef591411ffeb634900e75c2c3
     # and was called dc_identifier_druid_tesim
@@ -88,7 +83,7 @@ class IdentifiableIndexer
     # TODO: if you wanted to get a little fancier, you could also solrize a 2 level hierarchy and display using hierarchial facets, like
     # ["SOURCE", "SOURCE : TITLE"] (e.g. ["Hydrus", "Hydrus : Special Collections"], see (exploded) tags in IdentityMetadataDS#to_solr).
     title_type = :symbol # we'll get an _ssim because of the type
-    title_attrs = [:stored_searchable] # we'll also get a _tesim from this attr
+    title_attrs = [:stored_searchable] # we'll also get a _tesim from this attr (TODO, this is only needed for collection_title_tesim)
     relationships.each do |rel_druid|
       # populate cache if necessary
       unless title_hash.key?(rel_druid)
