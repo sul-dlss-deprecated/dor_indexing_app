@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe Indexer do
-  subject(:indexer) { described_class.for(model, cocina: cocina) }
+  subject(:indexer) { described_class.for(model, cocina: Success(cocina)) }
 
   let(:processable) do
     instance_double(ProcessableIndexer, to_solr: { 'milestones_ssim' => %w[foo bar] })
@@ -27,48 +27,48 @@ RSpec.describe Indexer do
 
   context 'when the model is an item' do
     let(:model) { Dor::Item.new(pid: 'druid:xx999xx9999') }
-    let(:cocina) { Success(instance_double(Cocina::Models::DRO)) }
+    let(:cocina) { instance_double(Cocina::Models::DRO) }
 
     it { is_expected.to be_instance_of CompositeIndexer::Instance }
   end
 
   context 'when the model is an admin policy' do
     let(:model) { Dor::AdminPolicyObject.new(pid: 'druid:xx999xx9999') }
-    let(:cocina) { Success(instance_double(Cocina::Models::AdminPolicy)) }
+    let(:cocina) { instance_double(Cocina::Models::AdminPolicy) }
 
     it { is_expected.to be_instance_of CompositeIndexer::Instance }
   end
 
   context 'when the model is a hydrus item' do
     let(:model) { Hydrus::Item.new }
-    let(:cocina) { Success(instance_double(Cocina::Models::DRO)) }
+    let(:cocina) { instance_double(Cocina::Models::DRO) }
 
     it { is_expected.to be_instance_of CompositeIndexer::Instance }
   end
 
   context 'when the model is a hydrus apo' do
     let(:model) { Hydrus::AdminPolicyObject.new(pid: 'druid:xx999xx9999') }
-    let(:cocina) { Success(instance_double(Cocina::Models::AdminPolicy)) }
+    let(:cocina) { instance_double(Cocina::Models::AdminPolicy) }
 
     it { is_expected.to be_instance_of CompositeIndexer::Instance }
   end
 
   context 'when the model is a collection' do
     let(:model) { Dor::Collection.new }
-    let(:cocina) { Success(instance_double(Cocina::Models::Collection)) }
+    let(:cocina) { instance_double(Cocina::Models::Collection) }
 
     it { is_expected.to be_instance_of CompositeIndexer::Instance }
   end
 
   context 'when the model is an agreement' do
     let(:model) { Dor::Agreement.new }
-    let(:cocina) { Success(instance_double(Cocina::Models::DRO)) }
+    let(:cocina) { instance_double(Cocina::Models::DRO) }
 
     it { is_expected.to be_instance_of CompositeIndexer::Instance }
   end
 
   describe '#to_solr' do
-    subject { indexer.to_solr }
+    subject(:solr_doc) { indexer.to_solr }
 
     let(:object_client) { instance_double(Dor::Services::Client::Object) }
     let(:apo_id) { 'druid:9999' }
@@ -86,22 +86,36 @@ RSpec.describe Indexer do
     end
 
     context 'when the model is an item' do
-      let(:model) { Dor::Item.new(pid: 'druid:xx999xx9999') }
-      let(:cocina) { Success(instance_double(Cocina::Models::DRO)) }
+      before do
+        model.contentMetadata.contentType = ['image']
+      end
 
-      it { is_expected.to include('milestones_ssim', 'released_to_ssim', 'wf_ssim', 'tag_ssim') }
+      context 'when cocina fetch is successful' do
+        let(:model) { Dor::Item.new(pid: 'druid:xx999xx9999') }
+        let(:cocina) { instance_double(Cocina::Models::DRO, structural: structural) }
+        let(:structural) { instance_double(Cocina::Models::DROStructural, contains: []) }
+
+        it { is_expected.to include('milestones_ssim', 'released_to_ssim', 'wf_ssim', 'tag_ssim') }
+      end
+
+      context 'when cocina fails to fetch' do
+        let(:indexer) { described_class.for(model, cocina: Failure(:conversion_error)) }
+        let(:model) { Dor::Item.new(pid: 'druid:xx999xx9999') }
+
+        it { is_expected.to include('milestones_ssim', 'released_to_ssim', 'wf_ssim', 'tag_ssim', 'obj_label_tesim', :id) }
+      end
     end
 
     context 'when the model is an admin policy' do
       let(:model) { Dor::AdminPolicyObject.new(pid: 'druid:xx999xx9999') }
-      let(:cocina) { Success(instance_double(Cocina::Models::AdminPolicy)) }
+      let(:cocina) { instance_double(Cocina::Models::AdminPolicy) }
 
       it { is_expected.to include('milestones_ssim', 'wf_ssim', 'tag_ssim') }
     end
 
     context 'when the model is a hydrus apo' do
       let(:model) { Hydrus::AdminPolicyObject.new(pid: 'druid:xx999xx9999') }
-      let(:cocina) { Success(instance_double(Cocina::Models::AdminPolicy)) }
+      let(:cocina) { instance_double(Cocina::Models::AdminPolicy) }
 
       it { is_expected.to include('milestones_ssim', 'wf_ssim', 'tag_ssim') }
     end

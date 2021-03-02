@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
+require 'dry/monads/maybe'
+
 class Indexer
   ADMIN_POLICY_INDEXER = CompositeIndexer.new(
-    DataQualityIndexer,
     AdministrativeTagIndexer,
     DataIndexer,
     RoleMetadataDatastreamIndexer,
@@ -21,7 +22,6 @@ class Indexer
   )
 
   COLLECTION_INDEXER = CompositeIndexer.new(
-    DataQualityIndexer,
     AdministrativeTagIndexer,
     DataIndexer,
     ProvenanceMetadataDatastreamIndexer,
@@ -38,7 +38,6 @@ class Indexer
   )
 
   ITEM_INDEXER = CompositeIndexer.new(
-    DataQualityIndexer,
     AdministrativeTagIndexer,
     DataIndexer,
     ProvenanceMetadataDatastreamIndexer,
@@ -57,7 +56,6 @@ class Indexer
   )
 
   SET_INDEXER = CompositeIndexer.new(
-    DataQualityIndexer,
     AdministrativeTagIndexer,
     DataIndexer,
     ProvenanceMetadataDatastreamIndexer,
@@ -70,6 +68,16 @@ class Indexer
     IdentifiableIndexer,
     ProcessableIndexer,
     WorkflowsIndexer
+  )
+
+  # This indexer is used when dor-services-app is unable to produce a cocina representation of the object
+  FALLBACK_INDEXER = CompositeIndexer.new(
+    DataQualityIndexer,
+    AdministrativeTagIndexer,
+    ProcessableIndexer,
+    ReleasableIndexer,
+    WorkflowsIndexer,
+    Fedora3LabelIndexer
   )
 
   INDEXERS = {
@@ -86,6 +94,10 @@ class Indexer
   # @param [Dry::Monads::Result] cocina
   def self.for(obj, cocina:)
     Rails.logger.debug("Fetching indexer for #{obj.class}")
-    INDEXERS.fetch(obj.class).new(resource: obj, cocina: cocina)
+    if cocina.success?
+      INDEXERS.fetch(obj.class).new(resource: obj, cocina: cocina.value!)
+    else
+      FALLBACK_INDEXER.new(resource: obj, cocina: cocina.to_maybe)
+    end
   end
 end

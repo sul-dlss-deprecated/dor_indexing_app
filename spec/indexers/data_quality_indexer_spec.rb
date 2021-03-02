@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe DataQualityIndexer do
   let(:obj) { Dor::Item.new(pid: 'druid:rt923jk342') }
-  let(:cocina) { Success(instance_double(Cocina::Models::DRO)) }
+  let(:cocina) { None() }
 
   let(:indexer) do
     described_class.new(resource: obj, cocina: cocina)
@@ -43,7 +43,7 @@ RSpec.describe DataQualityIndexer do
 
     context 'when all fields are present' do
       it 'has none' do
-        expect(doc).to eq('data_quality_ssim' => [])
+        expect(doc).to eq('data_quality_ssim' => ['Cocina conversion failed'])
       end
     end
 
@@ -92,7 +92,7 @@ RSpec.describe DataQualityIndexer do
 
       it 'draws the errors' do
         expect(doc).to eq(
-          'data_quality_ssim' => ['non-comformant sourceId']
+          'data_quality_ssim' => ['non-comformant sourceId', 'Cocina conversion failed']
         )
       end
     end
@@ -109,7 +109,7 @@ RSpec.describe DataQualityIndexer do
 
       it 'draws the errors' do
         expect(doc).to eq(
-          'data_quality_ssim' => []
+          'data_quality_ssim' => ['Cocina conversion failed']
         )
       end
     end
@@ -123,16 +123,6 @@ RSpec.describe DataQualityIndexer do
           </identityMetadata>
         XML
       end
-
-      it 'draws the errors' do
-        expect(doc).to eq(
-          'data_quality_ssim' => []
-        )
-      end
-    end
-
-    context 'with an failed conversion' do
-      let(:cocina) { Failure(:nope) }
 
       it 'draws the errors' do
         expect(doc).to eq(

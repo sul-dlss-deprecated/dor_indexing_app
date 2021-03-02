@@ -1,11 +1,10 @@
 # frozen_string_literal: true
 
 class DataQualityIndexer
-  attr_reader :resource, :cocina
+  attr_reader :resource
 
   def initialize(resource:, cocina:)
     @resource = resource
-    @cocina = cocina
   end
 
   # @return [Hash] the partial solr document for identityMetadata
@@ -34,7 +33,7 @@ class DataQualityIndexer
 
   def messages
     [source_id_message].compact.tap do |messages|
-      messages << 'Cocina conversion failed' if cocina.failure?
+      messages << 'Cocina conversion failed'
     end
   end
 
