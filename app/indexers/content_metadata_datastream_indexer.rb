@@ -3,7 +3,7 @@
 class ContentMetadataDatastreamIndexer
   attr_reader :resource, :cocina
 
-  def initialize(resource:, cocina:)
+  def initialize(resource:, cocina:, id:)
     @resource = resource
     @cocina = cocina
   end

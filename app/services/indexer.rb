@@ -95,9 +95,10 @@ class Indexer
   def self.for(obj, cocina:)
     Rails.logger.debug("Fetching indexer for #{obj.class}")
     if cocina.success?
-      INDEXERS.fetch(obj.class).new(resource: obj, cocina: cocina.value!)
+      result = cocina.value!
+      INDEXERS.fetch(obj.class).new(id: result.externalIdentifier, resource: obj, cocina: result)
     else
-      FALLBACK_INDEXER.new(resource: obj, cocina: cocina.to_maybe)
+      FALLBACK_INDEXER.new(id: obj.pid, resource: obj, cocina: cocina.to_maybe)
     end
   end
 end

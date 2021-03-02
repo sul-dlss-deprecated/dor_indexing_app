@@ -3,10 +3,7 @@
 require 'spec_helper'
 
 RSpec.describe WorkflowsIndexer do
-  let(:obj) { instance_double(Dor::Item, pid: 'druid:ab123cd4567') }
-  let(:cocina) { Success(instance_double(Cocina::Models::DRO)) }
-
-  let(:indexer) { described_class.new(resource: obj, cocina: cocina) }
+  let(:indexer) { described_class.new(id: 'druid:ab123cd4567') }
 
   describe '#to_solr' do
     let(:solr_doc) { indexer.to_solr }

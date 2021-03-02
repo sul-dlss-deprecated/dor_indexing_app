@@ -5,7 +5,7 @@ class ObjectProfileIndexer
 
   attr_reader :resource
 
-  def initialize(resource:, cocina:)
+  def initialize(resource:, **)
     @resource = resource
   end
 

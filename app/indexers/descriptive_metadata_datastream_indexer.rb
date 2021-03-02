@@ -3,7 +3,7 @@
 class DescriptiveMetadataDatastreamIndexer
   attr_reader :cocina
 
-  def initialize(resource:, cocina:)
+  def initialize(cocina:, **)
     @cocina = cocina
   end
 

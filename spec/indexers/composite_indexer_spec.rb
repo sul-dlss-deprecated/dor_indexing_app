@@ -62,7 +62,7 @@ RSpec.describe CompositeIndexer do
       instance_double(Dor::Workflow::Client::Status, milestones: {}, info: {}, display: 'bad')
     end
     let(:workflow_client) { instance_double(Dor::Workflow::Client, status: status) }
-    let(:doc) { indexer.new(resource: obj, cocina: cocina).to_solr }
+    let(:doc) { indexer.new(id: 'druid:ab123cd4567', resource: obj, cocina: cocina).to_solr }
 
     before do
       allow(Dor::Workflow::Client).to receive(:new).and_return(workflow_client)

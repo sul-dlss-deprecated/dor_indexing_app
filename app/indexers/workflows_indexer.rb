@@ -2,10 +2,10 @@
 
 # Indexes the objects position in workflows
 class WorkflowsIndexer
-  attr_reader :resource
+  attr_reader :id
 
-  def initialize(resource:, cocina:)
-    @resource = resource
+  def initialize(id:, **)
+    @id = id
   end
 
   # @return [Hash] the partial solr document for workflow concerns
@@ -30,6 +30,6 @@ class WorkflowsIndexer
   # TODO: remove Dor::Workflow::Document
   # @return [Workflow::Response::Workflows]
   def all_workflows
-    @all_workflows ||= WorkflowClientFactory.build.workflow_routes.all_workflows pid: resource.pid
+    @all_workflows ||= WorkflowClientFactory.build.workflow_routes.all_workflows pid: id
   end
 end

@@ -8,15 +8,11 @@ RSpec.describe ObjectProfileIndexer do
   end
   let(:cocina) { Success(instance_double(Cocina::Models::DRO)) }
 
-  let(:indexer) do
-    described_class.new(resource: obj, cocina: cocina)
-  end
-
   describe '#to_solr' do
     let(:indexer) do
       CompositeIndexer.new(
         described_class
-      ).new(resource: obj, cocina: cocina)
+      ).new(id: 'druid:ab123cd4567', resource: obj, cocina: cocina)
     end
     let(:doc) { indexer.to_solr }
 
