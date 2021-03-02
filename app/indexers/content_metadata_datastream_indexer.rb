@@ -19,7 +19,7 @@ class ContentMetadataDatastreamIndexer
     counts = Hash.new(0)                # default count is zero
     resource_type_counts = Hash.new(0)  # default count is zero
 
-    file_sets = cocina.value!.structural.contains
+    file_sets = cocina.structural.contains
     counts['resource'] = file_sets.size
     files = file_sets.flat_map { |fs| fs.structural.contains }
     counts['content_file'] = files.size
@@ -29,7 +29,7 @@ class ContentMetadataDatastreamIndexer
     counts['shelved_file'] = shelved_files.size
     mime_types = files.map(&:hasMimeType)
     file_roles = files.map(&:use).compact
-    first_shelved_image = shelved_files.find { |file| file.filename.end_with?('jp2') }.filename
+    first_shelved_image = shelved_files.find { |file| file.filename.end_with?('jp2') }&.filename
 
     doc.xpath('contentMetadata/resource').each do |resource|
       resource_type_counts[resource['type']] += 1 if resource['type']

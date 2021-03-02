@@ -157,9 +157,8 @@ RSpec.describe ContentMetadataDatastreamIndexer do
     JSON
   end
 
-  let(:model) { Cocina::Models.build(JSON.parse(json)) }
+  let(:cocina) { Cocina::Models.build(JSON.parse(json)) }
   let(:obj) { Dor::Item.new }
-  let(:cocina) { Success(model) }
 
   let(:indexer) do
     described_class.new(resource: obj, cocina: cocina)
