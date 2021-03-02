@@ -7,10 +7,10 @@ class AdministrativeTagIndexer
   TAG_PART_DELIMITER = ' : '
   TAGS_TO_INDEX = ['Project', 'Registered By'].freeze
 
-  attr_reader :resource
+  attr_reader :id
 
-  def initialize(resource:, cocina:)
-    @resource = resource
+  def initialize(id:, **)
+    @id = id
   end
 
   # @return [Hash] the partial solr document for administrative tags
@@ -45,7 +45,7 @@ class AdministrativeTagIndexer
   end
 
   def administrative_tags
-    Dor::Services::Client.object(resource.pid).administrative_tags.list
+    Dor::Services::Client.object(id).administrative_tags.list
   rescue Dor::Services::Client::NotFoundResponse
     []
   end

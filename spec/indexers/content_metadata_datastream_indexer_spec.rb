@@ -161,7 +161,7 @@ RSpec.describe ContentMetadataDatastreamIndexer do
   let(:obj) { Dor::Item.new }
 
   let(:indexer) do
-    described_class.new(resource: obj, cocina: cocina)
+    described_class.new(id: 'druid:ab123cd4567', resource: obj, cocina: cocina)
   end
 
   before do
