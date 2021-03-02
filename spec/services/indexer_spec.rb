@@ -90,9 +90,19 @@ RSpec.describe Indexer do
         model.contentMetadata.contentType = ['image']
       end
 
+      let(:model) { Dor::Item.new(pid: 'druid:xx999xx9999') }
+
       context 'when cocina fetch is successful' do
         let(:model) { Dor::Item.new(pid: 'druid:xx999xx9999') }
-        let(:cocina) { instance_double(Cocina::Models::DRO, structural: structural) }
+        let(:cocina) do
+          instance_double(Cocina::Models::DRO, structural: structural, description: description)
+        end
+        let(:description) do
+          instance_double(Cocina::Models::Description, subject: [topic])
+        end
+        let(:topic) do
+          instance_double(Cocina::Models::DescriptiveValue, type: 'topic', value: 'word')
+        end
         let(:structural) { instance_double(Cocina::Models::DROStructural, contains: []) }
 
         it { is_expected.to include('milestones_ssim', 'released_to_ssim', 'wf_ssim', 'tag_ssim') }
@@ -108,14 +118,26 @@ RSpec.describe Indexer do
 
     context 'when the model is an admin policy' do
       let(:model) { Dor::AdminPolicyObject.new(pid: 'druid:xx999xx9999') }
-      let(:cocina) { instance_double(Cocina::Models::AdminPolicy) }
+      let(:cocina) do
+        instance_double(Cocina::Models::AdminPolicy, description: description)
+      end
+
+      let(:description) do
+        instance_double(Cocina::Models::Description, subject: nil)
+      end
 
       it { is_expected.to include('milestones_ssim', 'wf_ssim', 'tag_ssim') }
     end
 
     context 'when the model is a hydrus apo' do
       let(:model) { Hydrus::AdminPolicyObject.new(pid: 'druid:xx999xx9999') }
-      let(:cocina) { instance_double(Cocina::Models::AdminPolicy) }
+      let(:cocina) do
+        instance_double(Cocina::Models::AdminPolicy, description: description)
+      end
+
+      let(:description) do
+        instance_double(Cocina::Models::Description, subject: nil)
+      end
 
       it { is_expected.to include('milestones_ssim', 'wf_ssim', 'tag_ssim') }
     end
