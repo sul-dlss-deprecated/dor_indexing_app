@@ -2,31 +2,45 @@
 
 # Indexing provided by ActiveFedora
 class DataIndexer
-  include ActiveFedora::Indexing
+  attr_reader :cocina
 
-  attr_reader :resource
-
-  def initialize(resource:, **)
-    @resource = resource
+  def initialize(cocina:, **)
+    @cocina = cocina
   end
 
-  # we need to override this until https://github.com/samvera/active_fedora/pull/1371
-  # has been released
-  def to_solr(solr_doc = {})
-    Rails.logger.debug "In #{self.class}"
+  def to_solr
+    {}.tap do |solr_doc|
+      Rails.logger.debug "In #{self.class}"
+      solr_doc[SOLR_DOCUMENT_ID.to_sym] = cocina.externalIdentifier
 
-    c_time = create_date
-    c_time = Time.parse(c_time) unless c_time.is_a?(Time)
-    m_time = modified_date
-    m_time = Time.parse(m_time) unless m_time.is_a?(Time)
-    Solrizer.set_field(solr_doc, 'system_create', c_time, :stored_sortable)
-    Solrizer.set_field(solr_doc, 'system_modified', m_time, :stored_sortable)
-    Solrizer.set_field(solr_doc, 'object_state', state, :stored_sortable)
-    Solrizer.set_field(solr_doc, 'active_fedora_model', has_model, :stored_sortable)
-    solr_doc[SOLR_DOCUMENT_ID.to_sym] = pid
-    solrize_relationships(solr_doc)
+      # These are required as long as dor-services-app uses ActiveFedora for querying:
+      solr_doc['has_model_ssim'] = legacy_model
+      solr_doc['is_governed_by_ssim'] = legacy_apo
+      solr_doc['is_member_of_collection_ssim'] = legacy_collections
+    end
   end
 
-  delegate :create_date, :modified_date, :state, :pid, :inner_object,
-           :datastreams, :relationships, :has_model, to: :resource
+  def legacy_collections
+    case cocina.type
+    when Cocina::Models::Vocab.admin_policy, Cocina::Models::Vocab.collection
+      []
+    else
+      cocina.structural.isMemberOf.map { |col_id| "info:fedora/#{col_id}" }
+    end
+  end
+
+  def legacy_apo
+    "info:fedora/#{cocina.administrative.hasAdminPolicy}"
+  end
+
+  def legacy_model
+    case cocina.type
+    when Cocina::Models::Vocab.admin_policy
+      'info:fedora/afmodel:Dor_AdminPolicyObject'
+    when Cocina::Models::Vocab.collection
+      'info:fedora/afmodel:Dor_Collection'
+    else
+      'info:fedora/afmodel:Dor_Item'
+    end
+  end
 end

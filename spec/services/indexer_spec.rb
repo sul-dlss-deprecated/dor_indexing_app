@@ -71,16 +71,25 @@ RSpec.describe Indexer do
   describe '#to_solr' do
     subject(:solr_doc) { indexer.to_solr }
 
-    let(:object_client) { instance_double(Dor::Services::Client::Object, find: apo) }
     let(:apo_id) { 'druid:bd999bd9999' }
+
     let(:apo) do
-      instance_double(Cocina::Models::AdminPolicy, label: 'APO title')
+      Cocina::Models.build(
+        'externalIdentifier' => apo_id,
+        'type' => Cocina::Models::Vocab.admin_policy,
+        'version' => 1,
+        'label' => 'APO title',
+        'administrative' => {
+          'hasAdminPolicy' => 'druid:xx000xx0000'
+        }
+      )
     end
 
+    let(:apo_object_client) { instance_double(Dor::Services::Client::Object, find: apo) }
+
     before do
-      allow(Dor).to receive(:find).and_return(apo)
-      allow(Dor::Services::Client).to receive(:object).and_return(object_client)
-      allow(object_client).to receive_message_chain(:administrative_tags, :list).and_return([])
+      allow(Dor::Services::Client).to receive(:object).with(apo_id).and_return(apo_object_client)
+      allow(apo_object_client).to receive_message_chain(:administrative_tags, :list).and_return([])
     end
 
     context 'when the model is an item' do
@@ -107,7 +116,8 @@ RSpec.describe Indexer do
               'subject' => [{ 'type' => 'topic', 'value' => 'word' }]
             },
             'structural' => {
-              'contains' => []
+              'contains' => [],
+              'isMemberOf' => []
             },
             'identification' => {
               'catalogLinks' => [{ 'catalog' => 'symphony', 'catalogRecordId' => '1234' }]
