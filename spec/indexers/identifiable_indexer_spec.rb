@@ -28,33 +28,42 @@ RSpec.describe IdentifiableIndexer do
     XML
   end
 
-  let(:obj) { Dor::Abstract.new(pid: 'druid:rt923jk342') }
+  let(:druid) { 'druid:rt923jk3422' }
+  let(:apo_id) { 'druid:bd999bd9999' }
+  let(:collections) { [] }
+  let(:cocina) do
+    Cocina::Models.build(
+      'externalIdentifier' => druid,
+      'type' => Cocina::Models::Vocab.image,
+      'version' => 1,
+      'label' => 'testing',
+      'access' => {},
+      'administrative' => {
+        'hasAdminPolicy' => apo_id
+      },
+      'description' => {
+        'title' => [{ 'value' => 'Test obj' }],
+        'subject' => [{ 'type' => 'topic', 'value' => 'word' }]
+      },
+      'structural' => {
+        'contains' => [],
+        'isMemberOf' => collections
+      },
+      'identification' => {
+        'catalogLinks' => [{ 'catalog' => 'symphony', 'catalogRecordId' => '1234' }]
+      }
+    )
+  end
 
   let(:indexer) do
-    described_class.new(resource: obj, cocina: cocina)
+    described_class.new(cocina: cocina)
   end
-  let(:cocina) { Success(instance_double(Cocina::Models::DRO)) }
 
   before do
-    obj.identityMetadata.content = xml
     described_class.reset_cache!
   end
 
   describe '#identity_metadata_source' do
-    it 'depends on remove_other_Id' do
-      obj.identityMetadata.remove_other_Id('catkey', '129483625')
-      obj.identityMetadata.remove_other_Id('barcode', '36105049267078')
-      obj.identityMetadata.add_other_Id('catkey', '129483625')
-      expect(indexer.identity_metadata_source).to eq 'Symphony'
-      obj.identityMetadata.remove_other_Id('catkey', '129483625')
-      obj.identityMetadata.add_other_Id('barcode', '36105049267078')
-      expect(indexer.identity_metadata_source).to eq 'Symphony'
-      obj.identityMetadata.remove_other_Id('barcode', '36105049267078')
-      expect(indexer.identity_metadata_source).to eq 'DOR'
-      obj.identityMetadata.remove_other_Id('foo', 'bar')
-      expect(indexer.identity_metadata_source).to eq 'DOR'
-    end
-
     it 'indexes metadata source' do
       expect(indexer.identity_metadata_source).to eq 'Symphony'
     end
@@ -62,50 +71,58 @@ RSpec.describe IdentifiableIndexer do
 
   describe '#to_solr' do
     let(:doc) { indexer.to_solr }
-    let(:mock_rel_druid) { 'druid:does_not_exist' }
-    let(:collection) { instance_double(Dor::Collection, id: mock_rel_druid) }
-    let(:collections) { [collection] }
+    let(:mock_rel_druid) { 'druid:qf999gg9999' }
+    # let(:collection) { instance_double(Dor::Collection, id: mock_rel_druid) }
+    # let(:collections) { [collection] }
 
-    before do
-      allow(obj).to receive_messages(admin_policy_object_id: mock_rel_druid, collections: collections)
+    let(:related) do
+      instance_double(Cocina::Models::AdminPolicy, label: 'Test object')
+    end
+    let(:object_client) do
+      instance_double(Dor::Services::Client::Object, find: related)
     end
 
-    context 'when no APO or collection is set' do
-      let(:mock_rel_druid) { nil }
+    before do
+      allow(object_client).to receive_message_chain(:administrative_tags, :list).and_return([])
+
+      allow(Dor::Services::Client).to receive(:object).and_return(object_client)
+    end
+
+    context 'when no collection is set' do
       let(:collections) { [] }
 
       it "doesn't raise an error" do
         expect(doc[Solrizer.solr_name('collection_title', :symbol)]).to be_nil
         expect(doc[Solrizer.solr_name('collection_title', :stored_searchable)]).to be_nil
-        expect(doc[Solrizer.solr_name('apo_title', :symbol)]).to be_nil
-        expect(doc[Solrizer.solr_name('apo_title', :stored_searchable)]).to be_nil
-        expect(doc[Solrizer.solr_name('nonhydrus_apo_title', :symbol)]).to be_nil
-        expect(doc[Solrizer.solr_name('nonhydrus_apo_title', :stored_searchable)]).to be_nil
+        expect(doc[Solrizer.solr_name('apo_title', :symbol)]).to eq ['Test object']
+        expect(doc[Solrizer.solr_name('apo_title', :stored_searchable)]).to eq ['Test object']
+        expect(doc[Solrizer.solr_name('nonhydrus_apo_title', :symbol)]).to eq ['Test object']
+        expect(doc[Solrizer.solr_name('nonhydrus_apo_title', :stored_searchable)]).to eq ['Test object']
       end
     end
 
     context 'when related collection and APOs are not found' do
       before do
-        allow(Dor).to receive(:find).with(mock_rel_druid).and_raise(ActiveFedora::ObjectNotFoundError)
+        allow(Dor::Services::Client).to receive(:object).and_raise(Dor::Services::Client::NotFoundResponse)
       end
+
+      let(:collections) { [mock_rel_druid] }
 
       it 'generate collections and apo title fields' do
         expect(doc[Solrizer.solr_name('collection_title', :symbol)].first).to eq mock_rel_druid
         expect(doc[Solrizer.solr_name('collection_title', :stored_searchable)].first).to eq mock_rel_druid
-        expect(doc[Solrizer.solr_name('apo_title', :symbol)].first).to eq mock_rel_druid
-        expect(doc[Solrizer.solr_name('apo_title', :stored_searchable)].first).to eq mock_rel_druid
-        expect(doc[Solrizer.solr_name('nonhydrus_apo_title', :symbol)].first).to eq mock_rel_druid
-        expect(doc[Solrizer.solr_name('nonhydrus_apo_title', :stored_searchable)].first).to eq mock_rel_druid
+        expect(doc[Solrizer.solr_name('apo_title', :symbol)].first).to eq apo_id
+        expect(doc[Solrizer.solr_name('apo_title', :stored_searchable)].first).to eq apo_id
+        expect(doc[Solrizer.solr_name('nonhydrus_apo_title', :symbol)].first).to eq apo_id
+        expect(doc[Solrizer.solr_name('nonhydrus_apo_title', :stored_searchable)].first).to eq apo_id
       end
     end
 
     context 'when related collection and APOs are found' do
-      let(:mock_obj) { instance_double(Dor::Item, full_title: 'Test object') }
-
-      before do
-        allow(Dor).to receive(:find).with(mock_rel_druid).and_return(mock_obj)
-        allow(indexer).to receive(:related_object_tags).and_return([])
-      end
+      let(:related) { instance_double(Cocina::Models::DRO, administrative: administrative, label: 'Test object') }
+      let(:administrative) { instance_double(Cocina::Models::Administrative, partOfProject: project) }
+      let(:project) { 'Google Books' }
+      let(:collections) { [mock_rel_druid] }
 
       it 'generate collections and apo title fields' do
         expect(doc[Solrizer.solr_name('collection_title', :symbol)].first).to eq 'Test object'
@@ -119,55 +136,6 @@ RSpec.describe IdentifiableIndexer do
       it 'indexes metadata source' do
         expect(doc).to match a_hash_including('metadata_source_ssi' => 'Symphony')
       end
-    end
-  end
-
-  describe '#related_object_tags' do
-    context 'with a nil' do
-      let(:object) { nil }
-
-      it 'returns an empty array' do
-        expect(indexer.send(:related_object_tags, object)).to eq([])
-      end
-    end
-
-    context 'with an object that responds to #pid' do
-      before do
-        allow(Dor::Services::Client).to receive(:object).with(object.pid).and_return(fake_object_client)
-      end
-
-      let(:fake_object_client) { instance_double(Dor::Services::Client::Object, administrative_tags: fake_tags_client) }
-      let(:fake_tags_client) { instance_double(Dor::Services::Client::AdministrativeTags, list: nil) }
-      let(:object) { obj }
-
-      it 'makes a dor-services-client call' do
-        indexer.send(:related_object_tags, object)
-        expect(fake_tags_client).to have_received(:list).once
-      end
-    end
-  end
-
-  describe '#related_obj_display_title' do
-    subject { indexer.send(:related_obj_display_title, mock_apo_obj, mock_default_title) }
-
-    let(:mock_default_title) { 'druid:zy098xw7654' }
-
-    context 'when the main title is available' do
-      let(:mock_apo_obj) { instance_double(Dor::AdminPolicyObject, full_title: 'apo title') }
-
-      it { is_expected.to eq 'apo title' }
-    end
-
-    context 'when the first descMetadata main title entry is empty string' do
-      let(:mock_apo_obj) { instance_double(Dor::AdminPolicyObject, full_title: nil) }
-
-      it { is_expected.to eq mock_default_title }
-    end
-
-    context 'when the related object is nil' do
-      let(:mock_apo_obj) { nil }
-
-      it { is_expected.to eq mock_default_title }
     end
   end
 end

@@ -50,6 +50,7 @@ Performance/CollectionLiteralInLoop:
 # Offense count: 2
 RSpec/MessageChain:
   Exclude:
+    - 'spec/indexers/identifiable_indexer_spec.rb'
     - 'spec/indexers/composite_indexer_spec.rb'
     - 'spec/services/indexer_spec.rb'
 
@@ -60,7 +61,7 @@ RSpec/MultipleExpectations:
 # Offense count: 40
 # Configuration parameters: AllowSubject.
 RSpec/MultipleMemoizedHelpers:
-  Max: 13
+  Max: 14
 
 # Offense count: 2
 # Configuration parameters: IgnoreSharedExamples.
