@@ -20,7 +20,24 @@ RSpec.describe ContentMetadataDatastreamIndexer do
         "identification": {
           "sourceId": "hydrus:72"
         },
-        "structural": {
+        "structural": {#{structural}}
+      }
+    JSON
+  end
+
+  let(:cocina) { Cocina::Models.build(JSON.parse(json)) }
+  let(:obj) { Dor::Item.new }
+
+  let(:indexer) do
+    described_class.new(id: 'druid:ab123cd4567', resource: obj, cocina: cocina)
+  end
+
+  describe '#to_solr' do
+    subject(:doc) { indexer.to_solr }
+
+    context 'when the object contains file_sets' do
+      let(:structural) do
+        <<~JSON
           "contains": [
             {
               "type": "http://cocina.sul.stanford.edu/models/fileset.jsonld",
@@ -127,32 +144,36 @@ RSpec.describe ContentMetadataDatastreamIndexer do
               }
             }
           ]
-        }
-      }
-    JSON
-  end
+        JSON
+      end
 
-  let(:cocina) { Cocina::Models.build(JSON.parse(json)) }
-  let(:obj) { Dor::Item.new }
+      it 'has the fields used by argo' do
+        expect(doc).to include(
+          'content_type_ssim' => 'map',
+          'content_file_mimetypes_ssim' => ['image/jp2', 'image/gif', 'image/tiff'],
+          'content_file_roles_ssim' => ['derivative'],
+          'shelved_content_file_count_itsi' => 1,
+          'resource_count_itsi' => 1,
+          'content_file_count_itsi' => 3,
+          'first_shelved_image_ss' => 'gw177fc7976_05_0001.jp2',
+          'preserved_size_dbtsi' => 86_774_303
+        )
+      end
+    end
 
-  let(:indexer) do
-    described_class.new(id: 'druid:ab123cd4567', resource: obj, cocina: cocina)
-  end
+    context 'when the object contains no file_sets' do
+      let(:structural) { '' }
 
-  describe '#to_solr' do
-    subject(:doc) { indexer.to_solr }
-
-    it 'has the fields used by argo' do
-      expect(doc).to include(
-        'content_type_ssim' => 'map',
-        'content_file_mimetypes_ssim' => ['image/jp2', 'image/gif', 'image/tiff'],
-        'content_file_roles_ssim' => ['derivative'],
-        'shelved_content_file_count_itsi' => 1,
-        'resource_count_itsi' => 1,
-        'content_file_count_itsi' => 3,
-        'first_shelved_image_ss' => 'gw177fc7976_05_0001.jp2',
-        'preserved_size_dbtsi' => 86_774_303
-      )
+      it 'has the fields used by argo' do
+        expect(doc).to include(
+          'content_type_ssim' => 'map',
+          'content_file_mimetypes_ssim' => [],
+          'shelved_content_file_count_itsi' => 0,
+          'resource_count_itsi' => 0,
+          'content_file_count_itsi' => 0,
+          'preserved_size_dbtsi' => 0
+        )
+      end
     end
   end
 end
