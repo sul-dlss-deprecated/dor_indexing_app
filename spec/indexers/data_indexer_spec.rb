@@ -6,7 +6,19 @@ RSpec.describe DataIndexer do
   let(:obj) do
     Dor::AdminPolicyObject.new(pid: 'druid:999')
   end
-  let(:cocina) { Success(instance_double(Cocina::Models::DRO)) }
+  let(:cocina) do
+    instance_double(Cocina::Models::DRO, externalIdentifier: 'druid:xx999xx9999',
+                                         type: Cocina::Models::Vocab.map,
+                                         administrative: administrative,
+                                         structural: structural)
+  end
+
+  let(:administrative) do
+    instance_double(Cocina::Models::Administrative, hasAdminPolicy: 'druid:vv888vv8888')
+  end
+  let(:structural) do
+    instance_double(Cocina::Models::DROStructural, isMemberOf: ['druid:bb777bb7777', 'druid:dd666dd6666'])
+  end
 
   describe '#to_solr' do
     let(:indexer) do
@@ -17,7 +29,12 @@ RSpec.describe DataIndexer do
     let(:doc) { indexer.to_solr }
 
     it 'makes a solr doc' do
-      expect(doc).to match a_hash_including(id: 'druid:999')
+      expect(doc).to eq(
+        'has_model_ssim' => 'info:fedora/afmodel:Dor_Item',
+        'is_governed_by_ssim' => 'info:fedora/druid:vv888vv8888',
+        'is_member_of_collection_ssim' => ['info:fedora/druid:bb777bb7777', 'info:fedora/druid:dd666dd6666'],
+        :id => 'druid:xx999xx9999'
+      )
     end
   end
 end
