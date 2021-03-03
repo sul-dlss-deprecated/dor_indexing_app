@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe ProcessableIndexer do
   let(:indexer) { described_class.new(id: 'druid:ab123cd4567', resource: obj, cocina: cocina) }
-  let(:cocina) { Success(instance_double(Cocina::Models::DRO)) }
+  let(:cocina) { instance_double(Cocina::Models::DRO, externalIdentifier: 'druid:ab123cd4567', version: 4) }
 
   describe '#to_solr' do
     let(:obj) do
@@ -15,47 +15,6 @@ RSpec.describe ProcessableIndexer do
     end
 
     let(:solr_doc) { indexer.to_solr }
-
-    context 'with rights set' do
-      let(:obj) do
-        instance_double(Dor::Item,
-                        pid: '99',
-                        rights: 'World',
-                        modified_date: '1999-12-20',
-                        current_version: '7')
-      end
-
-      describe '#to_solr' do
-        let(:indexer) do
-          CompositeIndexer.new(
-            described_class
-          ).new(id: 'druid:ab123cd4567', resource: obj, cocina: cocina)
-        end
-
-        let(:status) do
-          instance_double(Dor::Workflow::Client::Status,
-            milestones: {},
-            info: { status_code: 0 },
-            display: 'v1 blah (parenthetical)',
-            display_simplified: 'blah')
-        end
-
-        let(:workflow_client) { instance_double(Dor::Workflow::Client, status: status) }
-
-        before do
-          allow(Dor::Workflow::Client).to receive(:new).and_return(workflow_client)
-        end
-
-        it 'includes a rights facet' do
-          expect(solr_doc).to match a_hash_including('rights_ssim' => ['World'])
-        end
-
-        it 'does not error if there is nothing in the datastream' do
-          allow(obj).to receive(:rightsMetadata).and_return(Dor::RightsMetadataDS.new)
-          expect { solr_doc }.not_to raise_error
-        end
-      end
-    end
 
     context 'with milestones' do
       let(:dsxml) do
