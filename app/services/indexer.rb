@@ -9,7 +9,6 @@ class Indexer
     RoleMetadataDatastreamIndexer,
     AdministrativeMetadataDatastreamIndexer,
     DefaultObjectRightsDatastreamIndexer,
-    ProvenanceMetadataDatastreamIndexer,
     RightsMetadataDatastreamIndexer,
     VersionMetadataDatastreamIndexer,
     ObjectProfileIndexer,
@@ -24,7 +23,6 @@ class Indexer
   COLLECTION_INDEXER = CompositeIndexer.new(
     AdministrativeTagIndexer,
     DataIndexer,
-    ProvenanceMetadataDatastreamIndexer,
     RightsMetadataDatastreamIndexer,
     VersionMetadataDatastreamIndexer,
     ObjectProfileIndexer,
@@ -40,7 +38,6 @@ class Indexer
   ITEM_INDEXER = CompositeIndexer.new(
     AdministrativeTagIndexer,
     DataIndexer,
-    ProvenanceMetadataDatastreamIndexer,
     RightsMetadataDatastreamIndexer,
     VersionMetadataDatastreamIndexer,
     ObjectProfileIndexer,
@@ -58,7 +55,6 @@ class Indexer
   SET_INDEXER = CompositeIndexer.new(
     AdministrativeTagIndexer,
     DataIndexer,
-    ProvenanceMetadataDatastreamIndexer,
     RightsMetadataDatastreamIndexer,
     VersionMetadataDatastreamIndexer,
     ObjectProfileIndexer,
