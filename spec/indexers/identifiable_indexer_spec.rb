@@ -75,8 +75,6 @@ RSpec.describe IdentifiableIndexer do
   describe '#to_solr' do
     let(:doc) { indexer.to_solr }
     let(:mock_rel_druid) { 'druid:qf999gg9999' }
-    # let(:collection) { instance_double(Dor::Collection, id: mock_rel_druid) }
-    # let(:collections) { [collection] }
 
     let(:related) do
       instance_double(Cocina::Models::AdminPolicy, label: 'Test object')
@@ -143,6 +141,33 @@ RSpec.describe IdentifiableIndexer do
 
     context 'without catalogLinks' do
       let(:identification) { {} }
+
+      it 'indexes metadata source' do
+        expect(doc).to match a_hash_including('metadata_source_ssi' => 'DOR')
+      end
+    end
+
+    context 'with no identification sub-schema' do
+      let(:cocina) do
+        Cocina::Models.build(
+          'externalIdentifier' => druid,
+          'type' => Cocina::Models::Vocab.image,
+          'version' => 1,
+          'label' => 'testing',
+          'access' => {},
+          'administrative' => {
+            'hasAdminPolicy' => apo_id
+          },
+          'description' => {
+            'title' => [{ 'value' => 'Test obj' }],
+            'subject' => [{ 'type' => 'topic', 'value' => 'word' }]
+          },
+          'structural' => {
+            'contains' => [],
+            'isMemberOf' => collections
+          }
+        )
+      end
 
       it 'indexes metadata source' do
         expect(doc).to match a_hash_including('metadata_source_ssi' => 'DOR')
