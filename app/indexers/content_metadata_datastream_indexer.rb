@@ -41,7 +41,7 @@ class ContentMetadataDatastreamIndexer
   end
 
   def file_sets
-    @file_sets ||= cocina.structural.contains
+    @file_sets ||= Array(cocina.structural.contains)
   end
 
   def type(object_type)
