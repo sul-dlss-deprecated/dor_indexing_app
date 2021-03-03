@@ -25,7 +25,7 @@ class DataIndexer
     when Cocina::Models::Vocab.admin_policy, Cocina::Models::Vocab.collection
       []
     else
-      cocina.structural.isMemberOf.map { |col_id| "info:fedora/#{col_id}" }
+      Array(cocina.structural.isMemberOf).map { |col_id| "info:fedora/#{col_id}" }
     end
   end
 
