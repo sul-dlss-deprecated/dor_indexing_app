@@ -3,10 +3,10 @@
 class ReleasableIndexer
   include SolrDocHelper
 
-  attr_reader :resource
+  attr_reader :id
 
-  def initialize(resource:, **)
-    @resource = resource
+  def initialize(id:, **)
+    @id = id
   end
 
   # @return [Hash] the partial solr document for releasable concerns
@@ -36,6 +36,6 @@ class ReleasableIndexer
   end
 
   def object_client
-    Dor::Services::Client.object(resource.pid)
+    Dor::Services::Client.object(id)
   end
 end
