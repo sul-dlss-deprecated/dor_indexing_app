@@ -49,10 +49,13 @@ RSpec.describe IdentifiableIndexer do
         'contains' => [],
         'isMemberOf' => collections
       },
-      'identification' => {
-        'catalogLinks' => [{ 'catalog' => 'symphony', 'catalogRecordId' => '1234' }]
-      }
+      'identification' => identification
     )
+  end
+  let(:identification) do
+    {
+      'catalogLinks' => [{ 'catalog' => 'symphony', 'catalogRecordId' => '1234' }]
+    }
   end
 
   let(:indexer) do
@@ -135,6 +138,14 @@ RSpec.describe IdentifiableIndexer do
 
       it 'indexes metadata source' do
         expect(doc).to match a_hash_including('metadata_source_ssi' => 'Symphony')
+      end
+    end
+
+    context 'without catalogLinks' do
+      let(:identification) { {} }
+
+      it 'indexes metadata source' do
+        expect(doc).to match a_hash_including('metadata_source_ssi' => 'DOR')
       end
     end
   end
