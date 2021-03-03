@@ -1,12 +1,11 @@
 # frozen_string_literal: true
 
 class ProcessableIndexer
-  include SolrDocHelper
+  attr_reader :resource, :cocina
 
-  attr_reader :resource
-
-  def initialize(resource:, **)
+  def initialize(resource:, cocina:, **)
     @resource = resource
+    @cocina = cocina
   end
 
   # @return [Hash] the partial solr document for processable concerns
@@ -14,11 +13,11 @@ class ProcessableIndexer
     Rails.logger.debug "In #{self.class}"
 
     {}.tap do |solr_doc|
-      solr_doc['current_version_isi'] = current_version.to_i # Argo Facet field "Version"
+      solr_doc['current_version_isi'] = cocina.version # Argo Facet field "Version"
 
       add_sortable_milestones(solr_doc)
+      # TODO: This requires https://github.com/sul-dlss/dor-services-client/pull/199
       solr_doc['modified_latest_dttsi'] = resource.modified_date.to_datetime.utc.strftime('%FT%TZ')
-      add_solr_value(solr_doc, 'rights', resource.rights, :string, [:symbol]) if resource.respond_to? :rights
       add_status(solr_doc)
     end
   end
@@ -26,15 +25,7 @@ class ProcessableIndexer
   private
 
   def status_service
-    @status_service ||= WorkflowClientFactory.build.status(druid: resource.pid, version: resource.current_version)
-  end
-
-  def current_version
-    @current_version ||= begin
-      resource.current_version
-    rescue StandardError
-      '1'
-    end
+    @status_service ||= WorkflowClientFactory.build.status(druid: cocina.externalIdentifier, version: cocina.version)
   end
 
   def add_status(solr_doc)
@@ -42,7 +33,7 @@ class ProcessableIndexer
     return unless status_service.info[:status_code]
 
     # This is used for Argo's "Processing Status" facet
-    add_solr_value(solr_doc, 'processing_status_text', status_service.display_simplified, :string, [:stored_sortable])
+    solr_doc['processing_status_text_ssi'] = status_service.display_simplified
   end
 
   def sortable_milestones
