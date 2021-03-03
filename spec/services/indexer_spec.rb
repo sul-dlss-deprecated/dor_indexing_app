@@ -146,7 +146,8 @@ RSpec.describe Indexer do
           'version' => 1,
           'label' => 'testing',
           'administrative' => {
-            'hasAdminPolicy' => apo_id
+            'hasAdminPolicy' => apo_id,
+            'defaultObjectRights' => '<rightsMetadata/>'
           },
           'description' => {
             'title' => [{ 'value' => 'Test obj' }]
@@ -167,7 +168,8 @@ RSpec.describe Indexer do
           'version' => 1,
           'label' => 'testing',
           'administrative' => {
-            'hasAdminPolicy' => apo_id
+            'hasAdminPolicy' => apo_id,
+            'defaultObjectRights' => '<rightsMetadata/>'
           },
           'description' => {
             'title' => [{ 'value' => 'Test obj' }]
