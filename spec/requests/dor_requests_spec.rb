@@ -10,15 +10,16 @@ RSpec.describe 'DOR', type: :request do
       allow(Logger).to receive(:new).and_return(mock_logger)
       allow(ActiveFedora.solr).to receive(:conn).and_return(mock_solr_conn)
       allow(Dor).to receive(:find).with(druid).and_return(mock_af_doc)
-      allow(Indexer).to receive(:for).with(mock_af_doc, cocina: Success(cocina)).and_return(mock_indexer)
+      allow(Indexer).to receive(:for).with(mock_af_doc, cocina_with_metadata: Success([cocina, metadata])).and_return(mock_indexer)
       allow(Dor::Services::Client).to receive(:object).with(druid).and_return(object_service)
     end
 
     let(:mock_logger) { instance_double(Logger, :formatter= => true, info: true) }
     let(:mock_solr_conn) { instance_double(RSolr::Client, add: true, commit: true) }
     let(:mock_af_doc) { Dor::Item.new }
+    let(:metadata) { {} }
     let(:cocina) { instance_double(Cocina::Models::DRO) }
-    let(:object_service) { instance_double(Dor::Services::Client::Object, find: cocina) }
+    let(:object_service) { instance_double(Dor::Services::Client::Object, find_with_metadata: [cocina, metadata]) }
     let(:mock_indexer) { instance_double(CompositeIndexer::Instance, to_solr: mock_solr_doc) }
     let(:mock_solr_doc) { { id: druid, text_field_tesim: 'a field to be searched' } }
 

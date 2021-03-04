@@ -2,9 +2,10 @@
 
 # Indexing provided by ActiveFedora
 class DataIndexer
-  attr_reader :cocina
+  attr_reader :last_modified, :cocina
 
-  def initialize(cocina:, **)
+  def initialize(metadata:, cocina:, **)
+    @last_modified = metadata.fetch('Last-Modified')
     @cocina = cocina
   end
 
@@ -12,6 +13,8 @@ class DataIndexer
     {}.tap do |solr_doc|
       Rails.logger.debug "In #{self.class}"
       solr_doc[SOLR_DOCUMENT_ID.to_sym] = cocina.externalIdentifier
+
+      solr_doc['modified_latest_dttsi'] = last_modified.to_datetime.strftime('%FT%TZ')
 
       # These are required as long as dor-services-app uses ActiveFedora for querying:
       solr_doc['has_model_ssim'] = legacy_model

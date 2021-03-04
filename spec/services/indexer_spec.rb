@@ -3,8 +3,9 @@
 require 'rails_helper'
 
 RSpec.describe Indexer do
-  subject(:indexer) { described_class.for(model, cocina: Success(cocina)) }
+  subject(:indexer) { described_class.for(model, cocina_with_metadata: Success([cocina, metadata])) }
 
+  let(:metadata) { { 'Last-Modified' => 'Thu, 04 Mar 2021 23:05:34 GMT' } }
   let(:druid) { 'druid:xx999xx9999' }
   let(:processable) do
     instance_double(ProcessableIndexer, to_solr: { 'milestones_ssim' => %w[foo bar] })
@@ -129,7 +130,7 @@ RSpec.describe Indexer do
       end
 
       context 'when cocina fails to fetch' do
-        let(:indexer) { described_class.for(model, cocina: Failure(:conversion_error)) }
+        let(:indexer) { described_class.for(model, cocina_with_metadata: Failure(:conversion_error)) }
         let(:model) { Dor::Item.new(pid: druid) }
 
         it { is_expected.to include('milestones_ssim', 'released_to_ssim', 'wf_ssim', 'tag_ssim', 'obj_label_tesim', :id) }

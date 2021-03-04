@@ -83,14 +83,14 @@ class Indexer
   }.freeze
 
   # @param [Dor::Abstract] obj
-  # @param [Dry::Monads::Result] cocina
-  def self.for(obj, cocina:)
+  # @param [Dry::Monads::Result] cocina_with_metadata
+  def self.for(obj, cocina_with_metadata:)
     Rails.logger.debug("Fetching indexer for #{obj.class}")
-    if cocina.success?
-      result = cocina.value!
-      INDEXERS.fetch(obj.class).new(id: result.externalIdentifier, resource: obj, cocina: result)
+    if cocina_with_metadata.success?
+      model, metadata = cocina_with_metadata.value!
+      INDEXERS.fetch(obj.class).new(id: model.externalIdentifier, resource: obj, cocina: model, metadata: metadata)
     else
-      FALLBACK_INDEXER.new(id: obj.pid, resource: obj, cocina: cocina.to_maybe)
+      FALLBACK_INDEXER.new(id: obj.pid, resource: obj, cocina: cocina_with_metadata.to_maybe)
     end
   end
 end

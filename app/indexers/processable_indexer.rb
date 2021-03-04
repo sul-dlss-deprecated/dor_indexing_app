@@ -1,10 +1,9 @@
 # frozen_string_literal: true
 
 class ProcessableIndexer
-  attr_reader :resource, :cocina
+  attr_reader :cocina
 
-  def initialize(resource:, cocina:, **)
-    @resource = resource
+  def initialize(cocina:, **)
     @cocina = cocina
   end
 
@@ -16,8 +15,6 @@ class ProcessableIndexer
       solr_doc['current_version_isi'] = cocina.version # Argo Facet field "Version"
 
       add_sortable_milestones(solr_doc)
-      # TODO: This requires https://github.com/sul-dlss/dor-services-client/pull/199
-      solr_doc['modified_latest_dttsi'] = resource.modified_date.to_datetime.utc.strftime('%FT%TZ')
       add_status(solr_doc)
     end
   end
