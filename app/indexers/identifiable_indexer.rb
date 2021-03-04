@@ -52,7 +52,7 @@ class IdentifiableIndexer
 
   # @return [String] calculated value for Solr index
   def identity_metadata_source
-    if cocina.identification.catalogLinks&.any? { |link| link.catalog == 'symphony' }
+    if cocina.identification&.catalogLinks&.any? { |link| link.catalog == 'symphony' }
       'Symphony'
     else
       'DOR'
