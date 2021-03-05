@@ -13,6 +13,7 @@ class DataIndexer
     {}.tap do |solr_doc|
       Rails.logger.debug "In #{self.class}"
       solr_doc[SOLR_DOCUMENT_ID.to_sym] = cocina.externalIdentifier
+      solr_doc['current_version_isi'] = cocina.version # Argo Facet field "Version"
       solr_doc['obj_label_tesim'] = cocina.label
 
       solr_doc['modified_latest_dttsi'] = last_modified.to_datetime.strftime('%FT%TZ')
@@ -21,7 +22,7 @@ class DataIndexer
       solr_doc['has_model_ssim'] = legacy_model
       solr_doc['is_governed_by_ssim'] = legacy_apo
       solr_doc['is_member_of_collection_ssim'] = legacy_collections
-    end
+    end.merge(WorkflowFields.for(druid: cocina.externalIdentifier, version: cocina.version))
   end
 
   def legacy_collections

@@ -45,8 +45,7 @@ RSpec.describe CompositeIndexer do
   let(:indexer) do
     described_class.new(
       DescribableIndexer,
-      IdentifiableIndexer,
-      ProcessableIndexer
+      IdentifiableIndexer
     )
   end
 
