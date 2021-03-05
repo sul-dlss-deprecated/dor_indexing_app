@@ -5,24 +5,10 @@ require 'rails_helper'
 RSpec.describe CompositeIndexer do
   let(:model) { Dor::Abstract }
   let(:druid) { 'druid:mx123ms3333' }
-  let(:mods) do
-    double('mods', sw_title_display: 'foo', sw_genre: ['test genre'],
-                   main_author_w_date: '1999',
-                   sw_sort_author: 'baz',
-                   sw_language_facet: 'en',
-                   format_main: 'foofmt',
-                   topic_facet: 'topicbar',
-                   era_facet: ['17th century', '18th century'],
-                   geographic_facet: %w[Europe Europe],
-                   term_values: 'huh?',
-                   pub_year_sort_str: '1600',
-                   pub_year_int: 1600,
-                   pub_year_display_str: '1600')
-  end
+
   let(:obj) do
     instance_double(Dor::Item,
                     pid: druid,
-                    stanford_mods: mods,
                     label: 'obj label',
                     identityMetadata: identity_metadata,
                     versionMetadata: version_metadata,
@@ -89,23 +75,18 @@ RSpec.describe CompositeIndexer do
       allow(Dor::Workflow::Client).to receive(:new).and_return(workflow_client)
     end
 
-    it 'searchworks date-fu: temporal periods and pub_dates' do
-      expect(doc).to match a_hash_including(
-        'sw_subject_temporal_ssim' => a_collection_containing_exactly('18th century', '17th century'),
-        'sw_pub_date_facet_ssi' => '1600'
-      )
-    end
-
-    it 'subject geographic fields' do
-      expect(doc).to match a_hash_including(
-        'sw_subject_geographic_ssim' => %w[Europe Europe]
-      )
-    end
-
-    it 'genre fields' do
-      genre_list = obj.stanford_mods.sw_genre
-      expect(doc).to match a_hash_including(
-        'sw_genre_ssim' => genre_list
+    it 'calls each of the provided indexers and combines the results' do
+      expect(doc).to eq(
+        'metadata_format_ssim' => 'mods',
+        'sw_format_ssim' => 'Book',
+        'sw_display_title_tesim' => 'Test obj',
+        'dor_services_version_ssi' => '9.6.2',
+        'nonhydrus_apo_title_tesim' => ['APO title'],
+        'nonhydrus_apo_title_ssim' => ['APO title'],
+        'apo_title_tesim' => ['APO title'],
+        'apo_title_ssim' => ['APO title'],
+        'metadata_source_ssi' => 'Symphony',
+        'objectId_tesim' => ['druid:mx123ms3333', 'mx123ms3333']
       )
     end
   end
