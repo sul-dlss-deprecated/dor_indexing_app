@@ -12,6 +12,7 @@ class DataIndexer
     {}.tap do |solr_doc|
       Rails.logger.debug "In #{self.class}"
       solr_doc[SOLR_DOCUMENT_ID.to_sym] = cocina.externalIdentifier
+      solr_doc['obj_label_tesim'] = cocina.label
 
       # These are required as long as dor-services-app uses ActiveFedora for querying:
       solr_doc['has_model_ssim'] = legacy_model
