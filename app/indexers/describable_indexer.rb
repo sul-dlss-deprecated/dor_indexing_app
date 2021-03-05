@@ -20,15 +20,13 @@ class DescribableIndexer
     solr_doc = {}
     mods_sources = {
       sw_title_display: %w[sw_display_title_tesim],
-      main_author_w_date: %w[sw_author_ssim sw_author_tesim],
+      main_author_w_date: %w[sw_author_tesim],
       sw_language_facet: %w[sw_language_ssim],
       sw_genre: %w[sw_genre_ssim],
       format_main: %w[sw_format_ssim],
-      topic_facet: %w[sw_topic_ssim],
       era_facet: %w[sw_subject_temporal_ssim],
       geographic_facet: %w[sw_subject_geographic_ssim],
       %i[term_values typeOfResource] => %w[mods_typeOfResource_ssim],
-      pub_year_sort_str: %w[sw_pub_date_sort_ssi],
       pub_year_display_str: %w[sw_pub_date_facet_ssi]
     }
 

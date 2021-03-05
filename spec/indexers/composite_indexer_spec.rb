@@ -93,7 +93,6 @@ RSpec.describe CompositeIndexer do
     it 'searchworks date-fu: temporal periods and pub_dates' do
       expect(doc).to match a_hash_including(
         'sw_subject_temporal_ssim' => a_collection_containing_exactly('18th century', '17th century'),
-        'sw_pub_date_sort_ssi' => '1600',
         'sw_pub_date_facet_ssi' => '1600'
       )
     end
