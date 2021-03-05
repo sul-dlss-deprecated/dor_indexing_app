@@ -8,6 +8,7 @@ RSpec.describe DataIndexer do
   end
   let(:cocina) do
     instance_double(Cocina::Models::DRO, externalIdentifier: 'druid:xx999xx9999',
+                                         label: 'test label',
                                          type: Cocina::Models::Vocab.map,
                                          administrative: administrative,
                                          structural: structural)
@@ -35,6 +36,7 @@ RSpec.describe DataIndexer do
 
       it 'makes a solr doc' do
         expect(doc).to eq(
+          'obj_label_tesim' => 'test label',
           'has_model_ssim' => 'info:fedora/afmodel:Dor_Item',
           'is_governed_by_ssim' => 'info:fedora/druid:vv888vv8888',
           'is_member_of_collection_ssim' => ['info:fedora/druid:bb777bb7777', 'info:fedora/druid:dd666dd6666'],
@@ -50,6 +52,7 @@ RSpec.describe DataIndexer do
 
       it 'makes a solr doc' do
         expect(doc).to eq(
+          'obj_label_tesim' => 'test label',
           'has_model_ssim' => 'info:fedora/afmodel:Dor_Item',
           'is_governed_by_ssim' => 'info:fedora/druid:vv888vv8888',
           'is_member_of_collection_ssim' => [],
