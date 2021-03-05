@@ -7,6 +7,7 @@ class EmbargoMetadataDatastreamIndexer
     @resource = resource
   end
 
+  # These fields are used by the EmbargoReleaseService in dor-services-app
   # @return [Hash] the partial solr document for embargoMetadata
   def to_solr
     {
