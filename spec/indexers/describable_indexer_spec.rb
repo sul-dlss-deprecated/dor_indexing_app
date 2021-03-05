@@ -106,7 +106,6 @@ RSpec.describe DescribableIndexer do
         'sw_language_ssim' => ['English'],
         'sw_format_ssim' => ['Book'],
         'sw_subject_temporal_ssim' => ['1800-1900'],
-        'sw_pub_date_sort_ssi' => '1911',
         'sw_pub_date_facet_ssi' => '1911'
       )
     end
