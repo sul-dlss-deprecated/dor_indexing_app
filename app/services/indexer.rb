@@ -14,7 +14,6 @@ class Indexer
     DescriptiveMetadataDatastreamIndexer,
     DescribableIndexer,
     IdentifiableIndexer,
-    ProcessableIndexer,
     WorkflowsIndexer
   )
 
@@ -26,7 +25,6 @@ class Indexer
     DescriptiveMetadataDatastreamIndexer,
     DescribableIndexer,
     IdentifiableIndexer,
-    ProcessableIndexer,
     ReleasableIndexer,
     WorkflowsIndexer
   )
@@ -41,7 +39,6 @@ class Indexer
     ContentMetadataDatastreamIndexer,
     DescribableIndexer,
     IdentifiableIndexer,
-    ProcessableIndexer,
     ReleasableIndexer,
     WorkflowsIndexer
   )
@@ -54,7 +51,6 @@ class Indexer
     DescriptiveMetadataDatastreamIndexer,
     DescribableIndexer,
     IdentifiableIndexer,
-    ProcessableIndexer,
     WorkflowsIndexer
   )
 
@@ -62,7 +58,6 @@ class Indexer
   FALLBACK_INDEXER = CompositeIndexer.new(
     DataQualityIndexer,
     AdministrativeTagIndexer,
-    ProcessableIndexer,
     ReleasableIndexer,
     WorkflowsIndexer,
     Fedora3LabelIndexer

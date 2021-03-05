@@ -1,19 +1,22 @@
 # frozen_string_literal: true
 
-class ProcessableIndexer
-  attr_reader :cocina
+class WorkflowFields
+  def self.for(druid:, version:)
+    new(druid: druid, version: version).result
+  end
 
-  def initialize(cocina:, **)
-    @cocina = cocina
+  attr_reader :druid, :version
+
+  def initialize(druid:, version:)
+    @druid = druid
+    @version = version
   end
 
   # @return [Hash] the partial solr document for processable concerns
-  def to_solr
+  def result
     Rails.logger.debug "In #{self.class}"
 
     {}.tap do |solr_doc|
-      solr_doc['current_version_isi'] = cocina.version # Argo Facet field "Version"
-
       add_sortable_milestones(solr_doc)
       add_status(solr_doc)
     end
@@ -22,7 +25,7 @@ class ProcessableIndexer
   private
 
   def status_service
-    @status_service ||= WorkflowClientFactory.build.status(druid: cocina.externalIdentifier, version: cocina.version)
+    @status_service ||= WorkflowClientFactory.build.status(druid: druid, version: version)
   end
 
   def add_status(solr_doc)

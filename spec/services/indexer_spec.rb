@@ -7,9 +7,6 @@ RSpec.describe Indexer do
 
   let(:metadata) { { 'Last-Modified' => 'Thu, 04 Mar 2021 23:05:34 GMT' } }
   let(:druid) { 'druid:xx999xx9999' }
-  let(:processable) do
-    instance_double(ProcessableIndexer, to_solr: { 'milestones_ssim' => %w[foo bar] })
-  end
   let(:releasable) do
     instance_double(ReleasableIndexer, to_solr: { 'released_to_ssim' => %w[searchworks earthworks] })
   end
@@ -21,7 +18,7 @@ RSpec.describe Indexer do
   end
 
   before do
-    allow(ProcessableIndexer).to receive(:new).and_return(processable)
+    allow(WorkflowFields).to receive(:for).and_return({ 'milestones_ssim' => %w[foo bar] })
     allow(ReleasableIndexer).to receive(:new).and_return(releasable)
     allow(WorkflowsIndexer).to receive(:new).and_return(workflows)
     allow(AdministrativeTagIndexer).to receive(:new).and_return(admin_tags)
