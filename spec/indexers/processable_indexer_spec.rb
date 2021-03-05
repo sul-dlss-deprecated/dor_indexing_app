@@ -94,11 +94,6 @@ RSpec.describe ProcessableIndexer do
           expect(solr_doc['opened_dttsim']).to be_nil
         end
       end
-
-      it 'creates a modified_latest date field' do
-        # the facet field should have a date in it.
-        expect(solr_doc['modified_latest_dttsi']).to match(/^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\dZ$/)
-      end
     end
   end
 end

@@ -29,13 +29,13 @@ class DorController < ApplicationController
   def reindex_pid(pid, add_attributes:)
     obj = nil
     solr_doc = nil
-    cocina = nil
+    cocina_with_metadata = nil
 
     # benchmark how long it takes to load the object
     load_stats = Benchmark.measure('load_instance') do
       obj = Dor.find pid
-      cocina = begin
-        Success(Dor::Services::Client.object(pid).find)
+      cocina_with_metadata = begin
+        Success(Dor::Services::Client.object(pid).find_with_metadata)
       rescue StandardError
         Failure(:conversion_error)
       end
@@ -43,7 +43,7 @@ class DorController < ApplicationController
     logger.info 'document found, now generating document solr'
     # benchmark how long it takes to convert the object to a Solr document
     to_solr_stats = Benchmark.measure('to_solr') do
-      indexer = Indexer.for(obj, cocina: cocina)
+      indexer = Indexer.for(obj, cocina_with_metadata: cocina_with_metadata)
       solr_doc = indexer.to_solr
       logger.info 'solr doc created'
 

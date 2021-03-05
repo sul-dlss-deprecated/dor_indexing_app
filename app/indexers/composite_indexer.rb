@@ -8,16 +8,16 @@ class CompositeIndexer
     @indexers = indexers
   end
 
-  def new(id:, resource:, cocina:)
-    Instance.new(indexers, id: id, resource: resource, cocina: cocina)
+  def new(**kwargs)
+    Instance.new(indexers, **kwargs)
   end
 
   class Instance
     attr_reader :indexers
 
-    def initialize(indexers, id:, resource:, cocina:)
+    def initialize(indexers, **kwargs)
       @indexers = indexers.map do |i|
-        i.new(id: id, resource: resource, cocina: cocina)
+        i.new(**kwargs)
       rescue ArgumentError => e
         raise ArgumentError, "Unable to initialize #{i}. #{e.message}"
       end
