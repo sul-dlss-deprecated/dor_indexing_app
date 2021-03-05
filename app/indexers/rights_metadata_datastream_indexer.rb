@@ -21,9 +21,7 @@ class RightsMetadataDatastreamIndexer
     }
 
     dra = resource.rightsMetadata.dra_object
-    solr_doc['rights_primary_ssi'] = dra.index_elements[:primary]
     solr_doc['rights_errors_ssim'] = dra.index_elements[:errors] unless dra.index_elements[:errors].empty?
-    solr_doc['rights_characteristics_ssim'] = dra.index_elements[:terms] unless dra.index_elements[:terms].empty?
 
     solr_doc['rights_descriptions_ssim'] = [
       dra.index_elements[:primary],
@@ -74,20 +72,12 @@ class RightsMetadataDatastreamIndexer
       solr_doc['rights_descriptions_ssim'] -= ['cdl_none']
     end
 
-    solr_doc['obj_rights_locations_ssim'] = dra.index_elements[:obj_locations] if dra.index_elements[:obj_locations].present?
-    solr_doc['file_rights_locations_ssim'] = dra.index_elements[:file_locations] if dra.index_elements[:file_locations].present?
-    solr_doc['obj_rights_agents_ssim'] = dra.index_elements[:obj_agents] if dra.index_elements[:obj_agents].present?
-    solr_doc['file_rights_agents_ssim'] = dra.index_elements[:file_agents] if dra.index_elements[:file_agents].present?
-
     # suppress empties
     %w[use_statement_ssim copyright_ssim].each do |key|
       solr_doc[key] = solr_doc[key].reject(&:blank?).flatten unless solr_doc[key].nil?
     end
 
     solr_doc['use_license_machine_ssi'] = resource.rightsMetadata.use_license.first
-
-    # TODO: I don't think this is used in argo, and can be removed
-    solr_doc['use_licenses_machine_ssim'] = resource.rightsMetadata.use_license
 
     solr_doc
   end

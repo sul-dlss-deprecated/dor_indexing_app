@@ -73,7 +73,6 @@ RSpec.describe RightsMetadataDatastreamIndexer do
 
         it 'filters access_restricted from what gets aggregated into rights_descriptions_ssim' do
           expect(doc).to match a_hash_including(
-            'rights_primary_ssi' => 'access_restricted',
             'rights_descriptions_ssim' => ['location: someplace (somerule)', 'somegroup (file) (someotherrule)']
           )
         end
@@ -91,7 +90,6 @@ RSpec.describe RightsMetadataDatastreamIndexer do
 
         it 'filters world_qualified from what gets aggregated into rights_descriptions_ssim' do
           expect(doc).to match a_hash_including(
-            'rights_primary_ssi' => 'world_qualified',
             'rights_descriptions_ssim' => ['world (somerule)']
           )
         end
@@ -108,31 +106,7 @@ RSpec.describe RightsMetadataDatastreamIndexer do
 
         it 'indexes correctly into rights_descriptions_ssim' do
           expect(doc).to match a_hash_including(
-            'rights_primary_ssi' => 'cdl_none',
             'rights_descriptions_ssim' => ['controlled digital lending']
-          )
-        end
-      end
-
-      context 'with file_rights' do
-        let(:index_elements) do
-          {
-            primary: 'access_restricted',
-            errors: [],
-            terms: [],
-            obj_locations: ['location'],
-            file_locations: ['file_specific_location'],
-            obj_agents: ['agent'],
-            file_agents: ['file_specific_agent']
-          }
-        end
-
-        it 'includes the simple fields that are present' do
-          expect(doc).to match a_hash_including(
-            'obj_rights_locations_ssim' => ['location'],
-            'file_rights_locations_ssim' => ['file_specific_location'],
-            'obj_rights_agents_ssim' => ['agent'],
-            'file_rights_agents_ssim' => ['file_specific_agent']
           )
         end
       end
