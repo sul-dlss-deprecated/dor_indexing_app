@@ -111,7 +111,40 @@ RSpec.describe Indexer do
             },
             'description' => {
               'title' => [{ 'value' => 'Test obj' }],
-              'subject' => [{ 'type' => 'topic', 'value' => 'word' }]
+              'subject' => [{ 'type' => 'topic', 'value' => 'word' }],
+              'event' => [
+                {
+                  'type' => 'creation',
+                  'date' => [
+                    {
+                      'value' => '2021-01-01',
+                      'status' => 'primary',
+                      'encoding' => {
+                        'code' => 'w3cdtf'
+                      }
+                    }
+                  ]
+                },
+                {
+                  'type' => 'publication',
+                  'location' => [
+                    {
+                      'value' => 'Moskva'
+                    }
+                  ],
+                  'contributor' => [
+                    {
+                      'name' => [
+                        {
+                          'value' => 'Izdatelʹstvo "Vesʹ Mir"'
+                        }
+                      ],
+                      'type' => 'organization',
+                      'role' => [{ 'value' => 'publisher' }]
+                    }
+                  ]
+                }
+              ]
             },
             'structural' => {
               'contains' => [],
@@ -123,7 +156,13 @@ RSpec.describe Indexer do
           )
         end
 
-        it { is_expected.to include('milestones_ssim', 'released_to_ssim', 'wf_ssim', 'tag_ssim') }
+        it 'has required fields' do
+          expect(solr_doc).to include('milestones_ssim', 'released_to_ssim', 'wf_ssim', 'tag_ssim')
+
+          expect(solr_doc['originInfo_date_created_tesim']).to eq ['2021-01-01']
+          expect(solr_doc['originInfo_publisher_tesim']).to eq ['Izdatelʹstvo "Vesʹ Mir"']
+          expect(solr_doc['originInfo_place_placeTerm_tesim']).to eq ['Moskva']
+        end
       end
 
       context 'when cocina fails to fetch' do
