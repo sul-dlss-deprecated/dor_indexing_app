@@ -9,8 +9,6 @@ RSpec.describe EmbargoMetadataDatastreamIndexer do
       <embargoMetadata>
         <status>embargoed</status>
         <releaseDate>2011-10-12T15:47:52-07:00</releaseDate>
-        <twentyPctVisibilityStatus>released</twentyPctVisibilityStatus>
-        <twentyPctVisibilityReleaseDate>2016-10-12T15:47:52-07:00</twentyPctVisibilityReleaseDate>
         <releaseAccess>
           <access type="discover">
             <machine>
@@ -41,11 +39,9 @@ RSpec.describe EmbargoMetadataDatastreamIndexer do
   describe '#to_solr' do
     subject(:doc) { indexer.to_solr }
 
-    it 'has the fields used by argo' do
+    it 'has the fields used by dor-services-app' do
       expect(doc).to eq('embargo_release_dtsim' => ['2011-10-12T22:47:52Z'],
-                        'embargo_status_ssim' => ['embargoed'],
-                        'twenty_pct_status_ssim' => ['released'],
-                        'twenty_pct_release_embargo_release_dtsim' => ['2016-10-12T22:47:52Z'])
+                        'embargo_status_ssim' => ['embargoed'])
     end
   end
 end
