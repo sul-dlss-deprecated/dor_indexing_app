@@ -7,7 +7,6 @@ class Indexer
     AdministrativeTagIndexer,
     DataIndexer,
     RoleMetadataDatastreamIndexer,
-    AdministrativeMetadataDatastreamIndexer,
     DefaultObjectRightsDatastreamIndexer,
     RightsMetadataDatastreamIndexer,
     IdentityMetadataDatastreamIndexer,
