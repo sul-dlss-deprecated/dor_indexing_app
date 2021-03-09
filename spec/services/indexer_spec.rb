@@ -76,9 +76,12 @@ RSpec.describe Indexer do
         'externalIdentifier' => apo_id,
         'type' => Cocina::Models::Vocab.admin_policy,
         'version' => 1,
-        'label' => 'APO title',
+        'label' => 'testing',
         'administrative' => {
           'hasAdminPolicy' => 'druid:xx000xx0000'
+        },
+        'description' => {
+          'title' => [{ 'value' => 'APO title' }]
         }
       )
     end
