@@ -77,7 +77,18 @@ RSpec.describe IdentifiableIndexer do
     let(:mock_rel_druid) { 'druid:qf999gg9999' }
 
     let(:related) do
-      instance_double(Cocina::Models::AdminPolicy, label: 'Test object')
+      Cocina::Models.build(
+        'externalIdentifier' => apo_id,
+        'type' => Cocina::Models::Vocab.admin_policy,
+        'version' => 1,
+        'label' => 'testing',
+        'administrative' => {
+          'hasAdminPolicy' => apo_id
+        },
+        'description' => {
+          'title' => [{ 'value' => 'Test object' }]
+        }
+      )
     end
     let(:object_client) do
       instance_double(Dor::Services::Client::Object, find: related)
@@ -120,10 +131,25 @@ RSpec.describe IdentifiableIndexer do
     end
 
     context 'when related collection and APOs are found' do
-      let(:related) { instance_double(Cocina::Models::DRO, administrative: administrative, label: 'Test object') }
-      let(:administrative) { instance_double(Cocina::Models::Administrative, partOfProject: project) }
       let(:project) { 'Google Books' }
       let(:collections) { [mock_rel_druid] }
+
+      let(:related) do
+        Cocina::Models.build(
+          'externalIdentifier' => mock_rel_druid,
+          'type' => Cocina::Models::Vocab.collection,
+          'version' => 1,
+          'label' => 'testing',
+          'administrative' => {
+            'partOfProject' => project,
+            'hasAdminPolicy' => apo_id
+          },
+          'access' => {},
+          'description' => {
+            'title' => [{ 'value' => 'Test object' }]
+          }
+        )
+      end
 
       it 'generate collections and apo title fields' do
         expect(doc[Solrizer.solr_name('collection_title', :symbol)].first).to eq 'Test object'

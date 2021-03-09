@@ -18,9 +18,22 @@ RSpec.describe CompositeIndexer do
                     collections: [])
   end
   let(:apo_id) { 'druid:gf999hb9999' }
+
   let(:apo) do
-    instance_double(Cocina::Models::AdminPolicy, label: 'APO title')
+    Cocina::Models.build(
+      'externalIdentifier' => apo_id,
+      'type' => Cocina::Models::Vocab.admin_policy,
+      'version' => 1,
+      'label' => 'testing',
+      'administrative' => {
+        'hasAdminPolicy' => apo_id
+      },
+      'description' => {
+        'title' => [{ 'value' => 'APO title' }]
+      }
+    )
   end
+
   let(:identity_metadata) do
     instance_double(Dor::IdentityMetadataDS, otherId: 'foo')
   end
