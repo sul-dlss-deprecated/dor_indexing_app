@@ -30,8 +30,8 @@ class DescribableIndexer
     }.select { |_k, v| v.present? }
   end
 
-  def title
-    TitleBuilder.build(cocina.description.title)
+  def language
+    LanguageBuilder.build(Array(cocina.description.language))
   end
 
   def subject_temporal
@@ -63,16 +63,8 @@ class DescribableIndexer
     end
   end
 
-  def language
-    languages = cocina.description.language
-    return unless languages
-
-    languages.map do |lang|
-      if lang.source.code.start_with?('iso639')
-        name = ISO_639.find(lang.code)
-        name ? name.english_name : "Obsolete language #{lang.code}"
-      end
-    end
+  def title
+    TitleBuilder.build(cocina.description.title)
   end
 
   def forms
