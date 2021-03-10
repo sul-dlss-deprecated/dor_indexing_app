@@ -1,26 +1,24 @@
 # frozen_string_literal: true
 
 class RoleMetadataDatastreamIndexer
-  include SolrDocHelper
+  attr_reader :cocina
 
-  attr_reader :resource
-
-  def initialize(resource:, **)
-    @resource = resource
+  def initialize(cocina:, **)
+    @cocina = cocina
   end
 
   # @return [Hash] the partial solr document for roleMetadata
   def to_solr
-    {}.tap do |solr_doc|
-      # rubocop:disable Rails/DynamicFindBy
-      resource.roleMetadata.find_by_xpath('/roleMetadata/role/*').each do |actor|
-        role_type = actor.parent['type']
-        val = [actor.at_xpath('identifier/@type'), actor.at_xpath('identifier/text()')].join ':'
-        add_solr_value(solr_doc, "apo_role_#{actor.name}_#{role_type}", val, :string, [:symbol])
-        add_solr_value(solr_doc, "apo_role_#{role_type}", val, :string, [:symbol])
-        add_solr_value(solr_doc, 'apo_register_permissions', val, :string, %i[symbol stored_searchable]) if %w[dor-apo-manager dor-apo-depositor].include? role_type
-      end
-      # rubocop:enable Rails/DynamicFindBy
+    Array(cocina.administrative.roles).each_with_object({}) do |role, solr_doc|
+      solr_doc['apo_register_permissions_ssim'] = serialize(role.members) if role.name == 'dor-apo-manager'
+      solr_doc["apo_role_#{role.name}_ssim"] = serialize(role.members.select { |member| member.type == 'workgroup' })
+      solr_doc["apo_role_person_#{role.name}_ssim"] = serialize(role.members.select { |member| member.type == 'sunetid' })
     end
+  end
+
+  private
+
+  def serialize(members)
+    members.map { |member| [member.type, member.identifier].join(':') }
   end
 end

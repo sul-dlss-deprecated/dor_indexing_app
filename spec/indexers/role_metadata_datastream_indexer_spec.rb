@@ -4,56 +4,50 @@ require 'rails_helper'
 
 RSpec.describe RoleMetadataDatastreamIndexer do
   let(:obj) { Dor::AdminPolicyObject.new }
-  let(:cocina) { Success(instance_double(Cocina::Models::DRO)) }
+  let(:apo_id) { 'druid:gf999hb9999' }
+  let(:cocina) do
+    Cocina::Models.build(
+      'externalIdentifier' => apo_id,
+      'type' => Cocina::Models::Vocab.admin_policy,
+      'version' => 1,
+      'label' => 'testing',
+      'administrative' => {
+        'hasAdminPolicy' => apo_id,
+        'roles' => [
+          { 'name' => 'dor-apo-manager',
+            'members' => [
+              {
+                'type' => 'workgroup',
+                'identifier' => 'dlss:dor-admin'
+              },
+              {
+                'type' => 'workgroup',
+                'identifier' => 'sdr:developer'
+              },
+              {
+                'type' => 'sunetid',
+                'identifier' => 'tcramer'
+              }
+            ] }
+        ]
+      },
+      'description' => {
+        'title' => [{ 'value' => 'APO title' }]
+      }
+    )
+  end
 
   let(:indexer) do
     described_class.new(resource: obj, cocina: cocina)
   end
 
-  before do
-    obj.roleMetadata.content = xml
-  end
-
   describe '#to_solr' do
     subject(:doc) { indexer.to_solr }
 
-    context 'when there are non-Hydrus roles' do
-      let(:xml) do
-        <<~XML
-          <?xml version="1.0"?>
-          <roleMetadata>
-            <role type="dor-apo-manager">
-              <group>
-                <identifier type="workgroup">dlss:dor-admin</identifier>
-              </group>
-            </role>
-          </roleMetadata>
-        XML
-      end
-
-      it 'has the fields used by argo' do
-        expect(doc['apo_register_permissions_ssim']).to eq ['workgroup:dlss:dor-admin']
-        expect(doc['apo_register_permissions_tesim']).to eq ['workgroup:dlss:dor-admin']
-      end
-    end
-
-    context 'when there are hydrus roles' do
-      let(:xml) do
-        <<~XML
-          <roleMetadata>
-            <role type="hydrus-user">
-              <group>
-                <identifier type="workgroup">dlss:dor-admin</identifier>
-              </group>
-            </role>
-          </roleMetadata>
-        XML
-      end
-
-      it 'does not index apo_register_permissions' do
-        expect(doc).not_to have_key('apo_register_permissions_ssim')
-        expect(doc).not_to have_key('apo_register_permissions_tesim')
-      end
+    it 'has the fields used by argo' do
+      expect(doc['apo_register_permissions_ssim']).to eq ['workgroup:dlss:dor-admin', 'workgroup:sdr:developer', 'sunetid:tcramer']
+      expect(doc['apo_role_dor-apo-manager_ssim']).to eq ['workgroup:dlss:dor-admin', 'workgroup:sdr:developer']
+      expect(doc['apo_role_person_dor-apo-manager_ssim']).to eq ['sunetid:tcramer']
     end
   end
 end
