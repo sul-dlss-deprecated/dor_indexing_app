@@ -68,7 +68,10 @@ class DescribableIndexer
     return unless languages
 
     languages.map do |lang|
-      ISO_639.find(lang.code).english_name if lang.source.code.start_with?('iso639')
+      if lang.source.code.start_with?('iso639')
+        name = ISO_639.find(lang.code)
+        name ? name.english_name : "Obsolete language #{lang.code}"
+      end
     end
   end
 
