@@ -16,10 +16,26 @@ class TitleBuilder
 
   def self.build_structured(titles)
     title_parts = titles.map do |title|
-      join_token = title.type == 'nonsorting characters' ? ' ' : ' : '
-      [title.value, join_token]
+      if title.structuredValue
+        [build_structured(title.structuredValue), '']
+      else
+        [title.value, join_token(title.type)]
+      end
     end
     last = title_parts.pop
     title_parts.join + last.first # Drops the join token from the last element
+  end
+
+  def self.join_token(type)
+    case type
+    when 'nonsorting characters'
+      ' '
+    when 'subtitle'
+      '. '
+    when 'part number'
+      ', '
+    else
+      ' : '
+    end
   end
 end
