@@ -69,6 +69,7 @@ RSpec.describe ContentMetadataDatastreamIndexer do
                       "download": "world"
                     },
                     "administrative": {
+                      "publish": true,
                       "sdrPreserve": true,
                       "shelve": true
                     },
@@ -101,6 +102,7 @@ RSpec.describe ContentMetadataDatastreamIndexer do
                       "download": "none"
                     },
                     "administrative": {
+                      "publish": false,
                       "sdrPreserve": false,
                       "shelve": false
                     },
@@ -132,6 +134,7 @@ RSpec.describe ContentMetadataDatastreamIndexer do
                       "download": "none"
                     },
                     "administrative": {
+                      "publish": false,
                       "sdrPreserve": true,
                       "shelve": false
                     },
