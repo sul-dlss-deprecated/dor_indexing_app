@@ -344,6 +344,7 @@ RSpec.describe DescribableIndexer do
       						"download": "world"
       					},
       					"administrative": {
+      						"publish": true,
       						"sdrPreserve": true,
       						"shelve": true
       					}
