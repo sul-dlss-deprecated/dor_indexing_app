@@ -21,7 +21,6 @@ class RightsMetadataDatastreamIndexer
     }
 
     dra = resource.rightsMetadata.dra_object
-    solr_doc['rights_errors_ssim'] = dra.index_elements[:errors] unless dra.index_elements[:errors].empty?
 
     solr_doc['rights_descriptions_ssim'] = [
       dra.index_elements[:primary],
