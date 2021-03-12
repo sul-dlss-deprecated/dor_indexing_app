@@ -40,7 +40,7 @@ RSpec.describe ContentMetadataDatastreamIndexer do
         <<~JSON
           "contains": [
             {
-              "type": "http://cocina.sul.stanford.edu/models/fileset.jsonld",
+              "type": "http://cocina.sul.stanford.edu/models/resources/file.jsonld",
               "externalIdentifier": "0001",
               "label": "0001",
               "version": 1,

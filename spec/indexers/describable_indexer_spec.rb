@@ -317,7 +317,7 @@ RSpec.describe DescribableIndexer do
       	},
       	"structural": {
       		"contains": [{
-      			"type": "http://cocina.sul.stanford.edu/models/fileset.jsonld",
+      			"type": "http://cocina.sul.stanford.edu/models/resources/file.jsonld",
       			"externalIdentifier": "qy781dy0220_1",
       			"label": "qy781dy0220_1",
       			"version": 1,
