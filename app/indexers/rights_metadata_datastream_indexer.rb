@@ -35,15 +35,6 @@ class RightsMetadataDatastreamIndexer
         "location: #{rights_info[:location]} (file)#{rule_suffix}"
       end,
 
-      (dra.index_elements[:obj_agents_qualified] || []).map do |rights_info|
-        rule_suffix = rights_info[:rule] ? " (#{rights_info[:rule]})" : ''
-        "agent: #{rights_info[:agent]}#{rule_suffix}"
-      end,
-      (dra.index_elements[:file_agents_qualified] || []).map do |rights_info|
-        rule_suffix = rights_info[:rule] ? " (#{rights_info[:rule]})" : ''
-        "agent: #{rights_info[:agent]} (file)#{rule_suffix}"
-      end,
-
       (dra.index_elements[:obj_groups_qualified] || []).map do |rights_info|
         rule_suffix = rights_info[:rule] ? " (#{rights_info[:rule]})" : ''
         "#{rights_info[:group]}#{rule_suffix}"
