@@ -51,16 +51,7 @@ class DescribableIndexer
   end
 
   def author
-    contributors = Array(cocina.description.contributor)
-    contributors.flat_map do |contributor|
-      contributor.name.map do |name|
-        next unless name.structuredValue
-
-        name_value = name.structuredValue.find { |val| val.type == 'name' }.value
-        life_dates = name.structuredValue.find { |val| val.type == 'life dates' }
-        life_dates ? "#{name_value} (#{life_dates.value})" : name_value
-      end
-    end
+    AuthorBuilder.build(Array(cocina.description.contributor))
   end
 
   def title
