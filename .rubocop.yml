@@ -140,6 +140,8 @@ Style/SoleNestedConditional: # (new in 0.89)
   Enabled: true
 Style/StringConcatenation: # (new in 0.89)
   Enabled: true
+Style/WordArray:
+  MinSize: 3
 
 Performance/AncestorsInclude: # (new in 1.7)
   Enabled: true

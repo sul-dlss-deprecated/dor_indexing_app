@@ -1,18 +1,71 @@
 # frozen_string_literal: true
 
 class RightsMetadataIndexer
-  attr_reader :resource
+  attr_reader :resource, :cocina
 
-  def initialize(resource:, **)
+  def initialize(resource:, cocina:, **)
     @resource = resource
+    @cocina = cocina
   end
+
+  def cocina_to_solr
+    {}.tap do |fields|
+      fields['copyright_ssim'] = cocina.access.copyright
+      fields['use_statement_ssim'] = cocina.access.useAndReproductionStatement
+      fields['use_license_machine_ssi'] = cocina.access.license
+      fields['rights_descriptions_ssim'] = rights_descriptions
+    end.compact
+  end
+
+  # rubocop:disable Metrics/CyclomaticComplexity
+  # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Metrics/PerceivedComplexity
+  def rights_descriptions
+    results = []
+    root = case cocina.access.access
+           when 'dark'
+             'dark'
+           when 'citation-only'
+             'citation'
+           when 'location-based'
+             # FIXME: what if readLocation isn't present?
+             "location: #{cocina.access.readLocation}" if cocina.access.readLocation.present?
+           when 'stanford'
+             'stanford'
+           when 'world'
+             'world'
+           end
+
+    case cocina.access.download
+    when 'none'
+      if ['dark', 'citation'].include?(root)
+        results.push(root)
+      else
+        results.push("#{root} (no-download)")
+      end
+    when 'world'
+      results.push(root)
+    when 'stanford'
+      results.push(root) if root == 'stanford'
+    when 'location-based'
+      results.push(root) if root&.start_with?('location')
+    when nil
+      results.push(root)
+    end
+
+    results.push('controlled digital lending') if cocina.access.controlledDigitalLending.present?
+    results
+  end
+  # rubocop:enable Metrics/CyclomaticComplexity
+  # rubocop:enable Metrics/MethodLength
+  # rubocop:enable Metrics/PerceivedComplexity
 
   # @return [Hash] the partial solr document for rightsMetadata
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/CyclomaticComplexity
   # rubocop:disable Metrics/MethodLength
   # rubocop:disable Metrics/PerceivedComplexity
-  def to_solr
+  def fedora_to_solr
     Rails.logger.debug "In #{self.class}"
 
     solr_doc = {
@@ -71,6 +124,7 @@ class RightsMetadataIndexer
 
     solr_doc
   end
+  alias to_solr fedora_to_solr
   # rubocop:enable Metrics/AbcSize
   # rubocop:enable Metrics/CyclomaticComplexity
   # rubocop:enable Metrics/MethodLength
