@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class RoleMetadataDatastreamIndexer
+class RoleMetadataIndexer
   attr_reader :cocina
 
   def initialize(cocina:, **)

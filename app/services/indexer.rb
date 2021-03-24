@@ -6,7 +6,7 @@ class Indexer
   ADMIN_POLICY_INDEXER = CompositeIndexer.new(
     AdministrativeTagIndexer,
     DataIndexer,
-    RoleMetadataDatastreamIndexer,
+    RoleMetadataIndexer,
     DefaultObjectRightsIndexer,
     RightsMetadataDatastreamIndexer,
     IdentityMetadataIndexer,

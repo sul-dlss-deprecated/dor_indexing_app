@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe RoleMetadataDatastreamIndexer do
+RSpec.describe RoleMetadataIndexer do
   let(:obj) { Dor::AdminPolicyObject.new }
   let(:apo_id) { 'druid:gf999hb9999' }
   let(:cocina) do
