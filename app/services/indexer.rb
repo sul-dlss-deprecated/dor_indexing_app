@@ -35,7 +35,7 @@ class Indexer
     IdentityMetadataDatastreamIndexer,
     DescriptiveMetadataDatastreamIndexer,
     EmbargoMetadataDatastreamIndexer,
-    ContentMetadataDatastreamIndexer,
+    ContentMetadataIndexer,
     DescribableIndexer,
     IdentifiableIndexer,
     ReleasableIndexer,
