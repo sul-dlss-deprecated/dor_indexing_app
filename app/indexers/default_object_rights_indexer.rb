@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class DefaultObjectRightsDatastreamIndexer
+class DefaultObjectRightsIndexer
   attr_reader :cocina
 
   def initialize(cocina:, **)

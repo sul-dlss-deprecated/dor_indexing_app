@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class IdentityMetadataDatastreamIndexer
+class IdentityMetadataIndexer
   include SolrDocHelper
 
   attr_reader :cocina_object

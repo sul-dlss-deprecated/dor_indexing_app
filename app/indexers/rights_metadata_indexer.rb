@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class RightsMetadataDatastreamIndexer
+class RightsMetadataIndexer
   attr_reader :resource
 
   def initialize(resource:, **)

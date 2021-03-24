@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe ContentMetadataDatastreamIndexer do
+RSpec.describe ContentMetadataIndexer do
   let(:json) do
     <<~JSON
       {

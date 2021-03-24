@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe EmbargoMetadataDatastreamIndexer do
+RSpec.describe EmbargoMetadataIndexer do
   let(:xml) do
     <<~XML
       <?xml version="1.0"?>
