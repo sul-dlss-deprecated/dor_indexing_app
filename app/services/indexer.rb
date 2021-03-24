@@ -8,7 +8,7 @@ class Indexer
     DataIndexer,
     RoleMetadataIndexer,
     DefaultObjectRightsIndexer,
-    RightsMetadataDatastreamIndexer,
+    RightsMetadataIndexer,
     IdentityMetadataIndexer,
     DescriptiveMetadataIndexer,
     DescribableIndexer,
@@ -19,7 +19,7 @@ class Indexer
   COLLECTION_INDEXER = CompositeIndexer.new(
     AdministrativeTagIndexer,
     DataIndexer,
-    RightsMetadataDatastreamIndexer,
+    RightsMetadataIndexer,
     IdentityMetadataIndexer,
     DescriptiveMetadataIndexer,
     DescribableIndexer,
@@ -31,7 +31,7 @@ class Indexer
   ITEM_INDEXER = CompositeIndexer.new(
     AdministrativeTagIndexer,
     DataIndexer,
-    RightsMetadataDatastreamIndexer,
+    RightsMetadataIndexer,
     IdentityMetadataIndexer,
     DescriptiveMetadataIndexer,
     EmbargoMetadataIndexer,
@@ -45,7 +45,7 @@ class Indexer
   SET_INDEXER = CompositeIndexer.new(
     AdministrativeTagIndexer,
     DataIndexer,
-    RightsMetadataDatastreamIndexer,
+    RightsMetadataIndexer,
     IdentityMetadataIndexer,
     DescriptiveMetadataIndexer,
     DescribableIndexer,

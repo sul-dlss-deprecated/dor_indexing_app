@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe RightsMetadataDatastreamIndexer do
+RSpec.describe RightsMetadataIndexer do
   let(:xml) do
     <<~XML
       <?xml version="1.0"?>
