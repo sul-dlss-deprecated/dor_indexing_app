@@ -51,8 +51,9 @@ RSpec.describe EmbargoMetadataIndexer do
     context 'when embargo.releaseDate is in the past' do
       let(:release_date) { '2020-06-06T07:00:00.000+09:00' }
 
-      it 'Solr doc does not have embargo fields' do
-        expect(doc).to eq({})
+      it 'Solr doc has embargo fields' do
+        expect(doc).to eq('embargo_release_dtsim' => ['2020-06-05T22:00:00Z'],
+                          'embargo_status_ssim' => ['embargoed'])
       end
     end
 

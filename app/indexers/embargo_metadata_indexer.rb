@@ -12,9 +12,9 @@ class EmbargoMetadataIndexer
   def to_solr
     {}.tap do |solr_doc|
       embargo_release_date = embargo_release_date(cocina)
-      if future?(embargo_release_date)
+      if embargo_release_date.present?
         solr_doc['embargo_status_ssim'] = ['embargoed']
-        solr_doc['embargo_release_dtsim'] = [embargo_release_date.utc.strftime('%FT%TZ')]
+        solr_doc['embargo_release_dtsim'] = [embargo_release_date.utc.iso8601]
       end
     end
   end
@@ -23,11 +23,5 @@ class EmbargoMetadataIndexer
 
   def embargo_release_date(cocina)
     cocina.access.embargo.releaseDate if cocina.access.embargo&.releaseDate.present?
-  end
-
-  def future?(embargo_release_date)
-    return false unless embargo_release_date
-
-    embargo_release_date > DateTime.now
   end
 end
