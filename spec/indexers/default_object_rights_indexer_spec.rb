@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe DefaultObjectRightsDatastreamIndexer do
+RSpec.describe DefaultObjectRightsIndexer do
   let(:cocina) { instance_double(Cocina::Models::AdminPolicy, administrative: administrative) }
   let(:administrative) { instance_double(Cocina::Models::AdminPolicyAdministrative, defaultObjectRights: xml) }
   let(:xml) do
