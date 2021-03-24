@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe IdentityMetadataDatastreamIndexer do
+RSpec.describe IdentityMetadataIndexer do
   let(:obj) { Dor::Item.new(pid: 'druid:rt923jk3421') }
 
   let(:cocina) do
