@@ -1,27 +1,33 @@
 # frozen_string_literal: true
 
 class EmbargoMetadataIndexer
-  attr_reader :resource
+  attr_reader :cocina
 
-  def initialize(resource:, **)
-    @resource = resource
+  def initialize(cocina:, **)
+    @cocina = cocina
   end
 
   # These fields are used by the EmbargoReleaseService in dor-services-app
   # @return [Hash] the partial solr document for embargoMetadata
   def to_solr
-    {
-      'embargo_status_ssim' => embargo_status
-    }.tap do |solr_doc|
-      solr_doc['embargo_release_dtsim'] = Array(release_date.first.utc.strftime('%FT%TZ')) if release_date.first.present?
+    {}.tap do |solr_doc|
+      embargo_release_date = embargo_release_date(cocina)
+      if future?(embargo_release_date)
+        solr_doc['embargo_status_ssim'] = ['embargoed']
+        solr_doc['embargo_release_dtsim'] = [embargo_release_date.utc.strftime('%FT%TZ')]
+      end
     end
   end
 
-  # rubocop:disable Lint/UselessAccessModifier
   private
 
-  # rubocop:enable Lint/UselessAccessModifier
+  def embargo_release_date(cocina)
+    cocina.access.embargo.releaseDate if cocina.access.embargo&.releaseDate.present?
+  end
 
-  delegate :embargoMetadata, to: :resource
-  delegate :embargo_status, :release_date, to: :embargoMetadata
+  def future?(embargo_release_date)
+    return false unless embargo_release_date
+
+    embargo_release_date > DateTime.now
+  end
 end
