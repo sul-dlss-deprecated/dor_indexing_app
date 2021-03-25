@@ -74,5 +74,32 @@ RSpec.describe IdentityMetadataIndexer do
         )
       end
     end
+
+    context 'with a collection' do
+      let(:type) { Cocina::Models::Vocab.collection }
+      let(:identification) do
+        {
+          sourceId: 'google:STANFORD_342837261527',
+          catalogLinks: [
+            {
+              catalog: 'symphony',
+              catalogRecordId: '129483625'
+            }
+          ]
+        }
+      end
+
+      it 'has the fields used by argo' do
+        expect(doc).to include(
+          'barcode_id_ssim' => [],
+          'catkey_id_ssim' => ['129483625'],
+          'dor_id_tesim' => %w[STANFORD_342837261527 129483625],
+          'identifier_ssim' => ['google:STANFORD_342837261527', 'catkey:129483625'],
+          'identifier_tesim' => ['google:STANFORD_342837261527', 'catkey:129483625'],
+          'objectType_ssim' => ['collection'],
+          'source_id_ssim' => ['google:STANFORD_342837261527']
+        )
+      end
+    end
   end
 end
