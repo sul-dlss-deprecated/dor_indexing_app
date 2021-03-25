@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class IdentityMetadataIndexer
-  include SolrDocHelper
-
   attr_reader :cocina_object
 
   def initialize(cocina:, **)
@@ -49,7 +47,7 @@ class IdentityMetadataIndexer
     when Cocina::Models::Collection
       'collection'
     else
-      'item'
+      cocina_object.type == Cocina::Models::Vocab.agreement ? 'agreement' : 'item'
     end
   end
 
