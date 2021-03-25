@@ -5,6 +5,7 @@ FROM ruby:2.7.2-alpine
 
 RUN apk add --update --no-cache  \
   build-base \
+  shared-mime-info \
   tzdata
 
 # Get bundler 2.0
