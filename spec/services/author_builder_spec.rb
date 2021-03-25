@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe AuthorBuilder do
   subject { described_class.build(contributors) }
 
-  context 'with an author' do
+  context 'with an creator' do
     let(:contributors) do
       [
         Cocina::Models::Contributor.new(
@@ -44,6 +44,25 @@ RSpec.describe AuthorBuilder do
     end
 
     it { is_expected.to eq ['George, Henry (1839-1897)', 'George, Henry (1862-1916)'] }
+  end
+
+  context 'with an author (example from Hydrus)' do
+    let(:contributors) do
+      [
+        Cocina::Models::Contributor.new(
+          "name": [{ "value": 'Stanford, Jane Lathrop' }],
+          "type": 'person',
+          "role": [{
+            "value": 'Author',
+            "source": {
+              "code": 'marcrelator'
+            }
+          }]
+        )
+      ]
+    end
+
+    it { is_expected.to eq ['Stanford, Jane Lathrop'] }
   end
 
   context 'with non-author contributors' do

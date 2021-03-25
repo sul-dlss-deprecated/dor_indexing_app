@@ -1,13 +1,16 @@
 # frozen_string_literal: true
 
 class AuthorBuilder
+  ALLOWED_ROLES = %w[Author creator].freeze
+
   # @param [Array<Cocina::Models::Contributor>] contributors
   # @returns [String] The partial solr document
   def self.build(contributors)
     contributors
-      .reject { |contributor| contributor.role && contributor.role.first.value != 'creator' }
+      .reject { |contributor| contributor.role && ALLOWED_ROLES.exclude?(contributor.role.first.value) }
       .flat_map do |contributor|
         contributor.name.map do |name|
+          next name.value if name.value
           next unless name.structuredValue
 
           build_name(name.structuredValue)
