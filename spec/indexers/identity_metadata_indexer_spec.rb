@@ -8,7 +8,7 @@ RSpec.describe IdentityMetadataIndexer do
   let(:cocina) do
     Cocina::Models.build({
       externalIdentifier: 'druid:rt923jk3421',
-      type: Cocina::Models::Vocab.book,
+      type: type,
       version: 1,
       label: 'Squirrels of North America',
       access: {
@@ -28,7 +28,8 @@ RSpec.describe IdentityMetadataIndexer do
   describe '#to_solr' do
     subject(:doc) { indexer.to_solr }
 
-    context 'when all fields are present' do
+    context 'with an item' do
+      let(:type) { Cocina::Models::Vocab.book }
       let(:identification) do
         {
           sourceId: 'google:STANFORD_342837261527',
@@ -53,6 +54,23 @@ RSpec.describe IdentityMetadataIndexer do
                                  'catkey:129483625'],
           'objectType_ssim' => ['item'],
           'source_id_ssim' => ['google:STANFORD_342837261527']
+        )
+      end
+    end
+
+    context 'with an agreement' do
+      let(:type) { Cocina::Models::Vocab.agreement }
+      let(:identification) { {} }
+
+      it 'has the fields used by argo' do
+        expect(doc).to include(
+          'barcode_id_ssim' => [],
+          'catkey_id_ssim' => [],
+          'dor_id_tesim' => [],
+          'identifier_ssim' => [],
+          'identifier_tesim' => [],
+          'objectType_ssim' => ['agreement'],
+          'source_id_ssim' => []
         )
       end
     end
