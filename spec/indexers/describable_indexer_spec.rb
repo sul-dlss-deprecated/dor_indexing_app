@@ -3,6 +3,8 @@
 require 'rails_helper'
 
 RSpec.describe DescribableIndexer do
+  # https://argo.stanford.edu/view/mn760md9509
+  # https://argo.stanford.edu/view/sf449my9678
   subject(:indexer) { described_class.new(cocina: cocina) }
 
   let(:description) do
@@ -59,12 +61,11 @@ RSpec.describe DescribableIndexer do
       ],
       "event": [{
         "type": "publication",
-        "date": [{
-            "value": "1911"
-          },
+        "date": [
           {
             "value": "1911",
             "status": "primary",
+            "type": "publication",
             "encoding": {
               "code": "marc"
             }
@@ -364,7 +365,7 @@ RSpec.describe DescribableIndexer do
   describe '#to_solr' do
     let(:doc) { indexer.to_solr }
 
-    it 'includes values from stanford_mods' do
+    it 'populates expected fields' do
       expect(doc).to eq(
         'metadata_format_ssim' => 'mods',
         'sw_language_ssim' => ['English'],
@@ -426,12 +427,467 @@ RSpec.describe DescribableIndexer do
         JSON
       end
 
-      it 'includes values from stanford_mods' do
+      it 'populates expected fields' do
         expect(doc).to eq(
           'metadata_format_ssim' => 'mods',
           'sw_format_ssim' => 'Book',
           'sw_display_title_tesim' => 'Toldot ha-Yehudim be-artsot ha-Islam : ha-ʻet ha-ḥadashah-ʻad emtsaʻ ha-meʼah ha-19'
         )
+      end
+    end
+  end
+
+  describe 'pub_date field' do
+    let(:doc) { indexer.to_solr }
+
+    context 'when event has date.type publication and date.status primary' do
+      let(:description) do
+        <<~JSON
+          "title": [
+            {
+              "value": "pub dates are fun",
+              "type": "main title"
+            }
+          ],
+          "event": [
+            {
+              "date": [
+                {
+                  "value": "1827",
+                  "type": "creation"
+                }
+              ]
+            },
+            {
+              "date": [
+                {
+                  "value": "1940",
+                  "type": "publication",
+                  "status": "primary"
+                },
+                {
+                  "value": "1942",
+                  "type": "publication"
+                }
+              ]
+            }
+          ]
+        JSON
+      end
+
+      it 'populates sw_pub_date_facet_ssi' do
+        expect(doc).to include('sw_pub_date_facet_ssi' => '1940')
+      end
+
+      context 'when publication date is range (structuredValue)' do
+        let(:description) do
+          <<~JSON
+            "title": [
+              {
+                "value": "pub dates are fun",
+                "type": "main title"
+              }
+            ],
+            "event": [
+              {
+                "date": [
+                  {
+                    "structuredValue": [
+                      {
+                        "value": "1940",
+                        "status": "primary",
+                        "type": "start"
+                      },
+                      {
+                        "value": "1945",
+                        "type": "end"
+                      }
+                    ],
+                    "type": "publication"
+                  },
+                  {
+                    "value": "1948",
+                    "type": "publication"
+                  }
+                ]
+              }
+            ]
+          JSON
+        end
+
+        it 'populates sw_pub_date_facet_ssi' do
+          expect(doc).to include('sw_pub_date_facet_ssi' => '1940')
+        end
+      end
+
+      context 'when parallelEvent' do
+        # based on sf449my9678
+        let(:description) do
+          <<~JSON
+            "title": [
+              {
+                "value": "parallel publication event with status primary pub date"
+              }
+            ],
+            "event": [
+              {
+                "parallelEvent": [
+                  {
+                    "date": [
+                      {
+                        "value": "1999-09-09",
+                        "type": "publication",
+                        "status": "primary"
+                      }
+                    ],
+                    "location": [
+                      {
+                        "value": "Chengdu"
+                      }
+                    ]
+                  },
+                  {
+                    "location": [
+                      {
+                        "value": "成都："
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          JSON
+        end
+
+        it 'populates sw_pub_date_facet_ssi from parallelEvent date status primary with type publication' do
+          expect(doc).to include('sw_pub_date_facet_ssi' => '1999')
+        end
+      end
+    end
+
+    context 'when event.type publication and event has date.type publication but no date.status primary' do
+      let(:description) do
+        <<~JSON
+          "title": [
+            {
+              "structuredValue": [
+                {
+                  "value": "Work & social justice",
+                  "type": "main title"
+                }
+              ]
+            }
+          ],
+          "event": [
+            {
+              "date": [
+                {
+                  "value": "2018",
+                  "type": "publication"
+                }
+              ]
+            },
+            {
+              "type": "publication",
+              "date": [
+                {
+                  "value": "2019",
+                  "type": "publication"
+                }
+              ]
+            },
+            {
+              "type": "copyright notice",
+              "note": [
+                {
+                  "value": "©2020",
+                  "type": "copyright statement"
+                }
+              ]
+            }
+          ]
+        JSON
+      end
+
+      it 'populates sw_pub_date_facet_ssi' do
+        expect(doc).to include('sw_pub_date_facet_ssi' => '2019')
+      end
+
+      context 'when publication date is range (structuredValue)' do
+        let(:description) do
+          <<~JSON
+            "title": [
+              {
+                "value": "pub dates are fun",
+                "type": "main title"
+              }
+            ],
+            "event": [
+              {
+                "date": [
+                  {
+                    "value": "1957",
+                    "type": "publication"
+                  }
+                ]
+              },
+              {
+                "type": "publication",
+                "date": [
+                  {
+                    "structuredValue": [
+                      {
+                        "value": "1940",
+                        "type": "start"
+                      },
+                      {
+                        "value": "1945",
+                        "type": "end"
+                      }
+                    ],
+                    "type": "publication"
+                  }
+                ]
+              },
+              {
+                "type": "copyright notice",
+                "note": [
+                  {
+                    "value": "©2020",
+                    "type": "copyright statement"
+                  }
+                ]
+              }
+            ]
+          JSON
+        end
+
+        it 'populates sw_pub_date_facet_ssi with first date of structuredValue' do
+          expect(doc).to include('sw_pub_date_facet_ssi' => '1940')
+        end
+      end
+
+      context 'when parallelEvent' do
+        # based on sf449my9678
+        let(:description) do
+          <<~JSON
+            "title": [
+              {
+                "value": "parallelEvent with no status primary publication date"
+              }
+            ],
+            "event": [
+              {
+                "parallelEvent": [
+                  {
+                    "date": [
+                      {
+                        "value": "2020-01-01",
+                        "type": "publication"
+                      }
+                    ],
+                    "location": [
+                      {
+                        "value": "Chengdu"
+                      }
+                    ]
+                  },
+                  {
+                    "location": [
+                      {
+                        "value": "成都："
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "publication",
+                "parallelEvent": [
+                  {
+                    "date": [
+                      {
+                        "value": "2021-01-01",
+                        "type": "publication"
+                      }
+                    ],
+                    "location": [
+                      {
+                        "value": "Chengdu"
+                      }
+                    ]
+                  },
+                  {
+                    "location": [
+                      {
+                        "value": "成都："
+                      }
+                    ]
+                  }
+                ]
+              }                ]
+          JSON
+        end
+
+        it 'populates sw_pub_date_facet_ssi with first publication date of parallelValue of type publication' do
+          expect(doc).to include('sw_pub_date_facet_ssi' => '2021')
+        end
+      end
+    end
+
+    context 'when event has date.type publication and no event.type publication' do
+      let(:description) do
+        <<~JSON
+          "title": [
+            {
+              "value": "publication dates R us"
+            }
+          ],
+          "event": [
+            {
+              "date": [
+                {
+                  "value": "1980-1984",
+                  "type": "publication"
+                }
+              ]
+            }
+          ]
+        JSON
+      end
+
+      it 'populates sw_pub_date_facet_ssi with first year of 1980-1984' do
+        expect(doc).to include('sw_pub_date_facet_ssi' => '1980')
+      end
+
+      context 'when publication date is range (structuredValue)' do
+        let(:description) do
+          <<~JSON
+            "title": [
+              {
+                "value": "publication dates R us"
+              }
+            ],
+            "event": [
+              {
+                "date": [
+                  {
+                    "structuredValue": [
+                      {
+                        "value": "1980",
+                        "type": "start"
+                      },
+                      {
+                        "value": "1984",
+                        "type": "end"
+                      }
+                    ],
+                    "type": "publication",
+                    "encoding": {
+                      "code": "marc"
+                    }
+                  }
+                ]
+              }
+            ]
+          JSON
+        end
+
+        it 'populates sw_pub_date_facet_ssi with first year of structuredValue' do
+          expect(doc).to include('sw_pub_date_facet_ssi' => '1980')
+        end
+      end
+
+      context 'when parallelEvent' do
+        # based on sf449my9678
+        let(:description) do
+          <<~JSON
+            "title": [
+              {
+                "value": "parallelEvent joy"
+              }
+            ],
+            "event": [
+              {
+                "date": [
+                  {
+                    "structuredValue": [
+                      {
+                        "value": "1980",
+                        "type": "start"
+                      },
+                      {
+                        "value": "1984",
+                        "type": "end"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "parallelEvent": [
+                  {
+                    "date": [
+                      {
+                        "value": "1966",
+                        "type": "publication"
+                      }
+                    ],
+                    "location": [
+                      {
+                        "value": "Chengdu"
+                      }
+                    ]
+                  },
+                  {
+                    "location": [
+                      {
+                        "value": "成都："
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          JSON
+        end
+
+        it 'populates sw_pub_date_facet_ssi with first publication date of parallelValue' do
+          expect(doc).to include('sw_pub_date_facet_ssi' => '1966')
+        end
+      end
+    end
+
+    context 'when no event with date.type publication and no event.type publication' do
+      let(:description) do
+        <<~JSON
+          "title": [
+            {
+              "structuredValue": [
+                {
+                  "value": "Work & social justice",
+                  "type": "main title"
+                }
+              ]
+            }
+          ],
+          "event": [
+            {
+              "type": "publication",
+              "date": [
+                {
+                  "value": "2018",
+                  "status": "primary",
+                  "type": "copyright"
+                }
+              ]
+            }
+          ]
+        JSON
+      end
+
+      it 'does not populate sw_pub_date_facet_ssi' do
+        expect(doc).not_to include('sw_pub_date_facet_ssi')
       end
     end
   end

@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+require 'parse_date'
+
+# TODO: combine this with DescriptiveMetadataIndexer now that we're off dor-services and are indexing from cocina
+# rubocop:disable Metrics/ClassLength
 class DescribableIndexer
   attr_reader :cocina
 
@@ -9,14 +13,16 @@ class DescribableIndexer
 
   # @return [Hash] the partial solr document for describable concerns
   def to_solr
-    add_metadata_format_to_solr_doc.merge(add_mods_to_solr_doc)
+    add_metadata_format_to_solr_doc.merge(solr_doc)
   end
 
   def add_metadata_format_to_solr_doc
-    { 'metadata_format_ssim' => 'mods' }
+    { 'metadata_format_ssim' => 'mods' } # NOTE: seriously? for cocina????
   end
 
-  def add_mods_to_solr_doc
+  def solr_doc
+    # TODO: Naomi will be writing issues that get correct mapping from Arcadia, that accommodate parallelEvents
+    #   and any other cocina wrinkles, as well as ensuring the logic follows what SearchWorks uses, conceptually
     {
       'sw_language_ssim' => language,
       'mods_typeOfResource_ssim' => resource_type,
@@ -26,7 +32,7 @@ class DescribableIndexer
       'sw_display_title_tesim' => title,
       'sw_subject_temporal_ssim' => subject_temporal,
       'sw_subject_geographic_ssim' => subject_geographic,
-      'sw_pub_date_facet_ssi' => pub_date
+      'sw_pub_date_facet_ssi' => ParseDate.earliest_year(pub_date).to_s
     }.select { |_k, v| v.present? }
   end
 
@@ -103,16 +109,60 @@ class DescribableIndexer
     genres.include?('archived website')
   end
 
+  # NOTE: shameless green to fix production bug.  Ripe for refactor
+  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/CyclomaticComplexity
+  # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Metrics/PerceivedComplexity
   def publication_event
-    Array(cocina.description.event).find { |form| form.type == 'publication' }
-  end
+    # look for event with date of type publication and of status primary
+    pub_event = Array(cocina.description.event&.compact).find do |event|
+      event_dates = Array(event.date) + Array(event.parallelEvent&.map(&:date))
+      event_dates.flatten.compact.find do |date|
+        next if date.type != 'publication'
 
+        structured_primary = Array(date.structuredValue).find do |structured_date|
+          structured_date.status == 'primary'
+        end
+        date.status == 'primary' || structured_primary
+      end
+    end
+    return pub_event if pub_event.present?
+
+    # otherwise look for event with date of type publication and the event has type publication
+    pub_event = Array(cocina.description.event&.compact).find do |event|
+      next unless event.type == 'publication' || event.parallelEvent&.find { |parallel_event| parallel_event.type == 'publication' }
+
+      event_dates = Array(event.date) + Array(event.parallelEvent&.map(&:date))
+      event_dates.flatten.compact.find do |date|
+        date.type == 'publication'
+      end
+    end
+    return pub_event if pub_event.present?
+
+    # otherwise look for event with date of type publication
+    Array(cocina.description.event&.compact).find do |event|
+      event_dates = Array(event.date) + Array(event.parallelEvent&.map(&:date))
+      event_dates.flatten.compact.find do |date|
+        date.type == 'publication'
+      end
+    end
+  end
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/CyclomaticComplexity
+  # rubocop:enable Metrics/MethodLength
+  # rubocop:enable Metrics/PerceivedComplexity
+
+  # TODO: Naomi will be writing an issue that gets correct mapping from Arcadia, that accommodates parallelEvents
+  #   and any other cocina wrinkles, as well as ensuring the logic follows what SearchWorks uses, conceptually
+  # From Arcadia, it should be:
+  #  typeOfResource is "text" and any of: issuance is "continuing", issuance is "serial", frequency has a value
   def periodical?
     publication_event&.note&.any? { |note| note.type == 'issuance' && note.value == 'serial' }
   end
 
   def pub_date
-    Array(publication_event&.date).map(&:value).first
+    PubDateBuilder.build(publication_event)
   end
 
   def sw_format_for_text
@@ -122,3 +172,4 @@ class DescribableIndexer
     'Book'
   end
 end
+# rubocop:enable Metrics/ClassLength
