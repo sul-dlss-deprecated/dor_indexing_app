@@ -34,7 +34,7 @@ class DescriptiveMetadataIndexer
   end
 
   def topics
-    @topics ||= Array(cocina.description.subject).select { |node| node.type == 'topic' }.map(&:value)
+    @topics ||= Array(cocina.description.subject).select { |subject| subject.type == 'topic' }.map(&:value)
   end
 
   def events
