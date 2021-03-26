@@ -419,11 +419,12 @@ GEM
       mime-types
       nokogiri
       rest-client
-    simplecov (0.17.1)
+    simplecov (0.21.2)
       docile (~> 1.1)
-      json (>= 1.8, < 3)
-      simplecov-html (~> 0.10.0)
-    simplecov-html (0.10.2)
+      simplecov-html (~> 0.11)
+      simplecov_json_formatter (~> 0.1)
+    simplecov-html (0.12.3)
+    simplecov_json_formatter (0.1.2)
     solrizer (3.4.1)
       activesupport
       daemons
@@ -510,7 +511,7 @@ DEPENDENCIES
   rubocop-performance
   rubocop-rails
   rubocop-rspec
-  simplecov (~> 0.17.1)
+  simplecov
   webmock
 
 BUNDLED WITH
