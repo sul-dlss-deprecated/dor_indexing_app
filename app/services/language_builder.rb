@@ -3,9 +3,9 @@
 # Finds the language value to index from the cocina languages
 class LanguageBuilder
   # @param [Array<Cocina::Models::Language>] languages
-  # @returns [String] The partial solr document
+  # @returns [String] the language value for Solr
   def self.build(languages)
-    languages.map do |lang|
+    languages&.map do |lang|
       if lang.source&.code&.start_with?('iso639')
         language_for_code(lang.code)
       else
