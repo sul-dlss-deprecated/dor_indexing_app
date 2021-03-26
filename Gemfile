@@ -2,29 +2,26 @@
 
 source 'https://rubygems.org'
 
-gem 'rails', '~> 5.2.3'
-
-# Use Puma as the app server
-gem 'puma', '~> 3.0'
-
-gem 'erubis'
-
+gem 'bootsnap', '>= 1.1.0', require: false # Reduces boot times through caching; required in config/boot.rb
 gem 'committee' # Validates HTTP requests/responses per OpenAPI specification
 gem 'config'
+gem 'dry-monads', '~> 1.3'
+gem 'erubis'
 gem 'faraday'
 gem 'honeybadger', '~> 4.5'
+gem 'iso-639', '~> 0.3.5'
+gem 'okcomputer' # for monitoring
+gem 'puma', '~> 3.0' # app server
 gem 'rack-timeout', '~> 0.5.1'
+gem 'rails', '~> 5.2.3'
+gem 'rsolr', '~> 2.0'
 
-# Reduces boot times through caching; required in config/boot.rb
-gem 'bootsnap', '>= 1.1.0', require: false
+# DLSS gems
 gem 'dor-rights-auth', '~>1.5' # 1.5 or better is needed to ensure we index controlled digital lending rights object correctly
 gem 'dor-services', '~> 9.0', '>= 9.2.1' # must be 9.2.1 to get fix from https://github.com/sul-dlss/dor-services/pull/695
 gem 'dor-services-client', '~> 6.30'
 gem 'dor-workflow-client', '~> 3.20'
-gem 'dry-monads', '~> 1.3'
-gem 'iso-639', '~> 0.3.5'
-gem 'okcomputer' # for monitoring
-gem 'rsolr', '~> 2.0'
+gem 'parse_date'
 
 group :production do
   gem 'newrelic_rpm'
