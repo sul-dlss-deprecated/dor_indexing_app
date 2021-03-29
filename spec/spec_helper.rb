@@ -21,12 +21,6 @@
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 
 require 'simplecov'
-require 'coveralls'
-Coveralls.wear!('rails')
-SimpleCov.formatters = [
-  SimpleCov::Formatter::HTMLFormatter,
-  Coveralls::SimpleCov::Formatter
-]
 SimpleCov.start 'rails'
 
 require 'webmock/rspec'
