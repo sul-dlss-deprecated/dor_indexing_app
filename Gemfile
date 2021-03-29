@@ -33,7 +33,7 @@ end
 group :development, :test do
   gem 'byebug'
   gem 'rspec-rails', '~> 3.0'
-  gem 'simplecov', '~> 0.17.1', require: false # https://github.com/codeclimate/test-reporter/issues/413
+  gem 'simplecov'
   gem 'webmock'
 end
 
