@@ -32,9 +32,8 @@ end
 
 group :development, :test do
   gem 'byebug'
-  gem 'coveralls', require: false
   gem 'rspec-rails', '~> 3.0'
-  gem 'simplecov', '~> 0.17.1', require: false # 0.18 breaks reporting to coveralls `undefined method `coverage' for #<SimpleCov::SourceFile:0x0000561b4563cd18>`
+  gem 'simplecov', '~> 0.17.1', require: false # https://github.com/codeclimate/test-reporter/issues/413
   gem 'webmock'
 end
 
