@@ -2,20 +2,20 @@
 
 class PubDateBuilder
   # @param [Array<Cocina::Models::Event>] single event selected as publication event
-  # @returns [String] the pub date value for Solr
-  def self.build(publication_event)
+  # @returns [String, nil] the pub date value for Solr
+  def self.build(publication_event, date_type)
     event_dates = Array(publication_event&.date) + Array(publication_event&.parallelEvent&.map(&:date))
 
-    pub_date = pub_date_from_status_primary(event_dates)
+    pub_date = pub_date_from_status_primary(event_dates, date_type)
     return pub_date if pub_date.present?
 
-    date_from_type_publication(event_dates)
+    date_from_type_publication(event_dates, date_type)
   end
 
-  # @return String date.value from a date of type of publication and status primary
-  def self.pub_date_from_status_primary(event_dates)
+  # @return [String, nil] date.value from a date of type of publication and status primary
+  def self.pub_date_from_status_primary(event_dates, date_type)
     event_dates.flatten.compact.find do |date|
-      next if date.type != 'publication'
+      next if date.type != date_type
       return date.value if date.status == 'primary' && date&.value.present?
 
       Array(date&.structuredValue).find do |structured_date|
@@ -25,10 +25,10 @@ class PubDateBuilder
   end
   private_class_method :pub_date_from_status_primary
 
-  # @return String date.value from a date of type of publication
-  def self.date_from_type_publication(event_dates)
+  # @return [String, nil] date.value from a date of type of publication
+  def self.date_from_type_publication(event_dates, date_type)
     event_dates.flatten.compact.find do |date|
-      next if date.type != 'publication'
+      next if date.type != date_type
       return date.value if date&.value.present?
 
       Array(date&.structuredValue).find do |structured_date|

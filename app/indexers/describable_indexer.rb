@@ -21,8 +21,6 @@ class DescribableIndexer
   end
 
   def solr_doc
-    # TODO: Naomi will be writing issues that get correct mapping from Arcadia, that accommodate parallelEvents
-    #   and any other cocina wrinkles, as well as ensuring the logic follows what SearchWorks uses, conceptually
     {
       'sw_language_ssim' => language,
       'mods_typeOfResource_ssim' => resource_type,
@@ -109,17 +107,36 @@ class DescribableIndexer
     genres.include?('archived website')
   end
 
+  # TODO: part of https://github.com/sul-dlss/dor_indexing_app/issues/567
+  # From Arcadia, it should be:
+  #  typeOfResource is "text" and any of: issuance is "continuing", issuance is "serial", frequency has a value
+  def periodical?
+    event_selector('publication')&.note&.any? { |note| note.type == 'issuance' && note.value == 'serial' }
+  end
+
+  def pub_date
+    PubDateBuilder.build(event_selector('publication'), 'publication') ||
+      PubDateBuilder.build(event_selector('creation'), 'creation')
+  end
+
+  def sw_format_for_text
+    return 'Archived website' if archived_website?
+    return 'Journal/Periodical' if periodical?
+
+    'Book'
+  end
+
   # NOTE: shameless green to fix production bug.  Ripe for refactor
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/CyclomaticComplexity
   # rubocop:disable Metrics/MethodLength
   # rubocop:disable Metrics/PerceivedComplexity
-  def publication_event
-    # look for event with date of type publication and of status primary
+  def event_selector(date_type)
+    # look for event with date of type date_type and of status primary
     pub_event = Array(cocina.description.event&.compact).find do |event|
       event_dates = Array(event.date) + Array(event.parallelEvent&.map(&:date))
       event_dates.flatten.compact.find do |date|
-        next if date.type != 'publication'
+        next if date.type != date_type
 
         structured_primary = Array(date.structuredValue).find do |structured_date|
           structured_date.status == 'primary'
@@ -131,11 +148,11 @@ class DescribableIndexer
 
     # otherwise look for event with date of type publication and the event has type publication
     pub_event = Array(cocina.description.event&.compact).find do |event|
-      next unless event.type == 'publication' || event.parallelEvent&.find { |parallel_event| parallel_event.type == 'publication' }
+      next unless event.type == date_type || event.parallelEvent&.find { |parallel_event| parallel_event.type == date_type }
 
       event_dates = Array(event.date) + Array(event.parallelEvent&.map(&:date))
       event_dates.flatten.compact.find do |date|
-        date.type == 'publication'
+        date.type == date_type
       end
     end
     return pub_event if pub_event.present?
@@ -144,7 +161,7 @@ class DescribableIndexer
     Array(cocina.description.event&.compact).find do |event|
       event_dates = Array(event.date) + Array(event.parallelEvent&.map(&:date))
       event_dates.flatten.compact.find do |date|
-        date.type == 'publication'
+        date.type == date_type
       end
     end
   end
@@ -152,24 +169,5 @@ class DescribableIndexer
   # rubocop:enable Metrics/CyclomaticComplexity
   # rubocop:enable Metrics/MethodLength
   # rubocop:enable Metrics/PerceivedComplexity
-
-  # TODO: Naomi will be writing an issue that gets correct mapping from Arcadia, that accommodates parallelEvents
-  #   and any other cocina wrinkles, as well as ensuring the logic follows what SearchWorks uses, conceptually
-  # From Arcadia, it should be:
-  #  typeOfResource is "text" and any of: issuance is "continuing", issuance is "serial", frequency has a value
-  def periodical?
-    publication_event&.note&.any? { |note| note.type == 'issuance' && note.value == 'serial' }
-  end
-
-  def pub_date
-    PubDateBuilder.build(publication_event)
-  end
-
-  def sw_format_for_text
-    return 'Archived website' if archived_website?
-    return 'Journal/Periodical' if periodical?
-
-    'Book'
-  end
 end
 # rubocop:enable Metrics/ClassLength
