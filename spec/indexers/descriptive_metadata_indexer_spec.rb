@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe DescribableIndexer do
+RSpec.describe DescriptiveMetadataIndexer do
   # https://argo.stanford.edu/view/mn760md9509
   # https://argo.stanford.edu/view/sf449my9678
   subject(:indexer) { described_class.new(cocina: cocina) }
@@ -194,6 +194,10 @@ RSpec.describe DescribableIndexer do
           "source": {
             "code": "lcsh"
           }
+        },
+        {
+          "value": "cats",
+          "type": "topic"
         }
       ],
       "purl": "http://purl.stanford.edu/qy781dy0220",
@@ -375,7 +379,12 @@ RSpec.describe DescribableIndexer do
         'sw_subject_geographic_ssim' => ['Europe'],
         'sw_pub_date_facet_ssi' => '1911',
         'sw_author_tesim' => ['George, Henry (1839-1897)', 'George, Henry (1862-1916)'],
-        'sw_display_title_tesim' => 'The complete works of Henry George'
+        'sw_display_title_tesim' => 'The complete works of Henry George',
+        # 'originInfo_date_created_tesim' => '', # not populated by the example
+        'originInfo_publisher_tesim' => ['Doubleday, Page'],
+        'originInfo_place_placeTerm_tesim' => ['Garden City, N. Y'],
+        'topic_ssim' => ['cats'],
+        'topic_tesim' => ['cats']
       )
     end
 
