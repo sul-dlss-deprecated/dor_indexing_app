@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+require 'parse_date'
+
+# TODO: combine this with DescriptiveMetadataIndexer now that we're off dor-services and are indexing from cocina
+# rubocop:disable Metrics/ClassLength
 class DescribableIndexer
   attr_reader :cocina
 
@@ -9,14 +13,14 @@ class DescribableIndexer
 
   # @return [Hash] the partial solr document for describable concerns
   def to_solr
-    add_metadata_format_to_solr_doc.merge(add_mods_to_solr_doc)
+    add_metadata_format_to_solr_doc.merge(solr_doc)
   end
 
   def add_metadata_format_to_solr_doc
-    { 'metadata_format_ssim' => 'mods' }
+    { 'metadata_format_ssim' => 'mods' } # NOTE: seriously? for cocina????
   end
 
-  def add_mods_to_solr_doc
+  def solr_doc
     {
       'sw_language_ssim' => language,
       'mods_typeOfResource_ssim' => resource_type,
@@ -26,7 +30,7 @@ class DescribableIndexer
       'sw_display_title_tesim' => title,
       'sw_subject_temporal_ssim' => subject_temporal,
       'sw_subject_geographic_ssim' => subject_geographic,
-      'sw_pub_date_facet_ssi' => pub_date
+      'sw_pub_date_facet_ssi' => ParseDate.earliest_year(pub_date).to_s
     }.select { |_k, v| v.present? }
   end
 
@@ -103,16 +107,16 @@ class DescribableIndexer
     genres.include?('archived website')
   end
 
-  def publication_event
-    Array(cocina.description.event).find { |form| form.type == 'publication' }
-  end
-
+  # TODO: part of https://github.com/sul-dlss/dor_indexing_app/issues/567
+  # From Arcadia, it should be:
+  #  typeOfResource is "text" and any of: issuance is "continuing", issuance is "serial", frequency has a value
   def periodical?
-    publication_event&.note&.any? { |note| note.type == 'issuance' && note.value == 'serial' }
+    event_selector('publication')&.note&.any? { |note| note.type == 'issuance' && note.value == 'serial' }
   end
 
   def pub_date
-    Array(publication_event&.date).map(&:value).first
+    PubDateBuilder.build(event_selector('publication'), 'publication') ||
+      PubDateBuilder.build(event_selector('creation'), 'creation')
   end
 
   def sw_format_for_text
@@ -121,4 +125,49 @@ class DescribableIndexer
 
     'Book'
   end
+
+  # NOTE: shameless green to fix production bug.  Ripe for refactor
+  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/CyclomaticComplexity
+  # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Metrics/PerceivedComplexity
+  def event_selector(date_type)
+    # look for event with date of type date_type and of status primary
+    pub_event = Array(cocina.description.event&.compact).find do |event|
+      event_dates = Array(event.date) + Array(event.parallelEvent&.map(&:date))
+      event_dates.flatten.compact.find do |date|
+        next if date.type != date_type
+
+        structured_primary = Array(date.structuredValue).find do |structured_date|
+          structured_date.status == 'primary'
+        end
+        date.status == 'primary' || structured_primary
+      end
+    end
+    return pub_event if pub_event.present?
+
+    # otherwise look for event with date of type publication and the event has type publication
+    pub_event = Array(cocina.description.event&.compact).find do |event|
+      next unless event.type == date_type || event.parallelEvent&.find { |parallel_event| parallel_event.type == date_type }
+
+      event_dates = Array(event.date) + Array(event.parallelEvent&.map(&:date))
+      event_dates.flatten.compact.find do |date|
+        date.type == date_type
+      end
+    end
+    return pub_event if pub_event.present?
+
+    # otherwise look for event with date of type publication
+    Array(cocina.description.event&.compact).find do |event|
+      event_dates = Array(event.date) + Array(event.parallelEvent&.map(&:date))
+      event_dates.flatten.compact.find do |date|
+        date.type == date_type
+      end
+    end
+  end
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/CyclomaticComplexity
+  # rubocop:enable Metrics/MethodLength
+  # rubocop:enable Metrics/PerceivedComplexity
 end
+# rubocop:enable Metrics/ClassLength

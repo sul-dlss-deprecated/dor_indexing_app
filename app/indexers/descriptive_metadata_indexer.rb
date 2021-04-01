@@ -8,6 +8,9 @@ class DescriptiveMetadataIndexer
   end
 
   # @return [Hash] the partial solr document for descMetadata
+  # TODO: Naomi will be writing issues that get correct mapping from Arcadia, that
+  #   accommodate structured and parallel values and
+  #   any other cocina wrinkles, as well as ensuring the logic follows what SearchWorks uses, conceptually
   def to_solr
     {
       'originInfo_date_created_tesim' => creation&.date&.map(&:value),
@@ -26,15 +29,15 @@ class DescriptiveMetadataIndexer
   end
 
   def publication
-    @publication ||= events.find { |node| node.type == 'publication' }
+    @publication ||= events.find { |event| event.type == 'publication' }
   end
 
   def creation
-    events.find { |node| node.type == 'creation' }
+    events.find { |event| event.type == 'creation' }
   end
 
   def topics
-    @topics ||= Array(cocina.description.subject).select { |node| node.type == 'topic' }.map(&:value)
+    @topics ||= Array(cocina.description.subject).select { |subject| subject.type == 'topic' }.map(&:value)
   end
 
   def events

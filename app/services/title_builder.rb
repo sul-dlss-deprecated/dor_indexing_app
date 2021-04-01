@@ -2,7 +2,7 @@
 
 class TitleBuilder
   # @param [Array<Cocina::Models::Title>] titles
-  # @returns [String] The partial solr document
+  # @returns [String] the title value for Solr
   def self.build(titles)
     title = titles.first
     if title.value
