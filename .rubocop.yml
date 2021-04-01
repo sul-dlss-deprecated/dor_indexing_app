@@ -33,6 +33,10 @@ Naming/PredicateName:
 RSpec/ExampleLength:
   Enabled: false
 
+RSpec/FilePath:
+  Exclude:
+    - 'spec/indexers/description_metadata/*'
+
 Layout/BeginEndAlignment: # (new in 0.91)
   Enabled: true
 Layout/EmptyLinesAroundAttributeAccessor: # (new in 0.83)
