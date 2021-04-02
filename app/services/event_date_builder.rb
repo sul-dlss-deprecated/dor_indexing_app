@@ -1,15 +1,13 @@
 # frozen_string_literal: true
 
 class EventDateBuilder
-  # @param [Array<Cocina::Models::Event>] single event selected as publication event
-  # @returns [String, nil] the pub date value for Solr
-  def self.build(publication_event, date_type)
-    event_dates = Array(publication_event&.date) + Array(publication_event&.parallelEvent&.map(&:date))
+  # @param [Array<Cocina::Models::Event>] single selected  event
+  # @returns [String, nil] the date value for Solr
+  def self.build(event, date_type)
+    event_dates = Array(event&.date) + Array(event&.parallelEvent&.map(&:date))
 
-    pub_date = matching_date_value_with_status_primary(event_dates, date_type)
-    return pub_date if pub_date.present?
-
-    matching_date_value(event_dates, date_type)
+    matching_date_value_with_status_primary(event_dates, date_type) ||
+      matching_date_value(event_dates, date_type)
   end
 
   # @return [String, nil] date.value from a date of type of date_type and of status primary
