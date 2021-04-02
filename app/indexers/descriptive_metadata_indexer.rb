@@ -20,7 +20,7 @@ class DescriptiveMetadataIndexer
       'sw_subject_temporal_ssim' => subject_temporal,
       'sw_subject_geographic_ssim' => subject_geographic,
       'sw_pub_date_facet_ssi' => pub_year,
-      'originInfo_date_created_tesim' => [creation_date].compact,
+      'originInfo_date_created_tesim' => creation_date,
       'originInfo_publisher_tesim' => publisher_name,
       'originInfo_place_placeTerm_tesim' => publication_location,
       'topic_ssim' => topics,

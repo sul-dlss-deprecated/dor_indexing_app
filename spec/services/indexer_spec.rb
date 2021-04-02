@@ -163,7 +163,7 @@ RSpec.describe Indexer do
         it 'has required fields' do
           expect(solr_doc).to include('milestones_ssim', 'released_to_ssim', 'wf_ssim', 'tag_ssim')
 
-          expect(solr_doc['originInfo_date_created_tesim']).to eq ['2021-01-01']
+          expect(solr_doc['originInfo_date_created_tesim']).to eq '2021-01-01'
           expect(solr_doc['originInfo_publisher_tesim']).to eq ['Izdatelʹstvo "Vesʹ Mir"']
           expect(solr_doc['originInfo_place_placeTerm_tesim']).to eq ['Moskva']
         end
