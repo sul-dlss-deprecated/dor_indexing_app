@@ -35,7 +35,7 @@ RSpec/ExampleLength:
 
 RSpec/FilePath:
   Exclude:
-    - 'spec/indexers/description_metadata/*'
+    - 'spec/indexers/descriptive_metadata/*'
 
 Layout/BeginEndAlignment: # (new in 0.91)
   Enabled: true

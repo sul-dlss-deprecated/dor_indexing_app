@@ -11,7 +11,6 @@ class Indexer
     RightsMetadataIndexer,
     IdentityMetadataIndexer,
     DescriptiveMetadataIndexer,
-    DescribableIndexer,
     IdentifiableIndexer,
     WorkflowsIndexer
   )
@@ -22,7 +21,6 @@ class Indexer
     RightsMetadataIndexer,
     IdentityMetadataIndexer,
     DescriptiveMetadataIndexer,
-    DescribableIndexer,
     IdentifiableIndexer,
     ReleasableIndexer,
     WorkflowsIndexer
@@ -36,7 +34,6 @@ class Indexer
     DescriptiveMetadataIndexer,
     EmbargoMetadataIndexer,
     ContentMetadataIndexer,
-    DescribableIndexer,
     IdentifiableIndexer,
     ReleasableIndexer,
     WorkflowsIndexer
@@ -48,7 +45,6 @@ class Indexer
     RightsMetadataIndexer,
     IdentityMetadataIndexer,
     DescriptiveMetadataIndexer,
-    DescribableIndexer,
     IdentifiableIndexer,
     WorkflowsIndexer
   )

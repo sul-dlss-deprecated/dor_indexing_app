@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe DescribableIndexer do
+RSpec.describe DescriptiveMetadataIndexer do
   describe 'title mappings from Cocina to Solr' do
     describe 'single untyped title' do
       # Select value; status: primary may or may not be present

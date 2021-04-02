@@ -43,7 +43,7 @@ RSpec.describe CompositeIndexer do
 
   let(:indexer) do
     described_class.new(
-      DescribableIndexer,
+      DescriptiveMetadataIndexer,
       IdentifiableIndexer
     )
   end
@@ -99,7 +99,9 @@ RSpec.describe CompositeIndexer do
         'apo_title_tesim' => ['APO title'],
         'apo_title_ssim' => ['APO title'],
         'metadata_source_ssi' => 'Symphony',
-        'objectId_tesim' => ['druid:mx123ms3333', 'mx123ms3333']
+        'objectId_tesim' => ['druid:mx123ms3333', 'mx123ms3333'],
+        'topic_ssim' => ['word'],
+        'topic_tesim' => ['word']
       )
     end
   end
