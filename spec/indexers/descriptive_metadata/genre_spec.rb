@@ -85,9 +85,10 @@ RSpec.describe DescriptiveMetadataIndexer do
                 "value": "title"
               }
             ],
-            "genre": [
+            "form": [
               {
-                "value": "photographs"
+                "value": "photographs",
+                "type": "genre"
               }
             ]
           JSON
@@ -106,12 +107,14 @@ RSpec.describe DescriptiveMetadataIndexer do
                 "value": "title"
               }
             ],
-            "genre": [
+            "form": [
               {
-                "value": "photographs"
+                "value": "photographs",
+                "type": "genre"
               },
               {
-                "value": "ambrotypes"
+                "value": "ambrotypes",
+                "type": "genre"
               }
             ]
           JSON
@@ -122,7 +125,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         end
       end
 
-      context 'when genre with additional property' do
+      context 'when multilingual' do
         let(:description) do
           <<~JSON
             "title": [
@@ -130,9 +133,40 @@ RSpec.describe DescriptiveMetadataIndexer do
                 "value": "title"
               }
             ],
-            "genre": [
+            "form": [
+              {
+                "parallelValue": [
+                  {
+                    "value": "photographs",
+                    "type": "genre"
+                  },
+                  {
+                    "value": "фотографии",
+                    "type": "genre"
+                  }
+                ]
+              }
+            ]
+          JSON
+        end
+
+        xit 'populates sw_genre_ssim' do
+          expect(doc).to include('sw_genre_ssim' => %w[photographs фотографии])
+        end
+      end
+
+      context 'when genre term is capitalized' do
+        let(:description) do
+          <<~JSON
+            "title": [
+              {
+                "value": "title"
+              }
+            ],
+            "form": [
               {
                 "value": "Photographs",
+                "type": "genre",
                 "displayLabel": "Image type"
               }
             ]
@@ -152,9 +186,10 @@ RSpec.describe DescriptiveMetadataIndexer do
                 "value": "title"
               }
             ],
-            "genre": [
+            "form": [
               {
-                "value": "Thesis"
+                "value": "Thesis",
+                "type": "genre"
               }
             ]
           JSON
@@ -173,9 +208,10 @@ RSpec.describe DescriptiveMetadataIndexer do
                 "value": "title"
               }
             ],
-            "genre": [
+            "form": [
               {
-                "value": "Conference Publication"
+                "value": "Conference Publication",
+                "type": "genre"
               }
             ]
           JSON
@@ -194,9 +230,10 @@ RSpec.describe DescriptiveMetadataIndexer do
                 "value": "title"
               }
             ],
-            "genre": [
+            "form": [
               {
-                "value": "Government publication"
+                "value": "Government publication",
+                "type": "genre"
               }
             ]
           JSON
@@ -215,9 +252,10 @@ RSpec.describe DescriptiveMetadataIndexer do
                 "value": "title"
               }
             ],
-            "genre": [
+            "form": [
               {
-                "value": "technical report"
+                "value": "technical report",
+                "type": "genre"
               }
             ]
           JSON
