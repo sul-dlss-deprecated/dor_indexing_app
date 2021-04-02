@@ -6,6 +6,8 @@ RSpec.describe DescriptiveMetadataIndexer do
   describe 'date mappings from Cocina to Solr' do
     describe 'origin_info_date_created_tesim' do
       # Creation date
+      let(:doc) { indexer.to_solr }
+
       context 'when date.type creation and date.status primary' do
         # Select date.type creation with date.status primary
         let(:description) do
