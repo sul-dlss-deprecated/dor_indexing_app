@@ -19,8 +19,7 @@ class DescriptiveMetadataIndexer
       'sw_display_title_tesim' => title,
       'sw_subject_temporal_ssim' => subject_temporal,
       'sw_subject_geographic_ssim' => subject_geographic,
-      'sw_pub_date_facet_ssi' => ParseDate.earliest_year(pub_date).to_s,
-      # 'originInfo_date_created_tesim' => ParseDate.earliest_year(creation_date).to_s,
+      'sw_pub_date_facet_ssi' => pub_year,
       'originInfo_date_created_tesim' => [creation_date].compact,
       'originInfo_publisher_tesim' => publisher_name,
       'originInfo_place_placeTerm_tesim' => publication_location,
@@ -112,9 +111,9 @@ class DescriptiveMetadataIndexer
     publication_event&.note&.any? { |note| note.type == 'issuance' && note.value == 'serial' }
   end
 
-  def pub_date
-    EventDateBuilder.build(publication_event, 'publication') ||
-      creation_date
+  def pub_year
+    date = EventDateBuilder.build(publication_event, 'publication') || creation_date
+    ParseDate.earliest_year(date).to_s if date.present?
   end
 
   def creation_date
