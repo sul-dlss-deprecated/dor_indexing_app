@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class PubDateBuilder
+class EventDateBuilder
   # @param [Array<Cocina::Models::Event>] single event selected as publication event
   # @returns [String, nil] the pub date value for Solr
   def self.build(publication_event, date_type)

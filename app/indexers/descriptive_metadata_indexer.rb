@@ -113,12 +113,12 @@ class DescriptiveMetadataIndexer
   end
 
   def pub_date
-    PubDateBuilder.build(publication_event, 'publication') ||
+    EventDateBuilder.build(publication_event, 'publication') ||
       creation_date
   end
 
   def creation_date
-    @creation_date ||= PubDateBuilder.build(creation_event, 'creation')
+    @creation_date ||= EventDateBuilder.build(creation_event, 'creation')
   end
 
   def sw_format_for_text
