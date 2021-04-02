@@ -3,6 +3,8 @@
 require 'rails_helper'
 
 RSpec.describe DescriptiveMetadataIndexer do
+  subject(:indexer) { described_class.new(cocina: cocina) }
+
   describe 'date mappings from Cocina to Solr' do
     describe 'origin_info_date_created_tesim' do
       # Creation date
