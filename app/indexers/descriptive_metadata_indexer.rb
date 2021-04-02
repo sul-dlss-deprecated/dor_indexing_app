@@ -19,8 +19,8 @@ class DescriptiveMetadataIndexer
       'sw_display_title_tesim' => title,
       'sw_subject_temporal_ssim' => subject_temporal,
       'sw_subject_geographic_ssim' => subject_geographic,
-      'sw_pub_date_facet_ssi' => ParseDate.earliest_year(pub_date).to_s,
-      'originInfo_date_created_tesim' => creation&.date&.map(&:value),
+      'sw_pub_date_facet_ssi' => pub_year,
+      'originInfo_date_created_tesim' => [creation_date].compact,
       'originInfo_publisher_tesim' => publisher_name,
       'originInfo_place_placeTerm_tesim' => publication_location,
       'topic_ssim' => topics,
@@ -108,12 +108,16 @@ class DescriptiveMetadataIndexer
   # From Arcadia, it should be:
   #  typeOfResource is "text" and any of: issuance is "continuing", issuance is "serial", frequency has a value
   def periodical?
-    event_selector('publication')&.note&.any? { |note| note.type == 'issuance' && note.value == 'serial' }
+    publication_event&.note&.any? { |note| note.type == 'issuance' && note.value == 'serial' }
   end
 
-  def pub_date
-    PubDateBuilder.build(event_selector('publication'), 'publication') ||
-      PubDateBuilder.build(event_selector('creation'), 'creation')
+  def pub_year
+    date = EventDateBuilder.build(publication_event, 'publication') || creation_date
+    ParseDate.earliest_year(date).to_s if date.present?
+  end
+
+  def creation_date
+    @creation_date ||= EventDateBuilder.build(creation_event, 'creation')
   end
 
   def sw_format_for_text
@@ -136,60 +140,20 @@ class DescriptiveMetadataIndexer
     publication&.location&.map(&:value)&.compact
   end
 
-  def creation
-    events.find { |event| event.type == 'creation' }
-  end
-
   def topics
     @topics ||= Array(cocina.description.subject).select { |subject| subject.type == 'topic' }.map(&:value).compact
+  end
+
+  def publication_event
+    @publication_event ||= EventSelector.select(events, 'publication')
+  end
+
+  def creation_event
+    @creation_event ||= EventSelector.select(events, 'creation')
   end
 
   def events
     @events ||= Array(cocina.description.event).compact
   end
-
-  # NOTE: shameless green to fix production bug.  Ripe for refactor
-  # rubocop:disable Metrics/AbcSize
-  # rubocop:disable Metrics/CyclomaticComplexity
-  # rubocop:disable Metrics/MethodLength
-  # rubocop:disable Metrics/PerceivedComplexity
-  def event_selector(date_type)
-    # look for event with date of type date_type and of status primary
-    pub_event = Array(cocina.description.event&.compact).find do |event|
-      event_dates = Array(event.date) + Array(event.parallelEvent&.map(&:date))
-      event_dates.flatten.compact.find do |date|
-        next if date.type != date_type
-
-        structured_primary = Array(date.structuredValue).find do |structured_date|
-          structured_date.status == 'primary'
-        end
-        date.status == 'primary' || structured_primary
-      end
-    end
-    return pub_event if pub_event.present?
-
-    # otherwise look for event with date of type publication and the event has type publication
-    pub_event = Array(cocina.description.event&.compact).find do |event|
-      next unless event.type == date_type || event.parallelEvent&.find { |parallel_event| parallel_event.type == date_type }
-
-      event_dates = Array(event.date) + Array(event.parallelEvent&.map(&:date))
-      event_dates.flatten.compact.find do |date|
-        date.type == date_type
-      end
-    end
-    return pub_event if pub_event.present?
-
-    # otherwise look for event with date of type publication
-    Array(cocina.description.event&.compact).find do |event|
-      event_dates = Array(event.date) + Array(event.parallelEvent&.map(&:date))
-      event_dates.flatten.compact.find do |date|
-        date.type == date_type
-      end
-    end
-  end
-  # rubocop:enable Metrics/AbcSize
-  # rubocop:enable Metrics/CyclomaticComplexity
-  # rubocop:enable Metrics/MethodLength
-  # rubocop:enable Metrics/PerceivedComplexity
 end
 # rubocop:enable Metrics/ClassLength
