@@ -124,7 +124,8 @@ RSpec.describe Indexer do
                       'status' => 'primary',
                       'encoding' => {
                         'code' => 'w3cdtf'
-                      }
+                      },
+                      'type' => 'creation'
                     }
                   ]
                 },

@@ -20,7 +20,7 @@ class DescriptiveMetadataIndexer
       'sw_subject_temporal_ssim' => subject_temporal,
       'sw_subject_geographic_ssim' => subject_geographic,
       'sw_pub_date_facet_ssi' => ParseDate.earliest_year(pub_date).to_s,
-      'originInfo_date_created_tesim' => creation&.date&.map(&:value),
+      'originInfo_date_created_tesim' => creation_event&.date&.map(&:value),
       'originInfo_publisher_tesim' => publisher_name,
       'originInfo_place_placeTerm_tesim' => publication_location,
       'topic_ssim' => topics,
@@ -113,7 +113,7 @@ class DescriptiveMetadataIndexer
 
   def pub_date
     PubDateBuilder.build(publication_event, 'publication') ||
-      PubDateBuilder.build(EventSelector.select(events, 'creation'), 'creation')
+      PubDateBuilder.build(creation_event, 'creation')
   end
 
   def sw_format_for_text
@@ -136,16 +136,16 @@ class DescriptiveMetadataIndexer
     publication&.location&.map(&:value)&.compact
   end
 
-  def creation
-    events.find { |event| event.type == 'creation' }
-  end
-
   def topics
     @topics ||= Array(cocina.description.subject).select { |subject| subject.type == 'topic' }.map(&:value).compact
   end
 
   def publication_event
     @publication_event ||= EventSelector.select(events, 'publication')
+  end
+
+  def creation_event
+    @creation_event ||= EventSelector.select(events, 'creation')
   end
 
   def events
