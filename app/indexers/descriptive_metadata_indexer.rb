@@ -108,11 +108,11 @@ class DescriptiveMetadataIndexer
   # From Arcadia, it should be:
   #  typeOfResource is "text" and any of: issuance is "continuing", issuance is "serial", frequency has a value
   def periodical?
-    EventSelector.select(events, 'publication')&.note&.any? { |note| note.type == 'issuance' && note.value == 'serial' }
+    publication_event&.note&.any? { |note| note.type == 'issuance' && note.value == 'serial' }
   end
 
   def pub_date
-    PubDateBuilder.build(EventSelector.select(events, 'publication'), 'publication') ||
+    PubDateBuilder.build(publication_event, 'publication') ||
       PubDateBuilder.build(EventSelector.select(events, 'creation'), 'creation')
   end
 
@@ -142,6 +142,10 @@ class DescriptiveMetadataIndexer
 
   def topics
     @topics ||= Array(cocina.description.subject).select { |subject| subject.type == 'topic' }.map(&:value).compact
+  end
+
+  def publication_event
+    @publication_event ||= EventSelector.select(events, 'publication')
   end
 
   def events
