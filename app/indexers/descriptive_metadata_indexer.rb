@@ -108,12 +108,12 @@ class DescriptiveMetadataIndexer
   # From Arcadia, it should be:
   #  typeOfResource is "text" and any of: issuance is "continuing", issuance is "serial", frequency has a value
   def periodical?
-    event_selector('publication')&.note&.any? { |note| note.type == 'issuance' && note.value == 'serial' }
+    EventSelector.select(events, 'publication')&.note&.any? { |note| note.type == 'issuance' && note.value == 'serial' }
   end
 
   def pub_date
-    PubDateBuilder.build(event_selector('publication'), 'publication') ||
-      PubDateBuilder.build(event_selector('creation'), 'creation')
+    PubDateBuilder.build(EventSelector.select(events, 'publication'), 'publication') ||
+      PubDateBuilder.build(EventSelector.select(events, 'creation'), 'creation')
   end
 
   def sw_format_for_text
@@ -147,49 +147,5 @@ class DescriptiveMetadataIndexer
   def events
     @events ||= Array(cocina.description.event).compact
   end
-
-  # NOTE: shameless green to fix production bug.  Ripe for refactor
-  # rubocop:disable Metrics/AbcSize
-  # rubocop:disable Metrics/CyclomaticComplexity
-  # rubocop:disable Metrics/MethodLength
-  # rubocop:disable Metrics/PerceivedComplexity
-  def event_selector(date_type)
-    # look for event with date of type date_type and of status primary
-    pub_event = Array(cocina.description.event&.compact).find do |event|
-      event_dates = Array(event.date) + Array(event.parallelEvent&.map(&:date))
-      event_dates.flatten.compact.find do |date|
-        next if date.type != date_type
-
-        structured_primary = Array(date.structuredValue).find do |structured_date|
-          structured_date.status == 'primary'
-        end
-        date.status == 'primary' || structured_primary
-      end
-    end
-    return pub_event if pub_event.present?
-
-    # otherwise look for event with date of type publication and the event has type publication
-    pub_event = Array(cocina.description.event&.compact).find do |event|
-      next unless event.type == date_type || event.parallelEvent&.find { |parallel_event| parallel_event.type == date_type }
-
-      event_dates = Array(event.date) + Array(event.parallelEvent&.map(&:date))
-      event_dates.flatten.compact.find do |date|
-        date.type == date_type
-      end
-    end
-    return pub_event if pub_event.present?
-
-    # otherwise look for event with date of type publication
-    Array(cocina.description.event&.compact).find do |event|
-      event_dates = Array(event.date) + Array(event.parallelEvent&.map(&:date))
-      event_dates.flatten.compact.find do |date|
-        date.type == date_type
-      end
-    end
-  end
-  # rubocop:enable Metrics/AbcSize
-  # rubocop:enable Metrics/CyclomaticComplexity
-  # rubocop:enable Metrics/MethodLength
-  # rubocop:enable Metrics/PerceivedComplexity
 end
 # rubocop:enable Metrics/ClassLength
