@@ -6,14 +6,14 @@ class PubDateBuilder
   def self.build(publication_event, date_type)
     event_dates = Array(publication_event&.date) + Array(publication_event&.parallelEvent&.map(&:date))
 
-    pub_date = pub_date_from_status_primary(event_dates, date_type)
+    pub_date = matching_date_value_with_status_primary(event_dates, date_type)
     return pub_date if pub_date.present?
 
-    date_from_type_publication(event_dates, date_type)
+    matching_date_value(event_dates, date_type)
   end
 
-  # @return [String, nil] date.value from a date of type of publication and status primary
-  def self.pub_date_from_status_primary(event_dates, date_type)
+  # @return [String, nil] date.value from a date of type of date_type and of status primary
+  def self.matching_date_value_with_status_primary(event_dates, date_type)
     event_dates.flatten.compact.find do |date|
       next if date.type != date_type
       return date.value if date.status == 'primary' && date&.value.present?
@@ -23,10 +23,10 @@ class PubDateBuilder
       end
     end
   end
-  private_class_method :pub_date_from_status_primary
+  private_class_method :matching_date_value_with_status_primary
 
-  # @return [String, nil] date.value from a date of type of publication
-  def self.date_from_type_publication(event_dates, date_type)
+  # @return [String, nil] date.value from a date of type of date_type
+  def self.matching_date_value(event_dates, date_type)
     event_dates.flatten.compact.find do |date|
       next if date.type != date_type
       return date.value if date&.value.present?
@@ -36,5 +36,5 @@ class PubDateBuilder
       end
     end
   end
-  private_class_method :date_from_type_publication
+  private_class_method :matching_date_value
 end

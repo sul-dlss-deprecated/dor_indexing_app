@@ -20,7 +20,8 @@ class DescriptiveMetadataIndexer
       'sw_subject_temporal_ssim' => subject_temporal,
       'sw_subject_geographic_ssim' => subject_geographic,
       'sw_pub_date_facet_ssi' => ParseDate.earliest_year(pub_date).to_s,
-      'originInfo_date_created_tesim' => creation_event&.date&.map(&:value),
+      # 'originInfo_date_created_tesim' => ParseDate.earliest_year(creation_date).to_s,
+      'originInfo_date_created_tesim' => [creation_date].compact,
       'originInfo_publisher_tesim' => publisher_name,
       'originInfo_place_placeTerm_tesim' => publication_location,
       'topic_ssim' => topics,
@@ -113,7 +114,11 @@ class DescriptiveMetadataIndexer
 
   def pub_date
     PubDateBuilder.build(publication_event, 'publication') ||
-      PubDateBuilder.build(creation_event, 'creation')
+      creation_date
+  end
+
+  def creation_date
+    @creation_date ||= PubDateBuilder.build(creation_event, 'creation')
   end
 
   def sw_format_for_text
