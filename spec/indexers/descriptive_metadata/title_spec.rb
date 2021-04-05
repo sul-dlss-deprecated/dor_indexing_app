@@ -3,384 +3,422 @@
 require 'rails_helper'
 
 RSpec.describe DescriptiveMetadataIndexer do
-  describe 'title mappings from Cocina to Solr' do
+  subject(:indexer) { described_class.new(cocina: cocina) }
+
+  let(:cocina) { Cocina::Models.build(JSON.parse(json)) }
+  let(:json) do
+    <<~JSON
+      {
+        "type": "http://cocina.sul.stanford.edu/models/image.jsonld",
+        "externalIdentifier": "druid:qy781dy0220",
+        "label": "SUL Logo for forebrain",
+        "version": 1,
+        "access": {
+          "access": "world",
+          "copyright": "This work is copyrighted by the creator.",
+          "download": "world",
+          "useAndReproductionStatement": "This document is available only to the Stanford faculty, staff and student community."
+        },
+        "administrative": {
+          "hasAdminPolicy": "druid:zx485kb6348",
+          "partOfProject": "H2"
+        },
+        "description": #{JSON.generate(description)},
+        "identification": {
+          "sourceId": "hydrus:object-6"
+        },
+        "structural": {
+          "contains": [{
+            "type": "http://cocina.sul.stanford.edu/models/resources/file.jsonld",
+            "externalIdentifier": "qy781dy0220_1",
+            "label": "qy781dy0220_1",
+            "version": 1,
+            "structural": {
+              "contains": [{
+                "type": "http://cocina.sul.stanford.edu/models/file.jsonld",
+                "externalIdentifier": "druid:qy781dy0220/sul-logo.png",
+                "label": "sul-logo.png",
+                "filename": "sul-logo.png",
+                "size": 19823,
+                "version": 1,
+                "hasMimeType": "image/png",
+                "hasMessageDigests": [{
+                    "type": "sha1",
+                    "digest": "b5f3221455c8994afb85214576bc2905d6b15418"
+                  },
+                  {
+                    "type": "md5",
+                    "digest": "7142ce948827c16120cc9e19b05acd49"
+                  }
+                ],
+                "access": {
+                  "access": "world",
+                  "download": "world"
+                },
+                "administrative": {
+                  "publish": true,
+                  "sdrPreserve": true,
+                  "shelve": true
+                }
+              }]
+            }
+          }],
+          "isMemberOf": [
+            "druid:nb022qg2431"
+          ]
+        }
+      }
+    JSON
+  end
+  let(:doc) { indexer.to_solr }
+
+  describe 'title mappings from Cocina to Solr sw_display_title_tesim' do
     describe 'single untyped title' do
       # Select value; status: primary may or may not be present
-      xit 'not implemented' do
-        let(:description) do
-          <<~JSON
-            "title": [
-              {
-                "value": "Title"
-              }
-            ]
-          JSON
-        end
+      let(:description) do
+        {
+          title: [
+            {
+              value: 'Title'
+            }
+          ]
+        }
+      end
 
-        it 'populates sw_display_title_tesim' do
-          expect(doc).to include('sw_display_title_tesim' => 'Title')
-        end
+      xit 'uses title value' do
+        expect(doc).to include('sw_display_title_tesim' => 'Title')
       end
     end
 
     describe 'single typed title' do
       # Select value; status: primary may or may not be present
-      xit 'not implemented' do
-        let(:description) do
-          <<~JSON
-            "title": [
-              {
-                "value": "Title",
-                "type": "translated"
-              }
-            ]
-          JSON
-        end
+      let(:description) do
+        {
+          title: [
+            {
+              value: 'Title',
+              type: 'translated'
+            }
+          ]
+        }
+      end
 
-        it 'populates sw_display_title_tesim' do
-          expect(doc).to include('sw_display_title_tesim' => 'Title')
-        end
+      xit 'uses title value' do
+        expect(doc).to include('sw_display_title_tesim' => 'Title')
       end
     end
 
     describe 'multiple untyped titles, one primary' do
       # Select primary
-      xit 'not implemented' do
-        let(:description) do
-          <<~JSON
-            "title": [
-              {
-                "value": "Title 1",
-                "status": "primary"
-              },
-              {
-                "value": "Title 2"
-              }
-            ]
-          JSON
-        end
+      let(:description) do
+        {
+          title: [
+            {
+              value: 'Title 1',
+              status: 'primary'
+            },
+            {
+              value: 'Title 2'
+            }
+          ]
+        }
+      end
 
-        it 'populates sw_display_title_tesim' do
-          expect(doc).to include('sw_display_title_tesim' => 'Title 1')
-        end
+      xit 'uses value from title with status primary' do
+        expect(doc).to include('sw_display_title_tesim' => 'Title 1')
       end
     end
 
     describe 'multiple untyped titles, none primary' do
       # Select first
-      xit 'not implemented' do
-        let(:description) do
-          <<~JSON
-            "title": [
-              {
-                "value": "Title 1"
-              },
-              {
-                "value": "Title 2"
-              }
-            ]
-          JSON
-        end
+      let(:description) do
+        {
+          title: [
+            {
+              value: 'Title 1'
+            },
+            {
+              value: 'Title 2'
+            }
+          ]
+        }
+      end
 
-        it 'populates sw_display_title_tesim' do
-          expect(doc).to include('sw_display_title_tesim' => 'Title 1')
-        end
+      xit 'uses first value' do
+        expect(doc).to include('sw_display_title_tesim' => 'Title 1')
       end
     end
 
     describe 'multiple typed and untyped titles, one primary' do
-      # Select primary
-      xit 'not implemented' do
-        let(:description) do
-          <<~JSON
-            "title": [
-              {
-                "value": "Title 1",
-                "type": "translated",
-                "status": "primary"
-              },
-              {
-                "value": "Title 2"
-              }
-            ]
-          JSON
-        end
+      let(:description) do
+        {
+          title: [
+            {
+              value: 'Title 1',
+              type: 'translated',
+              status: 'primary'
+            },
+            {
+              value: 'Title 2'
+            }
+          ]
+        }
+      end
 
-        it 'populates sw_display_title_tesim' do
-          expect(doc).to include('sw_display_title_tesim' => 'Title 1')
-        end
+      xit 'uses value from title with status primary' do
+        expect(doc).to include('sw_display_title_tesim' => 'Title 1')
       end
     end
 
     describe 'multiple typed and untyped titles, none primary' do
       # Select first without type
-      xit 'not implemented' do
-        let(:description) do
-          <<~JSON
-            "title": [
-              {
-                "value": "Title 1",
-                "type": "alternative"
-              },
-              {
-                "value": "Title 2"
-              },
-              {
-                "value": "Title 3"
-              }
-            ]
-          JSON
-        end
+      let(:description) do
+        {
+          title: [
+            {
+              value: 'Title 1',
+              type: 'alternative'
+            },
+            {
+              value: 'Title 2'
+            },
+            {
+              value: 'Title 3'
+            }
+          ]
+        }
+      end
 
-        it 'populates sw_display_title_tesim' do
-          expect(doc).to include('sw_display_title_tesim' => 'Title 2')
-        end
+      xit 'uses value from first title without type' do
+        expect(doc).to include('sw_display_title_tesim' => 'Title 2')
       end
     end
 
     describe 'multiple typed titles, one primary' do
       # Select primary
-      xit 'not implemented' do
-        let(:description) do
-          <<~JSON
-            "title": [
-              {
-                "value": "Title 1",
-                "type": "translated",
-                "status": "primary"
-              },
-              {
-                "value": "Title 2",
-                "type": "alternative"
-              }
-            ]
-          JSON
-        end
+      let(:description) do
+        {
+          title: [
+            {
+              value: 'Title 1',
+              type: 'translated',
+              status: 'primary'
+            },
+            {
+              value: 'Title 2',
+              type: 'alternative'
+            }
+          ]
+        }
+      end
 
-        it 'populates sw_display_title_tesim' do
-          expect(doc).to include('sw_display_title_tesim' => 'Title 1')
-        end
+      xit 'uses value from title with status primary' do
+        expect(doc).to include('sw_display_title_tesim' => 'Title 1')
       end
     end
 
     describe 'multiple typed titles, none primary' do
       # Select first
-      xit 'not implemented' do
-        let(:description) do
-          <<~JSON
-            "title": [
-              {
-                "value": "Title 1",
-                "type": "translated"
-              },
-              {
-                "value": "Title 2",
-                "type": "alternative"
-              }
-            ]
-          JSON
-        end
+      let(:description) do
+        {
+          title: [
+            {
+              value: 'Title 1',
+              type: 'translated'
+            },
+            {
+              value: 'Title 2',
+              type: 'alternative'
+            }
+          ]
+        }
+      end
 
-        it 'populates sw_display_title_tesim' do
-          expect(doc).to include('sw_display_title_tesim' => 'Title 1')
-        end
+      xit 'uses value from first title' do
+        expect(doc).to include('sw_display_title_tesim' => 'Title 1')
       end
     end
 
     describe 'nonsorting character count' do
       # Note doesn't matter for display value
-      xit 'not implemented' do
-        let(:description) do
-          <<~JSON
-            "title": [
-              {
-                "value": "A title",
-                "note": [
-                  {
-                    "type": "nonsorting character count",
-                    "value": "2"
-                  }
-                ]
-              }
-            ]
-          JSON
-        end
+      let(:description) do
+        {
+          title: [
+            {
+              value: 'A title',
+              note: [
+                {
+                  type: 'nonsorting character count',
+                  value: '2'
+                }
+              ]
+            }
+          ]
+        }
+      end
 
-        it 'populates sw_display_title_tesim' do
-          expect(doc).to include('sw_display_title_tesim' => 'A title')
-        end
+      xit 'uses full value from title' do
+        expect(doc).to include('sw_display_title_tesim' => 'A title')
       end
     end
 
     describe 'parallelValue with primary on value' do
       # Select primary
-      xit 'not implemented' do
-        let(:description) do
-          <<~JSON
-            "title": [
-              {
-                "parallelValue": [
-                  {
-                    "value": "Title 1"
-                    "status": "primary"
-                  },
-                  {
-                    "value": "Title 2"
-                  }
-                ]
-              }
-            ]
-          JSON
-        end
+      let(:description) do
+        {
+          title: [
+            {
+              parallelValue: [
+                {
+                  value: 'Title 1',
+                  status: 'primary'
+                },
+                {
+                  value: 'Title 2'
+                }
+              ]
+            }
+          ]
+        }
+      end
 
-        it 'populates sw_display_title_tesim' do
-          expect(doc).to include('sw_display_title_tesim' => 'Title 1')
-        end
+      xit 'uses value with status primary' do
+        expect(doc).to include('sw_display_title_tesim' => 'Title 1')
       end
     end
 
     describe 'parallelValue with primary on parallelValue' do
       # Select first value in primary parallelValue
-      xit 'not implemented' do
-        let(:description) do
-          <<~JSON
-            "title": [
-              {
-                "parallelValue": [
-                  {
-                    "value": "Title 1"
-                  },
-                  {
-                    "value": "Title 2"
-                  }
-                ],
-                "status": "primary"
-              }
-            ]
-          JSON
-        end
+      let(:description) do
+        {
+          title: [
+            {
+              parallelValue: [
+                {
+                  value: 'Title 1'
+                },
+                {
+                  value: 'Title 2'
+                }
+              ],
+              status: 'primary'
+            }
+          ]
+        }
+      end
 
-        it 'populates sw_display_title_tesim' do
-          expect(doc).to include('sw_display_title_tesim' => 'Title 1')
-        end
+      xit 'uses first value from parallelValue with status primary' do
+        expect(doc).to include('sw_display_title_tesim' => 'Title 1')
       end
     end
 
     describe 'parallelValue with primary on value and parallelValue' do
       # Select primary value in primary parallelValue
-      xit 'not implemented' do
-        let(:description) do
-          <<~JSON
-            "title": [
-              {
-                "parallelValue": [
-                  {
-                    "value": "Title 1",
-                    "status": "primary"
-                  },
-                  {
-                    "value": "Title 2"
-                  }
-                ],
-                "status": "primary"
-              }
-            ]
-          JSON
-        end
+      let(:description) do
+        {
+          title: [
+            {
+              parallelValue: [
+                {
+                  value: 'Title 1',
+                  status: 'primary'
+                },
+                {
+                  value: 'Title 2'
+                }
+              ],
+              status: 'primary'
+            }
+          ]
+        }
+      end
 
-        it 'populates sw_display_title_tesim' do
-          expect(doc).to include('sw_display_title_tesim' => 'Title 1')
-        end
+      xit 'uses value with status primary in parallelValue' do
+        expect(doc).to include('sw_display_title_tesim' => 'Title 1')
       end
     end
 
     describe 'primary on both parallelValue value and other value' do
       # Select other value with primary; parallelValue primary value is primary within
       # parallelValue but the parallelValue is not itself the primary title
-      xit 'not implemented' do
-        let(:description) do
-          <<~JSON
-            "title": [
-              {
-                "parallelValue": [
-                  {
-                    "value": "Title 1",
-                    "status": "primary"
-                  },
-                  {
-                    "value": "Title 2"
-                  }
-                ]
-              },
-              {
-                "value": "Title 3",
-                "status": "primary"
-              }
-            ]
-          JSON
-        end
+      let(:description) do
+        {
+          title: [
+            {
+              parallelValue: [
+                {
+                  value: 'Title 1',
+                  status: 'primary'
+                },
+                {
+                  value: 'Title 2'
+                }
+              ]
+            },
+            {
+              value: 'Title 3',
+              status: 'primary'
+            }
+          ]
+        }
+      end
 
-        it 'populates sw_display_title_tesim' do
-          expect(doc).to include('sw_display_title_tesim' => 'Title 3')
-        end
+      xit 'uses value from outermost title with status primary' do
+        expect(doc).to include('sw_display_title_tesim' => 'Title 3')
       end
     end
 
     describe 'parallelValue with additional value, parallelValue first, no primary' do
       # Select first value, in this case inside parallelValue
-      xit 'not implemented' do
-        let(:description) do
-          <<~JSON
-            "title": [
-              {
-                "parallelValue": [
-                  {
-                    "value": "Title 1"
-                  },
-                  {
-                    "value": "Title 2"
-                  }
-                ]
-              },
-              {
-                "value": "Title 3"
-              }
-            ]
-          JSON
-        end
+      let(:description) do
+        {
+          title: [
+            {
+              parallelValue: [
+                {
+                  value: 'Title 1'
+                },
+                {
+                  value: 'Title 2'
+                }
+              ]
+            },
+            {
+              value: 'Title 3'
+            }
+          ]
+        }
+      end
 
-        it 'populates sw_display_title_tesim' do
-          expect(doc).to include('sw_display_title_tesim' => 'Title 1')
-        end
+      xit 'uses first value' do
+        expect(doc).to include('sw_display_title_tesim' => 'Title 1')
       end
     end
 
     describe 'parallelValue with additional value, value first, no primary' do
       # Select first value
-      xit 'not implemented' do
-        let(:description) do
-          <<~JSON
-            "title": [
-              {
-                "value": "Title 3"
-              },
-              {
-                "parallelValue": [
-                  {
-                    "value": "Title 1"
-                  },
-                  {
-                    "value": "Title 2"
-                  }
-                ]
-              }
-            ]
-          JSON
-        end
+      let(:description) do
+        {
+          title: [
+            {
+              value: 'Title 3'
+            },
+            {
+              parallelValue: [
+                {
+                  value: 'Title 1'
+                },
+                {
+                  value: 'Title 2'
+                }
+              ]
+            }
+          ]
+        }
+      end
 
-        it 'populates sw_display_title_tesim' do
-          expect(doc).to include('sw_display_title_tesim' => 'Title 3')
-        end
+      xit 'uses first value' do
+        expect(doc).to include('sw_display_title_tesim' => 'Title 3')
       end
     end
 
@@ -396,209 +434,197 @@ RSpec.describe DescriptiveMetadataIndexer do
     # partName or partNumber before nonsorting characters or main title is followed
     #   by period space
     describe 'structuredValue with all parts in common order' do
-      xit 'not implemented' do
-        let(:description) do
-          <<~JSON
-            "title": [
-              {
-                "structuredValue": [
-                  {
-                    "value": "A",
-                    "type": "nonsorting characters"
-                  },
-                  {
-                    "value": "title",
-                    "type": "main title"
-                  },
-                  {
-                    "value": "a subtitle",
-                    "type": "subtitle"
-                  },
-                  {
-                    "value": "Vol. 1",
-                    "type": "part number"
-                  },
-                  {
-                    "value": "Supplement",
-                    "type": "part name"
-                  }
-                ]
-              }
-            ]
-          JSON
-        end
+      let(:description) do
+        {
+          title: [
+            {
+              structuredValue: [
+                {
+                  value: 'A',
+                  type: 'nonsorting characters'
+                },
+                {
+                  value: 'title',
+                  type: 'main title'
+                },
+                {
+                  value: 'a subtitle',
+                  type: 'subtitle'
+                },
+                {
+                  value: 'Vol. 1',
+                  type: 'part number'
+                },
+                {
+                  value: 'Supplement',
+                  type: 'part name'
+                }
+              ]
+            }
+          ]
+        }
+      end
 
-        it 'populates sw_display_title_tesim' do
-          expect(doc).to include('sw_display_title_tesim' => 'A title : a subtitle. Vol. 1, Supplement')
-        end
+      xit 'constructs title from structuredValue' do
+        expect(doc).to include('sw_display_title_tesim' => 'A title : a subtitle. Vol. 1, Supplement')
       end
     end
 
     describe 'structuredValue with parts in uncommon order' do
       # improvement on stanford_mods in that it respects field order as given
       # based on ckey 9803970
-      xit 'not implemented' do
-        let(:description) do
-          <<~JSON
-            "title": [
-              {
-                "structuredValue": [
-                  {
-                    "value": "The",
-                    "type": "nonsorting characters"
-                  },
-                  {
-                    "value": "title",
-                    "type": "main title"
-                  },
-                  {
-                    "value": "Vol. 1",
-                    "type": "part number"
-                  },
-                  {
-                    "value": "Supplement",
-                    "type": "part name"
-                  },
-                  {
-                    "value": "a subtitle",
-                    "type": "subtitle"
-                  }
-                ]
-              }
-            ]
-          JSON
-        end
+      let(:description) do
+        {
+          title: [
+            {
+              structuredValue: [
+                {
+                  value: 'The',
+                  type: 'nonsorting characters'
+                },
+                {
+                  value: 'title',
+                  type: 'main title'
+                },
+                {
+                  value: 'Vol. 1',
+                  type: 'part number'
+                },
+                {
+                  value: 'Supplement',
+                  type: 'part name'
+                },
+                {
+                  value: 'a subtitle',
+                  type: 'subtitle'
+                }
+              ]
+            }
+          ]
+        }
+      end
 
-        it 'populates sw_display_title_tesim' do
-          expect(doc).to include('sw_display_title_tesim' => 'The title. Vol. 1, Supplement : a subtitle')
-        end
+      xit 'constructs title from structuredValue, respecting order of occurrence' do
+        expect(doc).to include('sw_display_title_tesim' => 'The title. Vol. 1, Supplement : a subtitle')
       end
     end
 
     describe 'structuredValue with multiple partName and partNumber' do
       # improvement on stanford_mods in that it respects field order as given
-      xit 'not implemented' do
-        let(:description) do
-          <<~JSON
-            "title": [
-              {
-                "structuredValue": [
-                  {
-                    "value": "Title",
-                    "type": "main title"
-                  },
-                  {
-                    "value": "Special series",
-                    "type": "part name"
-                  },
-                  {
-                    "value": "Vol. 1",
-                    "type": "part number"
-                  },
-                  {
-                    "value": "Supplement",
-                    "type": "part name"
-                  }
-                ]
-              }
-            ]
-          JSON
-        end
+      let(:description) do
+        {
+          title: [
+            {
+              structuredValue: [
+                {
+                  value: 'Title',
+                  type: 'main title'
+                },
+                {
+                  value: 'Special series',
+                  type: 'part name'
+                },
+                {
+                  value: 'Vol. 1',
+                  type: 'part number'
+                },
+                {
+                  value: 'Supplement',
+                  type: 'part name'
+                }
+              ]
+            }
+          ]
+        }
+      end
 
-        it 'populates sw_display_title_tesim' do
-          expect(doc).to include('sw_display_title_tesim' => 'Title. Special series, Vol. 1, Supplement')
-        end
+      xit 'constructs title from structuredValue, respecting order of occurrence' do
+        expect(doc).to include('sw_display_title_tesim' => 'Title. Special series, Vol. 1, Supplement')
       end
     end
 
     describe 'structuredValue with part before title' do
       # improvement on stanford_mods in that it respects field order as given
-      xit 'not implemented' do
-        let(:description) do
-          <<~JSON
-            "title": [
-              {
-                "structuredValue": [
-                  {
-                    "value": "Series 1",
-                    "type": "part number"
-                  },
-                  {
-                    "value": "Title",
-                    "type": "main title"
-                  }
-                ]
-              }
-            ]
-          JSON
-        end
+      let(:description) do
+        {
+          title: [
+            {
+              structuredValue: [
+                {
+                  value: 'Series 1',
+                  type: 'part number'
+                },
+                {
+                  value: 'Title',
+                  type: 'main title'
+                }
+              ]
+            }
+          ]
+        }
+      end
 
-        it 'populates sw_display_title_tesim' do
-          expect(doc).to include('sw_display_title_tesim' => 'Series 1. Title')
-        end
+      xit 'constructs title from structuredValue, respecting order of occurrence' do
+        expect(doc).to include('sw_display_title_tesim' => 'Series 1. Title')
       end
     end
 
     describe 'structuredValue with nonsorting character count' do
       # improvement on stanford_mods in that it does not force a space separator
-      xit 'not implemented' do
-        let(:description) do
-          <<~JSON
-            "title": [
-              {
-                "structuredValue": [
-                  {
-                    "value": "L'",
-                    "type": "nonsorting characters"
-                  },
-                  {
-                    "value": "autre title",
-                    "type": "main title"
-                  }
-                ],
-                "note": [
-                  {
-                    "value": "2",
-                    "type": "nonsorting character count"
-                  }
-                ]
-              }
-            ]
-          JSON
-        end
+      let(:description) do
+        {
+          title: [
+            {
+              structuredValue: [
+                {
+                  value: "L'",
+                  type: 'nonsorting characters'
+                },
+                {
+                  value: 'autre title',
+                  type: 'main title'
+                }
+              ],
+              note: [
+                {
+                  value: '2',
+                  type: 'nonsorting character count'
+                }
+              ]
+            }
+          ]
+        }
+      end
 
-        it 'populates sw_display_title_tesim' do
-          expect(doc).to include('sw_display_title_tesim' => 'L\'autre title')
-        end
+      xit 'constructs title from structuredValue, respecting order of occurrence' do
+        expect(doc).to include('sw_display_title_tesim' => 'L\'autre title')
       end
     end
 
     describe 'structuredValue for uniform title' do
       # Omit author name when uniform title is preferred title for display
-      xit 'not implemented' do
-        let(:description) do
-          <<~JSON
-            "title": [
-              {
-                "structuredValue": [
-                  {
-                    "value": "Author, An",
-                    "type": "name"
-                  },
-                  {
-                    "value": "Title",
-                    "type": "Title"
-                  }
-                ],
-                "type": "uniform"
-              }
-            ]
-          JSON
-        end
+      let(:description) do
+        {
+          title: [
+            {
+              structuredValue: [
+                {
+                  value: 'Author, An',
+                  type: 'name'
+                },
+                {
+                  value: 'Title',
+                  type: 'Title'
+                }
+              ],
+              type: 'uniform'
+            }
+          ]
+        }
+      end
 
-        it 'populates sw_display_title_tesim' do
-          expect(doc).to include('sw_display_title_tesim' => 'Title')
-        end
+      xit 'constructs title from structuredValue without author name' do
+        expect(doc).to include('sw_display_title_tesim' => 'Title')
       end
     end
 
@@ -606,48 +632,45 @@ RSpec.describe DescriptiveMetadataIndexer do
 
     describe 'punctuation/space in simple value' do
       # strip one or more instances of .,;:/\ plus whitespace at beginning or end of string
-      xit 'not implemented' do
-        let(:description) do
-          <<~JSON
-            "title": [
-              {
-                "value": "Title /"
-              }
-            ]
-          JSON
-        end
 
-        it 'populates sw_display_title_tesim' do
-          expect(doc).to include('sw_display_title_tesim' => 'Title')
-        end
+      let(:description) do
+        {
+          title: [
+            {
+              value: 'Title /'
+            }
+          ]
+        }
+      end
+
+      xit 'uses value with trailing punctuation of .,;:/\ stripped' do
+        expect(doc).to include('sw_display_title_tesim' => 'Title')
       end
     end
 
     describe 'punctuation/space in structuredValue' do
       # strip one or more instances of .,;:/\ plus whitespace at beginning or end of string
-      xit 'not implemented' do
-        let(:description) do
-          <<~JSON
-            "title": [
-              {
-                "structuredValue": [
-                  {
-                    "value": "Title.",
-                    "type": "main title"
-                  },
-                  {
-                    "value": ":subtitle",
-                    "type": "subtitle"
-                  }
-                ]
-              }
-            ]
-          JSON
-        end
+      let(:description) do
+        {
+          title: [
+            {
+              structuredValue: [
+                {
+                  value: 'Title.',
+                  type: 'main title'
+                },
+                {
+                  value: ':subtitle',
+                  type: 'subtitle'
+                }
+              ]
+            }
+          ]
+        }
+      end
 
-        it 'populates sw_display_title_tesim' do
-          expect(doc).to include('sw_display_title_tesim' => 'Title : subtitle')
-        end
+      xit 'uses value with trailing punctuation of .,;:/\ stripped' do
+        expect(doc).to include('sw_display_title_tesim' => 'Title : subtitle')
       end
     end
   end
