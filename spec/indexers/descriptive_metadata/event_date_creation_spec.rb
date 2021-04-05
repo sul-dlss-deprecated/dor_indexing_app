@@ -6,6 +6,7 @@ RSpec.describe DescriptiveMetadataIndexer do
   subject(:indexer) { described_class.new(cocina: cocina) }
 
   let(:cocina) { Cocina::Models.build(JSON.parse(json)) }
+  let(:doc) { indexer.to_solr }
   let(:json) do
     <<~JSON
       {
@@ -23,9 +24,7 @@ RSpec.describe DescriptiveMetadataIndexer do
           "hasAdminPolicy": "druid:zx485kb6348",
           "partOfProject": "H2"
         },
-        "description": {
-          #{description}
-        },
+        "description": #{JSON.generate(description)},
         "identification": {
           "sourceId": "hydrus:object-6"
         },
@@ -73,351 +72,349 @@ RSpec.describe DescriptiveMetadataIndexer do
     JSON
   end
 
-  describe 'date mappings from Cocina to Solr' do
-    describe 'originInfo_date_created_tesim' do
-      let(:doc) { indexer.to_solr }
-
-      context 'when date.type creation and date.status primary' do
-        let(:description) do
-          <<~JSON
-            "title": [
-              {
-                "value": "Title"
-              }
-            ],
-            "event": [
-              {
-                "date": [
-                  {
-                    "value": "1900",
-                    "type": "creation",
-                    "status": "primary"
-                  }
-                ]
-              }
-            ]
-          JSON
-        end
-
-        it 'uses date' do
-          expect(doc).to include('originInfo_date_created_tesim' => '1900')
-        end
+  describe 'date mappings from Cocina to Solr originInfo_date_created_tesim' do
+    context 'when date.type creation and date.status primary' do
+      let(:description) do
+        {
+          title: [
+            {
+              value: 'Title'
+            }
+          ],
+          event: [
+            {
+              date: [
+                {
+                  value: '1900',
+                  type: 'creation',
+                  status: 'primary'
+                }
+              ]
+            }
+          ]
+        }
       end
 
-      context 'when one date.type creation and other date type has date.status primary' do
-        let(:description) do
-          <<~JSON
-            "title": [
-              {
-                "value": "Title"
-              }
-            ],
-            "event": [
-              {
-                "date": [
-                  {
-                    "value": "1900",
-                    "type": "creation"
-                  },
-                  {
-                    "value": "1905",
-                    "type": "publication",
-                    "status": "primary"
-                  }
-                ]
-              }
-            ]
-          JSON
-        end
+      it 'uses date' do
+        expect(doc).to include('originInfo_date_created_tesim' => '1900')
+      end
+    end
 
-        it 'uses date.type creation' do
-          expect(doc).to include('originInfo_date_created_tesim' => '1900')
-        end
+    context 'when one date.type creation and other date type has date.status primary' do
+      let(:description) do
+        {
+          title: [
+            {
+              value: 'Title'
+            }
+          ],
+          event: [
+            {
+              date: [
+                {
+                  value: '1900',
+                  type: 'creation'
+                },
+                {
+                  value: '1905',
+                  type: 'publication',
+                  status: 'primary'
+                }
+              ]
+            }
+          ]
+        }
       end
 
-      context 'when event.type creation and date.type not creation' do
-        let(:description) do
-          <<~JSON
-            "title": [
-              {
-                "value": "Title"
-              }
-            ],
-            "event": [
-              {
-                "type": "creation",
-                "date": [
-                  {
-                    "value": "1900",
-                    "type": "publication"
-                  }
-                ]
-              }
-            ]
-          JSON
-        end
+      it 'uses date.type creation' do
+        expect(doc).to include('originInfo_date_created_tesim' => '1900')
+      end
+    end
 
-        it 'does not populate field' do
-          expect(doc).not_to include('originInfo_date_created_tesim')
-        end
+    context 'when event.type creation and date.type not creation' do
+      let(:description) do
+        {
+          title: [
+            {
+              value: 'Title'
+            }
+          ],
+          event: [
+            {
+              type: 'creation',
+              date: [
+                {
+                  value: '1900',
+                  type: 'publication'
+                }
+              ]
+            }
+          ]
+        }
       end
 
-      context 'when multiple date.type creation and no date.status primary' do
-        let(:description) do
-          <<~JSON
-            "title": [
-              {
-                "value": "Title"
-              }
-            ],
-            "event": [
-              {
-                "date": [
-                  {
-                    "value": "1900",
-                    "type": "creation"
-                  }
-                ]
-              },
-              {
-                "date": [
-                  {
-                    "value": "1905",
-                    "type": "creation"
-                  }
-                ]
-              }
-            ]
-          JSON
-        end
+      it 'does not populate field' do
+        expect(doc).not_to include('originInfo_date_created_tesim')
+      end
+    end
 
-        it 'uses first date with type creation' do
-          expect(doc).to include('originInfo_date_created_tesim' => '1900')
-        end
+    context 'when multiple date.type creation and no date.status primary' do
+      let(:description) do
+        {
+          title: [
+            {
+              value: 'Title'
+            }
+          ],
+          event: [
+            {
+              date: [
+                {
+                  value: '1900',
+                  type: 'creation'
+                }
+              ]
+            },
+            {
+              date: [
+                {
+                  value: '1905',
+                  type: 'creation'
+                }
+              ]
+            }
+          ]
+        }
       end
 
-      context 'when no date.type creation and only event.type creation has date with no type' do
-        let(:description) do
-          <<~JSON
-            "title": [
-              {
-                "value": "Title"
-              }
-            ],
-            "event": [
-              {
-                "type": "creation",
-                "date": [
-                  {
-                    "value": "1900"
-                  }
-                ]
-              },
-              {
-                "type": "publication",
-                "date": [
-                  {
-                    "value": "1905"
-                  }
-                ]
-              }
+      it 'uses first date with type creation' do
+        expect(doc).to include('originInfo_date_created_tesim' => '1900')
+      end
+    end
 
-            ]
-          JSON
-        end
+    context 'when no date.type creation and only event.type creation has date with no type' do
+      let(:description) do
+        {
+          title: [
+            {
+              value: 'Title'
+            }
+          ],
+          event: [
+            {
+              type: 'creation',
+              date: [
+                {
+                  value: '1900'
+                }
+              ]
+            },
+            {
+              type: 'publication',
+              date: [
+                {
+                  value: '1905'
+                }
+              ]
+            }
 
-        it 'uses date from event type creation' do
-          expect(doc).to include('originInfo_date_created_tesim' => '1900')
-        end
+          ]
+        }
       end
 
-      context 'when event.type not creation has only date.type creation in record' do
-        let(:description) do
-          <<~JSON
-            "title": [
-              {
-                "value": "Title"
-              }
-            ],
-            "event": [
-              {
-                "type": "publication",
-                "date": [
-                  {
-                    "value": "1900",
-                    "type": "creation"
-                  },
-                  {
-                    "value": "1905",
-                    "type": "publication"
-                  }
-                ]
-              }
-            ]
-          JSON
-        end
+      it 'uses date from event type creation' do
+        expect(doc).to include('originInfo_date_created_tesim' => '1900')
+      end
+    end
 
-        it 'uses value from date.type creation' do
-          expect(doc).to include('originInfo_date_created_tesim' => '1900')
-        end
+    context 'when event.type not creation has only date.type creation in record' do
+      let(:description) do
+        {
+          title: [
+            {
+              value: 'Title'
+            }
+          ],
+          event: [
+            {
+              type: 'publication',
+              date: [
+                {
+                  value: '1900',
+                  type: 'creation'
+                },
+                {
+                  value: '1905',
+                  type: 'publication'
+                }
+              ]
+            }
+          ]
+        }
       end
 
-      context 'when no event.type creation and no date.type creation' do
-        let(:description) do
-          <<~JSON
-            "title": [
-              {
-                "value": "Title"
-              }
-            ],
-            "event": [
-              {
-                "type": "publication",
-                "date": [
-                  {
-                    "value": "1900",
-                    "type": "publication",
-                    "status": "primary"
-                  }
-                ]
-              }
-            ]
-          JSON
-        end
+      it 'uses value from date.type creation' do
+        expect(doc).to include('originInfo_date_created_tesim' => '1900')
+      end
+    end
 
-        it 'does not populate originInfo_date_created_tesim' do
-          expect(doc).not_to include('originInfo_date_created_tesim')
-        end
+    context 'when no event.type creation and no date.type creation' do
+      let(:description) do
+        {
+          title: [
+            {
+              value: 'Title'
+            }
+          ],
+          event: [
+            {
+              type: 'publication',
+              date: [
+                {
+                  value: '1900',
+                  type: 'publication',
+                  status: 'primary'
+                }
+              ]
+            }
+          ]
+        }
       end
 
-      context 'when creation date is range' do
-        let(:description) do
-          <<~JSON
-            "title": [
-              {
-                "value": "Title"
-              }
-            ],
-            "event": [
-              {
-                "type": "creation",
-                "date": [
-                  {
-                    "structuredValue": [
-                      {
-                        "value": "1900",
-                        "type": "start"
-                      },
-                      {
-                        "value": "1905",
-                        "type": "end"
-                      }
-                    ],
-                    "type": "creation",
-                    "status": "primary"
-                  }
-                ]
-              }
-            ]
-          JSON
-        end
+      it 'does not populate originInfo_date_created_tesim' do
+        expect(doc).not_to include('originInfo_date_created_tesim')
+      end
+    end
 
-        it 'uses the first value in the range' do
-          expect(doc).to include('originInfo_date_created_tesim' => '1900')
-        end
+    context 'when creation date is range' do
+      let(:description) do
+        {
+          title: [
+            {
+              value: 'Title'
+            }
+          ],
+          event: [
+            {
+              type: 'creation',
+              date: [
+                {
+                  structuredValue: [
+                    {
+                      value: '1900',
+                      type: 'start'
+                    },
+                    {
+                      value: '1905',
+                      type: 'end'
+                    }
+                  ],
+                  type: 'creation',
+                  status: 'primary'
+                }
+              ]
+            }
+          ]
+        }
       end
 
-      context 'when creation date is in parallelValue' do
-        let(:description) do
-          <<~JSON
-            "title": [
-              {
-                "value": "Title"
-              }
-            ],
-            "event": [
-              {
-                "date": [
-                  {
-                    "parallelValue": [
-                      {
-                        "value": "1900-04-02",
-                        "note": [
-                          {
-                            "value": "Gregorian",
-                            "type": "calendar"
-                          }
-                        ]
-                      },
-                      {
-                        "value": "1900-03-20",
-                        "note": [
-                          {
-                            "value": "Julian",
-                            "type": "calendar"
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          JSON
-        end
+      it 'uses the first value in the range' do
+        expect(doc).to include('originInfo_date_created_tesim' => '1900')
+      end
+    end
 
-        it 'uses the first creation date in parallelValue' do
-          expect(doc).to include('originInfo_date_created_tesim' => '1900-04-02')
-        end
+    context 'when creation date is in parallelValue' do
+      let(:description) do
+        {
+          title: [
+            {
+              value: 'Title'
+            }
+          ],
+          event: [
+            {
+              date: [
+                {
+                  parallelValue: [
+                    {
+                      value: '1900-04-02',
+                      note: [
+                        {
+                          value: 'Gregorian',
+                          type: 'calendar'
+                        }
+                      ]
+                    },
+                    {
+                      value: '1900-03-20',
+                      note: [
+                        {
+                          value: 'Julian',
+                          type: 'calendar'
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
       end
 
-      context 'when creation date is in parallelEvent' do
-        let(:description) do
-          <<~JSON
-            "title": [
-              {
-                "value": "Title"
-              }
-            ],
-            "event": [
-              {
-                "type": "creation",
-                "parallelEvent": [
-                  {
-                    "date": [
-                      {
-                        "value": "1900-04-02",
-                        "note": [
-                          {
-                            "value": "Gregorian",
-                            "type": "calendar"
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "date": [
-                      {
-                        "value": "1900-03-20",
-                        "note": [
-                          {
-                            "value": "Julian",
-                            "type": "calendar"
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          JSON
-        end
+      # FIXME:  have question in with Arcadia:  how do we know the above is a date value for creation (vs publication, or ...)?
+      #  We also probably need more parallelValue examples
+      xit 'uses the first creation date in parallelValue' do
+        expect(doc).to include('originInfo_date_created_tesim' => '1900-04-02')
+      end
+    end
 
-        it 'uses first creation date in parallelEvent' do
-          expect(doc).to include('originInfo_date_created_tesim' => '1900-04-02')
-        end
+    context 'when creation date is in parallelEvent' do
+      let(:description) do
+        {
+          title: [
+            {
+              value: 'Title'
+            }
+          ],
+          event: [
+            {
+              type: 'creation',
+              parallelEvent: [
+                {
+                  date: [
+                    {
+                      value: '1900-04-02',
+                      note: [
+                        {
+                          value: 'Gregorian',
+                          type: 'calendar'
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  date: [
+                    {
+                      value: '1900-03-20',
+                      note: [
+                        {
+                          value: 'Julian',
+                          type: 'calendar'
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      end
+
+      it 'uses first creation date in parallelEvent' do
+        expect(doc).to include('originInfo_date_created_tesim' => '1900-04-02')
       end
     end
   end
