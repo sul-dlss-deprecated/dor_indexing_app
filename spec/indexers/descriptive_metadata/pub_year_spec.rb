@@ -23,9 +23,7 @@ RSpec.describe DescriptiveMetadataIndexer do
       		"hasAdminPolicy": "druid:zx485kb6348",
       		"partOfProject": "H2"
       	},
-      	"description": {
-          #{description}
-      	},
+      	"description": #{JSON.generate(description)},
       	"identification": {
       		"sourceId": "hydrus:object-6"
       	},
@@ -72,86 +70,85 @@ RSpec.describe DescriptiveMetadataIndexer do
       }
     JSON
   end
+  let(:doc) { indexer.to_solr }
 
-  describe 'pub_year field' do
-    let(:doc) { indexer.to_solr }
-
+  describe 'publication year mappings from Cocina to Solr sw_pub_date_facet_ssi' do
     context 'when event has date.type publication and date.status primary' do
       let(:description) do
-        <<~JSON
-          "title": [
+        {
+          title: [
             {
-              "value": "pub dates are fun",
-              "type": "main title"
+              value: 'pub dates are fun',
+              type: 'main title'
             }
           ],
-          "event": [
+          event: [
             {
-              "date": [
+              date: [
                 {
-                  "value": "1827",
-                  "type": "creation"
+                  value: '1827',
+                  type: 'creation'
                 }
               ]
             },
             {
-              "date": [
+              date: [
                 {
-                  "value": "1940",
-                  "type": "publication",
-                  "status": "primary"
+                  value: '1940',
+                  type: 'publication',
+                  status: 'primary'
                 },
                 {
-                  "value": "1942",
-                  "type": "publication"
+                  value: '1942',
+                  type: 'publication'
                 }
               ]
             }
           ]
-        JSON
+        }
       end
 
-      it 'populates sw_pub_date_facet_ssi' do
+      it 'uses value with status primary' do
         expect(doc).to include('sw_pub_date_facet_ssi' => '1940')
       end
 
       context 'when publication date is range (structuredValue)' do
         let(:description) do
-          <<~JSON
-            "title": [
+          {
+            title: [
               {
-                "value": "pub dates are fun",
-                "type": "main title"
+                value: 'pub dates are fun',
+                type: 'main title'
               }
             ],
-            "event": [
+            event: [
               {
-                "date": [
+                date: [
                   {
-                    "structuredValue": [
+                    structuredValue: [
                       {
-                        "value": "1940",
-                        "status": "primary",
-                        "type": "start"
+                        value: '1940',
+                        status: 'primary',
+                        type: 'start'
                       },
                       {
-                        "value": "1945",
-                        "type": "end"
+                        value: '1945',
+                        type: 'end'
                       }
                     ],
-                    "type": "publication"
+                    type: 'publication'
                   },
                   {
-                    "value": "1948",
-                    "type": "publication"
+                    value: '1948',
+                    type: 'publication'
                   }
                 ]
               }
             ]
-          JSON
+          }
         end
 
-        it 'populates sw_pub_date_facet_ssi' do
+        it 'uses value with status primary' do
           expect(doc).to include('sw_pub_date_facet_ssi' => '1940')
         end
       end
@@ -159,43 +156,43 @@ RSpec.describe DescriptiveMetadataIndexer do
       context 'when parallelEvent' do
         # based on sf449my9678
         let(:description) do
-          <<~JSON
-            "title": [
+          {
+            title: [
               {
-                "value": "parallel publication event with status primary pub date"
+                value: 'parallel publication event with status primary pub date'
               }
             ],
-            "event": [
+            event: [
               {
-                "parallelEvent": [
+                parallelEvent: [
                   {
-                    "date": [
+                    date: [
                       {
-                        "value": "1999-09-09",
-                        "type": "publication",
-                        "status": "primary"
+                        value: '1999-09-09',
+                        type: 'publication',
+                        status: 'primary'
                       }
                     ],
-                    "location": [
+                    location: [
                       {
-                        "value": "Chengdu"
+                        value: 'Chengdu'
                       }
                     ]
                   },
                   {
-                    "location": [
+                    location: [
                       {
-                        "value": "成都："
+                        value: '成都：'
                       }
                     ]
                   }
                 ]
               }
             ]
-          JSON
+          }
         end
 
-        it 'populates sw_pub_date_facet_ssi from parallelEvent date status primary with type publication' do
+        it 'uses parallelEvent date status primary with type publication' do
           expect(doc).to include('sw_pub_date_facet_ssi' => '1999')
         end
       end
@@ -203,102 +200,102 @@ RSpec.describe DescriptiveMetadataIndexer do
 
     context 'when event.type publication and event has date.type publication but no date.status primary' do
       let(:description) do
-        <<~JSON
-          "title": [
+        {
+          title: [
             {
-              "structuredValue": [
+              structuredValue: [
                 {
-                  "value": "Work & social justice",
-                  "type": "main title"
+                  value: 'Work & social justice',
+                  type: 'main title'
                 }
               ]
             }
           ],
-          "event": [
+          event: [
             {
-              "date": [
+              date: [
                 {
-                  "value": "2018",
-                  "type": "publication"
+                  value: '2018',
+                  type: 'publication'
                 }
               ]
             },
             {
-              "type": "publication",
-              "date": [
+              type: 'publication',
+              date: [
                 {
-                  "value": "2019",
-                  "type": "publication"
+                  value: '2019',
+                  type: 'publication'
                 }
               ]
             },
             {
-              "type": "copyright notice",
-              "note": [
+              type: 'copyright notice',
+              note: [
                 {
-                  "value": "©2020",
-                  "type": "copyright statement"
+                  value: '©2020',
+                  type: 'copyright statement'
                 }
               ]
             }
           ]
-        JSON
+        }
       end
 
-      it 'populates sw_pub_date_facet_ssi' do
+      it 'uses value from type publication' do
         expect(doc).to include('sw_pub_date_facet_ssi' => '2019')
       end
 
       context 'when publication date is range (structuredValue)' do
         let(:description) do
-          <<~JSON
-            "title": [
+          {
+            title: [
               {
-                "value": "pub dates are fun",
-                "type": "main title"
+                value: 'pub dates are fun',
+                type: 'main title'
               }
             ],
-            "event": [
+            event: [
               {
-                "date": [
+                date: [
                   {
-                    "value": "1957",
-                    "type": "publication"
+                    value: '1957',
+                    type: 'publication'
                   }
                 ]
               },
               {
-                "type": "publication",
-                "date": [
+                type: 'publication',
+                date: [
                   {
-                    "structuredValue": [
+                    structuredValue: [
                       {
-                        "value": "1940",
-                        "type": "start"
+                        value: '1940',
+                        type: 'start'
                       },
                       {
-                        "value": "1945",
-                        "type": "end"
+                        value: '1945',
+                        type: 'end'
                       }
                     ],
-                    "type": "publication"
+                    type: 'publication'
                   }
                 ]
               },
               {
-                "type": "copyright notice",
-                "note": [
+                type: 'copyright notice',
+                note: [
                   {
-                    "value": "©2020",
-                    "type": "copyright statement"
+                    value: '©2020',
+                    type: 'copyright statement'
                   }
                 ]
               }
             ]
-          JSON
+          }
         end
 
-        it 'populates sw_pub_date_facet_ssi with first date of structuredValue' do
+        it 'uses value from first date of structuredValue' do
           expect(doc).to include('sw_pub_date_facet_ssi' => '1940')
         end
       end
@@ -306,66 +303,67 @@ RSpec.describe DescriptiveMetadataIndexer do
       context 'when parallelEvent' do
         # based on sf449my9678
         let(:description) do
-          <<~JSON
-            "title": [
+          {
+            title: [
               {
-                "value": "parallelEvent with no status primary publication date"
+                value: 'parallelEvent with no status primary publication date'
               }
             ],
-            "event": [
+            event: [
               {
-                "parallelEvent": [
+                parallelEvent: [
                   {
-                    "date": [
+                    date: [
                       {
-                        "value": "2020-01-01",
-                        "type": "publication"
+                        value: '2020-01-01',
+                        type: 'publication'
                       }
                     ],
-                    "location": [
+                    location: [
                       {
-                        "value": "Chengdu"
+                        value: 'Chengdu'
                       }
                     ]
                   },
                   {
-                    "location": [
+                    location: [
                       {
-                        "value": "成都："
+                        value: '成都：'
                       }
                     ]
                   }
                 ]
               },
               {
-                "type": "publication",
-                "parallelEvent": [
+                type: 'publication',
+                parallelEvent: [
                   {
-                    "date": [
+                    date: [
                       {
-                        "value": "2021-01-01",
-                        "type": "publication"
+                        value: '2021-01-01',
+                        type: 'publication'
                       }
                     ],
-                    "location": [
+                    location: [
                       {
-                        "value": "Chengdu"
+                        value: 'Chengdu'
                       }
                     ]
                   },
                   {
-                    "location": [
+                    location: [
                       {
-                        "value": "成都："
+                        value: '成都：'
                       }
                     ]
                   }
                 ]
-              }                ]
-          JSON
+              }
+            ]
+          }
         end
 
-        it 'populates sw_pub_date_facet_ssi with first publication date of parallelValue of type publication' do
+        it 'uses first publication date of parallelValue of type publication' do
           expect(doc).to include('sw_pub_date_facet_ssi' => '2021')
         end
       end
@@ -373,63 +371,63 @@ RSpec.describe DescriptiveMetadataIndexer do
 
     context 'when event has date.type publication and no event.type publication' do
       let(:description) do
-        <<~JSON
-          "title": [
+        {
+          title: [
             {
-              "value": "publication dates R us"
+              value: 'publication dates R us'
             }
           ],
-          "event": [
+          event: [
             {
-              "date": [
+              date: [
                 {
-                  "value": "1980-1984",
-                  "type": "publication"
+                  value: '1980-1984',
+                  type: 'publication'
                 }
               ]
             }
           ]
-        JSON
+        }
       end
 
-      it 'populates sw_pub_date_facet_ssi with first year of 1980-1984' do
+      it 'uses first year of 1980-1984' do
         expect(doc).to include('sw_pub_date_facet_ssi' => '1980')
       end
 
       context 'when publication date is range (structuredValue)' do
         let(:description) do
-          <<~JSON
-            "title": [
+          {
+            title: [
               {
-                "value": "publication dates R us"
+                value: 'publication dates R us'
               }
             ],
-            "event": [
+            event: [
               {
-                "date": [
+                date: [
                   {
-                    "structuredValue": [
+                    structuredValue: [
                       {
-                        "value": "1980",
-                        "type": "start"
+                        value: '1980',
+                        type: 'start'
                       },
                       {
-                        "value": "1984",
-                        "type": "end"
+                        value: '1984',
+                        type: 'end'
                       }
                     ],
-                    "type": "publication",
+                    type: 'publication',
                     "encoding": {
-                      "code": "marc"
+                      code: 'marc'
                     }
                   }
                 ]
               }
             ]
-          JSON
+          }
         end
 
-        it 'populates sw_pub_date_facet_ssi with first year of structuredValue' do
+        it 'uses first year of structuredValue' do
           expect(doc).to include('sw_pub_date_facet_ssi' => '1980')
         end
       end
@@ -437,58 +435,58 @@ RSpec.describe DescriptiveMetadataIndexer do
       context 'when parallelEvent' do
         # based on sf449my9678
         let(:description) do
-          <<~JSON
-            "title": [
+          {
+            title: [
               {
-                "value": "parallelEvent joy"
+                value: 'parallelEvent joy'
               }
             ],
-            "event": [
+            event: [
               {
-                "date": [
+                date: [
                   {
-                    "structuredValue": [
+                    structuredValue: [
                       {
-                        "value": "1980",
-                        "type": "start"
+                        value: '1980',
+                        type: 'start'
                       },
                       {
-                        "value": "1984",
-                        "type": "end"
+                        value: '1984',
+                        type: 'end'
                       }
                     ]
                   }
                 ]
               },
               {
-                "parallelEvent": [
+                parallelEvent: [
                   {
-                    "date": [
+                    date: [
                       {
-                        "value": "1966",
-                        "type": "publication"
+                        value: '1966',
+                        type: 'publication'
                       }
                     ],
-                    "location": [
+                    location: [
                       {
-                        "value": "Chengdu"
+                        value: 'Chengdu'
                       }
                     ]
                   },
                   {
-                    "location": [
+                    location: [
                       {
-                        "value": "成都："
+                        value: '成都：'
                       }
                     ]
                   }
                 ]
               }
             ]
-          JSON
+          }
         end
 
-        it 'populates sw_pub_date_facet_ssi with first publication date of parallelValue' do
+        it 'uses first publication date of parallelValue' do
           expect(doc).to include('sw_pub_date_facet_ssi' => '1966')
         end
       end
@@ -496,83 +494,83 @@ RSpec.describe DescriptiveMetadataIndexer do
 
     context 'when event has date.type creation, no date.type publication, and date.status primary' do
       let(:description) do
-        <<~JSON
-          "title": [
+        {
+          title: [
             {
-              "value": "pub dates are fun",
-              "type": "main title"
+              value: 'pub dates are fun',
+              type: 'main title'
             }
           ],
-          "event": [
+          event: [
             {
-              "date": [
+              date: [
                 {
-                  "value": "1827",
-                  "type": "validity"
+                  value: '1827',
+                  type: 'validity'
                 }
               ]
             },
             {
-              "date": [
+              date: [
                 {
-                  "value": "1940-01-01",
-                  "type": "creation",
-                  "status": "primary",
+                  value: '1940-01-01',
+                  type: 'creation',
+                  status: 'primary',
                   "encoding": {
-                    "code": "w3cdtf"
+                    code: 'w3cdtf'
                   }
                 },
                 {
-                  "value": "1942",
-                  "type": "creation"
+                  value: '1942',
+                  type: 'creation'
                 }
               ]
             }
           ]
-        JSON
+        }
       end
 
-      it 'populates sw_pub_date_facet_ssi' do
+      it 'uses creation date' do
         expect(doc).to include('sw_pub_date_facet_ssi' => '1940')
       end
 
       context 'when creation date is range (structuredValue)' do
         let(:description) do
-          <<~JSON
-            "title": [
+          {
+            title: [
               {
-                "value": "pub dates are fun",
-                "type": "main title"
+                value: 'pub dates are fun',
+                type: 'main title'
               }
             ],
-            "event": [
+            event: [
               {
-                "date": [
+                date: [
                   {
-                    "structuredValue": [
+                    structuredValue: [
                       {
-                        "value": "1940",
-                        "status": "primary",
-                        "type": "start"
+                        value: '1940',
+                        status: 'primary',
+                        type: 'start'
                       },
                       {
-                        "value": "1945",
-                        "type": "end"
+                        value: '1945',
+                        type: 'end'
                       }
                     ],
-                    "type": "creation"
+                    type: 'creation'
                   },
                   {
-                    "value": "1948",
-                    "type": "creation"
+                    value: '1948',
+                    type: 'creation'
                   }
                 ]
               }
             ]
-          JSON
+          }
         end
 
-        it 'populates sw_pub_date_facet_ssi' do
+        it 'uses creation date with status primary' do
           expect(doc).to include('sw_pub_date_facet_ssi' => '1940')
         end
       end
@@ -580,43 +578,43 @@ RSpec.describe DescriptiveMetadataIndexer do
       context 'when parallelEvent' do
         # based on sf449my9678
         let(:description) do
-          <<~JSON
-            "title": [
+          {
+            title: [
               {
-                "value": "parallel creation event with status primary pub date"
+                value: 'parallel creation event with status primary pub date'
               }
             ],
-            "event": [
+            event: [
               {
-                "parallelEvent": [
+                parallelEvent: [
                   {
-                    "date": [
+                    date: [
                       {
-                        "value": "1999-09-09",
-                        "type": "creation",
-                        "status": "primary"
+                        value: '1999-09-09',
+                        type: 'creation',
+                        status: 'primary'
                       }
                     ],
-                    "location": [
+                    location: [
                       {
-                        "value": "Chengdu"
+                        value: 'Chengdu'
                       }
                     ]
                   },
                   {
-                    "location": [
+                    location: [
                       {
-                        "value": "成都："
+                        value: '成都：'
                       }
                     ]
                   }
                 ]
               }
             ]
-          JSON
+          }
         end
 
-        it 'populates sw_pub_date_facet_ssi from parallelEvent date status primary with type publication' do
+        it 'uses value from parallelEvent date status primary with type publication' do
           expect(doc).to include('sw_pub_date_facet_ssi' => '1999')
         end
       end
@@ -624,102 +622,102 @@ RSpec.describe DescriptiveMetadataIndexer do
 
     context 'when event.type creation and event has date.type creation but no date.status primary' do
       let(:description) do
-        <<~JSON
-          "title": [
+        {
+          title: [
             {
-              "structuredValue": [
+              structuredValue: [
                 {
-                  "value": "Work & social justice",
-                  "type": "main title"
+                  value: 'Work & social justice',
+                  type: 'main title'
                 }
               ]
             }
           ],
-          "event": [
+          event: [
             {
-              "date": [
+              date: [
                 {
-                  "value": "2018",
-                  "type": "creation"
+                  value: '2018',
+                  type: 'creation'
                 }
               ]
             },
             {
-              "type": "creation",
-              "date": [
+              type: 'creation',
+              date: [
                 {
-                  "value": "2019",
-                  "type": "creation"
+                  value: '2019',
+                  type: 'creation'
                 }
               ]
             },
             {
-              "type": "copyright notice",
-              "note": [
+              type: 'copyright notice',
+              note: [
                 {
-                  "value": "©2020",
-                  "type": "copyright statement"
+                  value: '©2020',
+                  type: 'copyright statement'
                 }
               ]
             }
           ]
-        JSON
+        }
       end
 
-      it 'populates sw_pub_date_facet_ssi' do
+      it 'uses value with date of type creation from event type of creation' do
         expect(doc).to include('sw_pub_date_facet_ssi' => '2019')
       end
 
       context 'when creation date is range (structuredValue)' do
         let(:description) do
-          <<~JSON
-            "title": [
+          {
+            title: [
               {
-                "value": "pub dates are fun",
-                "type": "main title"
+                value: 'pub dates are fun',
+                type: 'main title'
               }
             ],
-            "event": [
+            event: [
               {
-                "date": [
+                date: [
                   {
-                    "value": "1957",
-                    "type": "creation"
+                    value: '1957',
+                    type: 'creation'
                   }
                 ]
               },
               {
-                "type": "creation",
-                "date": [
+                type: 'creation',
+                date: [
                   {
-                    "structuredValue": [
+                    structuredValue: [
                       {
-                        "value": "1940",
-                        "type": "start"
+                        value: '1940',
+                        type: 'start'
                       },
                       {
-                        "value": "1945",
-                        "type": "end"
+                        value: '1945',
+                        type: 'end'
                       }
                     ],
-                    "type": "creation"
+                    type: 'creation'
                   }
                 ]
               },
               {
-                "type": "copyright notice",
-                "note": [
+                type: 'copyright notice',
+                note: [
                   {
-                    "value": "©2020",
-                    "type": "copyright statement"
+                    value: '©2020',
+                    type: 'copyright statement'
                   }
                 ]
               }
             ]
-          JSON
+          }
         end
 
-        it 'populates sw_pub_date_facet_ssi with first date of structuredValue' do
+        it 'uses first date of structuredValue of type creation from event of type creation' do
           expect(doc).to include('sw_pub_date_facet_ssi' => '1940')
         end
       end
@@ -727,66 +725,67 @@ RSpec.describe DescriptiveMetadataIndexer do
       context 'when parallelEvent' do
         # based on sf449my9678
         let(:description) do
-          <<~JSON
-            "title": [
+          {
+            title: [
               {
-                "value": "parallelEvent with no status primary creation date"
+                value: 'parallelEvent with no status primary creation date'
               }
             ],
-            "event": [
+            event: [
               {
-                "parallelEvent": [
+                parallelEvent: [
                   {
-                    "date": [
+                    date: [
                       {
-                        "value": "2020-01-01",
-                        "type": "creation"
+                        value: '2020-01-01',
+                        type: 'creation'
                       }
                     ],
-                    "location": [
+                    location: [
                       {
-                        "value": "Chengdu"
+                        value: 'Chengdu'
                       }
                     ]
                   },
                   {
-                    "location": [
+                    location: [
                       {
-                        "value": "成都："
+                        value: '成都：'
                       }
                     ]
                   }
                 ]
               },
               {
-                "type": "creation",
-                "parallelEvent": [
+                type: 'creation',
+                parallelEvent: [
                   {
-                    "date": [
+                    date: [
                       {
-                        "value": "2021-01-01",
-                        "type": "creation"
+                        value: '2021-01-01',
+                        type: 'creation'
                       }
                     ],
-                    "location": [
+                    location: [
                       {
-                        "value": "Chengdu"
+                        value: 'Chengdu'
                       }
                     ]
                   },
                   {
-                    "location": [
+                    location: [
                       {
-                        "value": "成都："
+                        value: '成都：'
                       }
                     ]
                   }
                 ]
-              }                ]
-          JSON
+              }
+            ]
+          }
         end
 
-        it 'populates sw_pub_date_facet_ssi with first publication date of parallelValue of type publication' do
+        it 'uses first publication date of parallelValue of type publication' do
           expect(doc).to include('sw_pub_date_facet_ssi' => '2021')
         end
       end
@@ -794,63 +793,63 @@ RSpec.describe DescriptiveMetadataIndexer do
 
     context 'when event has date.type creation and no event.type creation' do
       let(:description) do
-        <<~JSON
-          "title": [
+        {
+          title: [
             {
-              "value": "creation dates R us"
+              value: 'creation dates R us'
             }
           ],
-          "event": [
+          event: [
             {
-              "date": [
+              date: [
                 {
-                  "value": "1980-1984",
-                  "type": "creation"
+                  value: '1980-1984',
+                  type: 'creation'
                 }
               ]
             }
           ]
-        JSON
+        }
       end
 
-      it 'populates sw_pub_date_facet_ssi with first year of 1980-1984' do
+      it 'uses first year of 1980-1984 from date with type creation' do
         expect(doc).to include('sw_pub_date_facet_ssi' => '1980')
       end
 
       context 'when creation date is range (structuredValue)' do
         let(:description) do
-          <<~JSON
-            "title": [
+          {
+            title: [
               {
-                "value": "creation dates R us"
+                value: 'creation dates R us'
               }
             ],
-            "event": [
+            event: [
               {
-                "date": [
+                date: [
                   {
-                    "structuredValue": [
+                    structuredValue: [
                       {
-                        "value": "1980",
-                        "type": "start"
+                        value: '1980',
+                        type: 'start'
                       },
                       {
-                        "value": "1984",
-                        "type": "end"
+                        value: '1984',
+                        type: 'end'
                       }
                     ],
-                    "type": "creation",
+                    type: 'creation',
                     "encoding": {
-                      "code": "marc"
+                      code: 'marc'
                     }
                   }
                 ]
               }
             ]
-          JSON
+          }
         end
 
-        it 'populates sw_pub_date_facet_ssi with first year of structuredValue' do
+        it 'uses first year of structuredValue for date of type creation' do
           expect(doc).to include('sw_pub_date_facet_ssi' => '1980')
         end
       end
@@ -858,58 +857,58 @@ RSpec.describe DescriptiveMetadataIndexer do
       context 'when parallelEvent' do
         # based on sf449my9678
         let(:description) do
-          <<~JSON
-            "title": [
+          {
+            title: [
               {
-                "value": "parallelEvent joy"
+                value: 'parallelEvent joy'
               }
             ],
-            "event": [
+            event: [
               {
-                "date": [
+                date: [
                   {
-                    "structuredValue": [
+                    structuredValue: [
                       {
-                        "value": "1980",
-                        "type": "start"
+                        value: '1980',
+                        type: 'start'
                       },
                       {
-                        "value": "1984",
-                        "type": "end"
+                        value: '1984',
+                        type: 'end'
                       }
                     ]
                   }
                 ]
               },
               {
-                "parallelEvent": [
+                parallelEvent: [
                   {
-                    "date": [
+                    date: [
                       {
-                        "value": "1966",
-                        "type": "creation"
+                        value: '1966',
+                        type: 'creation'
                       }
                     ],
-                    "location": [
+                    location: [
                       {
-                        "value": "Chengdu"
+                        value: 'Chengdu'
                       }
                     ]
                   },
                   {
-                    "location": [
+                    location: [
                       {
-                        "value": "成都："
+                        value: '成都：'
                       }
                     ]
                   }
                 ]
               }
             ]
-          JSON
+          }
         end
 
-        it 'populates sw_pub_date_facet_ssi with first publication date of parallelValue' do
+        it 'uses first publication date of parallelValue' do
           expect(doc).to include('sw_pub_date_facet_ssi' => '1966')
         end
       end
@@ -917,30 +916,30 @@ RSpec.describe DescriptiveMetadataIndexer do
 
     context 'when no event with desired date.type and no desired event.type' do
       let(:description) do
-        <<~JSON
-          "title": [
+        {
+          title: [
             {
-              "structuredValue": [
+              structuredValue: [
                 {
-                  "value": "Work & social justice",
-                  "type": "main title"
+                  value: 'Work & social justice',
+                  type: 'main title'
                 }
               ]
             }
           ],
-          "event": [
+          event: [
             {
-              "type": "publication",
-              "date": [
+              type: 'publication',
+              date: [
                 {
-                  "value": "2018",
-                  "status": "primary",
-                  "type": "copyright"
+                  value: '2018',
+                  status: 'primary',
+                  type: 'copyright'
                 }
               ]
             }
           ]
-        JSON
+        }
       end
 
       it 'does not populate sw_pub_date_facet_ssi' do

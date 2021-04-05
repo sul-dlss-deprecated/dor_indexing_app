@@ -23,9 +23,7 @@ RSpec.describe DescriptiveMetadataIndexer do
           "hasAdminPolicy": "druid:zx485kb6348",
           "partOfProject": "H2"
         },
-        "description": {
-          #{description}
-        },
+        "description": #{JSON.generate(description)},
         "identification": {
           "sourceId": "hydrus:object-6"
         },
@@ -72,198 +70,195 @@ RSpec.describe DescriptiveMetadataIndexer do
       }
     JSON
   end
+  let(:doc) { indexer.to_solr }
 
-  describe 'genre mappings from Cocina to Solr' do
-    describe 'sw_genre_ssim' do
-      let(:doc) { indexer.to_solr }
-
-      context 'when single genre' do
-        let(:description) do
-          <<~JSON
-            "title": [
-              {
-                "value": "title"
-              }
-            ],
-            "form": [
-              {
-                "value": "photographs",
-                "type": "genre"
-              }
-            ]
-          JSON
-        end
-
-        xit 'populates sw_genre_ssim' do
-          expect(doc).to include('sw_genre_ssim' => ['photographs'])
-        end
+  describe 'genre mappings from Cocina to Solr sw_genre_ssim' do
+    context 'when single genre' do
+      let(:description) do
+        {
+          title: [
+            {
+              value: 'title'
+            }
+          ],
+          form: [
+            {
+              value: 'photographs',
+              type: 'genre'
+            }
+          ]
+        }
       end
 
-      context 'when multiple genres' do
-        let(:description) do
-          <<~JSON
-            "title": [
-              {
-                "value": "title"
-              }
-            ],
-            "form": [
-              {
-                "value": "photographs",
-                "type": "genre"
-              },
-              {
-                "value": "ambrotypes",
-                "type": "genre"
-              }
-            ]
-          JSON
-        end
+      xit 'uses genre value' do
+        expect(doc).to include('sw_genre_ssim' => ['photographs'])
+      end
+    end
 
-        xit 'populates sw_genre_ssim' do
-          expect(doc).to include('sw_genre_ssim' => %w[photographs ambrotypes])
-        end
+    context 'when multiple genres' do
+      let(:description) do
+        {
+          title: [
+            {
+              value: 'title'
+            }
+          ],
+          form: [
+            {
+              value: 'photographs',
+              type: 'genre'
+            },
+            {
+              value: 'ambrotypes',
+              type: 'genre'
+            }
+          ]
+        }
       end
 
-      context 'when multilingual' do
-        let(:description) do
-          <<~JSON
-            "title": [
-              {
-                "value": "title"
-              }
-            ],
-            "form": [
-              {
-                "parallelValue": [
-                  {
-                    "value": "photographs",
-                    "type": "genre"
-                  },
-                  {
-                    "value": "фотографии",
-                    "type": "genre"
-                  }
-                ]
-              }
-            ]
-          JSON
-        end
+      xit 'uses both genre values' do
+        expect(doc).to include('sw_genre_ssim' => %w[photographs ambrotypes])
+      end
+    end
 
-        xit 'populates sw_genre_ssim' do
-          expect(doc).to include('sw_genre_ssim' => %w[photographs фотографии])
-        end
+    context 'when multilingual' do
+      let(:description) do
+        {
+          title: [
+            {
+              value: 'title'
+            }
+          ],
+          form: [
+            {
+              parallelValue: [
+                {
+                  value: 'photographs',
+                  type: 'genre'
+                },
+                {
+                  value: 'фотографии',
+                  type: 'genre'
+                }
+              ]
+            }
+          ]
+        }
       end
 
-      context 'when genre term is capitalized' do
-        let(:description) do
-          <<~JSON
-            "title": [
-              {
-                "value": "title"
-              }
-            ],
-            "form": [
-              {
-                "value": "Photographs",
-                "type": "genre",
-                "displayLabel": "Image type"
-              }
-            ]
-          JSON
-        end
+      xit 'uses both genre values' do
+        expect(doc).to include('sw_genre_ssim' => %w[photographs фотографии])
+      end
+    end
 
-        xit 'populates sw_genre_ssim' do
-          expect(doc).to include('sw_genre_ssim' => ['Photographs'])
-        end
+    context 'when genre term is capitalized' do
+      let(:description) do
+        {
+          title: [
+            {
+              value: 'title'
+            }
+          ],
+          form: [
+            {
+              value: 'Photographs',
+              type: 'genre',
+              displayLabel: 'Image type'
+            }
+          ]
+        }
       end
 
-      context 'when thesis (case-insensitive)' do
-        let(:description) do
-          <<~JSON
-            "title": [
-              {
-                "value": "title"
-              }
-            ],
-            "form": [
-              {
-                "value": "Thesis",
-                "type": "genre"
-              }
-            ]
-          JSON
-        end
+      xit 'retains capitalization in Solr' do
+        expect(doc).to include('sw_genre_ssim' => ['Photographs'])
+      end
+    end
 
-        xit 'populates sw_genre_ssim' do
-          expect(doc).to include('sw_genre_ssim' => ['Thesis'])
-        end
+    context 'when thesis (case-insensitive)' do
+      let(:description) do
+        {
+          title: [
+            {
+              value: 'title'
+            }
+          ],
+          form: [
+            {
+              value: 'Thesis',
+              type: 'genre'
+            }
+          ]
+        }
       end
 
-      context 'when conference publication (case-insensitive)' do
-        let(:description) do
-          <<~JSON
-            "title": [
-              {
-                "value": "title"
-              }
-            ],
-            "form": [
-              {
-                "value": "Conference Publication",
-                "type": "genre"
-              }
-            ]
-          JSON
-        end
+      xit 'retains capitalization in Solr' do
+        expect(doc).to include('sw_genre_ssim' => ['Thesis'])
+      end
+    end
 
-        xit 'populates sw_genre_ssim' do
-          expect(doc).to include('sw_genre_ssim' => ['Conference proceedings'])
-        end
+    context 'when conference publication (case-insensitive)' do
+      let(:description) do
+        {
+          title: [
+            {
+              value: 'title'
+            }
+          ],
+          form: [
+            {
+              value: 'Conference Publication',
+              type: 'genre'
+            }
+          ]
+        }
       end
 
-      context 'when government publication (case-insensitive)' do
-        let(:description) do
-          <<~JSON
-            "title": [
-              {
-                "value": "title"
-              }
-            ],
-            "form": [
-              {
-                "value": "Government publication",
-                "type": "genre"
-              }
-            ]
-          JSON
-        end
+      xit 'retains capitalization in Solr' do
+        expect(doc).to include('sw_genre_ssim' => ['Conference proceedings'])
+      end
+    end
 
-        xit 'populates sw_genre_ssim' do
-          expect(doc).to include('sw_genre_ssim' => ['Government document'])
-        end
+    context 'when government publication (case-insensitive)' do
+      let(:description) do
+        {
+          title: [
+            {
+              value: 'title'
+            }
+          ],
+          form: [
+            {
+              value: 'Government publication',
+              type: 'genre'
+            }
+          ]
+        }
       end
 
-      context 'when technical report (case-insensitive)' do
-        let(:description) do
-          <<~JSON
-            "title": [
-              {
-                "value": "title"
-              }
-            ],
-            "form": [
-              {
-                "value": "technical report",
-                "type": "genre"
-              }
-            ]
-          JSON
-        end
+      xit 'retains capitalization in Solr' do
+        expect(doc).to include('sw_genre_ssim' => ['Government document'])
+      end
+    end
 
-        xit 'populates sw_genre_ssim' do
-          expect(doc).to include('sw_genre_ssim' => ['Technical report'])
-        end
+    context 'when technical report (case-insensitive)' do
+      let(:description) do
+        {
+          title: [
+            {
+              value: 'title'
+            }
+          ],
+          form: [
+            {
+              value: 'technical report',
+              type: 'genre'
+            }
+          ]
+        }
+      end
+
+      xit 'retains capitalization in Solr' do
+        expect(doc).to include('sw_genre_ssim' => ['Technical report'])
       end
     end
   end
