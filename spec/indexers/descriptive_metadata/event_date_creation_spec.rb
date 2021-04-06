@@ -354,7 +354,8 @@ RSpec.describe DescriptiveMetadataIndexer do
                         }
                       ]
                     }
-                  ]
+                  ],
+                  type: 'creation'
                 }
               ]
             }
@@ -362,7 +363,6 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      # FIXME:  have question in with Arcadia:  how do we know the above is a date value for creation (vs publication, or ...)?
       #  We also probably need more parallelValue examples
       xit 'uses the first creation date in parallelValue' do
         expect(doc).to include('originInfo_date_created_tesim' => '1900-04-02')
