@@ -3,33 +3,39 @@
 require 'rails_helper'
 
 RSpec.describe TitleBuilder do
-  subject { described_class.build(titles) }
+  subject { described_class.build(cocina_titles) }
 
-  let(:titles) do
+  # lots more specs in spec/indexers/descriptive_metadata/title_spec
+
+  # from a spreadsheet upload integration test
+  #   https://argo-stage.stanford.edu/view/sk561pf3505
+  let(:cocina_titles) do
     [
+      # Yes, there can be a structuredValue inside a StructuredValue.  For example,
+      # a uniform title where both the name and the title have internal StructuredValue
       Cocina::Models::Title.new(
         structuredValue: [
           {
             structuredValue: [
               {
-                "value": 'ti1:nonSort',
-                "type": 'nonsorting characters'
+                value: 'ti1:nonSort',
+                type: 'nonsorting characters'
               },
               {
-                "value": 'brisk junket',
-                "type": 'main title'
+                value: 'brisk junket',
+                type: 'main title'
               },
               {
-                "value": 'ti1:subTitle',
-                "type": 'subtitle'
+                value: 'ti1:subTitle',
+                type: 'subtitle'
               },
               {
-                "value": 'ti1:partNumber',
-                "type": 'part number'
+                value: 'ti1:partNumber',
+                type: 'part number'
               },
               {
-                "value": 'ti1:partName',
-                "type": 'part name'
+                value: 'ti1:partName',
+                type: 'part name'
               }
             ]
           }

@@ -85,8 +85,8 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'uses title value' do
-        expect(doc).to include('sw_display_title_tesim' => 'Title')
+      it 'uses title value' do
+        expect(doc['sw_display_title_tesim']).to eq 'Title'
       end
     end
 
@@ -103,8 +103,8 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'uses title value' do
-        expect(doc).to include('sw_display_title_tesim' => 'Title')
+      it 'uses title value' do
+        expect(doc['sw_display_title_tesim']).to eq 'Title'
       end
     end
 
@@ -114,18 +114,18 @@ RSpec.describe DescriptiveMetadataIndexer do
         {
           title: [
             {
-              value: 'Title 1',
-              status: 'primary'
+              value: 'Title 1'
             },
             {
-              value: 'Title 2'
+              value: 'Title 2',
+              status: 'primary'
             }
           ]
         }
       end
 
-      xit 'uses value from title with status primary' do
-        expect(doc).to include('sw_display_title_tesim' => 'Title 1')
+      it 'uses value from title with status primary' do
+        expect(doc['sw_display_title_tesim']).to eq 'Title 2'
       end
     end
 
@@ -144,8 +144,8 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'uses first value' do
-        expect(doc).to include('sw_display_title_tesim' => 'Title 1')
+      it 'uses first value' do
+        expect(doc['sw_display_title_tesim']).to eq 'Title 1'
       end
     end
 
@@ -165,8 +165,8 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'uses value from title with status primary' do
-        expect(doc).to include('sw_display_title_tesim' => 'Title 1')
+      it 'uses value from title with status primary' do
+        expect(doc['sw_display_title_tesim']).to eq 'Title 1'
       end
     end
 
@@ -189,8 +189,8 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'uses value from first title without type' do
-        expect(doc).to include('sw_display_title_tesim' => 'Title 2')
+      it 'uses value from first title without type' do
+        expect(doc['sw_display_title_tesim']).to eq 'Title 2'
       end
     end
 
@@ -200,20 +200,20 @@ RSpec.describe DescriptiveMetadataIndexer do
         {
           title: [
             {
+              value: 'Title 2',
+              type: 'alternative'
+            },
+            {
               value: 'Title 1',
               type: 'translated',
               status: 'primary'
-            },
-            {
-              value: 'Title 2',
-              type: 'alternative'
             }
           ]
         }
       end
 
-      xit 'uses value from title with status primary' do
-        expect(doc).to include('sw_display_title_tesim' => 'Title 1')
+      it 'uses value from title with status primary' do
+        expect(doc['sw_display_title_tesim']).to eq 'Title 1'
       end
     end
 
@@ -234,8 +234,8 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'uses value from first title' do
-        expect(doc).to include('sw_display_title_tesim' => 'Title 1')
+      it 'uses value from first title' do
+        expect(doc['sw_display_title_tesim']).to eq 'Title 1'
       end
     end
 
@@ -257,8 +257,8 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'uses full value from title' do
-        expect(doc).to include('sw_display_title_tesim' => 'A title')
+      it 'uses full value from title' do
+        expect(doc['sw_display_title_tesim']).to eq 'A title'
       end
     end
 
@@ -270,11 +270,11 @@ RSpec.describe DescriptiveMetadataIndexer do
             {
               parallelValue: [
                 {
-                  value: 'Title 1',
-                  status: 'primary'
+                  value: 'Title 1'
                 },
                 {
-                  value: 'Title 2'
+                  value: 'Title 2',
+                  status: 'primary'
                 }
               ]
             }
@@ -282,8 +282,8 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'uses value with status primary' do
-        expect(doc).to include('sw_display_title_tesim' => 'Title 1')
+      it 'uses value with status primary' do
+        expect(doc['sw_display_title_tesim']).to eq 'Title 2'
       end
     end
 
@@ -307,8 +307,8 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'uses first value from parallelValue with status primary' do
-        expect(doc).to include('sw_display_title_tesim' => 'Title 1')
+      it 'uses first value from parallelValue with status primary' do
+        expect(doc['sw_display_title_tesim']).to eq 'Title 1'
       end
     end
 
@@ -320,11 +320,11 @@ RSpec.describe DescriptiveMetadataIndexer do
             {
               parallelValue: [
                 {
-                  value: 'Title 1',
-                  status: 'primary'
+                  value: 'Title 1'
                 },
                 {
-                  value: 'Title 2'
+                  value: 'Title 2',
+                  status: 'primary'
                 }
               ],
               status: 'primary'
@@ -333,8 +333,8 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'uses value with status primary in parallelValue' do
-        expect(doc).to include('sw_display_title_tesim' => 'Title 1')
+      it 'uses value with status primary in parallelValue' do
+        expect(doc['sw_display_title_tesim']).to eq 'Title 2'
       end
     end
 
@@ -363,8 +363,8 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'uses value from outermost title with status primary' do
-        expect(doc).to include('sw_display_title_tesim' => 'Title 3')
+      it 'uses value from outermost title with status primary' do
+        expect(doc['sw_display_title_tesim']).to eq 'Title 3'
       end
     end
 
@@ -390,8 +390,8 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'uses first value' do
-        expect(doc).to include('sw_display_title_tesim' => 'Title 1')
+      it 'uses first value' do
+        expect(doc['sw_display_title_tesim']).to eq 'Title 1'
       end
     end
 
@@ -417,8 +417,8 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'uses first value' do
-        expect(doc).to include('sw_display_title_tesim' => 'Title 3')
+      it 'uses first value' do
+        expect(doc['sw_display_title_tesim']).to eq 'Title 3'
       end
     end
 
@@ -465,8 +465,8 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'constructs title from structuredValue' do
-        expect(doc).to include('sw_display_title_tesim' => 'A title : a subtitle. Vol. 1, Supplement')
+      it 'constructs title from structuredValue' do
+        expect(doc['sw_display_title_tesim']).to eq 'A title : a subtitle. Vol. 1, Supplement'
       end
     end
 
@@ -504,8 +504,8 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'constructs title from structuredValue, respecting order of occurrence' do
-        expect(doc).to include('sw_display_title_tesim' => 'The title. Vol. 1, Supplement : a subtitle')
+      it 'constructs title from structuredValue, respecting order of occurrence' do
+        expect(doc['sw_display_title_tesim']).to eq 'The title. Vol. 1, Supplement : a subtitle'
       end
     end
 
@@ -538,8 +538,8 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'constructs title from structuredValue, respecting order of occurrence' do
-        expect(doc).to include('sw_display_title_tesim' => 'Title. Special series, Vol. 1, Supplement')
+      it 'constructs title from structuredValue, respecting order of occurrence' do
+        expect(doc['sw_display_title_tesim']).to eq 'Title. Special series, Vol. 1, Supplement'
       end
     end
 
@@ -564,8 +564,8 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'constructs title from structuredValue, respecting order of occurrence' do
-        expect(doc).to include('sw_display_title_tesim' => 'Series 1. Title')
+      it 'constructs title from structuredValue, respecting order of occurrence' do
+        expect(doc['sw_display_title_tesim']).to eq 'Series 1. Title'
       end
     end
 
@@ -596,8 +596,8 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'constructs title from structuredValue, respecting order of occurrence' do
-        expect(doc).to include('sw_display_title_tesim' => 'L\'autre title')
+      it 'constructs title from structuredValue, respecting order of occurrence' do
+        expect(doc['sw_display_title_tesim']).to eq 'L\'autre title'
       end
     end
 
@@ -623,8 +623,8 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'constructs title from structuredValue without author name' do
-        expect(doc).to include('sw_display_title_tesim' => 'Title')
+      it 'constructs title from structuredValue without author name' do
+        expect(doc['sw_display_title_tesim']).to eq 'Title'
       end
     end
 
@@ -632,7 +632,6 @@ RSpec.describe DescriptiveMetadataIndexer do
 
     describe 'punctuation/space in simple value' do
       # strip one or more instances of .,;:/\ plus whitespace at beginning or end of string
-
       let(:description) do
         {
           title: [
@@ -643,8 +642,8 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'uses value with trailing punctuation of .,;:/\ stripped' do
-        expect(doc).to include('sw_display_title_tesim' => 'Title')
+      it 'uses value with trailing punctuation of .,;:/\ stripped' do
+        expect(doc['sw_display_title_tesim']).to eq 'Title'
       end
     end
 
@@ -669,8 +668,122 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'uses value with trailing punctuation of .,;:/\ stripped' do
-        expect(doc).to include('sw_display_title_tesim' => 'Title : subtitle')
+      it 'uses value with trailing whitespace or punctuation [.,;:/\] stripped' do
+        expect(doc['sw_display_title_tesim']).to eq 'Title : subtitle'
+      end
+    end
+
+    # Added by devs
+
+    describe 'only has subtitle' do
+      let(:description) do
+        {
+          title: [
+            {
+              structuredValue: [
+                {
+                  value: 'subtitle',
+                  type: 'subtitle'
+                }
+              ]
+            }
+          ]
+        }
+      end
+
+      it 'uses correct punctuation' do
+        expect(doc['sw_display_title_tesim']).to eq 'subtitle'
+      end
+    end
+
+    describe 'starts with subtitle, has part name and part number' do
+      let(:description) do
+        {
+          title: [
+            {
+              structuredValue: [
+                {
+                  value: 'subtitle',
+                  type: 'subtitle'
+                },
+                {
+                  value: 'part name',
+                  type: 'part name'
+                },
+                {
+                  value: 'part number',
+                  type: 'part number'
+                }
+              ]
+            }
+          ]
+        }
+      end
+
+      # partName and partNumber are always separated from each other by comma space
+      # first partName or partNumber in the string is preceded by period space
+      it 'uses correct punctuation' do
+        expect(doc['sw_display_title_tesim']).to eq 'subtitle. part name, part number'
+      end
+    end
+
+    describe 'starts with subtitle, has part number and part name' do
+      let(:description) do
+        {
+          title: [
+            {
+              structuredValue: [
+                {
+                  value: 'subtitle',
+                  type: 'subtitle'
+                },
+                {
+                  value: 'part number',
+                  type: 'part number'
+                },
+                {
+                  value: 'part name',
+                  type: 'part name'
+                }
+              ]
+            }
+          ]
+        }
+      end
+
+      # partName and partNumber are always separated from each other by comma space
+      # first partName or partNumber in the string is preceded by period space
+      it 'uses correct punctuation' do
+        expect(doc['sw_display_title_tesim']).to eq 'subtitle. part number, part name'
+      end
+    end
+
+    describe 'nonsorting characters not first' do
+      let(:description) do
+        {
+          title: [
+            {
+              structuredValue: [
+                {
+                  value: 'Series 1',
+                  type: 'part number'
+                },
+                {
+                  value: 'A',
+                  type: 'nonsorting characters'
+                },
+                {
+                  value: 'Title',
+                  type: 'main title'
+                }
+              ]
+            }
+          ]
+        }
+      end
+
+      it 'uses correct punctuation and respects order of occurrence' do
+        expect(doc['sw_display_title_tesim']).to eq 'Series 1. A Title'
       end
     end
   end
