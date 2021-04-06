@@ -80,7 +80,7 @@ class DescriptiveMetadataIndexer
   end
 
   def genres
-    @genres ||= forms.select { |form| form.type == 'genre' }.map(&:value)
+    @genres ||= forms.flat_map { |form| form.parallelValue || form }.select { |form| form.type == 'genre' }.map(&:value)
   end
 
   FORMAT = {

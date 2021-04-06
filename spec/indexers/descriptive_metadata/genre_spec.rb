@@ -90,7 +90,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'uses genre value' do
+      it 'uses genre value' do
         expect(doc).to include('sw_genre_ssim' => ['photographs'])
       end
     end
@@ -116,7 +116,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'uses both genre values' do
+      it 'uses both genre values' do
         expect(doc).to include('sw_genre_ssim' => %w[photographs ambrotypes])
       end
     end
@@ -146,7 +146,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'uses both genre values' do
+      it 'uses both genre values' do
         expect(doc).to include('sw_genre_ssim' => %w[photographs фотографии])
       end
     end
@@ -169,7 +169,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'retains capitalization in Solr' do
+      it 'retains capitalization in Solr' do
         expect(doc).to include('sw_genre_ssim' => ['Photographs'])
       end
     end
@@ -191,8 +191,8 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'retains capitalization in Solr' do
-        expect(doc).to include('sw_genre_ssim' => ['Thesis'])
+      it 'retains capitalization in Solr' do
+        expect(doc).to include('sw_genre_ssim' => ['Thesis', 'Thesis/Dissertation'])
       end
     end
 
@@ -213,8 +213,8 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'retains capitalization in Solr' do
-        expect(doc).to include('sw_genre_ssim' => ['Conference proceedings'])
+      it 'retains capitalization in Solr' do
+        expect(doc).to include('sw_genre_ssim' => ['Conference Publication', 'Conference proceedings'])
       end
     end
 
@@ -235,8 +235,8 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'retains capitalization in Solr' do
-        expect(doc).to include('sw_genre_ssim' => ['Government document'])
+      it 'retains capitalization in Solr' do
+        expect(doc).to include('sw_genre_ssim' => ['Government publication', 'Government document'])
       end
     end
 
@@ -257,8 +257,8 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'retains capitalization in Solr' do
-        expect(doc).to include('sw_genre_ssim' => ['Technical report'])
+      it 'retains capitalization in Solr' do
+        expect(doc).to include('sw_genre_ssim' => ['technical report', 'Technical report'])
       end
     end
   end
