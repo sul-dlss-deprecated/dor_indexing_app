@@ -363,8 +363,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      #  We also probably need more parallelValue examples
-      xit 'uses the first creation date in parallelValue' do
+      it 'uses the first creation date in parallelValue' do
         expect(doc).to include('originInfo_date_created_tesim' => '1900-04-02')
       end
     end
