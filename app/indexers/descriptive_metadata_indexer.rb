@@ -128,8 +128,17 @@ class DescriptiveMetadataIndexer
   end
 
   def publisher_name
-    publisher = Array(publication&.contributor).find { |contributor| contributor.role.any? { |role| role.value == 'publisher' } }
-    Array(publisher&.name).map(&:value)&.compact
+    (publisher_names_for(publication) +
+      # flat_map handles parallel events.
+      events.flat_map { |event| flat_event(event).flat_map { |single_event| publisher_names_for(single_event) } }
+    ).compact.uniq
+  end
+
+  def publisher_names_for(publication_or_event)
+    # name_for handles structured names.
+    Array(publication_or_event&.contributor)
+      .select { |contributor| Array(contributor.role).any? { |role| role.value&.downcase == 'publisher' } }
+      .flat_map { |contributor| contributor.name.flat_map { |name| flat_name(name).map { |single_name| name_for(single_name) } } }.compact
   end
 
   def publication
@@ -154,6 +163,18 @@ class DescriptiveMetadataIndexer
 
   def events
     @events ||= Array(cocina.description.event).compact
+  end
+
+  def flat_event(event)
+    event.parallelEvent || Array(event)
+  end
+
+  def flat_name(name)
+    name.parallelValue || Array(name)
+  end
+
+  def name_for(name)
+    name.structuredValue ? name.structuredValue.map(&:value).join('. ') : name.value
   end
 end
 # rubocop:enable Metrics/ClassLength
