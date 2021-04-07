@@ -29,9 +29,26 @@ RSpec.describe RightsMetadataIndexer do
     XML
   end
 
-  let(:obj) { Dor::Item.new(pid: 'druid:rt923jk342') }
+  let(:obj) { Dor::Item.new(pid: 'druid:rt923jk3429') }
   let(:rights_md_ds) { obj.rightsMetadata }
-  let(:cocina) { Success(instance_double(Cocina::Models::DRO)) }
+  let(:cocina) do
+    Cocina::Models.build(
+      'externalIdentifier' => 'druid:rt923jk3429',
+      'type' => Cocina::Models::Vocab.image,
+      'version' => 1,
+      'label' => 'testing',
+      'access' => {
+        'license' => license
+      },
+      'administrative' => {
+        'hasAdminPolicy' => 'druid:xx000xx0000'
+      },
+      'description' => {
+        'title' => [{ 'value' => 'Test obj' }]
+      }
+    )
+  end
+  let(:license) { 'https://creativecommons.org/publicdomain/zero/1.0/' }
 
   let(:indexer) do
     described_class.new(resource: obj, cocina: cocina)
@@ -48,7 +65,7 @@ RSpec.describe RightsMetadataIndexer do
       expect(doc).to include(
         'copyright_ssim' => ['Copyright © World Trade Organization'],
         'use_statement_ssim' => ['Official WTO documents are free for public use.'],
-        'use_license_machine_ssi' => 'by-nc-nd',
+        'use_license_machine_ssi' => 'CC0-1.0',
         'rights_descriptions_ssim' => ['world']
       )
     end
