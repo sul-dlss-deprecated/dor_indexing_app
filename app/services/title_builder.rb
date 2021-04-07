@@ -15,6 +15,10 @@ class TitleBuilder
     remove_trailing_punctuation(my_title.strip) if my_title.present?
   end
 
+  # rubocop:disable Metrics/BlockLength
+  # rubocop:disable Metrics/CyclomaticComplexity
+  # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Metrics/PerceivedComplexity
   def self.title_from_structured_values(structured_values, non_sorting_char_count)
     structured_title = ''
     title_from_part = ''
@@ -26,41 +30,45 @@ class TitleBuilder
       value = structured_value.value&.strip
       next unless value
 
+      # additional types:  name, uniform ...
       case structured_value.type&.downcase
       when 'nonsorting characters'
         non_sort_value = value&.size == non_sorting_char_count ? value : "#{value} "
-        if structured_title.present?
-          structured_title = "#{structured_title}#{non_sort_value}"
-        else
-          structured_title = non_sort_value
-        end
+        structured_title = if structured_title.present?
+                             "#{structured_title}#{non_sort_value}"
+                           else
+                             non_sort_value
+                           end
       when 'part name', 'part number'
         if title_from_part.blank?
           title_from_part = title_from_structured_part(structured_values)
-          if structured_title.present?
-            structured_title = "#{structured_title.sub(/[ \.,]*$/, '')}. #{title_from_part}. "
-          else
-            structured_title = "#{title_from_part}. "
-          end
+          structured_title = if structured_title.present?
+                               "#{structured_title.sub(/[ .,]*$/, '')}. #{title_from_part}. "
+                             else
+                               "#{title_from_part}. "
+                             end
         end
       when 'main title', 'title'
         structured_title = "#{structured_title}#{value}"
       when 'subtitle'
         # subtitle is preceded by space colon space, unless it is at the beginning of the title string
-        if structured_title.present?
-          structured_title = "#{structured_title.sub(/[. :]+$/, '')} : #{value.sub(/^:/, '').strip}"
-        else
-          structured_title = value.sub(/^:/, '').strip
-        end
-      # other types:  name, uniform ...
+        structured_title = if structured_title.present?
+                             "#{structured_title.sub(/[. :]+$/, '')} : #{value.sub(/^:/, '').strip}"
+                           else
+                             structured_title = value.sub(/^:/, '').strip
+                           end
       end
     end
     structured_title
   end
+  # rubocop:enable Metrics/BlockLength
+  # rubocop:enable Metrics/CyclomaticComplexity
+  # rubocop:enable Metrics/MethodLength
+  # rubocop:enable Metrics/PerceivedComplexity
   private_class_method :title_from_structured_values
 
   def self.remove_trailing_punctuation(title)
-    title.sub(/[ \.,;:\/\\]+$/, '')
+    title.sub(%r{[ .,;:/\\]+$}, '')
   end
   private_class_method :remove_trailing_punctuation
 
@@ -74,12 +82,11 @@ class TitleBuilder
 
     # NOTE: structuredValues would only have status primary assigned as a sibling, not as an attribute
 
-    parallel_title_primary = titles.find do |title|
+    titles.find do |title|
       title.parallelValue&.find do |parallel_title|
         parallel_title.status == 'primary'
       end
     end
-    parallel_title_primary
   end
   private_class_method :primary_title
 
@@ -107,18 +114,20 @@ class TitleBuilder
   # combine part name and part number:
   #   respect order of occurrence
   #   separated from each other by comma space
+  # rubocop:disable Metrics/PerceivedComplexity
   def self.title_from_structured_part(structured_values)
     title_from_part = ''
     structured_values.each do |structured_value|
       case structured_value.type&.downcase
       when 'part name', 'part number'
-        if title_from_part&.strip.present?
-          title_from_part = "#{title_from_part.sub(/[ \.,]*$/, '')}, #{structured_value.value&.strip}"
-        else
-          title_from_part = structured_value.value&.strip
-        end
+        title_from_part = if title_from_part&.strip.present?
+                            "#{title_from_part.sub(/[ .,]*$/, '')}, #{structured_value.value&.strip}"
+                          else
+                            structured_value.value&.strip
+                          end
       end
     end
     title_from_part
   end
+  # rubocop:enable Metrics/PerceivedComplexity
 end
