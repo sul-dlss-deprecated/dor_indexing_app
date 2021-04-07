@@ -102,7 +102,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'uses publisher' do
+      it 'uses publisher' do
         expect(doc).to include('originInfo_publisher_tesim' => ['Stanford University Press'])
       end
     end
@@ -148,8 +148,8 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'uses publishers' do
-        expect(doc).to include(originInfo_publisher_tesim => ['Stanford University Press', 'Highwire Press'])
+      it 'uses publishers' do
+        expect(doc).to include('originInfo_publisher_tesim' => ['Stanford University Press', 'Highwire Press'])
       end
     end
 
@@ -198,7 +198,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'uses publishers' do
+      it 'uses publishers' do
         expect(doc).to include('originInfo_publisher_tesim' => ['Stanford University Press', 'Highwire Press'])
       end
     end
@@ -232,7 +232,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'does not use publisher' do
+      it 'does not use publisher' do
         expect(doc).not_to include('originInfo_publisher_tesim')
       end
     end
@@ -266,7 +266,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'uses publisher' do
+      it 'uses publisher' do
         expect(doc).to include('originInfo_publisher_tesim' => ['Stanford University Press'])
       end
     end
@@ -296,7 +296,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'does not use publisher' do
+      it 'does not use publisher' do
         expect(doc).not_to include('originInfo_publisher_tesim')
       end
     end
@@ -331,7 +331,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'uses publisher' do
+      it 'uses publisher' do
         expect(doc).to include('originInfo_publisher_tesim' => ['Stanford University Press'])
       end
     end
@@ -381,7 +381,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'uses publishers' do
+      it 'uses publishers' do
         expect(doc).to include('originInfo_publisher_tesim' => ['Stanford University Press', 'Highwire Press'])
       end
     end
@@ -443,7 +443,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'dedupes' do
+      it 'dedupes' do
         expect(doc).to include('originInfo_publisher_tesim' => ['Stanford University Press'])
       end
     end
@@ -531,7 +531,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'uses publishers' do
+      it 'uses publishers' do
         expect(doc).to include('originInfo_publisher_tesim' => %w[СФУ SFU])
       end
     end
@@ -596,7 +596,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'uses publishers' do
+      it 'uses publishers' do
         expect(doc).to include('originInfo_publisher_tesim' => %w[СФУ SFU])
       end
     end
@@ -637,7 +637,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'uses publisher' do
+      it 'uses publisher' do
         expect(doc).to include('originInfo_publisher_tesim' => ['Stanford University Press. Internal Division'])
       end
     end
