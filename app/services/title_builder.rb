@@ -24,7 +24,7 @@ class TitleBuilder
   # @returns [String] the title value from combining the pieces of the structured_values according to type and order of occurrence
   def self.title_from_structured_values(structured_values, non_sorting_char_count)
     structured_title = ''
-    title_from_part = ''
+    part_name_number = ''
     # combine pieces of the cocina structuredValue into a single title
     structured_values.each do |structured_value|
       # There can be a structuredValue inside a structuredValue.  For example,
@@ -44,12 +44,12 @@ class TitleBuilder
                              non_sort_value
                            end
       when 'part name', 'part number'
-        if title_from_part.blank?
-          title_from_part = title_from_structured_part(structured_values)
+        if part_name_number.blank?
+          part_name_number = part_name_number(structured_values)
           structured_title = if structured_title.present?
-                               "#{structured_title.sub(/[ .,]*$/, '')}. #{title_from_part}. "
+                               "#{structured_title.sub(/[ .,]*$/, '')}. #{part_name_number}. "
                              else
-                               "#{title_from_part}. "
+                               "#{part_name_number}. "
                              end
         end
       when 'main title', 'title'
@@ -118,18 +118,22 @@ class TitleBuilder
   # combine part name and part number:
   #   respect order of occurrence
   #   separated from each other by comma space
-  def self.title_from_structured_part(structured_values)
+  def self.part_name_number(structured_values)
     title_from_part = ''
     structured_values.each do |structured_value|
       case structured_value.type&.downcase
       when 'part name', 'part number'
+        value = structured_value.value&.strip
+        next unless value
+
         title_from_part = if title_from_part.strip.present?
-                            "#{title_from_part.sub(/[ .,]*$/, '')}, #{structured_value.value&.strip}"
+                            "#{title_from_part.sub(/[ .,]*$/, '')}, #{value}"
                           else
-                            structured_value.value&.strip
+                            value
                           end
       end
     end
     title_from_part
   end
+  private_class_method :part_name_number
 end
