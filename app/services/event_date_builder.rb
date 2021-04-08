@@ -2,7 +2,7 @@
 
 class EventDateBuilder
   # @param [Array<Cocina::Models::Event>] single selected  event
-  # @returns [String, nil] the date value for Solr
+  # @return [String, nil] the date value for Solr
   def self.build(event, date_type)
     event_dates = Array(event&.date) + Array(event&.parallelEvent&.map(&:date))
 

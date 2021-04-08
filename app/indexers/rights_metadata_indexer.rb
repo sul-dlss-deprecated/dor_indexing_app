@@ -100,7 +100,7 @@ class RightsMetadataIndexer
     'http://opendatacommons.org/licenses/odbl/1.0/' => 'odc-odbl'
   }.freeze
 
-  # @returns [String] the code if we've defined one, or the URI if we haven't.
+  # @return [String] the code if we've defined one, or the URI if we haven't.
   def license
     return if cocina.admin_policy?
 

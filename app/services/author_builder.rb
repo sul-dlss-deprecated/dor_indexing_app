@@ -4,7 +4,7 @@ class AuthorBuilder
   ALLOWED_ROLES = %w[Author creator].freeze
 
   # @param [Array<Cocina::Models::Contributor>] contributors
-  # @returns [String] the author value for Solr
+  # @return [String] the author value for Solr
   def self.build(contributors)
     contributors
       .reject { |contributor| contributor.role && ALLOWED_ROLES.exclude?(contributor.role.first.value) }
