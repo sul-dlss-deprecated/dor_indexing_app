@@ -21,7 +21,8 @@ class TitleBuilder
   # rubocop:disable Metrics/PerceivedComplexity
   # @param [Array<Cocina::Models::StructuredValue>] structured_values - the individual pieces of a structuredValue to be combined
   # @param [Integer] the length of the non_sorting_characters
-  # @returns [String] the title value from combining the pieces of the structured_values according to type and order of occurrence
+  # @returns [String] the title value from combining the pieces of the structured_values according to type and order of occurrence,
+  #   with desired punctuation per specs
   def self.title_from_structured_values(structured_values, non_sorting_char_count)
     structured_title = ''
     part_name_number = ''
