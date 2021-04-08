@@ -4,24 +4,28 @@ class TitleBuilder
   # @param [Array<Cocina::Models::Title>] titles
   # @returns [String] the title value for Solr
   def self.build(titles)
-    title = primary_title(titles) || first_untyped_title(titles) || titles.first
-    if title.value
-      my_title = title.value
-    elsif title.structuredValue
-      my_title = title_from_structured_values(title.structuredValue, non_sorting_char_count(title))
-    elsif title.parallelValue
-      my_title = build(title.parallelValue)
-    end
-    remove_trailing_punctuation(my_title.strip) if my_title.present?
+    cocina_title = primary_title(titles) || first_untyped_title(titles) || titles.first
+    result = if cocina_title.value
+               cocina_title.value
+             elsif cocina_title.structuredValue
+               title_from_structured_values(cocina_title.structuredValue, non_sorting_char_count(cocina_title))
+             elsif cocina_title.parallelValue
+               build(cocina_title.parallelValue)
+             end
+    remove_trailing_punctuation(result.strip) if result.present?
   end
 
   # rubocop:disable Metrics/BlockLength
   # rubocop:disable Metrics/CyclomaticComplexity
   # rubocop:disable Metrics/MethodLength
   # rubocop:disable Metrics/PerceivedComplexity
+  # @param [Array<Cocina::Models::StructuredValue>] structured_values - the individual pieces of a structuredValue to be combined
+  # @param [Integer] the length of the non_sorting_characters
+  # @returns [String] the title value from combining the pieces of the structured_values according to type and order of occurrence
   def self.title_from_structured_values(structured_values, non_sorting_char_count)
     structured_title = ''
     title_from_part = ''
+    # combine pieces of the cocina structuredValue into a single title
     structured_values.each do |structured_value|
       # There can be a structuredValue inside a structuredValue.  For example,
       #   a uniform title where both the name and the title have internal StructuredValue
@@ -95,7 +99,7 @@ class TitleBuilder
   def self.first_untyped_title(titles)
     titles.find do |title|
       if title.parallelValue.present?
-        title.parallelValue&.find { |parallel_value| parallel_value.type.nil? }
+        title.parallelValue.find { |parallel_value| parallel_value.type.nil? }
       else
         title.type.nil?
       end
@@ -114,13 +118,12 @@ class TitleBuilder
   # combine part name and part number:
   #   respect order of occurrence
   #   separated from each other by comma space
-  # rubocop:disable Metrics/PerceivedComplexity
   def self.title_from_structured_part(structured_values)
     title_from_part = ''
     structured_values.each do |structured_value|
       case structured_value.type&.downcase
       when 'part name', 'part number'
-        title_from_part = if title_from_part&.strip.present?
+        title_from_part = if title_from_part.strip.present?
                             "#{title_from_part.sub(/[ .,]*$/, '')}, #{structured_value.value&.strip}"
                           else
                             structured_value.value&.strip
@@ -129,5 +132,4 @@ class TitleBuilder
     end
     title_from_part
   end
-  # rubocop:enable Metrics/PerceivedComplexity
 end
