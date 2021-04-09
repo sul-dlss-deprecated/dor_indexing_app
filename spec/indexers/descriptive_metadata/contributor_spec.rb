@@ -74,7 +74,6 @@ RSpec.describe DescriptiveMetadataIndexer do
 
   describe 'primary contributor mappings from Cocina to Solr sw_author_tesim' do
     ### Select contributor
-
     context 'when single contributor' do
       let(:description) do
         {
@@ -95,7 +94,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'selects name of contributor' do
+      it 'selects name of contributor' do
         expect(doc).to include('sw_author_tesim' => 'Sayers, Dorothy L.')
       end
     end
@@ -128,7 +127,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'selects name of contributor with primary status' do
+      it 'selects name of contributor with primary status' do
         expect(doc).to include('sw_author_tesim' => 'Sayers, Dorothy L.')
       end
     end
@@ -160,7 +159,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'selects name of first contributor' do
+      it 'selects name of first contributor' do
         expect(doc).to include('sw_author_tesim' => 'Sayers, Dorothy L.')
       end
     end
@@ -191,7 +190,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'selects display name of contributor' do
+      it 'selects display name of contributor' do
         expect(doc).to include('sw_author_tesim' => 'Sayers, Dorothy L.')
       end
     end
@@ -220,7 +219,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'selects primary name of contributor' do
+      it 'selects primary name of contributor' do
         expect(doc).to include('sw_author_tesim' => 'Sayers, Dorothy L.')
       end
     end
@@ -248,7 +247,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'selects first name of contributor' do
+      it 'selects first name of contributor' do
         expect(doc).to include('sw_author_tesim' => 'Sayers, Dorothy L.')
       end
     end
@@ -295,7 +294,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'selects primary name from parallelContributor' do
+      it 'selects primary name from parallelContributor' do
         expect(doc).to include('sw_author_tesim' => 'Zhou, L.-F. (Liang-Fu)')
       end
     end
@@ -341,7 +340,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'selects first name from parallelContributor' do
+      it 'selects first name from parallelContributor' do
         expect(doc).to include('sw_author_tesim' => 'Zhou, L.-F. (Liang-Fu)')
       end
     end
@@ -374,7 +373,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'selects primary name from parallelValue' do
+      it 'selects primary name from parallelValue' do
         expect(doc).to include('sw_author_tesim' => 'Bulgakov, Mikhail Afanasʹevich')
       end
     end
@@ -406,7 +405,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'selects first name from parallelValue' do
+      it 'selects first name from parallelValue' do
         expect(doc).to include('sw_author_tesim' => 'Булгаков, Михаил Афанасьевич')
       end
     end
@@ -440,7 +439,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'selects value with type name' do
+      it 'selects value with type name' do
         expect(doc).to include('sw_author_tesim' => 'Strachey, Dorothy')
       end
     end
@@ -502,7 +501,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'constructs name of contributor' do
+      it 'constructs name of contributor' do
         # No comma between name and term of address because also used for e.g. Elizabeth I
         expect(doc).to include('sw_author_tesim' => 'Sayers Fleming, Dorothy Leigh B.A. (Oxon.), M.A. (Oxon.), 1893-1957')
       end
@@ -548,7 +547,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'constructs name of contributor' do
+      it 'constructs name of contributor' do
         # No comma between name and term of address because also used for e.g. Elizabeth I
         expect(doc).to include('sw_author_tesim' => 'Sayers, Dorothy L. B.A. (Oxon.), M.A. (Oxon.), 1893-1957')
       end
@@ -583,7 +582,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'constructs name of contributor' do
+      it 'constructs name of contributor' do
         # Concatenate in order given, period space delimiter
         expect(doc).to include('sw_author_tesim' => 'United States. Office of Foreign Investment in the United States')
       end
