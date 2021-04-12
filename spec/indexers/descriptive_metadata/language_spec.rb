@@ -92,7 +92,7 @@ RSpec.describe DescriptiveMetadataIndexer do
           ]
         }
       end
-      it 'translates code to term' do
+      xit 'translates code to term' do
         expect(doc).to include('sw_language_ssim' => ['English'])
       end
     end
@@ -115,7 +115,7 @@ RSpec.describe DescriptiveMetadataIndexer do
           ]
         }
       end
-      it 'translates code to term' do
+      xit 'translates code to term' do
         expect(doc).to include('sw_language_ssim' => ['English'])
       end
     end
@@ -138,7 +138,7 @@ RSpec.describe DescriptiveMetadataIndexer do
           ]
         }
       end
-      it 'includes language term' do
+      xit 'includes language term' do
         expect(doc).to include('sw_language_ssim' => ['English'])
       end
     end
@@ -161,7 +161,7 @@ RSpec.describe DescriptiveMetadataIndexer do
           ]
         }
       end
-      it 'does not include a value' do
+      xit 'does not include a value' do
         expect(doc).not_to include('sw_language_ssim')
       end
     end
@@ -184,7 +184,7 @@ RSpec.describe DescriptiveMetadataIndexer do
           ]
         }
       end
-      it 'does not include a value' do
+      xit 'does not include a value' do
         expect(doc).not_to include('sw_language_ssim')
       end
     end
@@ -208,7 +208,7 @@ RSpec.describe DescriptiveMetadataIndexer do
           ]
         }
       end
-      it 'translates code to term' do
+      xit 'translates code to term' do
         expect(doc).to include('sw_language_ssim' => ['English, Old (ca. 450-1100)'])
       end
     end
@@ -232,7 +232,7 @@ RSpec.describe DescriptiveMetadataIndexer do
           ]
         }
       end
-      it 'includes text value' do
+      xit 'includes text value' do
         expect(doc).to include('sw_language_ssim' => ['English, Old (ca. 450-1100)'])
       end
     end
@@ -256,7 +256,7 @@ RSpec.describe DescriptiveMetadataIndexer do
           ]
         }
       end
-      it 'does not include a value' do
+      xit 'does not include a value' do
         expect(doc).not_to include('sw_language_ssim')
       end
     end
@@ -280,7 +280,7 @@ RSpec.describe DescriptiveMetadataIndexer do
           ]
         }
       end
-      it 'translates code to term' do
+      xit 'translates code to term' do
         expect(doc).to include('sw_language_ssim' => ['American Sign Language'])
       end
     end
@@ -303,7 +303,7 @@ RSpec.describe DescriptiveMetadataIndexer do
           ]
         }
       end
-      it 'does not include a value' do
+      xit 'does not include a value' do
         expect(doc).not_to include('sw_language_ssim')
       end
     end
@@ -323,7 +323,7 @@ RSpec.describe DescriptiveMetadataIndexer do
           ]
         }
       end
-      it 'includes language term' do
+      xit 'includes language term' do
         expect(doc).to include('sw_language_ssim' => ['English'])
       end
     end
@@ -354,7 +354,7 @@ RSpec.describe DescriptiveMetadataIndexer do
           ]
         }
       end
-      it 'translates language code to term' do
+      xit 'translates language code to term' do
         expect(doc).to include('sw_language_ssim' => ['English'])
       end
     end
@@ -380,7 +380,7 @@ RSpec.describe DescriptiveMetadataIndexer do
           ]
         }
       end
-      it 'does not include a value' do
+      xit 'does not include a value' do
         expect(doc).to include('sw_language_ssim')
       end
     end
@@ -425,7 +425,7 @@ RSpec.describe DescriptiveMetadataIndexer do
           ]
         }
       end
-      it 'translates language code to term and drops duplicate' do
+      xit 'translates language code to term and drops duplicate' do
         expect(doc).to include('sw_language_ssim' => ['Chinese'])
       end
     end
@@ -456,7 +456,7 @@ RSpec.describe DescriptiveMetadataIndexer do
           ]
         }
       end
-      it 'includes all languages' do
+      xit 'includes all languages' do
         expect(doc).to include('sw_language_ssim' => ['English', 'Russian'])
       end
     end
@@ -480,7 +480,7 @@ RSpec.describe DescriptiveMetadataIndexer do
           ]
         }
       end
-      it 'translates code to term' do
+      xit 'translates code to term' do
         expect(doc).to include('sw_language_ssim' => ['English'])
       end
     end
@@ -504,7 +504,7 @@ RSpec.describe DescriptiveMetadataIndexer do
           ]
         }
       end
-      it 'translates code to term' do
+      xit 'translates code to term' do
         expect(doc).to include('sw_language_ssim' => ['English'])
       end
     end
@@ -526,7 +526,7 @@ RSpec.describe DescriptiveMetadataIndexer do
           ]
         }
       end
-      it 'translates code to term' do
+      xit 'translates code to term' do
         expect(doc).to include('sw_language_ssim' => ['English'])
       end
     end
@@ -548,7 +548,7 @@ RSpec.describe DescriptiveMetadataIndexer do
           ]
         }
       end
-      it 'translates code to term' do
+      xit 'translates code to term' do
         expect(doc).to include('sw_language_ssim' => ['American Sign Language'])
       end
     end
