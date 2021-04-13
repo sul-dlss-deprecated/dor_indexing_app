@@ -165,7 +165,7 @@ RSpec.describe Indexer do
 
           expect(solr_doc['originInfo_date_created_tesim']).to eq '2021-01-01'
           expect(solr_doc['originInfo_publisher_tesim']).to eq ['Izdatelʹstvo "Vesʹ Mir"']
-          expect(solr_doc['originInfo_place_placeTerm_tesim']).to eq ['Moskva']
+          expect(solr_doc['originInfo_place_placeTerm_tesim']).to eq 'Moskva'
         end
       end
 

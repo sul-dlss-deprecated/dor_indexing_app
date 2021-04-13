@@ -22,7 +22,7 @@ class DescriptiveMetadataIndexer
       'sw_pub_date_facet_ssi' => pub_year,
       'originInfo_date_created_tesim' => creation_date,
       'originInfo_publisher_tesim' => publisher_name,
-      'originInfo_place_placeTerm_tesim' => publication_location,
+      'originInfo_place_placeTerm_tesim' => event_place,
       'topic_ssim' => topics,
       'topic_tesim' => topics,
       'metadata_format_ssim' => 'mods' # NOTE: seriously? for cocina????
@@ -127,8 +127,13 @@ class DescriptiveMetadataIndexer
     'Book'
   end
 
+  def event_place
+    place_event = events.find { |event| event.type == 'publication' } || events.first
+    EventPlaceBuilder.build(place_event)
+  end
+
   def publisher_name
-    (publisher_names_for(publication) +
+    (publisher_names_for(publication_event) +
       # flat_map handles parallel events.
       events.flat_map { |event| flat_event(event).flat_map { |single_event| publisher_names_for(single_event) } }
     ).compact.uniq
@@ -139,14 +144,6 @@ class DescriptiveMetadataIndexer
     Array(publication_or_event&.contributor)
       .select { |contributor| Array(contributor.role).any? { |role| role.value&.downcase == 'publisher' } }
       .flat_map { |contributor| contributor.name.flat_map { |name| flat_name(name).map { |single_name| name_for(single_name) } } }.compact
-  end
-
-  def publication
-    @publication ||= events.find { |event| event.type == 'publication' }
-  end
-
-  def publication_location
-    publication&.location&.map(&:value)&.compact
   end
 
   def topics

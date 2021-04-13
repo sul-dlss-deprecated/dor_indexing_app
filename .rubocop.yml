@@ -8,7 +8,7 @@ inherit_from: .rubocop_todo.yml
 
 AllCops:
   DisplayCopNames: true
-  TargetRubyVersion: 2.5
+  TargetRubyVersion: 2.6
   Exclude:
     - 'bin/**/*'
     - 'vendor/bundle/**/*'
@@ -22,6 +22,10 @@ Metrics/BlockLength:
 Metrics/AbcSize:
   Exclude:
     - 'app/controllers/dor_controller.rb'
+
+Metrics/ClassLength:
+  Exclude:
+    - 'app/services/marc_country.rb'
 
 Metrics/MethodLength:
   Exclude:
