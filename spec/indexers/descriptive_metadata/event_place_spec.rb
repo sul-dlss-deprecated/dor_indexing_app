@@ -95,7 +95,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'selects one place text value' do
+      it 'selects one place text value' do
         expect(doc).to include('originInfo_place_placeTerm_tesim' => 'Stanford (Calif.)')
       end
     end
@@ -123,7 +123,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'selects all place text values and concatenates with space colon space' do
+      it 'selects all place text values and concatenates with space colon space' do
         expect(doc).to include('originInfo_place_placeTerm_tesim' => 'Stanford (Calif.) : United States')
       end
     end
@@ -152,7 +152,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'selects primary place text value' do
+      it 'selects primary place text value' do
         expect(doc).to include('originInfo_place_placeTerm_tesim' => 'Stanford (Calif.)')
       end
     end
@@ -180,7 +180,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'selects marccountry place code and maps to text value' do
+      it 'selects marccountry place code and maps to text value' do
         expect(doc).to include('originInfo_place_placeTerm_tesim' => 'California')
       end
     end
@@ -208,7 +208,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'selects marccountry place code and maps to text value' do
+      it 'selects marccountry place code and maps to text value' do
         expect(doc).to include('originInfo_place_placeTerm_tesim' => 'California')
       end
     end
@@ -225,7 +225,6 @@ RSpec.describe DescriptiveMetadataIndexer do
             {
               location: [
                 {
-                  code: 'cau',
                   uri: 'http://id.loc.gov/vocabulary/countries/cau'
                 }
               ]
@@ -234,7 +233,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'selects marccountry place code and maps to text value' do
+      it 'selects marccountry place code and maps to text value' do
         expect(doc).to include('originInfo_place_placeTerm_tesim' => 'California')
       end
     end
@@ -262,7 +261,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'does not select a place' do
+      it 'does not select a place' do
         expect(doc).not_to include('originInfo_place_placeTerm_tesim')
       end
     end
@@ -291,7 +290,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'selects the place text value' do
+      it 'selects the place text value' do
         expect(doc).to include('originInfo_place_placeTerm_tesim' => 'California')
       end
     end
@@ -322,7 +321,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'selects the place text value and omits the code' do
+      it 'selects the place text value and omits the code' do
         expect(doc).to include('originInfo_place_placeTerm_tesim' => 'Stanford (Calif.)')
       end
     end
@@ -351,7 +350,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'selects the place text value' do
+      it 'selects the place text value' do
         expect(doc).to include('originInfo_place_placeTerm_tesim' => 'California')
       end
     end
@@ -387,7 +386,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'selects all values and concatenates with space colon space' do
+      it 'selects all values and concatenates with space colon space' do
         expect(doc).to include('originInfo_place_placeTerm_tesim' => 'Moscow : Москва')
       end
     end
@@ -424,7 +423,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'selects primary value' do
+      it 'selects primary value' do
         expect(doc).to include('originInfo_place_placeTerm_tesim' => 'Москва')
       end
     end
@@ -456,7 +455,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'selects all values and concatenates with space colon space' do
+      it 'selects all values and concatenates with space colon space' do
         expect(doc).to include('originInfo_place_placeTerm_tesim' => 'Moscow : Москва')
       end
     end
@@ -489,7 +488,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'selects primary value' do
+      it 'selects primary value' do
         expect(doc).to include('originInfo_place_placeTerm_tesim' => 'Moscow')
       end
     end
@@ -521,7 +520,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'concatenates structured value with space colon space' do
+      it 'concatenates structured value with space colon space' do
         expect(doc).to include('originInfo_place_placeTerm_tesim' => 'Stanford : California')
       end
     end
