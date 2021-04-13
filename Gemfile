@@ -9,7 +9,10 @@ gem 'dry-monads', '~> 1.3'
 gem 'erubis'
 gem 'faraday'
 gem 'honeybadger', '~> 4.5'
+# ISO-639-1 and -2
 gem 'iso-639', '~> 0.3.5'
+# ISO-639-3
+gem 'language_list'
 gem 'okcomputer' # for monitoring
 gem 'puma', '~> 3.0' # app server
 gem 'rack-timeout', '~> 0.5.1'
