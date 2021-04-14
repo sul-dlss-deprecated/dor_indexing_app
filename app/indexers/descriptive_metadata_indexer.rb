@@ -64,7 +64,10 @@ class DescriptiveMetadataIndexer
   end
 
   def resource_type
-    @resource_type ||= forms.select { |form| form.type == 'resource type' }.map(&:value)
+    @resource_type ||= forms.select do |form|
+      form.source&.value == 'MODS resource types' &&
+        %w[collection manuscript].exclude?(form.value)
+    end.map(&:value)
   end
 
   def display_genre
