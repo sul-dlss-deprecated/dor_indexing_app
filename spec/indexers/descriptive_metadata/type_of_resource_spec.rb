@@ -93,7 +93,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'includes value' do
+      it 'includes value' do
         expect(doc).to include('mods_typeOfResource_ssim' => ['text'])
       end
     end
@@ -125,7 +125,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'includes values' do
+      it 'includes values' do
         expect(doc).to include('mods_typeOfResource_ssim' => ['text', 'still image'])
       end
     end
@@ -151,7 +151,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'does not include value' do
+      it 'does not include value' do
         expect(doc).not_to include('mods_typeOfResource_ssim')
       end
     end
@@ -177,7 +177,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'does not includes value' do
+      it 'does not includes value' do
         expect(doc).not_to include('mods_typeOfResource_ssim')
       end
     end
@@ -199,7 +199,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'does not includes value' do
+      it 'does not includes value' do
         expect(doc).not_to include('mods_typeOfResource_ssim')
       end
     end
@@ -223,7 +223,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'includes value' do
+      it 'includes value' do
         expect(doc).to include('mods_typeOfResource_ssim' => ['text'])
       end
     end
