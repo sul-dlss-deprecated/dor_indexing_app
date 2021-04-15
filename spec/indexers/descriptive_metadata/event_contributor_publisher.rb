@@ -73,7 +73,8 @@ RSpec.describe DescriptiveMetadataIndexer do
   end
 
   describe 'publisher mappings from Cocina to Solr originInfo_publisher_tesim' do
-    context 'when single event with one publisher' do
+    # Construct publisher from selected event
+    context 'when one publisher' do
       let(:description) do
         {
           title: [
@@ -102,12 +103,59 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      it 'uses publisher' do
-        expect(doc).to include('originInfo_publisher_tesim' => ['Stanford University Press'])
+      xit 'selects publisher' do
+        expect(doc).to include('originInfo_publisher_tesim' => 'Stanford University Press')
       end
     end
 
-    context 'when single event with multiple publishers' do
+    context 'when multiple publishers, one primary' do
+      let(:description) do
+        {
+          title: [
+            {
+              value: 'Title'
+            }
+          ],
+          event: [
+            {
+              contributor: [
+                {
+                  name: [
+                    {
+                      value: 'Stanford University Press'
+                    }
+                  ],
+                  role: [
+                    {
+                      value: 'publisher'
+                    }
+                  ]
+                },
+                {
+                  name: [
+                    {
+                      value: 'Highwire Press'
+                    }
+                  ],
+                  role: [
+                    {
+                      value: 'publisher'
+                    }
+                  ],
+                  status: 'primary'
+                }
+              ]
+            }
+          ]
+        }
+      end
+
+      xit 'selects primary publisher' do
+        expect(doc).to include('originInfo_publisher_tesim' => 'Highwire Press')
+      end
+    end
+
+    context 'when multiple publishers, none primary' do
       let(:description) do
         {
           title: [
@@ -148,58 +196,8 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      it 'uses publishers' do
-        expect(doc).to include('originInfo_publisher_tesim' => ['Stanford University Press', 'Highwire Press'])
-      end
-    end
-
-    context 'when multiple events with publishers' do
-      let(:description) do
-        {
-          title: [
-            {
-              value: 'Title'
-            }
-          ],
-          event: [
-            {
-              contributor: [
-                {
-                  name: [
-                    {
-                      value: 'Stanford University Press'
-                    }
-                  ],
-                  role: [
-                    {
-                      value: 'publisher'
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              contributor: [
-                {
-                  name: [
-                    {
-                      value: 'Highwire Press'
-                    }
-                  ],
-                  role: [
-                    {
-                      value: 'publisher'
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        }
-      end
-
-      it 'uses publishers' do
-        expect(doc).to include('originInfo_publisher_tesim' => ['Stanford University Press', 'Highwire Press'])
+      xit 'concatenates publishers with space colon space' do
+        expect(doc).to include('originInfo_publisher_tesim' => 'Stanford University Press : Highwire Press')
       end
     end
 
@@ -232,7 +230,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      it 'does not use publisher' do
+      xit 'does not select a publisher' do
         expect(doc).not_to include('originInfo_publisher_tesim')
       end
     end
@@ -266,8 +264,8 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      it 'uses publisher' do
-        expect(doc).to include('originInfo_publisher_tesim' => ['Stanford University Press'])
+      xit 'selects publisher' do
+        expect(doc).to include('originInfo_publisher_tesim' => 'Stanford University Press')
       end
     end
 
@@ -296,7 +294,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      it 'does not use publisher' do
+      xit 'does not select a publisher' do
         expect(doc).not_to include('originInfo_publisher_tesim')
       end
     end
@@ -331,120 +329,8 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      it 'uses publisher' do
-        expect(doc).to include('originInfo_publisher_tesim' => ['Stanford University Press'])
-      end
-    end
-
-    context 'when publisher role in events of multiple types' do
-      let(:description) do
-        {
-          title: [
-            {
-              value: 'Title'
-            }
-          ],
-          event: [
-            {
-              type: 'publication',
-              contributor: [
-                {
-                  name: [
-                    {
-                      value: 'Stanford University Press'
-                    }
-                  ],
-                  role: [
-                    {
-                      value: 'publisher'
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              type: 'production',
-              contributor: [
-                {
-                  name: [
-                    {
-                      value: 'Highwire Press'
-                    }
-                  ],
-                  role: [
-                    value: 'publisher'
-                  ]
-                }
-              ]
-            }
-          ]
-        }
-      end
-
-      it 'uses publishers' do
-        expect(doc).to include('originInfo_publisher_tesim' => ['Stanford University Press', 'Highwire Press'])
-      end
-    end
-
-    context 'when same publisher in multiple events' do
-      let(:description) do
-        {
-          title: [
-            {
-              value: 'Title'
-            }
-          ],
-          event: [
-            {
-              type: 'publication',
-              contributor: [
-                {
-                  name: [
-                    {
-                      value: 'Stanford University Press'
-                    }
-                  ],
-                  role: [
-                    {
-                      value: 'publisher'
-                    }
-                  ]
-                }
-              ],
-              date: [
-                {
-                  value: '1990'
-                }
-              ]
-            },
-            {
-              type: 'publication',
-              contributor: [
-                {
-                  name: [
-                    {
-                      value: 'Stanford University Press'
-                    }
-                  ],
-                  role: [
-                    {
-                      value: 'publisher'
-                    }
-                  ]
-                }
-              ],
-              date: [
-                {
-                  value: '1995'
-                }
-              ]
-            }
-          ]
-        }
-      end
-
-      it 'dedupes' do
-        expect(doc).to include('originInfo_publisher_tesim' => ['Stanford University Press'])
+      xit 'selects publisher' do
+        expect(doc).to include('originInfo_publisher_tesim' => 'Stanford University Press')
       end
     end
 
@@ -483,7 +369,8 @@ RSpec.describe DescriptiveMetadataIndexer do
                         {
                           value: 'publisher'
                         }
-                      ]
+                      ],
+                      status: 'primary'
                     }
                   ],
                   date: [
@@ -531,12 +418,78 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      it 'uses publishers' do
-        expect(doc).to include('originInfo_publisher_tesim' => %w[СФУ SFU])
+      xit 'selects publisher from preferred event' do
+        expect(doc).to include('originInfo_publisher_tesim' => 'СФУ')
       end
     end
 
-    context 'when parallelValue' do
+    context 'when parallelValue, one primary' do
+      let(:description) do
+        {
+          title: [
+            {
+              value: 'Title'
+            }
+          ],
+          event: [
+            {
+              contributor: [
+                {
+                  name: [
+                    {
+                      parallelValue: [
+                        {
+                          value: 'СФУ',
+                          valueLanguage: {
+                            code: 'rus',
+                            source: {
+                              code: 'iso639-2b'
+                            },
+                            valueScript: {
+                              code: 'Cyrl',
+                              source: {
+                                code: 'iso15924'
+                              }
+                            }
+                          }
+                        },
+                        {
+                          value: 'SFU',
+                          valueLanguage: {
+                            code: 'eng',
+                            source: {
+                              code: 'iso639-2b'
+                            },
+                            valueScript: {
+                              code: 'Latn',
+                              source: {
+                                code: 'iso15924'
+                              }
+                            }
+                          },
+                          status: 'primary'
+                        }
+                      ]
+                    }
+                  ],
+                  role: [
+                    {
+                      value: 'publisher'
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      end
+
+      xit 'selects primary publisher' do
+        expect(doc).to include('originInfo_publisher_tesim' => 'SFU')
+      end
+    end
+
+    context 'when parallelValue, none primary' do
       let(:description) do
         {
           title: [
@@ -596,8 +549,8 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      it 'uses publishers' do
-        expect(doc).to include('originInfo_publisher_tesim' => %w[СФУ SFU])
+      xit 'concatenates publishers with space colon space' do
+        expect(doc).to include('originInfo_publisher_tesim' => 'СФУ : SFU')
       end
     end
 
@@ -637,8 +590,132 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      it 'uses publisher' do
-        expect(doc).to include('originInfo_publisher_tesim' => ['Stanford University Press. Internal Division'])
+      xit 'concatenates values with period space' do
+        expect(doc).to include('originInfo_publisher_tesim' => 'Stanford University Press. Internal Division')
+      end
+    end
+
+    context 'when structuredValue in parallelEvent' do
+      let(:description) do
+        {
+          title: [
+            {
+              value: 'Title'
+            }
+          ],
+          event: [
+            {
+              parallelEvent: [
+                {
+                  contributor: [
+                    {
+                      name: [
+                        {
+                          structuredValue: [
+                            {
+                              value: 'Stanford University Press'
+                            },
+                            {
+                              value: 'Internal Division'
+                            }
+                          ]
+                        }
+                      ],
+                      role: [
+                        {
+                          value: 'publisher'
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  contributor: [
+                    {
+                      name: [
+                        {
+                          structuredValue: [
+                            {
+                              value: 'Another'
+                            },
+                            {
+                              value: 'Value'
+                            }
+                          ]
+                        }
+                      ],
+                      role: [
+                        {
+                          value: 'publisher'
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      end
+
+      xit 'concatenates preferred values with period space' do
+        expect(doc).to include('originInfo_publisher_tesim' => 'Stanford University Press. Internal Division')
+      end
+    end
+
+    context 'when structuredValue in parallelValue' do
+      let(:description) do
+        {
+          title: [
+            {
+              value: 'Title'
+            }
+          ],
+          event: [
+            {
+              contributor: [
+                {
+                  name: [
+                    {
+                      parallelValue: [
+                        {
+                          structuredValue: [
+                            {
+                              value: 'Stanford University Press'
+                            },
+                            {
+                              value: 'Internal Division'
+                            }
+                          ],
+                          status: 'primary'
+                        },
+                        {
+                          structuredValue: [
+                            {
+                              value: 'Another'
+                            },
+                            {
+                              value: 'Value'
+                            }
+                          ]
+                        }
+                      ],
+                      role: [
+                        {
+                          value: 'publisher'
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      end
+
+      xit 'concatenates preferred values with period space' do
+        expect(doc).to include('originInfo_publisher_tesim' => 'Stanford University Press. Internal Division')
       end
     end
   end
