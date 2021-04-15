@@ -86,8 +86,10 @@ class DescriptiveMetadataIndexer
     @genres ||= forms.flat_map { |form| form.parallelValue || form }.select { |form| form.type == 'genre' }.map(&:value)
   end
 
+  # See https://github.com/sul-dlss/stanford-mods/blob/master/lib/stanford-mods/searchworks.rb#L244
   FORMAT = {
     'cartographic' => 'Map',
+    'manuscript' => 'Archive/Manuscript',
     'mixed material' => 'Archive/Manuscript',
     'moving image' => 'Video',
     'notated music' => 'Music score',
@@ -96,22 +98,59 @@ class DescriptiveMetadataIndexer
     'sound recording-nonmusical' => 'Sound recording',
     'sound recording' => 'Sound recording',
     'still image' => 'Image',
-    'three dimensional object' => 'Object'
+    'three dimensional object' => 'Object',
+    'text' => 'Book'
   }.freeze
 
+  # rubocop:disable Metrics/CyclomaticComplexity
+  # rubocop:disable Metrics/PerceivedComplexity
   def sw_format
-    FORMAT.fetch(resource_type.first) { sw_format_for_text }
+    return ['Map'] if has_resource_type?('software, multimedia') && has_resource_type?('cartographic')
+    return ['Dataset'] if has_resource_type?('software, multimedia') && has_genre?('dataset')
+    return ['Archived website'] if has_resource_type?('text') && has_genre?('archived website')
+    return ['Book'] if has_resource_type?('text') && has_issuance?('monographic')
+    return ['Journal/Periodical'] if has_resource_type?('text') && (has_issuance?('continuing') || has_issuance?('serial') || has_frequency?)
+
+    resource_type_formats = flat_forms_for('resource type').map { |form| FORMAT[form.value.downcase] }.uniq.compact
+    resource_type_formats.delete('Book') if resource_type_formats.include?('Archive/Manuscript')
+
+    return resource_type_formats if resource_type_formats == ['Book']
+
+    genre_formats = flat_forms_for('genre').map { |form| form.value.capitalize }.uniq
+
+    (resource_type_formats + genre_formats).presence
+  end
+  # rubocop:enable Metrics/CyclomaticComplexity
+  # rubocop:enable Metrics/PerceivedComplexity
+
+  def has_resource_type?(type)
+    flat_forms_for('resource type').any? { |form| form.value == type }
   end
 
-  def archived_website?
-    genres.include?('archived website')
+  def has_genre?(genre)
+    flat_forms_for('genre').any? { |form| form.value == genre }
   end
 
-  # TODO: part of https://github.com/sul-dlss/dor_indexing_app/issues/567
-  # From Arcadia, it should be:
-  #  typeOfResource is "text" and any of: issuance is "continuing", issuance is "serial", frequency has a value
-  def periodical?
-    publication_event&.note&.any? { |note| note.type == 'issuance' && note.value == 'serial' }
+  def has_issuance?(issuance)
+    flat_event_notes.any? { |note| note.type == 'issuance' && note.value == issuance }
+  end
+
+  def has_frequency?
+    flat_event_notes.any? { |note| note.type == 'frequency' }
+  end
+
+  def flat_forms_for(type)
+    forms.flat_map do |form|
+      if form.type == type
+        flat_value(form)
+      else
+        flat_value(form).select { |form_value| form_value.type == type }
+      end
+    end
+  end
+
+  def flat_event_notes
+    @flat_event_notes ||= events.flat_map { |event| flat_event(event) }.flat_map { |event| Array(event.note).flat_map { |note| flat_value(note) } }
   end
 
   def pub_year
@@ -121,13 +160,6 @@ class DescriptiveMetadataIndexer
 
   def creation_date
     @creation_date ||= EventDateBuilder.build(creation_event, 'creation')
-  end
-
-  def sw_format_for_text
-    return 'Archived website' if archived_website?
-    return 'Journal/Periodical' if periodical?
-
-    'Book'
   end
 
   def event_place
@@ -146,7 +178,7 @@ class DescriptiveMetadataIndexer
     # name_for handles structured names.
     Array(publication_or_event&.contributor)
       .select { |contributor| Array(contributor.role).any? { |role| role.value&.downcase == 'publisher' } }
-      .flat_map { |contributor| contributor.name.flat_map { |name| flat_name(name).map { |single_name| name_for(single_name) } } }.compact
+      .flat_map { |contributor| contributor.name.flat_map { |name| flat_value(name).map { |single_name| name_for(single_name) } } }.compact
   end
 
   def topics
@@ -169,8 +201,8 @@ class DescriptiveMetadataIndexer
     event.parallelEvent || Array(event)
   end
 
-  def flat_name(name)
-    name.parallelValue || Array(name)
+  def flat_value(value)
+    value.parallelValue || value.groupedValue || Array(value)
   end
 
   def name_for(name)

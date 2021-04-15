@@ -91,7 +91,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'assigns format based on genre' do
+      it 'assigns format based on genre' do
         expect(doc).to include('sw_format_ssim' => ['Dataset'])
       end
     end
@@ -113,7 +113,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'assigns format based on resource type' do
+      it 'assigns format based on resource type' do
         expect(doc).to include('sw_format_ssim' => ['Archive/Manuscript'])
       end
     end
@@ -135,7 +135,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'assigns format based on resource type' do
+      it 'assigns format based on resource type' do
         expect(doc).to include('sw_format_ssim' => ['Map'])
       end
     end
@@ -157,7 +157,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'assigns format based on resource type' do
+      it 'assigns format based on resource type' do
         expect(doc).to include('sw_format_ssim' => ['Archive/Manuscript'])
       end
     end
@@ -179,7 +179,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'assigns format based on resource type' do
+      it 'assigns format based on resource type' do
         expect(doc).to include('sw_format_ssim' => ['Video'])
       end
     end
@@ -201,7 +201,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'assigns format based on resource type' do
+      it 'assigns format based on resource type' do
         expect(doc).to include('sw_format_ssim' => ['Music score'])
       end
     end
@@ -223,7 +223,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'assigns format based on resource type' do
+      it 'assigns format based on resource type' do
         expect(doc).to include('sw_format_ssim' => ['Software/Multimedia'])
       end
     end
@@ -249,7 +249,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'assigns format based on cartographic resource type' do
+      it 'assigns format based on cartographic resource type' do
         expect(doc).to include('sw_format_ssim' => ['Map'])
       end
     end
@@ -276,7 +276,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'assigns format based on dataset genre' do
+      it 'assigns format based on dataset genre' do
         expect(doc).to include('sw_format_ssim' => ['Dataset'])
       end
     end
@@ -298,7 +298,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'assigns format based on resource type' do
+      it 'assigns format based on resource type' do
         expect(doc).to include('sw_format_ssim' => ['Music recording'])
       end
     end
@@ -320,7 +320,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'assigns format based on resource type' do
+      it 'assigns format based on resource type' do
         expect(doc).to include('sw_format_ssim' => ['Sound recording'])
       end
     end
@@ -342,7 +342,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'assigns format based on resource type' do
+      it 'assigns format based on resource type' do
         expect(doc).to include('sw_format_ssim' => ['Sound recording'])
       end
     end
@@ -364,7 +364,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'assigns format based on resource type' do
+      it 'assigns format based on resource type' do
         expect(doc).to include('sw_format_ssim' => ['Image'])
       end
     end
@@ -396,7 +396,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'assigns format based on resource type and issuance' do
+      it 'assigns format based on resource type and issuance' do
         expect(doc).to include('sw_format_ssim' => ['Book'])
       end
     end
@@ -439,7 +439,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'assigns format based on resource type and issuance' do
+      it 'assigns format based on resource type and issuance' do
         expect(doc).to include('sw_format_ssim' => ['Book'])
       end
     end
@@ -475,7 +475,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'assigns format based on resource type and issuance' do
+      it 'assigns format based on resource type and issuance' do
         expect(doc).to include('sw_format_ssim' => ['Book'])
       end
     end
@@ -501,7 +501,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'assigns format based on manuscript resource type' do
+      it 'assigns format based on manuscript resource type' do
         expect(doc).to include('sw_format_ssim' => ['Archive/Manuscript'])
       end
     end
@@ -533,7 +533,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'assigns format based on resource type and issuance' do
+      it 'assigns format based on resource type and issuance' do
         expect(doc).to include('sw_format_ssim' => ['Journal/Periodical'])
       end
     end
@@ -565,7 +565,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'assigns format based on resource type and issuance' do
+      it 'assigns format based on resource type and issuance' do
         expect(doc).to include('sw_format_ssim' => ['Journal/Periodical'])
       end
     end
@@ -598,7 +598,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'assigns format based on resource type and frequency' do
+      it 'assigns format based on resource type and frequency' do
         expect(doc).to include('sw_format_ssim' => ['Journal/Periodical'])
       end
     end
@@ -641,7 +641,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'assigns format based on resource type and issuance' do
+      it 'assigns format based on resource type and issuance' do
         expect(doc).to include('sw_format_ssim' => ['Journal/Periodical'])
       end
     end
@@ -684,7 +684,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'assigns format based on resource type and issuance' do
+      it 'assigns format based on resource type and issuance' do
         expect(doc).to include('sw_format_ssim' => ['Journal/Periodical'])
       end
     end
@@ -728,7 +728,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'assigns format based on resource type and frequency' do
+      it 'assigns format based on resource type and frequency' do
         expect(doc).to include('sw_format_ssim' => ['Journal/Periodical'])
       end
     end
@@ -767,7 +767,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'assigns format based on resource type and issuance' do
+      it 'assigns format based on resource type and issuance' do
         expect(doc).to include('sw_format_ssim' => ['Journal/Periodical'])
       end
     end
@@ -806,7 +806,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'assigns format based on resource type and issuance' do
+      it 'assigns format based on resource type and issuance' do
         expect(doc).to include('sw_format_ssim' => ['Journal/Periodical'])
       end
     end
@@ -846,7 +846,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'assigns format based on resource type and frequency' do
+      it 'assigns format based on resource type and frequency' do
         expect(doc).to include('sw_format_ssim' => ['Journal/Periodical'])
       end
     end
@@ -873,7 +873,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'assigns format based on resource type and genre' do
+      it 'assigns format based on resource type and genre' do
         expect(doc).to include('sw_format_ssim' => ['Archived website'])
       end
     end
@@ -895,7 +895,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'defaults to Book format' do
+      it 'defaults to Book format' do
         expect(doc).to include('sw_format_ssim' => ['Book'])
       end
     end
@@ -921,7 +921,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'assigns format based on resource type' do
+      it 'assigns format based on resource type' do
         expect(doc).to include('sw_format_ssim' => ['Book'])
       end
     end
@@ -943,7 +943,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'assigns format based on resource type' do
+      it 'assigns format based on resource type' do
         expect(doc).to include('sw_format_ssim' => ['Object'])
       end
     end
@@ -973,8 +973,8 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'assigns formats based on all resource types and genres' do
-        expect(doc).to include('sw_format_ssim' => ['Map, Image, Dataset'])
+      it 'assigns formats based on all resource types and genres' do
+        expect(doc).to include('sw_format_ssim' => %w[Map Image Dataset])
       end
     end
 
@@ -995,7 +995,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'does not assign a format' do
+      it 'does not assign a format' do
         expect(doc).not_to include('sw_format_ssim')
       end
     end
@@ -1016,7 +1016,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'does not assign a format' do
+      it 'does not assign a format' do
         expect(doc).not_to include('sw_format_ssim')
       end
     end
@@ -1042,7 +1042,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'assigns format once' do
+      it 'assigns format once' do
         expect(doc).to include('sw_format_ssim' => ['Archive/Manuscript'])
       end
     end
@@ -1071,7 +1071,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'assigns format based on mapped resource type' do
+      it 'assigns format based on mapped resource type' do
         expect(doc).to include('sw_format_ssim' => ['Music score'])
       end
     end
@@ -1100,7 +1100,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'assigns format based on mapped resource type' do
+      it 'assigns format based on mapped resource type' do
         expect(doc).to include('sw_format_ssim' => ['Music score'])
       end
     end
@@ -1150,7 +1150,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'assigns formats based on resource types' do
+      it 'assigns formats based on resource types' do
         expect(doc).to include('sw_format_ssim' => ['Sound recording', 'Book'])
       end
     end

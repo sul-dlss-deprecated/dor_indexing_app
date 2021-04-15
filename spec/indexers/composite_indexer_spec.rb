@@ -91,7 +91,6 @@ RSpec.describe CompositeIndexer do
     it 'calls each of the provided indexers and combines the results' do
       expect(doc).to eq(
         'metadata_format_ssim' => 'mods',
-        'sw_format_ssim' => 'Book',
         'sw_display_title_tesim' => 'Test obj',
         'dor_services_version_ssi' => '9.6.2',
         'nonhydrus_apo_title_tesim' => ['APO title'],
