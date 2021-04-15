@@ -391,7 +391,7 @@ RSpec.describe DescriptiveMetadataIndexer do
       expect(doc).to eq(
         'metadata_format_ssim' => 'mods',
         'sw_language_ssim' => ['English'],
-        'sw_format_ssim' => 'Book',
+        'sw_format_ssim' => ['Book'],
         'mods_typeOfResource_ssim' => ['text'],
         'sw_subject_temporal_ssim' => ['1800-1900'],
         'sw_subject_geographic_ssim' => ['Europe'],
@@ -457,7 +457,6 @@ RSpec.describe DescriptiveMetadataIndexer do
       it 'populates expected fields' do
         expect(doc).to eq(
           'metadata_format_ssim' => 'mods',
-          'sw_format_ssim' => 'Book',
           'sw_display_title_tesim' => 'Toldot ha-Yehudim be-artsot ha-Islam : ha-ʻet ha-ḥadashah-ʻad emtsaʻ ha-meʼah ha-19'
         )
       end
