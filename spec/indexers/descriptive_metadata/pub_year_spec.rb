@@ -73,34 +73,24 @@ RSpec.describe DescriptiveMetadataIndexer do
   let(:doc) { indexer.to_solr }
 
   describe 'publication year mappings from Cocina to Solr sw_pub_date_facet_ssi' do
-    context 'when event has date.type publication and date.status primary' do
+    # Choose single date from selected event
+    context 'when date with status primary' do
       let(:description) do
         {
           title: [
             {
-              value: 'pub dates are fun',
-              type: 'main title'
+              value: 'Title'
             }
           ],
           event: [
             {
               date: [
                 {
-                  value: '1827',
-                  type: 'creation'
-                }
-              ]
-            },
-            {
-              date: [
-                {
-                  value: '1940',
-                  type: 'publication',
+                  value: '2020',
                   status: 'primary'
                 },
                 {
-                  value: '1942',
-                  type: 'publication'
+                  value: '2019'
                 }
               ]
             }
@@ -108,420 +98,28 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      it 'uses value with status primary' do
-        expect(doc).to include('sw_pub_date_facet_ssi' => '1940')
-      end
-
-      context 'when publication date is range (structuredValue)' do
-        let(:description) do
-          {
-            title: [
-              {
-                value: 'pub dates are fun',
-                type: 'main title'
-              }
-            ],
-            event: [
-              {
-                date: [
-                  {
-                    structuredValue: [
-                      {
-                        value: '1940',
-                        status: 'primary',
-                        type: 'start'
-                      },
-                      {
-                        value: '1945',
-                        type: 'end'
-                      }
-                    ],
-                    type: 'publication'
-                  },
-                  {
-                    value: '1948',
-                    type: 'publication'
-                  }
-                ]
-              }
-            ]
-          }
-        end
-
-        it 'uses value with status primary' do
-          expect(doc).to include('sw_pub_date_facet_ssi' => '1940')
-        end
-      end
-
-      context 'when parallelEvent' do
-        # based on sf449my9678
-        let(:description) do
-          {
-            title: [
-              {
-                value: 'parallel publication event with status primary pub date'
-              }
-            ],
-            event: [
-              {
-                parallelEvent: [
-                  {
-                    date: [
-                      {
-                        value: '1999-09-09',
-                        type: 'publication',
-                        status: 'primary'
-                      }
-                    ],
-                    location: [
-                      {
-                        value: 'Chengdu'
-                      }
-                    ]
-                  },
-                  {
-                    location: [
-                      {
-                        value: '成都：'
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        end
-
-        it 'uses parallelEvent date status primary with type publication' do
-          expect(doc).to include('sw_pub_date_facet_ssi' => '1999')
-        end
+      xit 'selects date with status primary' do
+        expect(doc).to include('sw_pub_date_facet_ssi' => '2020')
       end
     end
 
-    context 'when event.type publication and event has date.type publication but no date.status primary' do
+    context 'when one publication date, no primary' do
       let(:description) do
         {
           title: [
             {
-              structuredValue: [
-                {
-                  value: 'Work & social justice',
-                  type: 'main title'
-                }
-              ]
+              value: 'Title'
             }
           ],
           event: [
             {
               date: [
                 {
-                  value: '2018',
+                  value: '2020',
                   type: 'publication'
-                }
-              ]
-            },
-            {
-              type: 'publication',
-              date: [
-                {
-                  value: '2019',
-                  type: 'publication'
-                }
-              ]
-            },
-            {
-              type: 'copyright notice',
-              note: [
-                {
-                  value: '©2020',
-                  type: 'copyright statement'
-                }
-              ]
-            }
-          ]
-        }
-      end
-
-      it 'uses value from type publication' do
-        expect(doc).to include('sw_pub_date_facet_ssi' => '2019')
-      end
-
-      context 'when publication date is range (structuredValue)' do
-        let(:description) do
-          {
-            title: [
-              {
-                value: 'pub dates are fun',
-                type: 'main title'
-              }
-            ],
-            event: [
-              {
-                date: [
-                  {
-                    value: '1957',
-                    type: 'publication'
-                  }
-                ]
-              },
-              {
-                type: 'publication',
-                date: [
-                  {
-                    structuredValue: [
-                      {
-                        value: '1940',
-                        type: 'start'
-                      },
-                      {
-                        value: '1945',
-                        type: 'end'
-                      }
-                    ],
-                    type: 'publication'
-                  }
-                ]
-              },
-              {
-                type: 'copyright notice',
-                note: [
-                  {
-                    value: '©2020',
-                    type: 'copyright statement'
-                  }
-                ]
-              }
-            ]
-          }
-        end
-
-        it 'uses value from first date of structuredValue' do
-          expect(doc).to include('sw_pub_date_facet_ssi' => '1940')
-        end
-      end
-
-      context 'when parallelEvent' do
-        # based on sf449my9678
-        let(:description) do
-          {
-            title: [
-              {
-                value: 'parallelEvent with no status primary publication date'
-              }
-            ],
-            event: [
-              {
-                parallelEvent: [
-                  {
-                    date: [
-                      {
-                        value: '2020-01-01',
-                        type: 'publication'
-                      }
-                    ],
-                    location: [
-                      {
-                        value: 'Chengdu'
-                      }
-                    ]
-                  },
-                  {
-                    location: [
-                      {
-                        value: '成都：'
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                type: 'publication',
-                parallelEvent: [
-                  {
-                    date: [
-                      {
-                        value: '2021-01-01',
-                        type: 'publication'
-                      }
-                    ],
-                    location: [
-                      {
-                        value: 'Chengdu'
-                      }
-                    ]
-                  },
-                  {
-                    location: [
-                      {
-                        value: '成都：'
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        end
-
-        it 'uses first publication date of parallelValue of type publication' do
-          expect(doc).to include('sw_pub_date_facet_ssi' => '2021')
-        end
-      end
-    end
-
-    context 'when event has date.type publication and no event.type publication' do
-      let(:description) do
-        {
-          title: [
-            {
-              value: 'publication dates R us'
-            }
-          ],
-          event: [
-            {
-              date: [
-                {
-                  value: '1980-1984',
-                  type: 'publication'
-                }
-              ]
-            }
-          ]
-        }
-      end
-
-      it 'uses first year of 1980-1984' do
-        expect(doc).to include('sw_pub_date_facet_ssi' => '1980')
-      end
-
-      context 'when publication date is range (structuredValue)' do
-        let(:description) do
-          {
-            title: [
-              {
-                value: 'publication dates R us'
-              }
-            ],
-            event: [
-              {
-                date: [
-                  {
-                    structuredValue: [
-                      {
-                        value: '1980',
-                        type: 'start'
-                      },
-                      {
-                        value: '1984',
-                        type: 'end'
-                      }
-                    ],
-                    type: 'publication',
-                    "encoding": {
-                      code: 'marc'
-                    }
-                  }
-                ]
-              }
-            ]
-          }
-        end
-
-        it 'uses first year of structuredValue' do
-          expect(doc).to include('sw_pub_date_facet_ssi' => '1980')
-        end
-      end
-
-      context 'when parallelEvent' do
-        # based on sf449my9678
-        let(:description) do
-          {
-            title: [
-              {
-                value: 'parallelEvent joy'
-              }
-            ],
-            event: [
-              {
-                date: [
-                  {
-                    structuredValue: [
-                      {
-                        value: '1980',
-                        type: 'start'
-                      },
-                      {
-                        value: '1984',
-                        type: 'end'
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                parallelEvent: [
-                  {
-                    date: [
-                      {
-                        value: '1966',
-                        type: 'publication'
-                      }
-                    ],
-                    location: [
-                      {
-                        value: 'Chengdu'
-                      }
-                    ]
-                  },
-                  {
-                    location: [
-                      {
-                        value: '成都：'
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        end
-
-        it 'uses first publication date of parallelValue' do
-          expect(doc).to include('sw_pub_date_facet_ssi' => '1966')
-        end
-      end
-    end
-
-    context 'when event has date.type creation, no date.type publication, and date.status primary' do
-      let(:description) do
-        {
-          title: [
-            {
-              value: 'pub dates are fun',
-              type: 'main title'
-            }
-          ],
-          event: [
-            {
-              date: [
-                {
-                  value: '1827',
-                  type: 'validity'
-                }
-              ]
-            },
-            {
-              date: [
-                {
-                  value: '1940-01-01',
-                  type: 'creation',
-                  status: 'primary',
-                  "encoding": {
-                    code: 'w3cdtf'
-                  }
                 },
                 {
-                  value: '1942',
+                  value: '2019',
                   type: 'creation'
                 }
               ]
@@ -530,133 +128,119 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      it 'uses creation date' do
-        expect(doc).to include('sw_pub_date_facet_ssi' => '1940')
-      end
-
-      context 'when creation date is range (structuredValue)' do
-        let(:description) do
-          {
-            title: [
-              {
-                value: 'pub dates are fun',
-                type: 'main title'
-              }
-            ],
-            event: [
-              {
-                date: [
-                  {
-                    structuredValue: [
-                      {
-                        value: '1940',
-                        status: 'primary',
-                        type: 'start'
-                      },
-                      {
-                        value: '1945',
-                        type: 'end'
-                      }
-                    ],
-                    type: 'creation'
-                  },
-                  {
-                    value: '1948',
-                    type: 'creation'
-                  }
-                ]
-              }
-            ]
-          }
-        end
-
-        it 'uses creation date with status primary' do
-          expect(doc).to include('sw_pub_date_facet_ssi' => '1940')
-        end
-      end
-
-      context 'when parallelEvent' do
-        # based on sf449my9678
-        let(:description) do
-          {
-            title: [
-              {
-                value: 'parallel creation event with status primary pub date'
-              }
-            ],
-            event: [
-              {
-                parallelEvent: [
-                  {
-                    date: [
-                      {
-                        value: '1999-09-09',
-                        type: 'creation',
-                        status: 'primary'
-                      }
-                    ],
-                    location: [
-                      {
-                        value: 'Chengdu'
-                      }
-                    ]
-                  },
-                  {
-                    location: [
-                      {
-                        value: '成都：'
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        end
-
-        it 'uses value from parallelEvent date status primary with type publication' do
-          expect(doc).to include('sw_pub_date_facet_ssi' => '1999')
-        end
+      xit 'selects date with type publication' do
+        expect(doc).to include('sw_pub_date_facet_ssi' => '2020')
       end
     end
 
-    context 'when event.type creation and event has date.type creation but no date.status primary' do
+    context 'when multiple publication dates, no primary' do
       let(:description) do
         {
           title: [
             {
-              structuredValue: [
-                {
-                  value: 'Work & social justice',
-                  type: 'main title'
-                }
-              ]
+              value: 'Title'
             }
           ],
           event: [
             {
               date: [
                 {
-                  value: '2018',
-                  type: 'creation'
+                  value: '2020',
+                  type: 'publication'
+                },
+                {
+                  value: '2019',
+                  type: 'publication'
                 }
               ]
-            },
+            }
+          ]
+        }
+      end
+
+      xit 'selects first date with type publication' do
+        expect(doc).to include('sw_pub_date_facet_ssi' => '2020')
+      end
+    end
+
+    context 'when no publication date, single creation date, no primary' do
+      # date type creation or production
+      let(:description) do
+        {
+          title: [
             {
-              type: 'creation',
+              value: 'Title'
+            }
+          ],
+          event: [
+            {
               date: [
+                {
+                  value: '2020',
+                  type: 'creation'
+                },
+                {
+                  value: '2019'
+                }
+              ]
+            }
+          ]
+        }
+      end
+
+      xit 'selects date with type creation or production' do
+        expect(doc).to include('sw_pub_date_facet_ssi' => '2020')
+      end
+    end
+
+    context 'when no publication date, multiple creation dates, no primary' do
+      # date type creation or production
+      let(:description) do
+        {
+          title: [
+            {
+              value: 'Title'
+            }
+          ],
+          event: [
+            {
+              date: [
+                {
+                  value: '2020',
+                  type: 'production'
+                },
                 {
                   value: '2019',
                   type: 'creation'
                 }
               ]
-            },
+            }
+          ]
+        }
+      end
+
+      xit 'selects first date with type creation or production' do
+        expect(doc).to include('sw_pub_date_facet_ssi' => '2020')
+      end
+    end
+
+    context 'when no publication or creation date, single capture date, no primary' do
+      let(:description) do
+        {
+          title: [
             {
-              type: 'copyright notice',
-              note: [
+              value: 'Title'
+            }
+          ],
+          event: [
+            {
+              date: [
                 {
-                  value: '©2020',
-                  type: 'copyright statement'
+                  value: '2020',
+                  type: 'capture'
+                },
+                {
+                  value: '2019'
                 }
               ]
             }
@@ -664,147 +248,29 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      it 'uses value with date of type creation from event type of creation' do
-        expect(doc).to include('sw_pub_date_facet_ssi' => '2019')
-      end
-
-      context 'when creation date is range (structuredValue)' do
-        let(:description) do
-          {
-            title: [
-              {
-                value: 'pub dates are fun',
-                type: 'main title'
-              }
-            ],
-            event: [
-              {
-                date: [
-                  {
-                    value: '1957',
-                    type: 'creation'
-                  }
-                ]
-              },
-              {
-                type: 'creation',
-                date: [
-                  {
-                    structuredValue: [
-                      {
-                        value: '1940',
-                        type: 'start'
-                      },
-                      {
-                        value: '1945',
-                        type: 'end'
-                      }
-                    ],
-                    type: 'creation'
-                  }
-                ]
-              },
-              {
-                type: 'copyright notice',
-                note: [
-                  {
-                    value: '©2020',
-                    type: 'copyright statement'
-                  }
-                ]
-              }
-            ]
-          }
-        end
-
-        it 'uses first date of structuredValue of type creation from event of type creation' do
-          expect(doc).to include('sw_pub_date_facet_ssi' => '1940')
-        end
-      end
-
-      context 'when parallelEvent' do
-        # based on sf449my9678
-        let(:description) do
-          {
-            title: [
-              {
-                value: 'parallelEvent with no status primary creation date'
-              }
-            ],
-            event: [
-              {
-                parallelEvent: [
-                  {
-                    date: [
-                      {
-                        value: '2020-01-01',
-                        type: 'creation'
-                      }
-                    ],
-                    location: [
-                      {
-                        value: 'Chengdu'
-                      }
-                    ]
-                  },
-                  {
-                    location: [
-                      {
-                        value: '成都：'
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                type: 'creation',
-                parallelEvent: [
-                  {
-                    date: [
-                      {
-                        value: '2021-01-01',
-                        type: 'creation'
-                      }
-                    ],
-                    location: [
-                      {
-                        value: 'Chengdu'
-                      }
-                    ]
-                  },
-                  {
-                    location: [
-                      {
-                        value: '成都：'
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        end
-
-        it 'uses first publication date of parallelValue of type publication' do
-          expect(doc).to include('sw_pub_date_facet_ssi' => '2021')
-        end
+      xit 'selects date with type capture' do
+        expect(doc).to include('sw_pub_date_facet_ssi' => '2020')
       end
     end
 
-    context 'when event has date.type creation and no event.type creation' do
+    context 'when no publication or creation date, multiple capture dates, no primary' do
       let(:description) do
         {
           title: [
             {
-              value: 'creation dates R us'
+              value: 'Title'
             }
           ],
           event: [
             {
               date: [
                 {
-                  value: '1980-1984',
-                  type: 'creation'
+                  value: '2020',
+                  type: 'capture'
+                },
+                {
+                  value: '2019',
+                  type: 'capture'
                 }
               ]
             }
@@ -812,128 +278,57 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      it 'uses first year of 1980-1984 from date with type creation' do
-        expect(doc).to include('sw_pub_date_facet_ssi' => '1980')
-      end
-
-      context 'when creation date is range (structuredValue)' do
-        let(:description) do
-          {
-            title: [
-              {
-                value: 'creation dates R us'
-              }
-            ],
-            event: [
-              {
-                date: [
-                  {
-                    structuredValue: [
-                      {
-                        value: '1980',
-                        type: 'start'
-                      },
-                      {
-                        value: '1984',
-                        type: 'end'
-                      }
-                    ],
-                    type: 'creation',
-                    "encoding": {
-                      code: 'marc'
-                    }
-                  }
-                ]
-              }
-            ]
-          }
-        end
-
-        it 'uses first year of structuredValue for date of type creation' do
-          expect(doc).to include('sw_pub_date_facet_ssi' => '1980')
-        end
-      end
-
-      context 'when parallelEvent' do
-        # based on sf449my9678
-        let(:description) do
-          {
-            title: [
-              {
-                value: 'parallelEvent joy'
-              }
-            ],
-            event: [
-              {
-                date: [
-                  {
-                    structuredValue: [
-                      {
-                        value: '1980',
-                        type: 'start'
-                      },
-                      {
-                        value: '1984',
-                        type: 'end'
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                parallelEvent: [
-                  {
-                    date: [
-                      {
-                        value: '1966',
-                        type: 'creation'
-                      }
-                    ],
-                    location: [
-                      {
-                        value: 'Chengdu'
-                      }
-                    ]
-                  },
-                  {
-                    location: [
-                      {
-                        value: '成都：'
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        end
-
-        it 'uses first publication date of parallelValue' do
-          expect(doc).to include('sw_pub_date_facet_ssi' => '1966')
-        end
+      xit 'selects first date with type capture' do
+        expect(doc).to include('sw_pub_date_facet_ssi' => '2020')
       end
     end
 
-    context 'when no event with desired date.type and no desired event.type' do
+    context 'when no publication, creation, or capture date, single copyright date, no primary' do
       let(:description) do
         {
           title: [
             {
-              structuredValue: [
-                {
-                  value: 'Work & social justice',
-                  type: 'main title'
-                }
-              ]
+              value: 'Title'
             }
           ],
           event: [
             {
-              type: 'publication',
               date: [
                 {
-                  value: '2018',
-                  status: 'primary',
+                  value: '2020',
+                  type: 'copyright'
+                },
+                {
+                  value: '2019'
+                }
+              ]
+            }
+          ]
+        }
+      end
+
+      xit 'selects date with type copyright' do
+        expect(doc).to include('sw_pub_date_facet_ssi' => '2020')
+      end
+    end
+
+    context 'when no publication, creation, or capture date, multiple copyright dates, no primary' do
+      let(:description) do
+        {
+          title: [
+            {
+              value: 'Title'
+            }
+          ],
+          event: [
+            {
+              date: [
+                {
+                  value: '2020',
+                  type: 'copyright'
+                },
+                {
+                  value: '2019',
                   type: 'copyright'
                 }
               ]
@@ -942,8 +337,347 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      it 'does not populate sw_pub_date_facet_ssi' do
-        expect(doc).not_to include('sw_pub_date_facet_ssi')
+      xit 'selects first date with type copyright' do
+        expect(doc).to include('sw_pub_date_facet_ssi' => '2020')
+      end
+    end
+
+    context 'when none of the above' do
+      let(:description) do
+        {
+          title: [
+            {
+              value: 'Title'
+            }
+          ],
+          event: [
+            {
+              date: [
+                {
+                  value: '2020'
+                },
+                {
+                  value: '2019'
+                }
+              ]
+            }
+          ]
+        }
+      end
+
+      xit 'selects first date' do
+        expect(doc).to include('sw_pub_date_facet_ssi' => '')
+      end
+    end
+
+    context 'when date range, one primary' do
+      let(:description) do
+        {
+          title: [
+            {
+              value: 'Title'
+            }
+          ],
+          event: [
+            {
+              date: [
+                {
+                  structuredValue: [
+                    {
+                      value: '2020',
+                      type: 'start'
+                    },
+                    {
+                      value: '2021',
+                      type: 'end',
+                      status: 'primary'
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      end
+
+      xit 'selects date with status primary' do
+        expect(doc).to include('sw_pub_date_facet_ssi' => '2021')
+      end
+    end
+
+    context 'when date range, no primary' do
+      let(:description) do
+        {
+          title: [
+            {
+              value: 'Title'
+            }
+          ],
+          event: [
+            {
+              date: [
+                {
+                  structuredValue: [
+                    {
+                      value: '2020',
+                      type: 'start'
+                    },
+                    {
+                      value: '2021',
+                      type: 'end'
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      end
+
+      xit 'selects first date' do
+        expect(doc).to include('sw_pub_date_facet_ssi' => '2020')
+      end
+    end
+
+    context 'when parallelEvent' do
+      let(:description) do
+        {
+          title: [
+            {
+              value: 'Title'
+            }
+          ],
+          event: [
+            {
+              parallelEvent: [
+                {
+                  date: [
+                    {
+                      value: '2021',
+                      status: 'primary'
+                    }
+                  ]
+                },
+                {
+                  date: [
+                    {
+                      value: '2021年 '
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      end
+
+      xit 'selects date from preferred event' do
+        expect(doc).to include('sw_pub_date_facet_ssi' => '2021')
+      end
+    end
+
+    context 'when date range in parallelEvent' do
+      let(:description) do
+        {
+          title: [
+            {
+              value: 'Title'
+            }
+          ],
+          event: [
+            {
+              parallelEvent: [
+                {
+                  date: [
+                    {
+                      structuredValue: [
+                        {
+                          value: '2020',
+                          type: 'start'
+                        },
+                        {
+                          value: '2021',
+                          type: 'end'
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  date: [
+                    {
+                      structuredValue: [
+                        {
+                          value: '2020年',
+                          type: 'start'
+                        },
+                        {
+                          value: '2021年',
+                          type: 'end'
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      end
+
+      xit 'selects preferred date from preferred event' do
+        expect(doc).to include('sw_pub_date_facet_ssi' => '2020')
+      end
+    end
+
+    context 'when parallelValue, one primary' do
+      let(:description) do
+        {
+          title: [
+            {
+              value: 'Title'
+            }
+          ],
+          event: [
+            {
+              date: [
+                {
+                  parallelValue: [
+                    {
+                      value: '2021-04-15',
+                      note: [
+                        {
+                          value: 'Gregorian',
+                          type: 'calendar'
+                        }
+                      ]
+                    },
+                    {
+                      value: '2021-04-02',
+                      note: [
+                        {
+                          value: 'Julian',
+                          type: 'calendar'
+                        }
+                      ],
+                      status: 'primary'
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      end
+
+      xit 'selects date with status primary' do
+        expect(doc).to include('sw_pub_date_facet_ssi' => '2021-04-02')
+      end
+    end
+
+    context 'when parallelValue, no primary' do
+      let(:description) do
+        {
+          title: [
+            {
+              value: 'Title'
+            }
+          ],
+          event: [
+            {
+              date: [
+                {
+                  parallelValue: [
+                    {
+                      value: '2021-04-15',
+                      note: [
+                        {
+                          value: 'Gregorian',
+                          type: 'calendar'
+                        }
+                      ]
+                    },
+                    {
+                      value: '2021-04-02',
+                      note: [
+                        {
+                          value: 'Julian',
+                          type: 'calendar'
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      end
+
+      xit 'selects first date' do
+        expect(doc).to include('sw_pub_date_facet_ssi' => '2021-04-15')
+      end
+    end
+
+    context 'when date range in parallelValue' do
+      let(:description) do
+        {
+          title: [
+            {
+              value: 'Title'
+            }
+          ],
+          event: [
+            {
+              date: [
+                {
+                  parallelValue: [
+                    {
+                      structuredValue: [
+                        {
+                          value: '2021-04-14',
+                          type: 'start'
+                        },
+                        {
+                          value: '2021-04-15',
+                          type: 'end'
+                        }
+                      ],
+                      note: [
+                        {
+                          value: 'Gregorian',
+                          type: 'calendar'
+                        }
+                      ]
+                    },
+                    {
+                      structuredValue: [
+                        {
+                          value: '2021-04-01',
+                          type: 'start'
+                        },
+                        {
+                          value: '2021-04-02',
+                          type: 'end'
+                        }
+                      ],
+                      note: [
+                        {
+                          value: 'Julian',
+                          type: 'calendar'
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      end
+
+      xit 'selects preferred date from preferred parallelValue' do
+        expect(doc).to include('sw_pub_date_facet_ssi' => '2021-04-14')
       end
     end
   end
