@@ -98,7 +98,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'selects date with status primary' do
+      it 'selects date with status primary' do
         expect(doc).to include('sw_pub_date_facet_ssi' => '2020')
       end
     end
@@ -128,7 +128,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'selects date with type publication' do
+      it 'selects date with type publication' do
         expect(doc).to include('sw_pub_date_facet_ssi' => '2020')
       end
     end
@@ -158,7 +158,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'selects first date with type publication' do
+      it 'selects first date with type publication' do
         expect(doc).to include('sw_pub_date_facet_ssi' => '2020')
       end
     end
@@ -188,7 +188,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'selects date with type creation or production' do
+      it 'selects date with type creation or production' do
         expect(doc).to include('sw_pub_date_facet_ssi' => '2020')
       end
     end
@@ -219,7 +219,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'selects first date with type creation or production' do
+      it 'selects first date with type creation or production' do
         expect(doc).to include('sw_pub_date_facet_ssi' => '2020')
       end
     end
@@ -248,7 +248,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'selects date with type capture' do
+      it 'selects date with type capture' do
         expect(doc).to include('sw_pub_date_facet_ssi' => '2020')
       end
     end
@@ -278,7 +278,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'selects first date with type capture' do
+      it 'selects first date with type capture' do
         expect(doc).to include('sw_pub_date_facet_ssi' => '2020')
       end
     end
@@ -307,7 +307,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'selects date with type copyright' do
+      it 'selects date with type copyright' do
         expect(doc).to include('sw_pub_date_facet_ssi' => '2020')
       end
     end
@@ -337,7 +337,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'selects first date with type copyright' do
+      it 'selects first date with type copyright' do
         expect(doc).to include('sw_pub_date_facet_ssi' => '2020')
       end
     end
@@ -365,8 +365,8 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'selects first date' do
-        expect(doc).to include('sw_pub_date_facet_ssi' => '')
+      it 'selects first date' do
+        expect(doc).to include('sw_pub_date_facet_ssi' => '2020')
       end
     end
 
@@ -400,7 +400,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'selects date with status primary' do
+      it 'selects date with status primary' do
         expect(doc).to include('sw_pub_date_facet_ssi' => '2021')
       end
     end
@@ -434,7 +434,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'selects first date' do
+      it 'selects first date' do
         expect(doc).to include('sw_pub_date_facet_ssi' => '2020')
       end
     end
@@ -471,7 +471,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'selects date from preferred event' do
+      it 'selects date from preferred event' do
         expect(doc).to include('sw_pub_date_facet_ssi' => '2021')
       end
     end
@@ -525,7 +525,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'selects preferred date from preferred event' do
+      it 'selects preferred date from preferred event' do
         expect(doc).to include('sw_pub_date_facet_ssi' => '2020')
       end
     end
@@ -553,7 +553,7 @@ RSpec.describe DescriptiveMetadataIndexer do
                       ]
                     },
                     {
-                      value: '2021-04-02',
+                      value: '2022-04-02',
                       note: [
                         {
                           value: 'Julian',
@@ -570,8 +570,8 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'selects date with status primary' do
-        expect(doc).to include('sw_pub_date_facet_ssi' => '2021-04-02')
+      it 'selects date with status primary' do
+        expect(doc).to include('sw_pub_date_facet_ssi' => '2022')
       end
     end
 
@@ -598,7 +598,7 @@ RSpec.describe DescriptiveMetadataIndexer do
                       ]
                     },
                     {
-                      value: '2021-04-02',
+                      value: '2022-04-02',
                       note: [
                         {
                           value: 'Julian',
@@ -614,8 +614,8 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'selects first date' do
-        expect(doc).to include('sw_pub_date_facet_ssi' => '2021-04-15')
+      it 'selects first date' do
+        expect(doc).to include('sw_pub_date_facet_ssi' => '2021')
       end
     end
 
@@ -639,7 +639,7 @@ RSpec.describe DescriptiveMetadataIndexer do
                           type: 'start'
                         },
                         {
-                          value: '2021-04-15',
+                          value: '2022-04-15',
                           type: 'end'
                         }
                       ],
@@ -653,11 +653,11 @@ RSpec.describe DescriptiveMetadataIndexer do
                     {
                       structuredValue: [
                         {
-                          value: '2021-04-01',
+                          value: '2023-04-01',
                           type: 'start'
                         },
                         {
-                          value: '2021-04-02',
+                          value: '2024-04-02',
                           type: 'end'
                         }
                       ],
@@ -676,8 +676,8 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'selects preferred date from preferred parallelValue' do
-        expect(doc).to include('sw_pub_date_facet_ssi' => '2021-04-14')
+      it 'selects preferred date from preferred parallelValue' do
+        expect(doc).to include('sw_pub_date_facet_ssi' => '2021')
       end
     end
   end

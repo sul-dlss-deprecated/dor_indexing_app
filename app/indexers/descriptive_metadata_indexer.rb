@@ -154,8 +154,7 @@ class DescriptiveMetadataIndexer
   end
 
   def pub_year
-    date = EventDateBuilder.build(publication_event, 'publication') || creation_date
-    ParseDate.earliest_year(date).to_s if date.present?
+    PubYearSelector.build(events)
   end
 
   def creation_date
