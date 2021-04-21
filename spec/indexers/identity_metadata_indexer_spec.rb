@@ -11,9 +11,7 @@ RSpec.describe IdentityMetadataIndexer do
       type: type,
       version: 1,
       label: 'Squirrels of North America',
-      access: {
-        access: 'world'
-      },
+      access: {},
       administrative: {
         hasAdminPolicy: 'druid:bd999bd9999'
       },

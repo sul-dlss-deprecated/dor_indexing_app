@@ -22,7 +22,7 @@ gem 'rsolr', '~> 2.0'
 # DLSS gems
 gem 'dor-rights-auth', '~>1.5' # 1.5 or better is needed to ensure we index controlled digital lending rights object correctly
 gem 'dor-services', '~> 9.0', '>= 9.2.1' # must be 9.2.1 to get fix from https://github.com/sul-dlss/dor-services/pull/695
-gem 'dor-services-client', '~> 6.30'
+gem 'dor-services-client', '~> 6.33'
 gem 'dor-workflow-client', '~> 3.20'
 gem 'parse_date'
 
