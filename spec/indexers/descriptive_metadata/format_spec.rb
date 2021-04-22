@@ -73,6 +73,34 @@ RSpec.describe DescriptiveMetadataIndexer do
   end
 
   describe 'form/genre mappings from Cocina to Solr sw_format_ssim' do
+    context 'when structuredValue' do
+      let(:description) do
+        {
+          title: [
+            {
+              value: 'Text file houseplant in H2 collection'
+            }
+          ],
+          form: [
+            {
+              structuredValue: [
+                {
+                  value: 'Text',
+                  type: 'type'
+                }
+              ],
+              type: 'resource type',
+              source: { value: 'Stanford self-deposit resource types' }
+            }
+          ]
+        }
+      end
+
+      it 'assigns format based on resource type' do
+        expect(doc).to include('sw_format_ssim' => ['Book'])
+      end
+    end
+
     context 'when dataset' do
       # value "dataset" is case-insensitive
       let(:description) do
