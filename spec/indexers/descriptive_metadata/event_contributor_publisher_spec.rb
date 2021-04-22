@@ -103,7 +103,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'selects publisher' do
+      it 'selects publisher' do
         expect(doc).to include('originInfo_publisher_tesim' => 'Stanford University Press')
       end
     end
@@ -150,7 +150,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'selects primary publisher' do
+      it 'selects primary publisher' do
         expect(doc).to include('originInfo_publisher_tesim' => 'Highwire Press')
       end
     end
@@ -196,7 +196,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'concatenates publishers with space colon space' do
+      it 'concatenates publishers with space colon space' do
         expect(doc).to include('originInfo_publisher_tesim' => 'Stanford University Press : Highwire Press')
       end
     end
@@ -230,7 +230,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'does not select a publisher' do
+      it 'does not select a publisher' do
         expect(doc).not_to include('originInfo_publisher_tesim')
       end
     end
@@ -264,7 +264,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'selects publisher' do
+      it 'selects publisher' do
         expect(doc).to include('originInfo_publisher_tesim' => 'Stanford University Press')
       end
     end
@@ -294,7 +294,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'does not select a publisher' do
+      it 'does not select a publisher' do
         expect(doc).not_to include('originInfo_publisher_tesim')
       end
     end
@@ -329,7 +329,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'selects publisher' do
+      it 'selects publisher' do
         expect(doc).to include('originInfo_publisher_tesim' => 'Stanford University Press')
       end
     end
@@ -418,7 +418,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'selects publisher from preferred event' do
+      it 'selects publisher from preferred event' do
         expect(doc).to include('originInfo_publisher_tesim' => 'СФУ')
       end
     end
@@ -484,7 +484,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'selects primary publisher' do
+      it 'selects primary publisher' do
         expect(doc).to include('originInfo_publisher_tesim' => 'SFU')
       end
     end
@@ -549,7 +549,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'concatenates publishers with space colon space' do
+      it 'concatenates publishers with space colon space' do
         expect(doc).to include('originInfo_publisher_tesim' => 'СФУ : SFU')
       end
     end
@@ -590,7 +590,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'concatenates values with period space' do
+      it 'concatenates values with period space' do
         expect(doc).to include('originInfo_publisher_tesim' => 'Stanford University Press. Internal Division')
       end
     end
@@ -658,7 +658,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'concatenates preferred values with period space' do
+      it 'concatenates preferred values with period space' do
         expect(doc).to include('originInfo_publisher_tesim' => 'Stanford University Press. Internal Division')
       end
     end
@@ -699,12 +699,12 @@ RSpec.describe DescriptiveMetadataIndexer do
                             }
                           ]
                         }
-                      ],
-                      role: [
-                        {
-                          value: 'publisher'
-                        }
                       ]
+                    }
+                  ],
+                  role: [
+                    {
+                      value: 'publisher'
                     }
                   ]
                 }
@@ -714,7 +714,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'concatenates preferred values with period space' do
+      it 'concatenates preferred values with period space' do
         expect(doc).to include('originInfo_publisher_tesim' => 'Stanford University Press. Internal Division')
       end
     end
