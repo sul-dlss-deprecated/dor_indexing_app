@@ -1,20 +1,57 @@
 # frozen_string_literal: true
 
-class TitleBuilder
+class TitleBuilder # rubocop:disable Metrics/ClassLength
   # @param [Array<Cocina::Models::Title>] titles
+  # @param [Symbol] strategy ":first" is the strategy for how to choose a name if primary and display name is not found
   # @return [String] the title value for Solr
-  def self.build(titles)
-    cocina_title = primary_title(titles) || first_untyped_title(titles) || titles.first
+  def self.build(titles, strategy: :first, add_punctuation: true)
+    new(strategy: strategy, add_punctuation: add_punctuation).build(titles)
+  end
+
+  def initialize(strategy:, add_punctuation:)
+    @strategy = strategy
+    @add_punctuation = add_punctuation
+  end
+
+  def build(titles)
+    cocina_title = primary_title(titles) || untyped_title(titles) || other_title(titles)
+
+    if strategy == :first
+      build_title(cocina_title)
+    else
+      cocina_title.map { |one| build_title(one) }
+    end
+  end
+
+  private
+
+  attr_reader :strategy
+
+  def add_punctuation?
+    @add_punctuation
+  end
+
+  # This handles 'main title', 'uniform' or 'translated'
+  def other_title(titles)
+    if strategy == :first
+      titles.first
+    else
+      titles
+    end
+  end
+
+  def build_title(cocina_title)
     result = if cocina_title.value
                cocina_title.value
              elsif cocina_title.structuredValue
                title_from_structured_values(cocina_title.structuredValue, non_sorting_char_count(cocina_title))
              elsif cocina_title.parallelValue
-               build(cocina_title.parallelValue)
+               return build(cocina_title.parallelValue)
              end
     remove_trailing_punctuation(result.strip) if result.present?
   end
 
+  # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/BlockLength
   # rubocop:disable Metrics/CyclomaticComplexity
   # rubocop:disable Metrics/MethodLength
@@ -23,7 +60,7 @@ class TitleBuilder
   # @param [Integer] the length of the non_sorting_characters
   # @return [String] the title value from combining the pieces of the structured_values according to type and order of occurrence,
   #   with desired punctuation per specs
-  def self.title_from_structured_values(structured_values, non_sorting_char_count)
+  def title_from_structured_values(structured_values, non_sorting_char_count)
     structured_title = ''
     part_name_number = ''
     # combine pieces of the cocina structuredValue into a single title
@@ -47,7 +84,9 @@ class TitleBuilder
       when 'part name', 'part number'
         if part_name_number.blank?
           part_name_number = part_name_number(structured_values)
-          structured_title = if structured_title.present?
+          structured_title = if !add_punctuation?
+                               [structured_title, part_name_number].join(' ')
+                             elsif structured_title.present?
                                "#{structured_title.sub(/[ .,]*$/, '')}. #{part_name_number}. "
                              else
                                "#{part_name_number}. "
@@ -57,7 +96,9 @@ class TitleBuilder
         structured_title = "#{structured_title}#{value}"
       when 'subtitle'
         # subtitle is preceded by space colon space, unless it is at the beginning of the title string
-        structured_title = if structured_title.present?
+        structured_title = if !add_punctuation?
+                             [structured_title, value].join(' ')
+                           elsif structured_title.present?
                              "#{structured_title.sub(/[. :]+$/, '')} : #{value.sub(/^:/, '').strip}"
                            else
                              structured_title = value.sub(/^:/, '').strip
@@ -66,20 +107,19 @@ class TitleBuilder
     end
     structured_title
   end
+  # rubocop:enable Metrics/AbcSize
   # rubocop:enable Metrics/BlockLength
   # rubocop:enable Metrics/CyclomaticComplexity
   # rubocop:enable Metrics/MethodLength
   # rubocop:enable Metrics/PerceivedComplexity
-  private_class_method :title_from_structured_values
 
-  def self.remove_trailing_punctuation(title)
+  def remove_trailing_punctuation(title)
     title.sub(%r{[ .,;:/\\]+$}, '')
   end
-  private_class_method :remove_trailing_punctuation
 
   # @param [Array<Cocina::Models::Title>] titles
   # @return [Cocina::Models::Title, nil] title that has status=primary
-  def self.primary_title(titles)
+  def primary_title(titles)
     primary_title = titles.find do |title|
       title.status == 'primary'
     end
@@ -93,33 +133,31 @@ class TitleBuilder
       end
     end
   end
-  private_class_method :primary_title
 
   # @param [Array<Cocina::Models::Title>] titles
   # @return [Cocina::Models::Title, nil] first title that has no type attribute
-  def self.first_untyped_title(titles)
-    titles.find do |title|
+  def untyped_title(titles)
+    method = strategy == :first ? :find : :select
+    titles.public_send(method) do |title|
       if title.parallelValue.present?
-        title.parallelValue.find { |parallel_value| parallel_value.type.nil? }
+        untyped_title(title.parallelValue)
       else
-        title.type.nil?
+        title.type.nil? || title.type == 'title'
       end
     end
   end
-  private_class_method :first_untyped_title
 
-  def self.non_sorting_char_count(title)
+  def non_sorting_char_count(title)
     non_sort_note = title.note&.find { |note| note.type&.downcase == 'nonsorting character count' }
     return 0 unless non_sort_note
 
     non_sort_note.value.to_i
   end
-  private_class_method :non_sorting_char_count
 
   # combine part name and part number:
   #   respect order of occurrence
   #   separated from each other by comma space
-  def self.part_name_number(structured_values)
+  def part_name_number(structured_values)
     title_from_part = ''
     structured_values.each do |structured_value|
       case structured_value.type&.downcase
@@ -127,14 +165,20 @@ class TitleBuilder
         value = structured_value.value&.strip
         next unless value
 
-        title_from_part = if title_from_part.strip.present?
-                            "#{title_from_part.sub(/[ .,]*$/, '')}, #{value}"
-                          else
-                            value
-                          end
+        title_from_part = append_part_to_title(title_from_part, value)
+
       end
     end
     title_from_part
   end
-  private_class_method :part_name_number
+
+  def append_part_to_title(title_from_part, value)
+    if !add_punctuation?
+      [title_from_part, value].select(&:presence).join(' ')
+    elsif title_from_part.strip.present?
+      "#{title_from_part.sub(/[ .,]*$/, '')}, #{value}"
+    else
+      value
+    end
+  end
 end
