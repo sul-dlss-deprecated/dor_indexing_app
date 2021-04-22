@@ -111,7 +111,7 @@ class DescriptiveMetadataIndexer
     return ['Book'] if has_resource_type?('text') && has_issuance?('monographic')
     return ['Journal/Periodical'] if has_resource_type?('text') && (has_issuance?('continuing') || has_issuance?('serial') || has_frequency?)
 
-    resource_type_formats = flat_forms_for('resource type').map { |form| FORMAT[form.value&.downcase] }.uniq.compact
+    resource_type_formats = flat_forms_for('resource type').map { |form| FORMAT[form.value.downcase] }.uniq.compact
     resource_type_formats.delete('Book') if resource_type_formats.include?('Archive/Manuscript')
 
     return resource_type_formats if resource_type_formats == ['Book']
@@ -202,7 +202,7 @@ class DescriptiveMetadataIndexer
   end
 
   def flat_value(value)
-    value.parallelValue || value.groupedValue || Array(value)
+    value.parallelValue || value.groupedValue || value.structuredValue || Array(value)
   end
 
   def name_for(name)
