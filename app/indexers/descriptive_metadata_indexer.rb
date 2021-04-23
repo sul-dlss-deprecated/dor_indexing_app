@@ -188,7 +188,6 @@ class DescriptiveMetadataIndexer
   def nonstemmable_topics
     (
       TopicBuilder.build(Array(cocina.description.subject), filter: 'topic', remove_trailing_punctuation: true) +
-      # stemmable_topics + #.map { |topic| remove_trailing_punctuation(topic) } +
       TopicBuilder.build(Array(cocina.description.subject), filter: 'name')
     ).compact
   end
