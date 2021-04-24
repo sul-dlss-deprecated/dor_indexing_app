@@ -399,7 +399,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         'sw_author_tesim' => 'George, Henry, 1839-1897',
         'sw_display_title_tesim' => 'The complete works of Henry George',
         # 'originInfo_date_created_tesim' => '', # not populated by the example; see indexer_spec instead
-        'originInfo_publisher_tesim' => ['Doubleday, Page'],
+        'originInfo_publisher_tesim' => 'Doubleday, Page',
         'originInfo_place_placeTerm_tesim' => 'Garden City, N. Y',
         'topic_ssim' => ['cats'],
         'topic_tesim' => ['cats']
