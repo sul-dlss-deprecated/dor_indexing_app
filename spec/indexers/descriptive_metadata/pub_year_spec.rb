@@ -913,38 +913,5 @@ RSpec.describe DescriptiveMetadataIndexer do
         end
       end
     end
-
-    context 'when no event with desired date.type and no desired event.type' do
-      let(:description) do
-        {
-          title: [
-            {
-              structuredValue: [
-                {
-                  value: 'Work & social justice',
-                  type: 'main title'
-                }
-              ]
-            }
-          ],
-          event: [
-            {
-              type: 'publication',
-              date: [
-                {
-                  value: '2018',
-                  status: 'primary',
-                  type: 'copyright'
-                }
-              ]
-            }
-          ]
-        }
-      end
-
-      it 'does not populate sw_pub_date_facet_ssi' do
-        expect(doc).not_to include('sw_pub_date_facet_ssi')
-      end
-    end
   end
 end
