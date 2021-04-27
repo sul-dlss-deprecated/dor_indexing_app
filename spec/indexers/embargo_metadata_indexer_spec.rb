@@ -14,12 +14,14 @@ RSpec.describe EmbargoMetadataIndexer do
       'version' => 1,
       'access' => {
         'access' => 'world',
+        'download' => 'none',
         'copyright' => 'some student',
         'useAndReproductionStatement' => 'restricted until embargo lifted',
         'license' => 'by-nc-nd',
         'embargo' => {
           'releaseDate' => release_date,
           'access' => 'world',
+          'download' => 'world',
           'useAndReproductionStatement' => 'freedom reigns'
         }
       },
@@ -66,6 +68,7 @@ RSpec.describe EmbargoMetadataIndexer do
           'version' => 1,
           'access' => {
             'access' => 'world',
+            'download' => 'none',
             'copyright' => 'some student',
             'useAndReproductionStatement' => 'restricted until embargo lifted',
             'license' => 'by-nc-nd'
