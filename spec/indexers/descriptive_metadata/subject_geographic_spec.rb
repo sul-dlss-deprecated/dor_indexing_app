@@ -90,7 +90,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'selects geographic subject' do
+      it 'selects geographic subject' do
         expect(doc).to include('sw_subject_geographic_ssim' => ['Europe'])
       end
     end
@@ -116,7 +116,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'selects geographic subjects' do
+      it 'selects geographic subjects' do
         expect(doc).to include('sw_subject_geographic_ssim' => %w[Europe Africa])
       end
     end
@@ -146,7 +146,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'selects geographic subject from complex subject' do
+      it 'selects geographic subject from complex subject' do
         expect(doc).to include('sw_subject_geographic_ssim' => ['Europe'])
       end
     end
@@ -175,7 +175,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'selects geographic subjects from parallelValue' do
+      it 'selects geographic subjects from parallelValue' do
         expect(doc).to include('sw_subject_geographic_ssim' => %w[Russia Россия])
       end
     end
@@ -221,7 +221,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'selects geographic subject from complex subject' do
+      it 'selects geographic subject from complex subject' do
         expect(doc).to include('sw_subject_geographic_ssim' => %w[Russia Россия])
       end
     end
@@ -263,7 +263,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'dedupes the value' do
+      it 'dedupes the value' do
         expect(doc).to include('sw_subject_geographic_ssim' => ['Europe'])
       end
     end
@@ -291,7 +291,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'maps the code to text' do
+      it 'maps the code to text' do
         expect(doc).to include('sw_subject_geographic_ssim' => ['Russia (Federation)'])
       end
     end
@@ -316,7 +316,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'maps the code to text' do
+      it 'maps the code to text' do
         expect(doc).to include('sw_subject_geographic_ssim' => ['Russia (Federation)'])
       end
     end
@@ -341,7 +341,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'ignores the code' do
+      it 'ignores the code' do
         expect(doc).not_to include('sw_subject_geographic_ssim')
       end
     end
@@ -363,7 +363,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'ignores the code' do
+      it 'ignores the code' do
         expect(doc).not_to include('sw_subject_geographic_ssim')
       end
     end
@@ -389,7 +389,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'includes term once' do
+      it 'includes term once' do
         expect(doc).to include('sw_subject_geographic_ssim' => ['Russia (Federation)'])
       end
     end
@@ -415,7 +415,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'includes both terms' do
+      it 'includes both terms' do
         expect(doc).to include('sw_subject_geographic_ssim' => ['Russia', 'Russia (Federation)'])
       end
     end
@@ -451,7 +451,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'constructs the value' do
+      it 'constructs the value' do
         expect(doc).to include('sw_subject_geographic_ssim' => ['North America Canada Vancouver'])
       end
     end
@@ -474,7 +474,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'drops the punctuation' do
+      it 'drops the punctuation' do
         expect(doc).to include('sw_subject_geographic_ssim' => ['Europe'])
       end
     end
@@ -504,7 +504,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'drops the punctuation' do
+      it 'drops the punctuation' do
         expect(doc).to include('sw_subject_geographic_ssim' => ['Europe'])
       end
     end
@@ -533,7 +533,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'drops the punctuation' do
+      it 'drops the punctuation' do
         expect(doc).to include('sw_subject_geographic_ssim' => %w[Russia Россия])
       end
     end
@@ -579,7 +579,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'drops the punctuation' do
+      it 'drops the punctuation' do
         expect(doc).to include('sw_subject_geographic_ssim' => %w[Russia Россия])
       end
     end
@@ -601,7 +601,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'does not drop the punctuation' do
+      it 'does not drop the punctuation' do
         expect(doc).to include('sw_subject_geographic_ssim' => ['Europe.'])
       end
     end
@@ -627,7 +627,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      xit 'drops the punctuation before deduping' do
+      it 'drops the punctuation before deduping' do
         expect(doc).to include('sw_subject_geographic_ssim' => ['Europe'])
       end
     end
@@ -642,14 +642,17 @@ RSpec.describe DescriptiveMetadataIndexer do
           ],
           subject: [
             {
-              value: 'e-ru;',
-              type: 'place'
+              code: 'e-ru;',
+              type: 'place',
+              source: {
+                code: 'marcgac'
+              }
             }
           ]
         }
       end
 
-      xit 'drops the punctuation' do
+      it 'drops the punctuation' do
         expect(doc).to include('sw_subject_geographic_ssim' => ['Russia (Federation)'])
       end
     end
