@@ -36,9 +36,7 @@ class DescriptiveMetadataIndexer
   end
 
   def subject_temporal
-    subjects.flat_map do |subject|
-      Array(subject.structuredValue).select { |node| node.type == 'time' }.map(&:value)
-    end
+    TemporalBuilder.build(subjects)
   end
 
   def subject_geographic
