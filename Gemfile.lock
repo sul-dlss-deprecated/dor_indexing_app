@@ -245,6 +245,7 @@ GEM
       nokogiri (>= 1.5.9)
     mail (2.7.1)
       mini_mime (>= 0.1.1)
+    marc-vocab (0.2.1)
     marcel (1.0.1)
     method_source (1.0.0)
     mime-types (3.3.1)
@@ -492,6 +493,7 @@ DEPENDENCIES
   iso-639 (~> 0.3.5)
   language_list
   listen (~> 3.0.5)
+  marc-vocab (~> 0.2.0)
   newrelic_rpm
   okcomputer
   parse_date

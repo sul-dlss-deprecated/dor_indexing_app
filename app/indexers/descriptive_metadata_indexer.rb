@@ -40,9 +40,7 @@ class DescriptiveMetadataIndexer
   end
 
   def subject_geographic
-    subjects.flat_map do |subject|
-      Array(subject.structuredValue).select { |node| node.type == 'place' }.map(&:value)
-    end
+    GeographicBuilder.build(subjects)
   end
 
   def subjects
