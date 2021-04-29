@@ -26,10 +26,8 @@ RSpec.describe ContentMetadataIndexer do
   end
 
   let(:cocina) { Cocina::Models.build(JSON.parse(json)) }
-  let(:obj) { Dor::Item.new }
-
   let(:indexer) do
-    described_class.new(id: 'druid:ab123cd4567', resource: obj, cocina: cocina)
+    described_class.new(id: 'druid:ab123cd4567', cocina: cocina)
   end
 
   describe '#to_solr' do

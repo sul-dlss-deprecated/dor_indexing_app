@@ -3,7 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe RoleMetadataIndexer do
-  let(:obj) { Dor::AdminPolicyObject.new }
   let(:apo_id) { 'druid:gf999hb9999' }
   let(:cocina) do
     Cocina::Models.build(
@@ -38,7 +37,7 @@ RSpec.describe RoleMetadataIndexer do
   end
 
   let(:indexer) do
-    described_class.new(resource: obj, cocina: cocina)
+    described_class.new(cocina: cocina)
   end
 
   describe '#to_solr' do
