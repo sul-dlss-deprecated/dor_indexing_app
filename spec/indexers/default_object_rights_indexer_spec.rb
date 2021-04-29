@@ -3,31 +3,20 @@
 require 'rails_helper'
 
 RSpec.describe DefaultObjectRightsIndexer do
-  let(:cocina) { instance_double(Cocina::Models::AdminPolicy, administrative: administrative) }
-  let(:administrative) { instance_double(Cocina::Models::AdminPolicyAdministrative, defaultObjectRights: xml) }
-  let(:xml) do
-    <<~XML
-      <?xml version="1.0" encoding="UTF-8"?>
-
-      <rightsMetadata>
-         <access type="discover">
-            <machine>
-               <world/>
-            </machine>
-         </access>
-         <access type="read">
-            <machine>
-               <world/>
-            </machine>
-         </access>
-         <use>
-            <human type="useAndReproduction">Rights are owned by Stanford University Libraries.</human>
-         </use>
-         <copyright>
-            <human>Additional copyright info</human>
-         </copyright>
-      </rightsMetadata>
-    XML
+  let(:cocina) do
+    Cocina::Models.build(
+      'label' => 'The APO',
+      'version' => 1,
+      'type' => Cocina::Models::Vocab.admin_policy,
+      'externalIdentifier' => 'druid:cb123cd4567',
+      'administrative' => {
+        hasAdminPolicy: 'druid:hv992ry2431',
+        defaultAccess: {
+          useAndReproductionStatement: 'Rights are owned by Stanford University Libraries.',
+          copyright: 'Additional copyright info'
+        }
+      }
+    )
   end
 
   describe '#to_solr' do
@@ -40,8 +29,8 @@ RSpec.describe DefaultObjectRightsIndexer do
 
     it 'makes a solr doc' do
       expect(doc).to match a_hash_including('use_statement_ssim' =>
-        ['Rights are owned by Stanford University Libraries.'])
-      expect(doc).to match a_hash_including('copyright_ssim' => ['Additional copyright info'])
+        'Rights are owned by Stanford University Libraries.')
+      expect(doc).to match a_hash_including('copyright_ssim' => 'Additional copyright info')
     end
   end
 end

@@ -9,6 +9,8 @@ class DefaultObjectRightsIndexer
 
   # @return [Hash] the partial solr document for defaultObjectRights
   def to_solr
+    return {} unless cocina.administrative.defaultAccess
+
     {
       'use_statement_ssim' => use_statement,
       'copyright_ssim' => copyright
@@ -17,19 +19,11 @@ class DefaultObjectRightsIndexer
 
   private
 
-  def xml
-    @xml ||= cocina.administrative.defaultObjectRights
-  end
-
-  def ng_xml
-    @ng_xml ||= Nokogiri::XML(xml) if xml
-  end
-
   def use_statement
-    ng_xml.xpath('//rightsMetadata/use/human[@type="useAndReproduction"]').map(&:text)
+    cocina.administrative.defaultAccess.useAndReproductionStatement
   end
 
   def copyright
-    ng_xml.xpath('//rightsMetadata/copyright/human').map(&:text)
+    cocina.administrative.defaultAccess.copyright
   end
 end
