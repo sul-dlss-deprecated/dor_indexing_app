@@ -3,130 +3,293 @@
 require 'rails_helper'
 
 RSpec.describe RightsMetadataIndexer do
-  let(:xml) do
-    <<~XML
-      <?xml version="1.0"?>
-      <rightsMetadata>
-        <access type="discover">
-          <machine>
-            <world/>
-          </machine>
-        </access>
-        <access type="read">
-          <machine>
-            <world/>
-          </machine>
-        </access>
-        <use>
-          <human type="useAndReproduction">Official WTO documents are free for public use.</human>
-          <human type="creativeCommons"/>
-          <machine type="creativeCommons">by-nc-nd</machine>
-        </use>
-        <copyright>
-          <human>Copyright &#xA9; World Trade Organization</human>
-        </copyright>
-      </rightsMetadata>
-    XML
-  end
+  subject(:doc) { indexer.to_solr }
 
-  let(:obj) { Dor::Item.new(pid: 'druid:rt923jk3429') }
-  let(:rights_md_ds) { obj.rightsMetadata }
   let(:cocina) do
     Cocina::Models.build(
       'externalIdentifier' => 'druid:rt923jk3429',
       'type' => Cocina::Models::Vocab.image,
       'version' => 1,
       'label' => 'testing',
-      'access' => {
-        'license' => license
-      },
+      'access' => access,
       'administrative' => {
         'hasAdminPolicy' => 'druid:xx000xx0000'
       },
       'description' => {
         'title' => [{ 'value' => 'Test obj' }]
-      }
+      },
+      'structural' => structural
     )
   end
+
+  let(:structural) { {} }
+  let(:access) do
+    {
+      'access' => 'world',
+      'download' => 'world',
+      'license' => license,
+      'copyright' => 'Copyright © World Trade Organization',
+      'useAndReproductionStatement' => 'Official WTO documents are free for public use.'
+    }
+  end
+
   let(:license) { 'https://creativecommons.org/publicdomain/zero/1.0/' }
 
   let(:indexer) do
-    described_class.new(resource: obj, cocina: cocina)
+    described_class.new(cocina: cocina)
   end
 
-  before do
-    rights_md_ds.content = xml
+  it 'has the fields used by argo' do
+    expect(doc).to include(
+      'copyright_ssim' => 'Copyright © World Trade Organization',
+      'use_statement_ssim' => 'Official WTO documents are free for public use.',
+      'use_license_machine_ssi' => 'CC0-1.0',
+      'rights_descriptions_ssim' => ['world']
+    )
   end
 
-  describe '#to_solr' do
-    subject(:doc) { indexer.to_solr }
+  describe 'rights descriptions' do
+    subject { doc['rights_descriptions_ssim'] }
 
-    it 'has the fields used by argo' do
-      expect(doc).to include(
-        'copyright_ssim' => ['Copyright © World Trade Organization'],
-        'use_statement_ssim' => ['Official WTO documents are free for public use.'],
-        'use_license_machine_ssi' => 'CC0-1.0',
-        'rights_descriptions_ssim' => ['world']
-      )
+    context 'when citation only' do
+      let(:access) do
+        {
+          'access' => 'citation-only',
+          'download' => 'none'
+        }
+      end
+
+      it { is_expected.to eq ['citation'] }
     end
 
-    describe 'legacy tests to_solr' do
-      let(:mock_dra_obj) { instance_double(Dor::RightsAuth, index_elements: index_elements) }
-
-      before do
-        allow(rights_md_ds).to receive(:dra_object).and_return(mock_dra_obj)
+    context 'when controlled digital lending' do
+      let(:access) do
+        {
+          'access' => 'stanford',
+          'download' => 'none',
+          'controlledDigitalLending' => true
+        }
       end
 
-      context 'when access is restricted' do
-        let(:index_elements) do
-          {
-            primary: 'access_restricted',
-            errors: [],
-            terms: [],
-            obj_locations_qualified: [{ location: 'someplace', rule: 'somerule' }],
-            file_groups_qualified: [{ group: 'somegroup', rule: 'someotherrule' }]
-          }
-        end
+      it { is_expected.to eq 'controlled digital lending' }
+    end
 
-        it 'filters access_restricted from what gets aggregated into rights_descriptions_ssim' do
-          expect(doc).to match a_hash_including(
-            'rights_descriptions_ssim' => ['location: someplace (somerule)', 'somegroup (file) (someotherrule)']
-          )
-        end
+    context 'when dark' do
+      let(:access) do
+        {
+          'access' => 'dark',
+          'download' => 'none'
+        }
       end
 
-      context 'when it is world qualified' do
-        let(:index_elements) do
-          {
-            primary: 'world_qualified',
-            errors: [],
-            terms: [],
-            obj_world_qualified: [{ rule: 'somerule' }]
-          }
-        end
+      it { is_expected.to eq ['dark'] }
+    end
 
-        it 'filters world_qualified from what gets aggregated into rights_descriptions_ssim' do
-          expect(doc).to match a_hash_including(
-            'rights_descriptions_ssim' => ['world (somerule)']
-          )
-        end
+    context 'when location' do
+      let(:access) do
+        {
+          'access' => 'location-based',
+          'download' => 'location-based',
+          'readLocation' => 'spec'
+        }
       end
 
-      context 'when it is controlled digital lending' do
-        let(:index_elements) do
-          {
-            primary: 'cdl_none',
-            errors: [],
-            terms: []
-          }
-        end
+      it { is_expected.to eq ['location: spec'] }
+    end
 
-        it 'indexes correctly into rights_descriptions_ssim' do
-          expect(doc).to match a_hash_including(
-            'rights_descriptions_ssim' => ['controlled digital lending']
-          )
-        end
+    context 'when no-download' do
+      let(:access) do
+        {
+          'access' => 'world',
+          'download' => 'none'
+        }
       end
+
+      it { is_expected.to eq ['world (no-download)'] }
+    end
+
+    context 'when stanford, dark (file)' do
+      # via https://argo.stanford.edu/view/druid:hz651dj0129
+      let(:structural) do
+        {
+          "contains": [
+            {
+              "type": 'http://cocina.sul.stanford.edu/models/resources/page.jsonld',
+              "externalIdentifier": 'http://cocina.sul.stanford.edu/fileSet/d906da21-aca1-4b95-b7d1-c14c23cd93e6',
+              "label": 'Page 1',
+              "version": 5,
+              "structural": {
+                "contains": [
+                  {
+                    "type": 'http://cocina.sul.stanford.edu/models/file.jsonld',
+                    "externalIdentifier": 'http://cocina.sul.stanford.edu/file/4d88213d-f150-45ae-a58a-08b1045db2a0',
+                    "label": '50807230_0001.jp2',
+                    "filename": '50807230_0001.jp2',
+                    "size": 3_575_822,
+                    "version": 5,
+                    "hasMimeType": 'image/jp2',
+                    "hasMessageDigests": [
+                      {
+                        "type": 'sha1',
+                        "digest": '0a089200032d209e9b3e7f7768dd35323a863fcc'
+                      },
+                      {
+                        "type": 'md5',
+                        "digest": 'c99fae3c4c53e40824e710440f08acb9'
+                      }
+                    ],
+                    "access": file_access,
+                    "administrative": {
+                      "publish": false,
+                      "sdrPreserve": false,
+                      "shelve": false
+                    },
+                    "presentation": {}
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      end
+      let(:access) do
+        {
+          'access' => 'stanford',
+          'download' => 'stanford'
+        }
+      end
+
+      let(:file_access) do
+        {
+          "access": 'dark',
+          "download": 'none'
+        }
+      end
+
+      it { is_expected.to eq ['stanford', 'dark (file)'] }
+    end
+
+    context 'when stanford, world (file)' do
+      # Via https://argo.stanford.edu/view/druid:bb142ws0723
+      let(:structural) do
+        {
+          "contains": [
+            {
+              "type": 'http://cocina.sul.stanford.edu/models/resources/page.jsonld',
+              "externalIdentifier": 'http://cocina.sul.stanford.edu/fileSet/d906da21-aca1-4b95-b7d1-c14c23cd93e6',
+              "label": 'Page 1',
+              "version": 5,
+              "structural": {
+                "contains": [
+                  {
+                    "type": 'http://cocina.sul.stanford.edu/models/file.jsonld',
+                    "externalIdentifier": 'http://cocina.sul.stanford.edu/file/4d88213d-f150-45ae-a58a-08b1045db2a0',
+                    "label": '50807230_0001.jp2',
+                    "filename": '50807230_0001.jp2',
+                    "size": 3_575_822,
+                    "version": 5,
+                    "hasMimeType": 'image/jp2',
+                    "hasMessageDigests": [
+                      {
+                        "type": 'sha1',
+                        "digest": '0a089200032d209e9b3e7f7768dd35323a863fcc'
+                      },
+                      {
+                        "type": 'md5',
+                        "digest": 'c99fae3c4c53e40824e710440f08acb9'
+                      }
+                    ],
+                    "access": file_access,
+                    "administrative": {
+                      "publish": false,
+                      "sdrPreserve": false,
+                      "shelve": false
+                    },
+                    "presentation": {}
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      end
+      let(:access) do
+        {
+          'access' => 'stanford',
+          'download' => 'stanford'
+        }
+      end
+
+      let(:file_access) do
+        {
+          "access": 'world',
+          "download": 'world'
+        }
+      end
+
+      it { is_expected.to eq ['stanford', 'world (file)'] }
+    end
+
+    context 'when world (no-download), stanford (no-download) (file)' do
+      # via https://argo.stanford.edu/view/druid:cb810hh5010
+      let(:structural) do
+        {
+          "contains": [
+            {
+              "type": 'http://cocina.sul.stanford.edu/models/resources/page.jsonld',
+              "externalIdentifier": 'http://cocina.sul.stanford.edu/fileSet/d906da21-aca1-4b95-b7d1-c14c23cd93e6',
+              "label": 'Page 1',
+              "version": 5,
+              "structural": {
+                "contains": [
+                  {
+                    "type": 'http://cocina.sul.stanford.edu/models/file.jsonld',
+                    "externalIdentifier": 'http://cocina.sul.stanford.edu/file/4d88213d-f150-45ae-a58a-08b1045db2a0',
+                    "label": '50807230_0001.jp2',
+                    "filename": '50807230_0001.jp2',
+                    "size": 3_575_822,
+                    "version": 5,
+                    "hasMimeType": 'image/jp2',
+                    "hasMessageDigests": [
+                      {
+                        "type": 'sha1',
+                        "digest": '0a089200032d209e9b3e7f7768dd35323a863fcc'
+                      },
+                      {
+                        "type": 'md5',
+                        "digest": 'c99fae3c4c53e40824e710440f08acb9'
+                      }
+                    ],
+                    "access": file_access,
+                    "administrative": {
+                      "publish": false,
+                      "sdrPreserve": false,
+                      "shelve": false
+                    },
+                    "presentation": {}
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      end
+      let(:access) do
+        {
+          'access' => 'world',
+          'download' => 'none'
+        }
+      end
+
+      let(:file_access) do
+        {
+          "access": 'stanford',
+          "download": 'none',
+          "controlledDigitalLending": false
+        }
+      end
+
+      it { is_expected.to eq ['world (no-download)', 'stanford (no-download) (file)'] }
     end
   end
 end
