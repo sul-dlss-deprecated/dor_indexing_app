@@ -29,9 +29,6 @@ RSpec.describe DefaultObjectRightsIndexer do
       </rightsMetadata>
     XML
   end
-  let(:indexer) do
-    described_class.new(resource: obj, cocina: cocina)
-  end
 
   describe '#to_solr' do
     let(:indexer) do

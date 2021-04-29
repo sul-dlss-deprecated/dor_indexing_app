@@ -5,18 +5,6 @@ require 'rails_helper'
 RSpec.describe CompositeIndexer do
   let(:model) { Dor::Abstract }
   let(:druid) { 'druid:mx123ms3333' }
-
-  let(:obj) do
-    instance_double(Dor::Item,
-                    pid: druid,
-                    label: 'obj label',
-                    identityMetadata: identity_metadata,
-                    versionMetadata: version_metadata,
-                    current_version: '7',
-                    modified_date: '1999-12-30',
-                    admin_policy_object_id: apo_id,
-                    collections: [])
-  end
   let(:apo_id) { 'druid:gf999hb9999' }
 
   let(:apo) do
@@ -32,13 +20,6 @@ RSpec.describe CompositeIndexer do
         'title' => [{ 'value' => 'APO title' }]
       }
     )
-  end
-
-  let(:identity_metadata) do
-    instance_double(Dor::IdentityMetadataDS, otherId: 'foo')
-  end
-  let(:version_metadata) do
-    instance_double(Dor::VersionMetadataDS, tag_for_version: 'tag7', description_for_version: 'desc7', current_version_id: '7')
   end
 
   let(:indexer) do
@@ -82,7 +63,7 @@ RSpec.describe CompositeIndexer do
       instance_double(Dor::Workflow::Client::Status, milestones: {}, info: {}, display: 'bad')
     end
     let(:workflow_client) { instance_double(Dor::Workflow::Client, status: status) }
-    let(:doc) { indexer.new(id: 'druid:ab123cd4567', resource: obj, cocina: cocina).to_solr }
+    let(:doc) { indexer.new(id: 'druid:ab123cd4567', cocina: cocina).to_solr }
 
     before do
       allow(Dor::Workflow::Client).to receive(:new).and_return(workflow_client)

@@ -3,9 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe DataIndexer do
-  let(:obj) do
-    Dor::AdminPolicyObject.new(pid: 'druid:999')
-  end
   let(:cocina) do
     instance_double(Cocina::Models::DRO, externalIdentifier: 'druid:xx999xx9999',
                                          label: 'test label',
@@ -31,7 +28,7 @@ RSpec.describe DataIndexer do
     let(:indexer) do
       CompositeIndexer.new(
         described_class
-      ).new(id: 'druid:ab123cd4567', resource: obj, cocina: cocina, metadata: metadata)
+      ).new(id: 'druid:ab123cd4567', cocina: cocina, metadata: metadata)
     end
     let(:doc) { indexer.to_solr }
 

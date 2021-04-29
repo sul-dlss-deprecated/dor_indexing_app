@@ -3,8 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe IdentityMetadataIndexer do
-  let(:obj) { Dor::Item.new(pid: 'druid:rt923jk3421') }
-
   let(:cocina) do
     Cocina::Models.build({
       externalIdentifier: 'druid:rt923jk3421',
@@ -20,7 +18,7 @@ RSpec.describe IdentityMetadataIndexer do
   end
 
   let(:indexer) do
-    described_class.new(resource: obj, cocina: cocina)
+    described_class.new(cocina: cocina)
   end
 
   describe '#to_solr' do
