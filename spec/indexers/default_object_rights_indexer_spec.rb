@@ -23,7 +23,7 @@ RSpec.describe DefaultObjectRightsIndexer do
     let(:indexer) do
       CompositeIndexer.new(
         described_class
-      ).new(id: 'druid:ab123cd4567', resource: instance_double(Dor::AdminPolicyObject), cocina: cocina)
+      ).new(id: 'druid:ab123cd4567', cocina: cocina)
     end
     let(:doc) { indexer.to_solr }
 

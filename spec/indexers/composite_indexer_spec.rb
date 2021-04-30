@@ -73,7 +73,6 @@ RSpec.describe CompositeIndexer do
       expect(doc).to eq(
         'metadata_format_ssim' => 'mods',
         'sw_display_title_tesim' => 'Test obj',
-        'dor_services_version_ssi' => '9.6.2',
         'nonhydrus_apo_title_tesim' => ['APO title'],
         'nonhydrus_apo_title_ssim' => ['APO title'],
         'apo_title_tesim' => ['APO title'],

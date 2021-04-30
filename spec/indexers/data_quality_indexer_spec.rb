@@ -3,11 +3,19 @@
 require 'rails_helper'
 
 RSpec.describe DataQualityIndexer do
-  let(:obj) { Dor::Item.new(pid: 'druid:rt923jk342') }
-  let(:cocina) { None() }
+  let(:rels_response) { instance_double(RestClient::Response, body: rels) }
+  let(:identity_response) { instance_double(RestClient::Response, body: xml) }
+  let(:rels_ext) { instance_double(Rubydora::Datastream, content: rels_response) }
+  let(:identity_metadata) { instance_double(Rubydora::Datastream, content: identity_response) }
 
+  let(:obj) do
+    instance_double(Rubydora::DigitalObject,
+                    models: ['info:fedora/fedora-system:FedoraObject-3.0', model],
+                    datastreams: { 'RELS-EXT' => rels_ext, 'identityMetadata' => identity_metadata })
+  end
+  let(:model) { 'info:fedora/afmodel:Hydrus_Collection' }
   let(:indexer) do
-    described_class.new(resource: obj, cocina: cocina)
+    described_class.new(resource: obj)
   end
   let(:xml) do
     <<~XML
@@ -34,8 +42,15 @@ RSpec.describe DataQualityIndexer do
     XML
   end
 
-  before do
-    obj.identityMetadata.content = xml
+  let(:rels) do
+    <<~XML
+      <rdf:RDF xmlns:fedora-model="info:fedora/fedora-system:def/model#" xmlns:hydra="http://projecthydra.org/ns/relations#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+        <rdf:Description rdf:about="info:fedora/druid:pt184zz3625">
+          <hydra:isGovernedBy rdf:resource="info:fedora/druid:hh918nj2856"></hydra:isGovernedBy>
+          <fedora-model:hasModel rdf:resource="info:fedora/afmodel:Hydrus_Collection"></fedora-model:hasModel>
+        </rdf:Description>
+      </rdf:RDF>
+    XML
   end
 
   describe '#to_solr' do
@@ -49,8 +64,15 @@ RSpec.describe DataQualityIndexer do
 
     context 'when the object is part of an ETD' do
       context 'when it uses conforms_to (earlier ETD objects)' do
-        before do
-          allow(obj).to receive(:relationships).with(:conforms_to).and_return ['info:fedora/afmodel:Part']
+        let(:rels) do
+          <<~XML
+            <rdf:RDF xmlns:fedora-model="info:fedora/fedora-system:def/model#" xmlns:hydra="http://projecthydra.org/ns/relations#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="info:fedora/druid:pt184zz3625">
+                <hydra:isGovernedBy rdf:resource="info:fedora/druid:hh918nj2856"></hydra:isGovernedBy>
+                <fedora-model:conformsTo rdf:resource="info:fedora/afmodel:Part"></fedora-model:conformsTo>
+              </rdf:Description>
+            </rdf:RDF>
+          XML
         end
 
         it 'has none' do
@@ -59,10 +81,7 @@ RSpec.describe DataQualityIndexer do
       end
 
       context 'when it uses has_model with Part (later ETD objects)' do
-        before do
-          allow(obj).to receive(:relationships).with(:conforms_to).and_return []
-          allow(obj).to receive(:relationships).with(:has_model).and_return ['info:fedora/afmodel:Part']
-        end
+        let(:model) { 'info:fedora/afmodel:Part' }
 
         it 'has none' do
           expect(doc).to eq({})
@@ -70,10 +89,7 @@ RSpec.describe DataQualityIndexer do
       end
 
       context 'when it uses has_model with PermissionFile (EEMs objects)' do
-        before do
-          allow(obj).to receive(:relationships).with(:conforms_to).and_return []
-          allow(obj).to receive(:relationships).with(:has_model).and_return ['info:fedora/afmodel:PermissionFile']
-        end
+        let(:model) { 'info:fedora/afmodel:PermissionFile' }
 
         it 'has none' do
           expect(doc).to eq({})
@@ -97,26 +113,7 @@ RSpec.describe DataQualityIndexer do
       end
     end
 
-    context 'without a sourceId for a Collection' do
-      let(:obj) { Dor::Collection.new(pid: 'druid:rt923jk342') }
-
-      let(:xml) do
-        <<~XML
-          <identityMetadata>
-          </identityMetadata>
-        XML
-      end
-
-      it 'draws the errors' do
-        expect(doc).to eq(
-          'data_quality_ssim' => ['Cocina conversion failed']
-        )
-      end
-    end
-
-    context 'without a sourceId for an AdminPolicy' do
-      let(:obj) { Dor::AdminPolicyObject.new(pid: 'druid:rt923jk342') }
-
+    context 'without a sourceId' do
       let(:xml) do
         <<~XML
           <identityMetadata>

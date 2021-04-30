@@ -3,8 +3,6 @@
 class IdentifiableIndexer
   include SolrDocHelper
 
-  INDEX_VERSION_FIELD = 'dor_services_version_ssi'
-
   FIELDS = {
     collection: {
       hydrus: 'hydrus_collection_title',
@@ -33,7 +31,6 @@ class IdentifiableIndexer
     Rails.logger.debug "In #{self.class}"
 
     solr_doc = {}
-    solr_doc[INDEX_VERSION_FIELD] = Dor::VERSION
 
     solrize_related_obj_titles(solr_doc, [cocina.administrative.hasAdminPolicy].compact, @@apo_hash, :apo)
 

@@ -12,7 +12,7 @@ class DataIndexer
   def to_solr
     {}.tap do |solr_doc|
       Rails.logger.debug "In #{self.class}"
-      solr_doc[SOLR_DOCUMENT_ID.to_sym] = cocina.externalIdentifier
+      solr_doc[:id] = cocina.externalIdentifier
       solr_doc['current_version_isi'] = cocina.version # Argo Facet field "Version"
       solr_doc['obj_label_tesim'] = cocina.label
 
