@@ -296,7 +296,11 @@ RSpec.describe DescriptiveMetadataIndexer do
       end
     end
 
-    context 'when code value from mapped authority - marcgac padded with dashes' do
+    context "when code isn't found in the authority" do
+      before do
+        allow(Honeybadger).to receive(:notify)
+      end
+
       # mapped authorities are marcgac and marccountry
       # marcgac mapping: https://github.com/sul-dlss/mods/blob/master/lib/mods/marc_geo_area_codes.rb
       # marccountry mapping: https://github.com/sul-dlss/stanford-mods/blob/master/lib/marc_countries.rb
@@ -320,7 +324,9 @@ RSpec.describe DescriptiveMetadataIndexer do
       end
 
       it 'maps the code to text' do
-        expect(doc).to include('sw_subject_geographic_ssim' => ['Russia (Federation)'])
+        expect(doc).not_to include('sw_subject_geographic_ssim')
+        expect(Honeybadger).to have_received(:notify)
+          .with('[DATA ERROR] Unable to find "e-ru---" in authority "marcgac"')
       end
     end
 
