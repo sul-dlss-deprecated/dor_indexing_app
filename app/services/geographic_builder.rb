@@ -48,16 +48,18 @@ class GeographicBuilder
   def place_from_code(node)
     return [] unless node.code && node.source
 
-    code_with_dashes = node.code.gsub(/[^\w-]/, '') # remove any punctuation (except dash).
-    code_without_dashes = code_with_dashes.sub(/-+$/, '') # remove trailing dashes.
+    code = node.code.gsub(/[^\w-]/, '') # remove any punctuation (except dash).
     case node.source.code
     when 'marcgac'
-      [Marc::Vocab::GeographicArea.fetch(code_with_dashes, nil) || Marc::Vocab::GeographicArea.fetch(code_without_dashes, nil)].compact
+      [Marc::Vocab::GeographicArea.fetch(code)]
     when 'marccountry'
-      [Marc::Vocab::Country.fetch(code_without_dashes, nil)].compact
+      [Marc::Vocab::Country.fetch(code)]
     else
       []
     end
+  rescue KeyError
+    Honeybadger.notify("[DATA ERROR] Unable to find \"#{code}\" in authority \"#{node.source.code}\"")
+    []
   end
 
   def build_hierarchical_subject(node)
