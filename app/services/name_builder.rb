@@ -2,11 +2,12 @@
 
 class NameBuilder
   # @param [Symbol] strategy ":first" is the strategy for how to choose a name if primary and display name is not found
+  # @return [Array<String>] names
   def self.build(names, strategy: :first)
     flat_names = flat_names_for(names)
     name = display_name_for(flat_names) || primary_name_for(flat_names)
     name ||= flat_names.first if strategy == :first
-    return build_name(name) if name
+    return Array(build_name(name)) if name
 
     flat_names.map { |one| build_name(one) }
   end

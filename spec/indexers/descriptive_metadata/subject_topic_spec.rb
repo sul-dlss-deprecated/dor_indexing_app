@@ -421,6 +421,35 @@ RSpec.describe DescriptiveMetadataIndexer do
       end
     end
 
+    context 'when name subject with display' do
+      let(:description) do
+        {
+          title: [
+            {
+              value: 'Title'
+            }
+          ],
+          subject: [
+            parallelValue: [
+              {
+                value: 'Sayers, Dorothy L.'
+              },
+              {
+                value: 'Sayers, Dorothy L., 1983-1957',
+                type: 'display'
+              }
+            ],
+            type: 'person'
+          ]
+        }
+      end
+
+      it 'selects name from subject for topic_ssim' do
+        expect(doc).to include('topic_ssim' => ['Sayers, Dorothy L., 1983-1957', 'Sayers, Dorothy L.'])
+        expect(doc).not_to include('topic_tesim')
+      end
+    end
+
     context 'when multipart name subject' do
       # concatenate in given order with comma space separator EXCEPT:
       # 1. concatenate consecutive surnames with space
