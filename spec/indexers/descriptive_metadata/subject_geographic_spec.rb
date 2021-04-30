@@ -296,6 +296,59 @@ RSpec.describe DescriptiveMetadataIndexer do
       end
     end
 
+    context 'when code value from mapped authority - marcgac padded with dashes' do
+      # mapped authorities are marcgac and marccountry
+      # marcgac mapping: https://github.com/sul-dlss/mods/blob/master/lib/mods/marc_geo_area_codes.rb
+      # marccountry mapping: https://github.com/sul-dlss/stanford-mods/blob/master/lib/marc_countries.rb
+      let(:description) do
+        {
+          title: [
+            {
+              value: 'title'
+            }
+          ],
+          subject: [
+            {
+              code: 'e-ru---',
+              type: 'place',
+              source: {
+                code: 'marcgac'
+              }
+            }
+          ]
+        }
+      end
+
+      it 'maps the code to text' do
+        expect(doc).to include('sw_subject_geographic_ssim' => ['Russia (Federation)'])
+      end
+    end
+
+    context 'when code value from mapped authority - unknown marcgac' do
+      let(:description) do
+        {
+          title: [
+            {
+              value: 'title'
+            }
+          ],
+          subject: [
+            {
+              code: 'foo----',
+              type: 'place',
+              source: {
+                code: 'marcgac'
+              }
+            }
+          ]
+        }
+      end
+
+      it 'maps the code to text' do
+        expect(doc).not_to include('sw_subject_geographic_ssim')
+      end
+    end
+
     context 'when code value from mapped authority - marccountry' do
       let(:description) do
         {
@@ -318,6 +371,31 @@ RSpec.describe DescriptiveMetadataIndexer do
 
       it 'maps the code to text' do
         expect(doc).to include('sw_subject_geographic_ssim' => ['Russia (Federation)'])
+      end
+    end
+
+    context 'when code value from mapped authority - unknown marccountry' do
+      let(:description) do
+        {
+          title: [
+            {
+              value: 'title'
+            }
+          ],
+          subject: [
+            {
+              code: 'fu',
+              type: 'place',
+              source: {
+                code: 'marccountry'
+              }
+            }
+          ]
+        }
+      end
+
+      it 'maps the code to text' do
+        expect(doc).not_to include('sw_subject_geographic_ssim')
       end
     end
 
