@@ -48,12 +48,13 @@ class GeographicBuilder
   def place_from_code(node)
     return [] unless node.code && node.source
 
-    code = node.code.sub(/[^\w-]/, '') # remove any punctuation (except dash).
+    code_with_dashes = node.code.gsub(/[^\w-]/, '') # remove any punctuation (except dash).
+    code_without_dashes = code_with_dashes.sub(/-+$/, '') # remove trailing dashes.
     case node.source.code
     when 'marcgac'
-      [Marc::Vocab::GeographicArea.fetch(code)]
+      [Marc::Vocab::GeographicArea.fetch(code_with_dashes, nil) || Marc::Vocab::GeographicArea.fetch(code_without_dashes, nil)].compact
     when 'marccountry'
-      [Marc::Vocab::Country.fetch(code)]
+      [Marc::Vocab::Country.fetch(code_without_dashes, nil)].compact
     else
       []
     end
