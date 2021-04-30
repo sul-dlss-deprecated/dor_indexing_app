@@ -25,7 +25,7 @@ class AuthorBuilder
   def build_contributor(contributor)
     return if contributor.nil?
 
-    NameBuilder.build(contributor.name)
+    NameBuilder.build(contributor.name).first
   end
 
   def primary_contributor
