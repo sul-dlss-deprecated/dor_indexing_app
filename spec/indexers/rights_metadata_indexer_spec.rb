@@ -302,6 +302,68 @@ RSpec.describe RightsMetadataIndexer do
         it { is_expected.to eq ['stanford', 'world (file)'] }
       end
 
+      context 'when citation, world (file)' do
+        # https://argo.stanford.edu/view/druid:mq506jn2183
+        let(:structural) do
+          {
+            "contains": [
+              {
+                "type": 'http://cocina.sul.stanford.edu/models/resources/page.jsonld',
+                "externalIdentifier": 'http://cocina.sul.stanford.edu/fileSet/d906da21-aca1-4b95-b7d1-c14c23cd93e6',
+                "label": 'Page 1',
+                "version": 5,
+                "structural": {
+                  "contains": [
+                    {
+                      "type": 'http://cocina.sul.stanford.edu/models/file.jsonld',
+                      "externalIdentifier": 'http://cocina.sul.stanford.edu/file/4d88213d-f150-45ae-a58a-08b1045db2a0',
+                      "label": '50807230_0001.jp2',
+                      "filename": '50807230_0001.jp2',
+                      "size": 3_575_822,
+                      "version": 5,
+                      "hasMimeType": 'image/jp2',
+                      "hasMessageDigests": [
+                        {
+                          "type": 'sha1',
+                          "digest": '0a089200032d209e9b3e7f7768dd35323a863fcc'
+                        },
+                        {
+                          "type": 'md5',
+                          "digest": 'c99fae3c4c53e40824e710440f08acb9'
+                        }
+                      ],
+                      "access": file_access,
+                      "administrative": {
+                        "publish": false,
+                        "sdrPreserve": false,
+                        "shelve": false
+                      },
+                      "presentation": {}
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        end
+
+        let(:access) do
+          {
+            'access' => 'citation-only',
+            'download' => 'none'
+          }
+        end
+
+        let(:file_access) do
+          {
+            "access": 'world',
+            "download": 'world'
+          }
+        end
+
+        it { is_expected.to eq ['citation', 'world (file)'] }
+      end
+
       context 'when world (no-download), stanford (no-download) (file)' do
         # via https://argo.stanford.edu/view/druid:cb810hh5010
         let(:structural) do
@@ -362,6 +424,67 @@ RSpec.describe RightsMetadataIndexer do
         end
 
         it { is_expected.to eq ['world (no-download)', 'stanford (no-download) (file)'] }
+      end
+
+      context 'when two object level access. stanford, world (no-download), and world (file) ' do
+        # via https://argo.stanford.edu/view/druid:bd336ff4952
+        let(:structural) do
+          {
+            "contains": [
+              {
+                "type": 'http://cocina.sul.stanford.edu/models/resources/page.jsonld',
+                "externalIdentifier": 'http://cocina.sul.stanford.edu/fileSet/d906da21-aca1-4b95-b7d1-c14c23cd93e6',
+                "label": 'Page 1',
+                "version": 5,
+                "structural": {
+                  "contains": [
+                    {
+                      "type": 'http://cocina.sul.stanford.edu/models/file.jsonld',
+                      "externalIdentifier": 'http://cocina.sul.stanford.edu/file/4d88213d-f150-45ae-a58a-08b1045db2a0',
+                      "label": '50807230_0001.jp2',
+                      "filename": '50807230_0001.jp2',
+                      "size": 3_575_822,
+                      "version": 5,
+                      "hasMimeType": 'image/jp2',
+                      "hasMessageDigests": [
+                        {
+                          "type": 'sha1',
+                          "digest": '0a089200032d209e9b3e7f7768dd35323a863fcc'
+                        },
+                        {
+                          "type": 'md5',
+                          "digest": 'c99fae3c4c53e40824e710440f08acb9'
+                        }
+                      ],
+                      "access": file_access,
+                      "administrative": {
+                        "publish": false,
+                        "sdrPreserve": false,
+                        "shelve": false
+                      },
+                      "presentation": {}
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        end
+        let(:access) do
+          {
+            'access' => 'world',
+            'download' => 'stanford'
+          }
+        end
+
+        let(:file_access) do
+          {
+            "access": 'world',
+            "download": 'world'
+          }
+        end
+
+        it { is_expected.to eq ['stanford', 'world (no-download)', 'world (file)'] }
       end
     end
   end
