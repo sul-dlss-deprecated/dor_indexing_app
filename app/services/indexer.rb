@@ -8,7 +8,6 @@ class Indexer
     DataIndexer,
     RoleMetadataIndexer,
     DefaultObjectRightsIndexer,
-    RightsMetadataIndexer,
     IdentityMetadataIndexer,
     DescriptiveMetadataIndexer,
     IdentifiableIndexer,
