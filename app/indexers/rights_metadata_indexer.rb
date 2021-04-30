@@ -53,7 +53,10 @@ class RightsMetadataIndexer
     files = Array(cocina.structural.contains).flat_map { |fs| Array(fs.structural.contains) }
                                              .map { |file| build_basic_access_with_download(file.access) }.uniq
 
-    [basic_access] + files.map { |result| "#{result} (file)" }
+    # citation or dark access don't have any file access
+    return [basic_access] if %w[dark citation].include?(basic_access)
+
+    [basic_access] + (files - [basic_access]).map { |result| "#{result} (file)" }
   end
 
   def build_basic_access(access)

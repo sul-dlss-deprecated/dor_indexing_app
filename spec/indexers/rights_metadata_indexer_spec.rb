@@ -85,10 +85,60 @@ RSpec.describe RightsMetadataIndexer do
     describe 'rights descriptions' do
       subject { doc['rights_descriptions_ssim'] }
 
+      let(:structural) do
+        {
+          "contains": [
+            {
+              "type": 'http://cocina.sul.stanford.edu/models/resources/page.jsonld',
+              "externalIdentifier": 'http://cocina.sul.stanford.edu/fileSet/d906da21-aca1-4b95-b7d1-c14c23cd93e6',
+              "label": 'Page 1',
+              "version": 5,
+              "structural": {
+                "contains": [
+                  {
+                    "type": 'http://cocina.sul.stanford.edu/models/file.jsonld',
+                    "externalIdentifier": 'http://cocina.sul.stanford.edu/file/4d88213d-f150-45ae-a58a-08b1045db2a0',
+                    "label": '50807230_0001.jp2',
+                    "filename": '50807230_0001.jp2',
+                    "size": 3_575_822,
+                    "version": 5,
+                    "hasMimeType": 'image/jp2',
+                    "hasMessageDigests": [
+                      {
+                        "type": 'sha1',
+                        "digest": '0a089200032d209e9b3e7f7768dd35323a863fcc'
+                      },
+                      {
+                        "type": 'md5',
+                        "digest": 'c99fae3c4c53e40824e710440f08acb9'
+                      }
+                    ],
+                    "access": file_access,
+                    "administrative": {
+                      "publish": false,
+                      "sdrPreserve": false,
+                      "shelve": false
+                    },
+                    "presentation": {}
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      end
+
       context 'when citation only' do
         let(:access) do
           {
             'access' => 'citation-only',
+            'download' => 'none'
+          }
+        end
+
+        let(:file_access) do
+          {
+            'access' => 'dark',
             'download' => 'none'
           }
         end
@@ -105,11 +155,26 @@ RSpec.describe RightsMetadataIndexer do
           }
         end
 
+        let(:file_access) do
+          {
+            'access' => 'stanford',
+            'download' => 'none',
+            'controlledDigitalLending' => false
+          }
+        end
+
         it { is_expected.to eq 'controlled digital lending' }
       end
 
       context 'when dark' do
         let(:access) do
+          {
+            'access' => 'dark',
+            'download' => 'none'
+          }
+        end
+
+        let(:file_access) do
           {
             'access' => 'dark',
             'download' => 'none'
@@ -128,6 +193,14 @@ RSpec.describe RightsMetadataIndexer do
           }
         end
 
+        let(:file_access) do
+          {
+            'access' => 'location-based',
+            'download' => 'location-based',
+            'readLocation' => 'spec'
+          }
+        end
+
         it { is_expected.to eq ['location: spec'] }
       end
 
@@ -139,53 +212,18 @@ RSpec.describe RightsMetadataIndexer do
           }
         end
 
+        let(:file_access) do
+          {
+            'access' => 'world',
+            'download' => 'none'
+          }
+        end
+
         it { is_expected.to eq ['world (no-download)'] }
       end
 
       context 'when stanford, dark (file)' do
         # via https://argo.stanford.edu/view/druid:hz651dj0129
-        let(:structural) do
-          {
-            "contains": [
-              {
-                "type": 'http://cocina.sul.stanford.edu/models/resources/page.jsonld',
-                "externalIdentifier": 'http://cocina.sul.stanford.edu/fileSet/d906da21-aca1-4b95-b7d1-c14c23cd93e6',
-                "label": 'Page 1',
-                "version": 5,
-                "structural": {
-                  "contains": [
-                    {
-                      "type": 'http://cocina.sul.stanford.edu/models/file.jsonld',
-                      "externalIdentifier": 'http://cocina.sul.stanford.edu/file/4d88213d-f150-45ae-a58a-08b1045db2a0',
-                      "label": '50807230_0001.jp2',
-                      "filename": '50807230_0001.jp2',
-                      "size": 3_575_822,
-                      "version": 5,
-                      "hasMimeType": 'image/jp2',
-                      "hasMessageDigests": [
-                        {
-                          "type": 'sha1',
-                          "digest": '0a089200032d209e9b3e7f7768dd35323a863fcc'
-                        },
-                        {
-                          "type": 'md5',
-                          "digest": 'c99fae3c4c53e40824e710440f08acb9'
-                        }
-                      ],
-                      "access": file_access,
-                      "administrative": {
-                        "publish": false,
-                        "sdrPreserve": false,
-                        "shelve": false
-                      },
-                      "presentation": {}
-                    }
-                  ]
-                }
-              }
-            ]
-          }
-        end
         let(:access) do
           {
             'access' => 'stanford',
