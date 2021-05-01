@@ -58,7 +58,9 @@ class GeographicBuilder
       []
     end
   rescue KeyError
-    Honeybadger.notify("[DATA ERROR] Unable to find \"#{code}\" in authority \"#{node.source.code}\"")
+    # TODO: just commented out for now to keep from chewing through HB quota over the weekend since we're hitting
+    # this error a lot on a prior commit where it's uncaught (5297f4fe5c8f7661a5542265a512504efa97e9ea)
+    # Honeybadger.notify("[DATA ERROR] Unable to find \"#{code}\" in authority \"#{node.source.code}\"")
     []
   end
 
