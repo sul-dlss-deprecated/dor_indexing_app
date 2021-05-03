@@ -86,7 +86,7 @@ class RightsMetadataIndexer
       .uniq
   end
 
-  def object_level_access
+  def object_level_access # rubocop:disable Metrics/MethodLength
     case cocina.access.access
     when 'citation-only'
       ['citation']
@@ -100,7 +100,12 @@ class RightsMetadataIndexer
         ['world']
       end
     when 'location-based'
-      ["location: #{cocina.access.readLocation}"]
+      case cocina.access.download
+      when 'none'
+        ["location: #{cocina.access.readLocation} (no-download)"]
+      else
+        ["location: #{cocina.access.readLocation}"]
+      end
     when 'stanford'
       ['stanford']
     end

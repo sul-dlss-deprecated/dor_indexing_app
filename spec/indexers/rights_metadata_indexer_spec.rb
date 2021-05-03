@@ -185,23 +185,45 @@ RSpec.describe RightsMetadataIndexer do
       end
 
       context 'when location' do
-        let(:access) do
-          {
-            'access' => 'location-based',
-            'download' => 'location-based',
-            'readLocation' => 'spec'
-          }
+        context 'when downloadable' do
+          let(:access) do
+            {
+              'access' => 'location-based',
+              'download' => 'location-based',
+              'readLocation' => 'spec'
+            }
+          end
+
+          let(:file_access) do
+            {
+              'access' => 'location-based',
+              'download' => 'location-based',
+              'readLocation' => 'spec'
+            }
+          end
+
+          it { is_expected.to eq ['location: spec'] }
         end
 
-        let(:file_access) do
-          {
-            'access' => 'location-based',
-            'download' => 'location-based',
-            'readLocation' => 'spec'
-          }
-        end
+        context 'when not downloadable' do
+          let(:access) do
+            {
+              'access' => 'location-based',
+              'download' => 'none',
+              'readLocation' => 'spec'
+            }
+          end
 
-        it { is_expected.to eq ['location: spec'] }
+          let(:file_access) do
+            {
+              'access' => 'location-based',
+              'download' => 'none',
+              'readLocation' => 'spec'
+            }
+          end
+
+          it { is_expected.to eq ['location: spec (no-download)'] }
+        end
       end
 
       context 'when no-download' do
