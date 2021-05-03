@@ -75,6 +75,18 @@ class RightsDescriptionBuilder
         ["location: #{cocina.access.readLocation}"]
       end
     when 'stanford'
+      stanford_object_access
+    end
+  end
+
+  def stanford_object_access
+    case cocina.access.download
+    when 'none'
+      ['stanford (no-download)']
+    when 'location-based'
+      # this is an odd case we might want to move away from. See https://github.com/sul-dlss/cocina-models/issues/258
+      ['stanford (no-download)', "location: #{cocina.access.readLocation}"]
+    else
       ['stanford']
     end
   end

@@ -246,7 +246,27 @@ RSpec.describe RightsMetadataIndexer do
         it { is_expected.to eq ['world (no-download)', 'location: spec'] }
       end
 
-      context 'when no-download' do
+      context 'when stanford readable and location download' do
+        let(:access) do
+          {
+            'access' => 'stanford',
+            'download' => 'location-based',
+            'readLocation' => 'spec'
+          }
+        end
+
+        let(:file_access) do
+          {
+            'access' => 'stanford',
+            'download' => 'location-based',
+            'readLocation' => 'spec'
+          }
+        end
+
+        it { is_expected.to eq ['stanford (no-download)', 'location: spec'] }
+      end
+
+      context 'when world readable and no-download' do
         let(:access) do
           {
             'access' => 'world',
@@ -262,6 +282,26 @@ RSpec.describe RightsMetadataIndexer do
         end
 
         it { is_expected.to eq ['world (no-download)'] }
+      end
+
+      context 'when stanford readable and no-download' do
+        let(:access) do
+          {
+            'access' => 'stanford',
+            'download' => 'none',
+            'controlledDigitalLending' => false
+          }
+        end
+
+        let(:file_access) do
+          {
+            'access' => 'stanford',
+            'download' => 'none',
+            'controlledDigitalLending' => false
+          }
+        end
+
+        it { is_expected.to eq ['stanford (no-download)'] }
       end
 
       context 'when stanford, dark (file)' do
