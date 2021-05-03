@@ -226,6 +226,26 @@ RSpec.describe RightsMetadataIndexer do
         end
       end
 
+      context 'when world readable and location download' do
+        let(:access) do
+          {
+            'access' => 'world',
+            'download' => 'location-based',
+            'readLocation' => 'spec'
+          }
+        end
+
+        let(:file_access) do
+          {
+            'access' => 'world',
+            'download' => 'location-based',
+            'readLocation' => 'spec'
+          }
+        end
+
+        it { is_expected.to eq ['world (no-download)', 'location: spec'] }
+      end
+
       context 'when no-download' do
         let(:access) do
           {
