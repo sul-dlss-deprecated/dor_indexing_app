@@ -41,6 +41,9 @@ RSpec/FilePath:
   Exclude:
     - 'spec/indexers/descriptive_metadata/*'
 
+RSpec/NestedGroups:
+  Max: 5
+
 Layout/BeginEndAlignment: # (new in 0.91)
   Enabled: true
 Layout/EmptyLinesAroundAttributeAccessor: # (new in 0.83)

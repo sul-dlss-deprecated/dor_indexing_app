@@ -15,7 +15,7 @@ class RightsMetadataIndexer
       'copyright_ssim' => cocina.access.copyright,
       'use_statement_ssim' => cocina.access.useAndReproductionStatement,
       'use_license_machine_ssi' => license,
-      'rights_descriptions_ssim' => cocina.dro? ? rights_descriptions_for_item : rights_descriptions_for_collection
+      'rights_descriptions_ssim' => RightsDescriptionBuilder.build(cocina)
     }.compact
   end
 
@@ -41,40 +41,6 @@ class RightsMetadataIndexer
     'http://opendatacommons.org/licenses/by/1.0/' => 'odc-by',
     'http://opendatacommons.org/licenses/odbl/1.0/' => 'odc-odbl'
   }.freeze
-
-  def rights_descriptions_for_collection
-    build_basic_access(cocina.access)
-  end
-
-  def rights_descriptions_for_item
-    return 'controlled digital lending' if cocina.access.controlledDigitalLending
-
-    basic_access = build_basic_access_with_download(cocina.access)
-    files = Array(cocina.structural.contains).flat_map { |fs| Array(fs.structural.contains) }
-                                             .map { |file| build_basic_access_with_download(file.access) }.uniq
-
-    [basic_access] + files.map { |result| "#{result} (file)" }
-  end
-
-  def build_basic_access(access)
-    case access.access
-    when 'citation-only'
-      'citation'
-    when 'dark'
-      'dark'
-    when 'location-based'
-      "location: #{access.readLocation}"
-    else
-      access.access
-    end
-  end
-
-  def build_basic_access_with_download(access)
-    basic_access = build_basic_access(access)
-    return basic_access if access.download != 'none' || %w[dark citation].include?(basic_access)
-
-    "#{basic_access} (no-download)"
-  end
 
   # @return [String] the code if we've defined one, or the URI if we haven't.
   def license
