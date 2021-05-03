@@ -569,6 +569,25 @@ RSpec.describe RightsMetadataIndexer do
         it { is_expected.to eq ['stanford', 'world (no-download)', 'world (file)'] }
       end
 
+      context 'when file level access has a read location' do
+        let(:access) do
+          {
+            'access' => 'citation-only',
+            'download' => 'none'
+          }
+        end
+
+        let(:file_access) do
+          {
+            access: 'location-based',
+            download: 'none',
+            readLocation: 'm&m'
+          }
+        end
+
+        it { is_expected.to eq ['citation', 'location: m&m (no-download) (file)'] }
+      end
+
       context 'when file level access has stanford and a download location' do
         let(:access) do
           {
