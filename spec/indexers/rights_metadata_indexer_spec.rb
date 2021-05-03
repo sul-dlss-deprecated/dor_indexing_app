@@ -508,7 +508,7 @@ RSpec.describe RightsMetadataIndexer do
         it { is_expected.to eq ['world (no-download)', 'stanford (no-download) (file)'] }
       end
 
-      context 'when two object level access. stanford, world (no-download), and world (file) ' do
+      context 'when two object level access. stanford, world (no-download), and world (file)' do
         # via https://argo.stanford.edu/view/druid:bd336ff4952
         let(:structural) do
           {
@@ -567,6 +567,44 @@ RSpec.describe RightsMetadataIndexer do
         end
 
         it { is_expected.to eq ['stanford', 'world (no-download)', 'world (file)'] }
+      end
+
+      context 'when file level access has stanford and a download location' do
+        let(:access) do
+          {
+            'access' => 'citation-only',
+            'download' => 'none'
+          }
+        end
+
+        let(:file_access) do
+          {
+            access: 'stanford',
+            download: 'location-based',
+            readLocation: 'm&m'
+          }
+        end
+
+        it { is_expected.to eq ['citation', 'stanford (no-download) (file)', 'location: m&m (file)'] }
+      end
+
+      context 'when file level access has world and a download location' do
+        let(:access) do
+          {
+            'access' => 'citation-only',
+            'download' => 'none'
+          }
+        end
+
+        let(:file_access) do
+          {
+            access: 'world',
+            download: 'location-based',
+            readLocation: 'm&m'
+          }
+        end
+
+        it { is_expected.to eq ['citation', 'world (no-download) (file)', 'location: m&m (file)'] }
       end
     end
   end

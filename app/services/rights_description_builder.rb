@@ -31,7 +31,7 @@ class RightsDescriptionBuilder
 
     return ['dark'] if cocina.access.access == 'dark'
 
-    object_level_access + file_level_access
+    object_level_access + file_level_access.map { |str| "#{str} (file)" }
   end
 
   def file_level_access
@@ -42,10 +42,11 @@ class RightsDescriptionBuilder
       next if same_as_object_access?(fa)
 
       file_access << if fa[:access] != 'dark' && fa[:access] != fa[:download]
-                       "#{fa[:access]} (no-download) (file)"
+                       "#{fa[:access]} (no-download)"
                      else
-                       "#{fa[:access]} (file)"
+                       fa[:access]
                      end
+      file_access << "location: #{fa[:readLocation]}" if fa[:download] == 'location-based'
     end
   end
 
