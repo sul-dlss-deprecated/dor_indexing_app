@@ -54,10 +54,16 @@ class RightsDescriptionBuilder
 
     basic_access += ' (no-download)' if file_access[:access] != 'dark'
 
-    return [basic_access] unless file_access[:download] == 'location-based'
-
-    # Here we're using readLocation to mean download location. https://github.com/sul-dlss/cocina-models/issues/258
-    [basic_access, "location: #{file_access[:readLocation]}"]
+    case file_access[:download]
+    when 'stanford'
+      # Here we're using readLocation to mean download location. https://github.com/sul-dlss/cocina-models/issues/258
+      [basic_access, 'stanford']
+    when 'location-based'
+      # Here we're using readLocation to mean download location. https://github.com/sul-dlss/cocina-models/issues/258
+      [basic_access, "location: #{file_access[:readLocation]}"]
+    else
+      [basic_access]
+    end
   end
 
   def same_as_object_access?(file_access)
