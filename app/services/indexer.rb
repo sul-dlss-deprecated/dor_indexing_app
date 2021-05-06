@@ -52,7 +52,6 @@ class Indexer
   FALLBACK_INDEXER = CompositeIndexer.new(
     DataQualityIndexer,
     AdministrativeTagIndexer,
-    ReleasableIndexer,
     WorkflowsIndexer,
     Fedora3LabelIndexer
   )
