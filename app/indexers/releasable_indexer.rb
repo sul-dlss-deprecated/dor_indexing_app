@@ -29,6 +29,6 @@ class ReleasableIndexer
   private
 
   def released_for
-    cocina.administrative.releaseTags
+    Array(cocina.administrative.releaseTags)
   end
 end

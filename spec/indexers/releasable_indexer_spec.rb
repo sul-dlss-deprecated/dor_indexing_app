@@ -12,14 +12,7 @@ RSpec.describe ReleasableIndexer do
       'version' => 1,
       'label' => 'testing',
       'access' => {},
-      'administrative' => {
-        'hasAdminPolicy' => apo_id,
-        'releaseTags' => [
-          { 'to' => 'Project', 'release' => true },
-          { 'to' => 'test_target', 'release' => true },
-          { 'to' => 'test_nontarget', 'release' => false }
-        ]
-      },
+      'administrative' => administrative,
       'description' => {
         'title' => [{ 'value' => 'Test obj' }]
       },
@@ -33,8 +26,33 @@ RSpec.describe ReleasableIndexer do
   describe 'to_solr' do
     let(:doc) { described_class.new(cocina: cocina).to_solr }
 
-    it 'indexes release tags' do
-      expect(doc).to eq('released_to_ssim' => %w[Project test_target])
+    context 'when releaseTags are present' do
+      let(:administrative) do
+        {
+          'hasAdminPolicy' => apo_id,
+          'releaseTags' => [
+            { 'to' => 'Project', 'release' => true },
+            { 'to' => 'test_target', 'release' => true },
+            { 'to' => 'test_nontarget', 'release' => false }
+          ]
+        }
+      end
+
+      it 'indexes release tags' do
+        expect(doc).to eq('released_to_ssim' => %w[Project test_target])
+      end
+    end
+
+    context 'when releaseTags are not present' do
+      let(:administrative) do
+        {
+          'hasAdminPolicy' => apo_id
+        }
+      end
+
+      it 'has no release tags' do
+        expect(doc).not_to include('released_to_ssim')
+      end
     end
   end
 end
