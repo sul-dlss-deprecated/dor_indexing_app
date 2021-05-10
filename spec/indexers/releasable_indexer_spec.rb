@@ -3,27 +3,38 @@
 require 'rails_helper'
 
 RSpec.describe ReleasableIndexer do
-  let(:cocina) { instance_double(Cocina::Models::DRO) }
+  let(:apo_id) { 'druid:gf999hb9999' }
+
+  let(:cocina) do
+    Cocina::Models.build(
+      'externalIdentifier' => 'druid:pz263ny9658',
+      'type' => Cocina::Models::Vocab.image,
+      'version' => 1,
+      'label' => 'testing',
+      'access' => {},
+      'administrative' => {
+        'hasAdminPolicy' => apo_id,
+        'releaseTags' => [
+          { 'to' => 'Project', 'release' => true },
+          { 'to' => 'test_target', 'release' => true },
+          { 'to' => 'test_nontarget', 'release' => false }
+        ]
+      },
+      'description' => {
+        'title' => [{ 'value' => 'Test obj' }]
+      },
+      'structural' => {},
+      'identification' => {
+        'catalogLinks' => [{ 'catalog' => 'symphony', 'catalogRecordId' => '1234' }]
+      }
+    )
+  end
 
   describe 'to_solr' do
-    let(:doc) { described_class.new(id: 'druid:pz263ny9658', cocina: cocina).to_solr }
-    let(:released_for_info) do
-      {
-        'Project' => { 'release' => true },
-        'test_target' => { 'release' => true },
-        'test_nontarget' => { 'release' => false }
-      }
-    end
-    let(:released_to_field_name) { Solrizer.solr_name('released_to', :symbol) }
-    let(:object_client) { instance_double(Dor::Services::Client::Object, release_tags: tags_client) }
-    let(:tags_client) { instance_double(Dor::Services::Client::ReleaseTags, list: released_for_info) }
-
-    before do
-      allow(Dor::Services::Client).to receive(:object).and_return(object_client)
-    end
+    let(:doc) { described_class.new(cocina: cocina).to_solr }
 
     it 'indexes release tags' do
-      expect(doc).to eq(released_to_field_name => %w[Project test_target])
+      expect(doc).to eq('released_to_ssim' => %w[Project test_target])
     end
   end
 end

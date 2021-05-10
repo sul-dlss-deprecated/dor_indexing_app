@@ -173,7 +173,7 @@ RSpec.describe Indexer do
         let(:indexer) { described_class.for(model, cocina_with_metadata: Failure(:conversion_error)) }
         let(:model) { Dor::Item.new(pid: druid) }
 
-        it { is_expected.to include('milestones_ssim', 'released_to_ssim', 'wf_ssim', 'tag_ssim', 'obj_label_tesim', 'has_model_ssim', :id) }
+        it { is_expected.to include('milestones_ssim', 'wf_ssim', 'tag_ssim', 'obj_label_tesim', 'has_model_ssim', :id) }
       end
     end
 

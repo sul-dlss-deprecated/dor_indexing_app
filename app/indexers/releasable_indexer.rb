@@ -3,10 +3,10 @@
 class ReleasableIndexer
   include SolrDocHelper
 
-  attr_reader :id
+  attr_reader :cocina
 
-  def initialize(id:, **)
-    @id = id
+  def initialize(cocina:, **)
+    @cocina = cocina
   end
 
   # @return [Hash] the partial solr document for releasable concerns
@@ -16,8 +16,8 @@ class ReleasableIndexer
 
     # TODO: sort of worried about the performance impact in bulk reindex
     # situations, since released_for recurses all parent collections.  jmartin 2015-07-14
-    released_for.each do |release_target, release_info|
-      add_solr_value(solr_doc, 'released_to', release_target, :symbol, []) if release_info['release']
+    released_for.each do |directive|
+      add_solr_value(solr_doc, 'released_to', directive.to, :symbol, []) if directive.release
     end
 
     # TODO: need to solrize whether item is released to purl?  does released_for return that?
@@ -29,13 +29,6 @@ class ReleasableIndexer
   private
 
   def released_for
-    Rails.logger.debug 'Getting releases'
-    object_client.release_tags.list.tap do
-      Rails.logger.debug 'Got releases'
-    end
-  end
-
-  def object_client
-    Dor::Services::Client.object(id)
+    cocina.administrative.releaseTags
   end
 end
