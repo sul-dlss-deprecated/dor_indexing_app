@@ -31,9 +31,12 @@ RSpec.describe ReleasableIndexer do
         {
           'hasAdminPolicy' => apo_id,
           'releaseTags' => [
-            { 'to' => 'Project', 'release' => true },
+            { 'to' => 'Project', 'release' => true, 'date' => '2016-11-16T22:52:35.000+00:00' },
+            { 'to' => 'Project', 'release' => false, 'date' => '2016-12-21T17:31:18.000+00:00' },
+            { 'to' => 'Project', 'release' => true, 'date' => '2021-05-12T21:05:21.000+00:00' },
             { 'to' => 'test_target', 'release' => true },
-            { 'to' => 'test_nontarget', 'release' => false }
+            { 'to' => 'test_nontarget', 'release' => false, 'date' => '2016-12-16T22:52:35.000+00:00' },
+            { 'to' => 'test_nontarget', 'release' => true, 'date' => '2016-11-16T22:52:35.000+00:00' }
           ]
         }
       end
