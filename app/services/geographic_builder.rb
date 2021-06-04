@@ -58,7 +58,8 @@ class GeographicBuilder
       []
     end
   rescue KeyError
-    Honeybadger.notify("[DATA ERROR] Unable to find \"#{code}\" in authority \"#{node.source.code}\"")
+    # Per Arcadia, halt HB notification until after data clean-up.
+    # Honeybadger.notify("[DATA ERROR] Unable to find \"#{code}\" in authority \"#{node.source.code}\"")
     []
   end
 
