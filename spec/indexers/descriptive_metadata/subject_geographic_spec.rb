@@ -325,8 +325,9 @@ RSpec.describe DescriptiveMetadataIndexer do
 
       it 'maps the code to text' do
         expect(doc).not_to include('sw_subject_geographic_ssim')
-        expect(Honeybadger).to have_received(:notify)
-          .with('[DATA ERROR] Unable to find "e-ru---" in authority "marcgac"')
+        # HB notification has been temporarily removed.
+        # expect(Honeybadger).to have_received(:notify)
+        #   .with('[DATA ERROR] Unable to find "e-ru---" in authority "marcgac"')
       end
     end
 
