@@ -17,7 +17,6 @@ RSpec.describe EmbargoMetadataIndexer do
         'download' => 'none',
         'copyright' => 'some student',
         'useAndReproductionStatement' => 'restricted until embargo lifted',
-        'license' => 'by-nc-nd',
         'embargo' => {
           'releaseDate' => release_date,
           'access' => 'world',
@@ -70,8 +69,7 @@ RSpec.describe EmbargoMetadataIndexer do
             'access' => 'world',
             'download' => 'none',
             'copyright' => 'some student',
-            'useAndReproductionStatement' => 'restricted until embargo lifted',
-            'license' => 'by-nc-nd'
+            'useAndReproductionStatement' => 'restricted until embargo lifted'
           },
           'administrative' => {
             'hasAdminPolicy' => apo_id
