@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe RightsMetadataIndexer do
   subject(:doc) { indexer.to_solr }
 
-  let(:license) { 'https://creativecommons.org/publicdomain/zero/1.0/' }
+  let(:license) { 'https://creativecommons.org/publicdomain/zero/1.0/legalcode' }
   let(:indexer) do
     described_class.new(cocina: cocina)
   end
