@@ -20,16 +20,17 @@ class DataQualityIndexer
 
   # @return [Boolean] true if the object is an obsolete type that was used for Eems or Etds.
   #                        these will not be migrated as they are ephemeral and not preserved.
-  # rubocop:disable Style/MultipleComparison
   def filtered_object?
-    # conforms_to is used on earlier ETD objects and later objects used has_model
-    return true if resource.relationships(:conforms_to) == ['info:fedora/afmodel:Part']
+    # conformsTo is used on earlier ETD objects and later objects used has_model
+    return true if conforms_to_part?
 
-    model = resource.relationships(:has_model)
     # Etd used Part for everything and Eems used PermissionFile
     model == ['info:fedora/afmodel:Part'] || model == ['info:fedora/afmodel:PermissionFile']
   end
-  # rubocop:enable Style/MultipleComparison
+
+  def model
+    @model ||= resource.models.select { |model| model.start_with? 'info:fedora/afmodel' }
+  end
 
   def messages
     [source_id_message].compact.tap do |messages|
@@ -40,13 +41,25 @@ class DataQualityIndexer
   def source_id_message
     if source_id.present?
       'non-comformant sourceId' unless valid_source_id?
-    elsif resource.is_a?(Dor::Item) # Collections and APOs are not required to have a sourceId
+    elsif model == ['info:fedora/afmodel:Dor_Item'] # Collections and APOs are not required to have a sourceId
       'missing sourceId'
     end
   end
 
+  def conforms_to_part?
+    resource.datastreams['RELS-EXT'].content.body.include?('conformsTo rdf:resource="info:fedora/afmodel:Part"')
+  end
+
   def source_id
-    @source_id ||= resource.identityMetadata.sourceId
+    @source_id ||= source_node ? [source_node['source'], source_node.text].join(':') : nil
+  end
+
+  def source_node
+    @source_node ||= identity_metadata.xpath('//identityMetadata/sourceId').first
+  end
+
+  def identity_metadata
+    Nokogiri::XML(resource.datastreams['identityMetadata'].content.body)
   end
 
   def valid_source_id?

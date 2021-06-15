@@ -8,15 +8,15 @@ RSpec.describe 'DOR', type: :request do
   describe 'POST #reindex' do
     before do
       allow(Logger).to receive(:new).and_return(mock_logger)
-      allow(ActiveFedora.solr).to receive(:conn).and_return(mock_solr_conn)
-      allow(Dor).to receive(:find).with(druid).and_return(mock_af_doc)
-      allow(Indexer).to receive(:for).with(mock_af_doc, cocina_with_metadata: Success([cocina, metadata])).and_return(mock_indexer)
+      allow(RSolr).to receive(:connect).and_return(mock_solr_conn)
+      allow(Indexer).to receive(:for).with(model: cocina, metadata: metadata).and_return(mock_indexer)
       allow(Dor::Services::Client).to receive(:object).with(druid).and_return(object_service)
+      allow(Rubydora).to receive(:connect).and_return(connection)
     end
 
+    let(:connection) { instance_double(Rubydora::Repository) }
     let(:mock_logger) { instance_double(Logger, :formatter= => true, info: true) }
     let(:mock_solr_conn) { instance_double(RSolr::Client, add: true, commit: true) }
-    let(:mock_af_doc) { Dor::Item.new }
     let(:metadata) { {} }
     let(:cocina) { instance_double(Cocina::Models::DRO) }
     let(:object_service) { instance_double(Dor::Services::Client::Object, find_with_metadata: [cocina, metadata]) }
@@ -48,28 +48,31 @@ RSpec.describe 'DOR', type: :request do
     end
 
     it 'gives the right status if an object is not found' do
-      allow(Dor).to receive(:find).and_raise(ActiveFedora::ObjectNotFoundError)
+      allow(object_service).to receive(:find_with_metadata).and_raise(Dor::Services::Client::NotFoundResponse)
+      allow(connection).to receive(:find).and_raise(Rubydora::RecordNotFound)
       post "/dor/reindex/#{druid}"
-      expect(response.body).to eq 'Object does not exist in Fedora.'
+      expect(response.body).to eq 'Object does not exist in the repository'
       expect(response.code).to eq '404'
     end
   end
 
   describe '#delete_from_index' do
+    let(:mock_solr_conn) { instance_double(RSolr::Client, delete_by_id: true, commit: true) }
+
+    before do
+      allow(RSolr).to receive(:connect).and_return(mock_solr_conn)
+    end
+
     it 'removes an object from the index' do
-      allow(ActiveFedora.solr.conn).to receive(:delete_by_id)
-      allow(ActiveFedora.solr.conn).to receive(:commit)
       post "/dor/delete_from_index/#{druid}"
-      expect(ActiveFedora.solr.conn).to have_received(:delete_by_id).once.with(druid, commitWithin: 1000)
-      expect(ActiveFedora.solr.conn).to have_received(:commit).once
+      expect(mock_solr_conn).to have_received(:delete_by_id).once.with(druid, commitWithin: 1000)
+      expect(mock_solr_conn).to have_received(:commit).once
     end
 
     it 'passes through the commitWithin parameter' do
-      allow(ActiveFedora.solr.conn).to receive(:delete_by_id)
-      allow(ActiveFedora.solr.conn).to receive(:commit)
       post "/dor/delete_from_index/#{druid}", params: { commitWithin: 5000 }
-      expect(ActiveFedora.solr.conn).to have_received(:delete_by_id).once.with(druid, commitWithin: 5000)
-      expect(ActiveFedora.solr.conn).not_to have_received(:commit)
+      expect(mock_solr_conn).to have_received(:delete_by_id).once.with(druid, commitWithin: 5000)
+      expect(mock_solr_conn).not_to have_received(:commit)
     end
   end
 

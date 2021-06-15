@@ -5,13 +5,6 @@ require 'rails_helper'
 RSpec.describe WorkflowFields do
   let(:doc) { described_class.for(druid: 'druid:ab123cd4567', version: 4) }
 
-  let(:obj) do
-    instance_double(Dor::Item,
-                    current_version: '4',
-                    pid: '99',
-                    modified_date: '1999-12-20')
-  end
-
   context 'with milestones' do
     let(:dsxml) do
       '
@@ -47,7 +40,6 @@ RSpec.describe WorkflowFields do
         { milestone: 'published', at: Time.zone.parse('2012-11-06 16:59:39 -0800'), version: nil }
       ]
     end
-    let(:version_metadata) { Dor::VersionMetadataDS.from_xml(dsxml) }
 
     let(:status) do
       instance_double(Dor::Workflow::Client::Status,
@@ -61,7 +53,6 @@ RSpec.describe WorkflowFields do
 
     before do
       allow(Dor::Workflow::Client).to receive(:new).and_return(workflow_client)
-      allow(obj).to receive(:versionMetadata).and_return(version_metadata)
     end
 
     it 'includes the semicolon delimited version, an earliest published date and a status' do

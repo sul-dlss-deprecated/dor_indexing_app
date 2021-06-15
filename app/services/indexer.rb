@@ -48,33 +48,16 @@ class Indexer
     WorkflowsIndexer
   )
 
-  # This indexer is used when dor-services-app is unable to produce a cocina representation of the object
-  FALLBACK_INDEXER = CompositeIndexer.new(
-    DataQualityIndexer,
-    AdministrativeTagIndexer,
-    WorkflowsIndexer,
-    Fedora3LabelIndexer
-  )
-
   INDEXERS = {
-    Dor::Agreement => ITEM_INDEXER, # Agreement uses same indexer as Dor::Item
-    Dor::AdminPolicyObject => ADMIN_POLICY_INDEXER,
-    Dor::Collection => COLLECTION_INDEXER,
-    Hydrus::Item => ITEM_INDEXER,
-    Hydrus::AdminPolicyObject => ADMIN_POLICY_INDEXER,
-    Dor::Item => ITEM_INDEXER,
-    Dor::Set => SET_INDEXER
+    Cocina::Models::Vocab.agreement => ITEM_INDEXER, # Agreement uses same indexer as item
+    Cocina::Models::Vocab.admin_policy => ADMIN_POLICY_INDEXER,
+    Cocina::Models::Vocab.collection => COLLECTION_INDEXER
   }.freeze
 
-  # @param [Dor::Abstract] obj
-  # @param [Dry::Monads::Result] cocina_with_metadata
-  def self.for(obj, cocina_with_metadata:)
-    Rails.logger.debug("Fetching indexer for #{obj.class}")
-    if cocina_with_metadata.success?
-      model, metadata = cocina_with_metadata.value!
-      INDEXERS.fetch(obj.class).new(id: model.externalIdentifier, resource: obj, cocina: model, metadata: metadata)
-    else
-      FALLBACK_INDEXER.new(id: obj.pid, resource: obj, cocina: cocina_with_metadata.to_maybe)
-    end
+  # @param [Cocina::Models::DRO,Cocina::Models::Collection,Cocina::Model::AdminPolicy] model
+  # @param [Hash<String,String>] metadata
+  def self.for(model:, metadata:)
+    Rails.logger.debug("Fetching indexer for #{model.type}")
+    INDEXERS.fetch(model.type, ITEM_INDEXER).new(id: model.externalIdentifier, cocina: model, metadata: metadata)
   end
 end

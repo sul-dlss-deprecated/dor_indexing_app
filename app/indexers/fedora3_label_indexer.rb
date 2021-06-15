@@ -12,13 +12,18 @@ class Fedora3LabelIndexer
   # @return [Hash] the partial solr document
   def to_solr
     Rails.logger.debug "In #{self.class}"
-
+    version = find_current_version
     {}.tap do |solr_doc|
-      solr_doc['obj_label_tesim'] = resource.label
-      solr_doc['has_model_ssim'] = resource.class.to_class_uri
-      solr_doc['modified_latest_dttsi'] = resource.modified_date.to_datetime.utc.strftime('%FT%TZ')
-      solr_doc[SOLR_DOCUMENT_ID.to_sym] = resource.pid
-      solr_doc['current_version_isi'] = resource.current_version # Argo Facet field "Version"
-    end.merge(WorkflowFields.for(druid: resource.pid, version: resource.current_version))
+      solr_doc['obj_label_tesim'] = resource.label || 'No label provided'
+      solr_doc['has_model_ssim'] = resource.models.reject { |model| model == 'info:fedora/fedora-system:FedoraObject-3.0' }
+      solr_doc['modified_latest_dttsi'] = resource.lastModifiedDate.to_datetime.utc.strftime('%FT%TZ')
+      solr_doc[:id] = resource.pid
+      solr_doc['current_version_isi'] = version # Argo Facet field "Version"
+    end.merge(WorkflowFields.for(druid: resource.pid, version: version))
+  end
+
+  def find_current_version
+    ng_xml = Nokogiri::XML(resource.datastreams['versionMetadata'].content.body)
+    ng_xml.xpath('//versionMetadata/version').map { |node| node['versionId'].to_i }.max
   end
 end
