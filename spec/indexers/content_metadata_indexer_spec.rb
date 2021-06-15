@@ -140,6 +140,38 @@ RSpec.describe ContentMetadataIndexer do
                       "height": 4580,
                       "width": 5939
                     }
+                  },
+                  {
+                    "type": "http://cocina.sul.stanford.edu/models/file.jsonld",
+                    "externalIdentifier": "druid:cs178jh7817/gw177fc7976_00_0002.tif",
+                    "label": "gw177fc7976_00_0002.tif",
+                    "filename": "gw177fc7976_00_0002.tif",
+                    "size": 81630420,
+                    "version": 1,
+                    "hasMimeType": "image/tiff",
+                    "hasMessageDigests": [
+                      {
+                        "type": "sha1",
+                        "digest": "12586b624540031bfa3d153299160c4885c3508c"
+                      },
+                      {
+                        "type": "md5",
+                        "digest": "81ccd17bccf349581b779615e82a0366"
+                      }
+                    ],
+                    "access": {
+                      "access": "dark",
+                      "download": "none"
+                    },
+                    "administrative": {
+                      "publish": false,
+                      "sdrPreserve": true,
+                      "shelve": false
+                    },
+                    "presentation": {
+                      "height": 4580,
+                      "width": 5939
+                    }
                   }
                 ]
               }
@@ -155,9 +187,9 @@ RSpec.describe ContentMetadataIndexer do
           'content_file_roles_ssim' => ['derivative'],
           'shelved_content_file_count_itsi' => 1,
           'resource_count_itsi' => 1,
-          'content_file_count_itsi' => 3,
+          'content_file_count_itsi' => 4,
           'first_shelved_image_ss' => 'gw177fc7976_05_0001.jp2',
-          'preserved_size_dbtsi' => 86_774_303
+          'preserved_size_dbtsi' => 168_404_723
         )
       end
     end
