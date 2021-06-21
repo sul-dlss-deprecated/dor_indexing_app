@@ -86,8 +86,7 @@ GEM
       json_schema (~> 0.14, >= 0.14.3)
       openapi_parser (>= 0.11.1, < 1.0)
       rack (>= 1.5)
-    commonmarker (0.21.2)
-      ruby-enum (~> 0.5)
+    commonmarker (0.22.0)
     concurrent-ruby (1.1.9)
     config (3.1.0)
       deep_merge (~> 1.2, >= 1.2.1)
@@ -96,7 +95,7 @@ GEM
       rexml
     crass (1.0.6)
     deep_merge (1.2.1)
-    deprecation (0.99.0)
+    deprecation (1.1.0)
       activesupport
     diff-lcs (1.4.4)
     dlss-capistrano (3.11.1)
@@ -184,7 +183,7 @@ GEM
     faraday-net_http_persistent (1.1.0)
     faraday_middleware (1.0.0)
       faraday (~> 1.0)
-    ffi (1.15.1)
+    ffi (1.15.3)
     globalid (0.4.2)
       activesupport (>= 4.2.0)
     hashdiff (1.0.1)
@@ -336,8 +335,6 @@ GEM
     rubocop-rspec (1.44.1)
       rubocop (~> 0.87)
       rubocop-ast (>= 0.7.1)
-    ruby-enum (0.9.0)
-      i18n
     ruby-progressbar (1.11.0)
     ruby2_keywords (0.0.4)
     rubydora (2.1.0)
