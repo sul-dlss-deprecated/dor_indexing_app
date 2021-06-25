@@ -14,6 +14,8 @@ class Fedora3LabelIndexer
     Rails.logger.debug "In #{self.class}"
     version = find_current_version
     {}.tap do |solr_doc|
+      # Used to search based on druid.
+      solr_doc['objectId_tesim'] = [resource.pid, resource.pid.delete_prefix('druid:')]
       solr_doc['obj_label_tesim'] = resource.label || 'No label provided'
       solr_doc['has_model_ssim'] = resource.models.reject { |model| model == 'info:fedora/fedora-system:FedoraObject-3.0' }
       solr_doc['modified_latest_dttsi'] = resource.lastModifiedDate.to_datetime.utc.strftime('%FT%TZ')

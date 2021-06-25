@@ -85,6 +85,9 @@ RSpec.describe FallbackIndexer do
       allow(apo_object_client).to receive_message_chain(:administrative_tags, :list).and_return([])
     end
 
-    it { is_expected.to include('milestones_ssim', 'wf_ssim', 'tag_ssim', 'obj_label_tesim', 'has_model_ssim', :id) }
+    it 'creates the solr document' do
+      expect(solr_doc).to include('milestones_ssim', 'wf_ssim', 'tag_ssim', 'obj_label_tesim', 'has_model_ssim', :id)
+      expect(solr_doc['objectId_tesim']).to eq ['druid:bd999bd9999', 'bd999bd9999']
+    end
   end
 end
