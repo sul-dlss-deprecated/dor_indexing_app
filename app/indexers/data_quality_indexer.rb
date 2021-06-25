@@ -55,11 +55,14 @@ class DataQualityIndexer
   end
 
   def source_node
-    @source_node ||= identity_metadata.xpath('//identityMetadata/sourceId').first
+    @source_node ||= identity_metadata&.xpath('//identityMetadata/sourceId')&.first
   end
 
   def identity_metadata
-    Nokogiri::XML(resource.datastreams['identityMetadata'].content.body)
+    response = resource.datastreams['identityMetadata'].content
+    return unless response
+
+    Nokogiri::XML(response.body)
   end
 
   def valid_source_id?
