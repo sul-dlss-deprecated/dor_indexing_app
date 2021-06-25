@@ -58,7 +58,7 @@ RSpec.describe DataQualityIndexer do
 
     context 'when all fields are present' do
       it 'has none' do
-        expect(doc).to eq('data_quality_ssim' => ['Cocina conversion failed'])
+        expect(doc).to eq('data_quality_ssim' => ['To be migrated', 'Cocina conversion failed'])
       end
     end
 
@@ -76,7 +76,7 @@ RSpec.describe DataQualityIndexer do
         end
 
         it 'has none' do
-          expect(doc).to eq({})
+          expect(doc).to eq('data_quality_ssim' => ['Do not migrate', 'Cocina conversion failed'])
         end
       end
 
@@ -84,7 +84,7 @@ RSpec.describe DataQualityIndexer do
         let(:model) { 'info:fedora/afmodel:Part' }
 
         it 'has none' do
-          expect(doc).to eq({})
+          expect(doc).to eq('data_quality_ssim' => ['Do not migrate', 'Cocina conversion failed'])
         end
       end
 
@@ -92,7 +92,7 @@ RSpec.describe DataQualityIndexer do
         let(:model) { 'info:fedora/afmodel:PermissionFile' }
 
         it 'has none' do
-          expect(doc).to eq({})
+          expect(doc).to eq('data_quality_ssim' => ['Do not migrate', 'Cocina conversion failed'])
         end
       end
     end
@@ -108,7 +108,7 @@ RSpec.describe DataQualityIndexer do
 
       it 'draws the errors' do
         expect(doc).to eq(
-          'data_quality_ssim' => ['non-comformant sourceId', 'Cocina conversion failed']
+          'data_quality_ssim' => ['non-comformant sourceId', 'To be migrated', 'Cocina conversion failed']
         )
       end
     end
@@ -123,7 +123,7 @@ RSpec.describe DataQualityIndexer do
 
       it 'draws the errors' do
         expect(doc).to eq(
-          'data_quality_ssim' => ['Cocina conversion failed']
+          'data_quality_ssim' => ['To be migrated', 'Cocina conversion failed']
         )
       end
     end

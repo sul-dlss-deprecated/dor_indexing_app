@@ -10,8 +10,6 @@ class DataQualityIndexer
   # @return [Hash] the partial solr document for identityMetadata
   def to_solr
     Rails.logger.debug "In #{self.class}"
-    # Filter out Items that were attachments for ETDs/EEMs.  These aren't getting migrated.
-    return {} if filtered_object?
 
     { 'data_quality_ssim' => messages }
   end
@@ -33,9 +31,14 @@ class DataQualityIndexer
   end
 
   def messages
-    [source_id_message].compact.tap do |messages|
+    [source_id_message, migrate_message].compact.tap do |messages|
       messages << 'Cocina conversion failed'
     end
+  end
+
+  # Filter out Items that were attachments for ETDs/EEMs.  These aren't getting migrated.
+  def migrate_message
+    filtered_object? ? 'Do not migrate' : 'To be migrated'
   end
 
   def source_id_message
