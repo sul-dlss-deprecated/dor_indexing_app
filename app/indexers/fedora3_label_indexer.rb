@@ -23,7 +23,10 @@ class Fedora3LabelIndexer
   end
 
   def find_current_version
-    ng_xml = Nokogiri::XML(resource.datastreams['versionMetadata'].content.body)
+    response = resource.datastreams['versionMetadata'].content
+    return unless response # Handle atypical objects like EEMS permission files with no versionMetadata datastream
+
+    ng_xml = Nokogiri::XML(response.body)
     ng_xml.xpath('//versionMetadata/version').map { |node| node['versionId'].to_i }.max
   end
 end
