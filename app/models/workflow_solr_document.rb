@@ -86,6 +86,6 @@ class WorkflowSolrDocument
   attr_reader :data
 
   def empty_document
-    KEYS_TO_MERGE.each_with_object({}) { |k, obj| obj[k] = [] }
+    KEYS_TO_MERGE.index_with { |_k| [] }
   end
 end
