@@ -33,7 +33,7 @@ end
 
 group :development, :test do
   gem 'byebug'
-  gem 'rspec-rails', '~> 3.0'
+  gem 'rspec-rails', '~> 5.0'
   gem 'simplecov'
   gem 'webmock'
 end
