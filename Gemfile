@@ -17,7 +17,7 @@ gem 'marc-vocab', '~> 0.3.0'
 gem 'okcomputer' # for monitoring
 gem 'puma', '~> 5.3' # app server
 gem 'rack-timeout', '~> 0.5.1'
-gem 'rails', '~> 5.2.3'
+gem 'rails', '~> 6.0.4'
 gem 'rsolr', '~> 2.0'
 gem 'rubydora'
 gem 'solrizer'
