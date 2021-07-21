@@ -58,7 +58,8 @@ module DorIndexingApp
                                                                     strict: true,
                                                                     error_class: JSONAPIError,
                                                                     accept_request_filter: accept_proc,
-                                                                    parse_response_by_content_type: false
+                                                                    parse_response_by_content_type: false,
+                                                                    query_hash_key: 'action_dispatch.request.query_parameters'
 
     # TODO: Uncomment when API returns JSON or when Committee allows validating plain-text responses
     #
