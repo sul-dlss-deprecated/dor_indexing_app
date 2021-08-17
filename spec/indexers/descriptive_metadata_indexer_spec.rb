@@ -282,7 +282,7 @@ RSpec.describe DescriptiveMetadataIndexer do
           type: 'topic'
         }
       ],
-      purl: 'http://purl.stanford.edu/qy781dy0220',
+      purl: 'https://purl.stanford.edu/qy781dy0220',
       access: {
         physicalLocation: [{
           value: 'Stanford University Libraries'
@@ -353,7 +353,7 @@ RSpec.describe DescriptiveMetadataIndexer do
           }
         },
         {
-          purl: 'http://purl.stanford.edu/pz263ny9658',
+          purl: 'https://purl.stanford.edu/pz263ny9658',
           access: {
             digitalRepository: [
               {
