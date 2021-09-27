@@ -250,12 +250,12 @@ GEM
     netrc (0.11.0)
     newrelic_rpm (8.0.0)
     nio4r (2.5.8)
-    nokogiri (1.12.4)
+    nokogiri (1.12.5)
       mini_portile2 (~> 2.6.1)
       racc (~> 1.4)
-    nokogiri (1.12.4-x86_64-darwin)
+    nokogiri (1.12.5-x86_64-darwin)
       racc (~> 1.4)
-    nokogiri (1.12.4-x86_64-linux)
+    nokogiri (1.12.5-x86_64-linux)
       racc (~> 1.4)
     nokogiri-happymapper (0.8.1)
       nokogiri (~> 1.5)
@@ -263,7 +263,7 @@ GEM
     openapi3_parser (0.9.0)
       commonmarker (~> 0.17)
       psych (~> 3.1)
-    openapi_parser (0.14.1)
+    openapi_parser (0.15.0)
     parallel (1.21.0)
     parse_date (0.4.3)
       zeitwerk (~> 2.1)
@@ -451,4 +451,4 @@ DEPENDENCIES
   webmock
 
 BUNDLED WITH
-   2.2.15
+   2.2.27
