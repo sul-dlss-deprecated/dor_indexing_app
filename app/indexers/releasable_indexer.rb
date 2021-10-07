@@ -1,22 +1,17 @@
 # frozen_string_literal: true
 
 class ReleasableIndexer
-  include SolrDocHelper
+  attr_reader :cocina, :parent_collections
 
-  attr_reader :cocina
-
-  def initialize(cocina:, **)
+  def initialize(cocina:, parent_collections:, **)
     @cocina = cocina
+    @parent_collections = parent_collections
   end
 
   # @return [Hash] the partial solr document for releasable concerns
-  # TODO: sort of worried about the performance impact in bulk reindex
-  # situations, since released_for recurses all parent collections.  jmartin 2015-07-14
   def to_solr
     Rails.logger.debug "In #{self.class}"
-    values = released_for.group_by(&:to).map do |project, releases_for_project|
-      project if releases_for_project.max_by(&:date).release
-    end.compact
+    values = tags_from_item + tags_from_collection
 
     return {} if values.blank?
 
@@ -26,6 +21,22 @@ class ReleasableIndexer
   end
 
   private
+
+  def tags_from_collection
+    parent_collections.flat_map do |collection|
+      Array(collection.administrative.releaseTags)
+        .select { |tag| tag.what == 'collection' }
+        .group_by(&:to).map do |project, releases_for_project|
+          project if releases_for_project.max_by(&:date).release
+        end.compact
+    end
+  end
+
+  def tags_from_item
+    released_for.group_by(&:to).map do |project, releases_for_project|
+      project if releases_for_project.max_by(&:date).release
+    end.compact
+  end
 
   def released_for
     Array(cocina.administrative.releaseTags)
