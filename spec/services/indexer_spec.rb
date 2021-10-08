@@ -26,52 +26,99 @@ RSpec.describe Indexer do
 
   context 'when the model is an item' do
     let(:cocina) do
-      instance_double(Cocina::Models::DRO,
-                      type: Cocina::Models::Vocab.object,
-                      externalIdentifier: druid)
+      Cocina::Models.build(
+        'type' => Cocina::Models::Vocab.object,
+        'structural' => {
+          isMemberOf: collections
+        },
+        'label' => 'Test DRO',
+        'version' => 1,
+        'administrative' => {
+          hasAdminPolicy: 'druid:gf999hb9999'
+        },
+        'access' => {},
+        'externalIdentifier' => druid
+      )
     end
 
-    it { is_expected.to be_instance_of CompositeIndexer::Instance }
+    context 'without collections' do
+      let(:collections) { [] }
+
+      it { is_expected.to be_instance_of CompositeIndexer::Instance }
+    end
+
+    context 'with collections' do
+      let(:object_client) do
+        instance_double(Dor::Services::Client::Object, find: related)
+      end
+      let(:related) do
+        Cocina::Models.build(
+          'externalIdentifier' => 'druid:bc999df2323',
+          'type' => Cocina::Models::Vocab.collection,
+          'version' => 1,
+          'label' => 'testing',
+          'administrative' => {
+            'hasAdminPolicy' => 'druid:gf999hb9999'
+          },
+          'access' => {},
+          'description' => {
+            'title' => [{ 'value' => 'Test object' }]
+          }
+        )
+      end
+
+      let(:collections) { ['druid:bc999df2323'] }
+
+      before do
+        allow(Dor::Services::Client).to receive(:object).and_return(object_client)
+      end
+
+      it { is_expected.to be_instance_of CompositeIndexer::Instance }
+    end
+
+    context "with collections that can't be resolved" do
+      let(:collections) { ['druid:bc999df2323'] }
+
+      before do
+        allow(Dor::Services::Client).to receive(:object).and_raise(Dor::Services::Client::NotFoundResponse)
+      end
+
+      it 'logs to honeybadger' do
+        allow(Honeybadger).to receive(:notify)
+        expect(indexer).to be_instance_of CompositeIndexer::Instance
+        expect(Honeybadger).to have_received(:notify).with('Bad association found on druid:xx999xx9999. druid:bc999df2323 could not be found')
+      end
+    end
   end
 
   context 'when the model is an admin policy' do
     let(:cocina) do
-      instance_double(Cocina::Models::AdminPolicy,
-                      type: Cocina::Models::Vocab.admin_policy,
-                      externalIdentifier: druid)
-    end
-
-    it { is_expected.to be_instance_of CompositeIndexer::Instance }
-  end
-
-  context 'when the model is a hydrus item' do
-    # let(:model) { Hydrus::Item.new }
-    let(:cocina) do
-      instance_double(Cocina::Models::DRO,
-                      type: Cocina::Models::Vocab.object,
-                      externalIdentifier: druid)
-    end
-
-    it { is_expected.to be_instance_of CompositeIndexer::Instance }
-  end
-
-  context 'when the model is a hydrus apo' do
-    # let(:model) { Hydrus::AdminPolicyObject.new(pid: druid) }
-    let(:cocina) do
-      instance_double(Cocina::Models::AdminPolicy,
-                      type: Cocina::Models::Vocab.admin_policy,
-                      externalIdentifier: druid)
+      Cocina::Models.build(
+        'type' => Cocina::Models::Vocab.admin_policy,
+        'label' => 'Test APO',
+        'version' => 1,
+        'administrative' => {
+          hasAdminPolicy: 'druid:gf999hb9999'
+        },
+        'externalIdentifier' => druid
+      )
     end
 
     it { is_expected.to be_instance_of CompositeIndexer::Instance }
   end
 
   context 'when the model is a collection' do
-    # let(:model) { Dor::Collection.new }
     let(:cocina) do
-      instance_double(Cocina::Models::Collection,
-                      type: Cocina::Models::Vocab.collection,
-                      externalIdentifier: druid)
+      Cocina::Models.build(
+        'type' => Cocina::Models::Vocab.collection,
+        'label' => 'Test Collection',
+        'version' => 1,
+        'administrative' => {
+          hasAdminPolicy: 'druid:gf999hb9999'
+        },
+        'access' => {},
+        'externalIdentifier' => druid
+      )
     end
 
     it { is_expected.to be_instance_of CompositeIndexer::Instance }
@@ -79,9 +126,17 @@ RSpec.describe Indexer do
 
   context 'when the model is an agreement' do
     let(:cocina) do
-      instance_double(Cocina::Models::DRO,
-                      type: Cocina::Models::Vocab.agreement,
-                      externalIdentifier: druid)
+      Cocina::Models.build(
+        'type' => Cocina::Models::Vocab.agreement,
+        'structural' => {},
+        'label' => 'Test Agreement',
+        'version' => 1,
+        'administrative' => {
+          hasAdminPolicy: 'druid:gf999hb9999'
+        },
+        'access' => {},
+        'externalIdentifier' => druid
+      )
     end
 
     it { is_expected.to be_instance_of CompositeIndexer::Instance }
