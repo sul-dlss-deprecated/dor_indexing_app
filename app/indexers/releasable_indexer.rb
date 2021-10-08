@@ -11,7 +11,10 @@ class ReleasableIndexer
   # @return [Hash] the partial solr document for releasable concerns
   def to_solr
     Rails.logger.debug "In #{self.class}"
-    values = tags_from_item + tags_from_collection
+
+    # Item tags have precidence over collection tags, so if the collection is release=true
+    # and the item is release=false, then it is not released
+    values = tags_from_collection.merge(tags_from_item).values.select(&:release).map(&:to)
 
     return {} if values.blank?
 
@@ -23,19 +26,19 @@ class ReleasableIndexer
   private
 
   def tags_from_collection
-    parent_collections.flat_map do |collection|
+    parent_collections.each_with_object({}) do |collection, result|
       Array(collection.administrative.releaseTags)
         .select { |tag| tag.what == 'collection' }
         .group_by(&:to).map do |project, releases_for_project|
-          project if releases_for_project.max_by(&:date).release
-        end.compact
+          result[project] = releases_for_project.max_by(&:date)
+        end
     end
   end
 
   def tags_from_item
-    released_for.group_by(&:to).map do |project, releases_for_project|
-      project if releases_for_project.max_by(&:date).release
-    end.compact
+    released_for.group_by(&:to).transform_values do |releases_for_project|
+      releases_for_project.max_by(&:date)
+    end
   end
 
   def released_for
