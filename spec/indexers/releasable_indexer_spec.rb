@@ -67,7 +67,7 @@ RSpec.describe ReleasableIndexer do
         [instance_double(Cocina::Models::Collection, administrative: collection_administrative)]
       end
       let(:collection_administrative) do
-        instance_double(Cocina::Models::Administrative, releaseTags: release_tags)
+        instance_double(Cocina::Models::Administrative, releaseTags: collection_release_tags)
       end
 
       let(:administrative) do
@@ -77,7 +77,7 @@ RSpec.describe ReleasableIndexer do
       end
 
       context 'when the parent collection has releaseTags' do
-        let(:release_tags) do
+        let(:collection_release_tags) do
           [
             Cocina::Models::ReleaseTag.new('to' => 'Project', 'release' => true, 'date' => '2016-11-16T22:52:35.000+00:00', what: 'self'),
             Cocina::Models::ReleaseTag.new('to' => 'test_target', 'release' => true, 'date' => '2016-12-21T17:31:18.000+00:00', what: 'collection')
@@ -89,8 +89,30 @@ RSpec.describe ReleasableIndexer do
         end
       end
 
+      context 'when the parent collection has releaseTags and the item has the same' do
+        let(:collection_release_tags) do
+          [
+            Cocina::Models::ReleaseTag.new('to' => 'Project', 'release' => true, 'date' => '2016-11-16T22:52:35.000+00:00', what: 'self'),
+            Cocina::Models::ReleaseTag.new('to' => 'test_target', 'release' => true, 'date' => '2016-12-21T17:31:18.000+00:00', what: 'collection')
+          ]
+        end
+        let(:administrative) do
+          {
+            'hasAdminPolicy' => apo_id,
+            'releaseTags' => [
+              { 'to' => 'test_target', 'release' => true }
+            ]
+          }
+        end
+
+
+        it 'indexes release tags' do
+          expect(doc).to eq('released_to_ssim' => %w[test_target])
+        end
+      end
+
       context 'when releaseTags are not present' do
-        let(:release_tags) { [] }
+        let(:collection_release_tags) { [] }
 
         it 'has no release tags' do
           expect(doc).not_to include('released_to_ssim')

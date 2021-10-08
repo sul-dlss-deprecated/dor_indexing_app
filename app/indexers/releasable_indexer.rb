@@ -16,7 +16,7 @@ class ReleasableIndexer
     return {} if values.blank?
 
     {
-      'released_to_ssim' => values
+      'released_to_ssim' => values.uniq
     }
   end
 
