@@ -7,9 +7,9 @@ class DorController < ApplicationController
   def reindex
     @solr_doc = reindex_pid params[:pid], add_attributes: { commitWithin: params.fetch(:commitWithin, 1000).to_i }
     solr.commit unless params[:commitWithin] # reindex_pid doesn't commit, but callers of this method may expect the update to be committed immediately
-    render status: 200, plain: "Successfully updated index for #{params[:pid]}"
+    render status: :ok, plain: "Successfully updated index for #{params[:pid]}"
   rescue Dor::Services::Client::NotFoundResponse, Rubydora::RecordNotFound
-    render status: 404, plain: 'Object does not exist in the repository'
+    render status: :not_found, plain: 'Object does not exist in the repository'
   end
 
   def delete_from_index
@@ -19,7 +19,7 @@ class DorController < ApplicationController
   end
 
   def queue_size
-    render status: 200, json: { value: QueueStatus.all.queue_size }
+    render status: :ok, json: { value: QueueStatus.all.queue_size }
   end
 
   private
