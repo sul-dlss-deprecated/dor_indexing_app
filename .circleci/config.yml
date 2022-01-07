@@ -4,14 +4,14 @@ executors:
     environment:
       IMAGE_NAME: suldlss/dor-indexing-app
     docker:
-    - image: circleci/buildpack-deps:stretch
+    - image: cimg/base
 orbs:
   ruby: circleci/ruby@0.1.2
 
 jobs:
   test:
     docker:
-      - image: circleci/ruby:3.0.3-node
+      - image: cimg/ruby:3.0.3-node
     executor: ruby/default
     steps:
       - checkout
