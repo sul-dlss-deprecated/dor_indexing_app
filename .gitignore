@@ -11,7 +11,3 @@
 config/certs
 config/settings/*.local.yml
 /spec/examples.txt
-
-
-.rbenv-gemsets
-.ruby-version
