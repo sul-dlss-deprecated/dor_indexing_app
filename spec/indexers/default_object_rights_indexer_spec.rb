@@ -5,15 +5,17 @@ require 'rails_helper'
 RSpec.describe DefaultObjectRightsIndexer do
   let(:cocina) do
     Cocina::Models.build(
-      'label' => 'The APO',
-      'version' => 1,
-      'type' => Cocina::Models::Vocab.admin_policy,
-      'externalIdentifier' => 'druid:cb123cd4567',
-      'administrative' => {
-        hasAdminPolicy: 'druid:hv992ry2431',
-        defaultAccess: {
-          useAndReproductionStatement: 'Rights are owned by Stanford University Libraries.',
-          copyright: 'Additional copyright info'
+      {
+        'label' => 'The APO',
+        'version' => 1,
+        'type' => Cocina::Models::Vocab.admin_policy,
+        'externalIdentifier' => 'druid:cb123cd4567',
+        'administrative' => {
+          hasAdminPolicy: 'druid:hv992ry2431',
+          defaultAccess: {
+            useAndReproductionStatement: 'Rights are owned by Stanford University Libraries.',
+            copyright: 'Additional copyright info'
+          }
         }
       }
     )

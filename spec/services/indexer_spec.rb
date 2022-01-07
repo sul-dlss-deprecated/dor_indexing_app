@@ -27,17 +27,19 @@ RSpec.describe Indexer do
   context 'when the model is an item' do
     let(:cocina) do
       Cocina::Models.build(
-        'type' => Cocina::Models::Vocab.object,
-        'structural' => {
-          isMemberOf: collections
-        },
-        'label' => 'Test DRO',
-        'version' => 1,
-        'administrative' => {
-          hasAdminPolicy: 'druid:gf999hb9999'
-        },
-        'access' => {},
-        'externalIdentifier' => druid
+        {
+          'type' => Cocina::Models::Vocab.object,
+          'structural' => {
+            isMemberOf: collections
+          },
+          'label' => 'Test DRO',
+          'version' => 1,
+          'administrative' => {
+            hasAdminPolicy: 'druid:gf999hb9999'
+          },
+          'access' => {},
+          'externalIdentifier' => druid
+        }
       )
     end
 
@@ -53,16 +55,18 @@ RSpec.describe Indexer do
       end
       let(:related) do
         Cocina::Models.build(
-          'externalIdentifier' => 'druid:bc999df2323',
-          'type' => Cocina::Models::Vocab.collection,
-          'version' => 1,
-          'label' => 'testing',
-          'administrative' => {
-            'hasAdminPolicy' => 'druid:gf999hb9999'
-          },
-          'access' => {},
-          'description' => {
-            'title' => [{ 'value' => 'Test object' }]
+          {
+            'externalIdentifier' => 'druid:bc999df2323',
+            'type' => Cocina::Models::Vocab.collection,
+            'version' => 1,
+            'label' => 'testing',
+            'administrative' => {
+              'hasAdminPolicy' => 'druid:gf999hb9999'
+            },
+            'access' => {},
+            'description' => {
+              'title' => [{ 'value' => 'Test object' }]
+            }
           }
         )
       end
@@ -94,13 +98,15 @@ RSpec.describe Indexer do
   context 'when the model is an admin policy' do
     let(:cocina) do
       Cocina::Models.build(
-        'type' => Cocina::Models::Vocab.admin_policy,
-        'label' => 'Test APO',
-        'version' => 1,
-        'administrative' => {
-          hasAdminPolicy: 'druid:gf999hb9999'
-        },
-        'externalIdentifier' => druid
+        {
+          'type' => Cocina::Models::Vocab.admin_policy,
+          'label' => 'Test APO',
+          'version' => 1,
+          'administrative' => {
+            hasAdminPolicy: 'druid:gf999hb9999'
+          },
+          'externalIdentifier' => druid
+        }
       )
     end
 
@@ -110,14 +116,16 @@ RSpec.describe Indexer do
   context 'when the model is a collection' do
     let(:cocina) do
       Cocina::Models.build(
-        'type' => Cocina::Models::Vocab.collection,
-        'label' => 'Test Collection',
-        'version' => 1,
-        'administrative' => {
-          hasAdminPolicy: 'druid:gf999hb9999'
-        },
-        'access' => {},
-        'externalIdentifier' => druid
+        {
+          'type' => Cocina::Models::Vocab.collection,
+          'label' => 'Test Collection',
+          'version' => 1,
+          'administrative' => {
+            hasAdminPolicy: 'druid:gf999hb9999'
+          },
+          'access' => {},
+          'externalIdentifier' => druid
+        }
       )
     end
 
@@ -127,15 +135,17 @@ RSpec.describe Indexer do
   context 'when the model is an agreement' do
     let(:cocina) do
       Cocina::Models.build(
-        'type' => Cocina::Models::Vocab.agreement,
-        'structural' => {},
-        'label' => 'Test Agreement',
-        'version' => 1,
-        'administrative' => {
-          hasAdminPolicy: 'druid:gf999hb9999'
-        },
-        'access' => {},
-        'externalIdentifier' => druid
+        {
+          'type' => Cocina::Models::Vocab.agreement,
+          'structural' => {},
+          'label' => 'Test Agreement',
+          'version' => 1,
+          'administrative' => {
+            hasAdminPolicy: 'druid:gf999hb9999'
+          },
+          'access' => {},
+          'externalIdentifier' => druid
+        }
       )
     end
 
@@ -149,15 +159,17 @@ RSpec.describe Indexer do
 
     let(:apo) do
       Cocina::Models.build(
-        'externalIdentifier' => apo_id,
-        'type' => Cocina::Models::Vocab.admin_policy,
-        'version' => 1,
-        'label' => 'testing',
-        'administrative' => {
-          'hasAdminPolicy' => 'druid:xx000xx0000'
-        },
-        'description' => {
-          'title' => [{ 'value' => 'APO title' }]
+        {
+          'externalIdentifier' => apo_id,
+          'type' => Cocina::Models::Vocab.admin_policy,
+          'version' => 1,
+          'label' => 'testing',
+          'administrative' => {
+            'hasAdminPolicy' => 'druid:xx000xx0000'
+          },
+          'description' => {
+            'title' => [{ 'value' => 'APO title' }]
+          }
         }
       )
     end
@@ -172,58 +184,60 @@ RSpec.describe Indexer do
     context 'when the model is an item' do
       let(:cocina) do
         Cocina::Models.build(
-          'externalIdentifier' => druid,
-          'type' => Cocina::Models::Vocab.image,
-          'version' => 1,
-          'label' => 'testing',
-          'access' => {},
-          'administrative' => {
-            'hasAdminPolicy' => apo_id
-          },
-          'description' => {
-            'title' => [{ 'value' => 'Test obj' }],
-            'subject' => [{ 'type' => 'topic', 'value' => 'word' }],
-            'event' => [
-              {
-                'type' => 'creation',
-                'date' => [
-                  {
-                    'value' => '2021-01-01',
-                    'status' => 'primary',
-                    'encoding' => {
-                      'code' => 'w3cdtf'
-                    },
-                    'type' => 'creation'
-                  }
-                ]
-              },
-              {
-                'type' => 'publication',
-                'location' => [
-                  {
-                    'value' => 'Moskva'
-                  }
-                ],
-                'contributor' => [
-                  {
-                    'name' => [
-                      {
-                        'value' => 'Izdatelʹstvo "Vesʹ Mir"'
-                      }
-                    ],
-                    'type' => 'organization',
-                    'role' => [{ 'value' => 'publisher' }]
-                  }
-                ]
-              }
-            ]
-          },
-          'structural' => {
-            'contains' => [],
-            'isMemberOf' => []
-          },
-          'identification' => {
-            'catalogLinks' => [{ 'catalog' => 'symphony', 'catalogRecordId' => '1234' }]
+          {
+            'externalIdentifier' => druid,
+            'type' => Cocina::Models::Vocab.image,
+            'version' => 1,
+            'label' => 'testing',
+            'access' => {},
+            'administrative' => {
+              'hasAdminPolicy' => apo_id
+            },
+            'description' => {
+              'title' => [{ 'value' => 'Test obj' }],
+              'subject' => [{ 'type' => 'topic', 'value' => 'word' }],
+              'event' => [
+                {
+                  'type' => 'creation',
+                  'date' => [
+                    {
+                      'value' => '2021-01-01',
+                      'status' => 'primary',
+                      'encoding' => {
+                        'code' => 'w3cdtf'
+                      },
+                      'type' => 'creation'
+                    }
+                  ]
+                },
+                {
+                  'type' => 'publication',
+                  'location' => [
+                    {
+                      'value' => 'Moskva'
+                    }
+                  ],
+                  'contributor' => [
+                    {
+                      'name' => [
+                        {
+                          'value' => 'Izdatelʹstvo "Vesʹ Mir"'
+                        }
+                      ],
+                      'type' => 'organization',
+                      'role' => [{ 'value' => 'publisher' }]
+                    }
+                  ]
+                }
+              ]
+            },
+            'structural' => {
+              'contains' => [],
+              'isMemberOf' => []
+            },
+            'identification' => {
+              'catalogLinks' => [{ 'catalog' => 'symphony', 'catalogRecordId' => '1234' }]
+            }
           }
         )
       end
@@ -242,16 +256,18 @@ RSpec.describe Indexer do
 
       let(:cocina) do
         Cocina::Models.build(
-          'externalIdentifier' => druid,
-          'type' => Cocina::Models::Vocab.admin_policy,
-          'version' => 1,
-          'label' => 'testing',
-          'administrative' => {
-            'hasAdminPolicy' => apo_id,
-            'defaultObjectRights' => '<rightsMetadata/>'
-          },
-          'description' => {
-            'title' => [{ 'value' => 'Test obj' }]
+          {
+            'externalIdentifier' => druid,
+            'type' => Cocina::Models::Vocab.admin_policy,
+            'version' => 1,
+            'label' => 'testing',
+            'administrative' => {
+              'hasAdminPolicy' => apo_id,
+              'defaultObjectRights' => '<rightsMetadata/>'
+            },
+            'description' => {
+              'title' => [{ 'value' => 'Test obj' }]
+            }
           }
         )
       end
@@ -264,16 +280,18 @@ RSpec.describe Indexer do
 
       let(:cocina) do
         Cocina::Models.build(
-          'externalIdentifier' => druid,
-          'type' => Cocina::Models::Vocab.admin_policy,
-          'version' => 1,
-          'label' => 'testing',
-          'administrative' => {
-            'hasAdminPolicy' => apo_id,
-            'defaultObjectRights' => '<rightsMetadata/>'
-          },
-          'description' => {
-            'title' => [{ 'value' => 'Test obj' }]
+          {
+            'externalIdentifier' => druid,
+            'type' => Cocina::Models::Vocab.admin_policy,
+            'version' => 1,
+            'label' => 'testing',
+            'administrative' => {
+              'hasAdminPolicy' => apo_id,
+              'defaultObjectRights' => '<rightsMetadata/>'
+            },
+            'description' => {
+              'title' => [{ 'value' => 'Test obj' }]
+            }
           }
         )
       end

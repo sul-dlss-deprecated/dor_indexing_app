@@ -6,32 +6,34 @@ RSpec.describe RoleMetadataIndexer do
   let(:apo_id) { 'druid:gf999hb9999' }
   let(:cocina) do
     Cocina::Models.build(
-      'externalIdentifier' => apo_id,
-      'type' => Cocina::Models::Vocab.admin_policy,
-      'version' => 1,
-      'label' => 'testing',
-      'administrative' => {
-        'hasAdminPolicy' => apo_id,
-        'roles' => [
-          { 'name' => 'dor-apo-manager',
-            'members' => [
-              {
-                'type' => 'workgroup',
-                'identifier' => 'dlss:dor-admin'
-              },
-              {
-                'type' => 'workgroup',
-                'identifier' => 'sdr:developer'
-              },
-              {
-                'type' => 'sunetid',
-                'identifier' => 'tcramer'
-              }
-            ] }
-        ]
-      },
-      'description' => {
-        'title' => [{ 'value' => 'APO title' }]
+      {
+        'externalIdentifier' => apo_id,
+        'type' => Cocina::Models::Vocab.admin_policy,
+        'version' => 1,
+        'label' => 'testing',
+        'administrative' => {
+          'hasAdminPolicy' => apo_id,
+          'roles' => [
+            { 'name' => 'dor-apo-manager',
+              'members' => [
+                {
+                  'type' => 'workgroup',
+                  'identifier' => 'dlss:dor-admin'
+                },
+                {
+                  'type' => 'workgroup',
+                  'identifier' => 'sdr:developer'
+                },
+                {
+                  'type' => 'sunetid',
+                  'identifier' => 'tcramer'
+                }
+              ] }
+          ]
+        },
+        'description' => {
+          'title' => [{ 'value' => 'APO title' }]
+        }
       }
     )
   end

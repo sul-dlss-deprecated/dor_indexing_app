@@ -7,21 +7,23 @@ RSpec.describe CollectionTitleIndexer do
   let(:apo_id) { 'druid:bd999bd9999' }
   let(:cocina) do
     Cocina::Models.build(
-      'externalIdentifier' => druid,
-      'type' => Cocina::Models::Vocab.image,
-      'version' => 1,
-      'label' => 'testing',
-      'access' => {},
-      'administrative' => {
-        'hasAdminPolicy' => apo_id
-      },
-      'description' => {
-        'title' => [{ 'value' => 'Test obj' }],
-        'subject' => [{ 'type' => 'topic', 'value' => 'word' }]
-      },
-      'structural' => {
-        'contains' => [],
-        'isMemberOf' => []
+      {
+        'externalIdentifier' => druid,
+        'type' => Cocina::Models::Vocab.image,
+        'version' => 1,
+        'label' => 'testing',
+        'access' => {},
+        'administrative' => {
+          'hasAdminPolicy' => apo_id
+        },
+        'description' => {
+          'title' => [{ 'value' => 'Test obj' }],
+          'subject' => [{ 'type' => 'topic', 'value' => 'word' }]
+        },
+        'structural' => {
+          'contains' => [],
+          'isMemberOf' => []
+        }
       }
     )
   end
@@ -49,17 +51,19 @@ RSpec.describe CollectionTitleIndexer do
 
       let(:collection) do
         Cocina::Models.build(
-          'externalIdentifier' => mock_rel_druid,
-          'type' => Cocina::Models::Vocab.collection,
-          'version' => 1,
-          'label' => 'testing',
-          'administrative' => {
-            'partOfProject' => project,
-            'hasAdminPolicy' => apo_id
-          },
-          'access' => {},
-          'description' => {
-            'title' => [{ 'value' => 'Test object' }]
+          {
+            'externalIdentifier' => mock_rel_druid,
+            'type' => Cocina::Models::Vocab.collection,
+            'version' => 1,
+            'label' => 'testing',
+            'administrative' => {
+              'partOfProject' => project,
+              'hasAdminPolicy' => apo_id
+            },
+            'access' => {},
+            'description' => {
+              'title' => [{ 'value' => 'Test object' }]
+            }
           }
         )
       end
