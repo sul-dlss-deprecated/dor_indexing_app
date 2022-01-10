@@ -211,7 +211,7 @@ GEM
     faraday-retry (1.0.3)
     faraday_middleware (1.2.0)
       faraday (~> 1.0)
-    ffi (1.15.4)
+    ffi (1.15.5)
     globalid (1.0.0)
       activesupport (>= 5.0)
     hashdiff (1.0.1)
@@ -268,8 +268,6 @@ GEM
     newrelic_rpm (8.2.0)
     nio4r (2.5.8)
     nokogiri (1.13.0-x86_64-darwin)
-      racc (~> 1.4)
-    nokogiri (1.13.0-x86_64-linux)
       racc (~> 1.4)
     okcomputer (1.18.4)
     openapi3_parser (0.9.1)
@@ -414,8 +412,7 @@ GEM
     zeitwerk (2.5.3)
 
 PLATFORMS
-  x86_64-darwin-19
-  x86_64-linux
+  x86_64-darwin-21
 
 DEPENDENCIES
   bootsnap (>= 1.1.0)
@@ -456,4 +453,4 @@ DEPENDENCIES
   webmock
 
 BUNDLED WITH
-   2.2.30
+   2.3.4

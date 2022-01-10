@@ -11,7 +11,7 @@ orbs:
 jobs:
   test:
     docker:
-      - image: circleci/ruby:2.7-node
+      - image: circleci/ruby:3.0.3-node
     executor: ruby/default
     steps:
       - checkout
