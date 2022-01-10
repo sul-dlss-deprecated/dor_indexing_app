@@ -230,10 +230,9 @@ workflows:
           name: validate
       - ruby-rails/lint:
           name: lint
-      - ruby-rails/test-rails:
+      # Using test-gem since no DB.    
+      - ruby-rails/test-gem:
           name: test
-          executor: ruby-rails/ruby
-          api-only: true
       - ruby-rails/docker-publish:
           context: dlss
           name: publish-latest
