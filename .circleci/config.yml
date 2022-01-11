@@ -4,7 +4,7 @@ executors:
     environment:
       IMAGE_NAME: suldlss/dor-indexing-app
     docker:
-    - image: cimg/base
+    - image: cimg/base:stable
 orbs:
   ruby: circleci/ruby@0.1.2
 
