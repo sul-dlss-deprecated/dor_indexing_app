@@ -9,15 +9,17 @@ RSpec.describe CompositeIndexer do
 
   let(:apo) do
     Cocina::Models.build(
-      'externalIdentifier' => apo_id,
-      'type' => Cocina::Models::Vocab.admin_policy,
-      'version' => 1,
-      'label' => 'testing',
-      'administrative' => {
-        'hasAdminPolicy' => apo_id
-      },
-      'description' => {
-        'title' => [{ 'value' => 'APO title' }]
+      {
+        'externalIdentifier' => apo_id,
+        'type' => Cocina::Models::Vocab.admin_policy,
+        'version' => 1,
+        'label' => 'testing',
+        'administrative' => {
+          'hasAdminPolicy' => apo_id
+        },
+        'description' => {
+          'title' => [{ 'value' => 'APO title' }]
+        }
       }
     )
   end
@@ -31,23 +33,25 @@ RSpec.describe CompositeIndexer do
 
   let(:cocina) do
     Cocina::Models.build(
-      'externalIdentifier' => druid,
-      'type' => Cocina::Models::Vocab.image,
-      'version' => 1,
-      'label' => 'testing',
-      'access' => {},
-      'administrative' => {
-        'hasAdminPolicy' => apo_id
-      },
-      'description' => {
-        'title' => [{ 'value' => 'Test obj' }],
-        'subject' => [{ 'type' => 'topic', 'value' => 'word' }]
-      },
-      'structural' => {
-        'contains' => []
-      },
-      'identification' => {
-        'catalogLinks' => [{ 'catalog' => 'symphony', 'catalogRecordId' => '1234' }]
+      {
+        'externalIdentifier' => druid,
+        'type' => Cocina::Models::Vocab.image,
+        'version' => 1,
+        'label' => 'testing',
+        'access' => {},
+        'administrative' => {
+          'hasAdminPolicy' => apo_id
+        },
+        'description' => {
+          'title' => [{ 'value' => 'Test obj' }],
+          'subject' => [{ 'type' => 'topic', 'value' => 'word' }]
+        },
+        'structural' => {
+          'contains' => []
+        },
+        'identification' => {
+          'catalogLinks' => [{ 'catalog' => 'symphony', 'catalogRecordId' => '1234' }]
+        }
       }
     )
   end

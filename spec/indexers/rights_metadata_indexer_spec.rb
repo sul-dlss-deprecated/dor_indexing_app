@@ -21,16 +21,18 @@ RSpec.describe RightsMetadataIndexer do
     end
     let(:cocina) do
       Cocina::Models.build(
-        'externalIdentifier' => 'druid:rt923jk3429',
-        'type' => Cocina::Models::Vocab.collection,
-        'version' => 1,
-        'label' => 'testing',
-        'access' => access,
-        'administrative' => {
-          'hasAdminPolicy' => 'druid:xx000xx0000'
-        },
-        'description' => {
-          'title' => [{ 'value' => 'Test obj' }]
+        {
+          'externalIdentifier' => 'druid:rt923jk3429',
+          'type' => Cocina::Models::Vocab.collection,
+          'version' => 1,
+          'label' => 'testing',
+          'access' => access,
+          'administrative' => {
+            'hasAdminPolicy' => 'druid:xx000xx0000'
+          },
+          'description' => {
+            'title' => [{ 'value' => 'Test obj' }]
+          }
         }
       )
     end
@@ -48,18 +50,20 @@ RSpec.describe RightsMetadataIndexer do
   context 'with an item' do
     let(:cocina) do
       Cocina::Models.build(
-        'externalIdentifier' => 'druid:rt923jk3429',
-        'type' => Cocina::Models::Vocab.image,
-        'version' => 1,
-        'label' => 'testing',
-        'access' => access,
-        'administrative' => {
-          'hasAdminPolicy' => 'druid:xx000xx0000'
-        },
-        'description' => {
-          'title' => [{ 'value' => 'Test obj' }]
-        },
-        'structural' => structural
+        {
+          'externalIdentifier' => 'druid:rt923jk3429',
+          'type' => Cocina::Models::Vocab.image,
+          'version' => 1,
+          'label' => 'testing',
+          'access' => access,
+          'administrative' => {
+            'hasAdminPolicy' => 'druid:xx000xx0000'
+          },
+          'description' => {
+            'title' => [{ 'value' => 'Test obj' }]
+          },
+          'structural' => structural
+        }
       )
     end
     let(:structural) { {} }

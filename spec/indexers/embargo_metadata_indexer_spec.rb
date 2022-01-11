@@ -8,27 +8,29 @@ RSpec.describe EmbargoMetadataIndexer do
   let(:release_date) { '2024-06-06' }
   let(:cocina) do
     Cocina::Models.build(
-      'type' => Cocina::Models::Vocab.object,
-      'externalIdentifier' => druid,
-      'label' => 'testing embargo indexing',
-      'version' => 1,
-      'access' => {
-        'access' => 'world',
-        'download' => 'none',
-        'copyright' => 'some student',
-        'useAndReproductionStatement' => 'restricted until embargo lifted',
-        'embargo' => {
-          'releaseDate' => release_date,
+      {
+        'type' => Cocina::Models::Vocab.object,
+        'externalIdentifier' => druid,
+        'label' => 'testing embargo indexing',
+        'version' => 1,
+        'access' => {
           'access' => 'world',
-          'download' => 'world',
-          'useAndReproductionStatement' => 'freedom reigns'
+          'download' => 'none',
+          'copyright' => 'some student',
+          'useAndReproductionStatement' => 'restricted until embargo lifted',
+          'embargo' => {
+            'releaseDate' => release_date,
+            'access' => 'world',
+            'download' => 'world',
+            'useAndReproductionStatement' => 'freedom reigns'
+          }
+        },
+        'administrative' => {
+          'hasAdminPolicy' => apo_id
+        },
+        'description' => {
+          'title' => [{ 'value' => 'embargo indexing object' }]
         }
-      },
-      'administrative' => {
-        'hasAdminPolicy' => apo_id
-      },
-      'description' => {
-        'title' => [{ 'value' => 'embargo indexing object' }]
       }
     )
   end
@@ -61,21 +63,23 @@ RSpec.describe EmbargoMetadataIndexer do
     context 'when there is no embargo' do
       let(:cocina) do
         Cocina::Models.build(
-          'type' => Cocina::Models::Vocab.object,
-          'externalIdentifier' => druid,
-          'label' => 'testing embargo indexing',
-          'version' => 1,
-          'access' => {
-            'access' => 'world',
-            'download' => 'none',
-            'copyright' => 'some student',
-            'useAndReproductionStatement' => 'restricted until embargo lifted'
-          },
-          'administrative' => {
-            'hasAdminPolicy' => apo_id
-          },
-          'description' => {
-            'title' => [{ 'value' => 'embargo indexing object' }]
+          {
+            'type' => Cocina::Models::Vocab.object,
+            'externalIdentifier' => druid,
+            'label' => 'testing embargo indexing',
+            'version' => 1,
+            'access' => {
+              'access' => 'world',
+              'download' => 'none',
+              'copyright' => 'some student',
+              'useAndReproductionStatement' => 'restricted until embargo lifted'
+            },
+            'administrative' => {
+              'hasAdminPolicy' => apo_id
+            },
+            'description' => {
+              'title' => [{ 'value' => 'embargo indexing object' }]
+            }
           }
         )
       end

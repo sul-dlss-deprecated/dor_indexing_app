@@ -7,18 +7,20 @@ RSpec.describe ReleasableIndexer do
 
   let(:cocina) do
     Cocina::Models.build(
-      'externalIdentifier' => 'druid:pz263ny9658',
-      'type' => Cocina::Models::Vocab.image,
-      'version' => 1,
-      'label' => 'testing',
-      'access' => {},
-      'administrative' => administrative,
-      'description' => {
-        'title' => [{ 'value' => 'Test obj' }]
-      },
-      'structural' => {},
-      'identification' => {
-        'catalogLinks' => [{ 'catalog' => 'symphony', 'catalogRecordId' => '1234' }]
+      {
+        'externalIdentifier' => 'druid:pz263ny9658',
+        'type' => Cocina::Models::Vocab.image,
+        'version' => 1,
+        'label' => 'testing',
+        'access' => {},
+        'administrative' => administrative,
+        'description' => {
+          'title' => [{ 'value' => 'Test obj' }]
+        },
+        'structural' => {},
+        'identification' => {
+          'catalogLinks' => [{ 'catalog' => 'symphony', 'catalogRecordId' => '1234' }]
+        }
       }
     )
   end
