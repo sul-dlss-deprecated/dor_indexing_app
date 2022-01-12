@@ -33,6 +33,7 @@ end
 
 group :development, :test do
   gem 'byebug'
+  gem 'rspec_junit_formatter'
   gem 'rspec-rails', '~> 5.0'
   gem 'simplecov'
   gem 'webmock'
