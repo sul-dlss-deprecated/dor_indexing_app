@@ -33,7 +33,7 @@ class IdentityMetadataIndexer
   end
 
   def barcode
-    @barcode ||= object_type != 'collection' ? cocina_object.identification.barcode : nil
+    @barcode ||= object_type == 'collection' ? nil : cocina_object.identification.barcode
   end
 
   def catkey

@@ -10,7 +10,7 @@ class CollectionTitleIndexer
 
   # @return [Hash] the partial solr document for identifiable concerns
   def to_solr
-    Rails.logger.debug "In #{self.class}"
+    Rails.logger.debug { "In #{self.class}" }
 
     {}.tap do |solr_doc|
       parent_collections.each do |related_obj|

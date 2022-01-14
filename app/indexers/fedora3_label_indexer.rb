@@ -11,7 +11,7 @@ class Fedora3LabelIndexer
 
   # @return [Hash] the partial solr document
   def to_solr
-    Rails.logger.debug "In #{self.class}"
+    Rails.logger.debug { "In #{self.class}" }
     version = find_current_version
     {}.tap do |solr_doc|
       # Used to search based on druid.
