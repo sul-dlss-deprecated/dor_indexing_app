@@ -8,12 +8,6 @@
 The dor_indexing_app is the primary API for indexing DOR objects into the Argo index.
 For more information about the fields and their purpose see: https://docs.google.com/spreadsheets/d/1_uYZvh-oihcxAM_Q24qJ_3nSaqAybmS362SYlDYwYqg/edit#gid=0
 
-## Developer setup
-In order to run dor_indexing_app on your laptop (e.g. while running Argo), you need to
-
-* Create the directory `config/certs` and (preferably) create symbolic links to dor_indexing_app's shared_configs certs.
-* Create a symbolic link to development.local.yml within `config/settings/` (also found in shared_configs).
-
 ## Known Consumers
 * There is a Karaf job that runs on a single node: `sulmq-prod-a:/opt/app/karaf/current/deploy/dor_prod_reindexing.xml` that queries solr for the least-recently-indexed items and indexes them
 * There is a Camel route that sends messages from the fedora update topic https://github.com/sul-dlss/dor-camel-routes/blob/master/deploy/edu_stanford_dor-indexing-app-prod.indexing.xml#L116-L137
