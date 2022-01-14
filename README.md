@@ -14,7 +14,7 @@ For more information about the fields and their purpose see: https://docs.google
 
 ## API
 
-See sul-dlss.github.io/dor_indexing_app/
+See https://sul-dlss.github.io/dor_indexing_app/
 
 ### Docker
 
