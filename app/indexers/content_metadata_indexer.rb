@@ -16,7 +16,7 @@ class ContentMetadataIndexer
       'shelved_content_file_count_itsi' => shelved_files.size,
       'resource_count_itsi' => file_sets.size,
       'preserved_size_dbtsi' => preserved_files.sum(&:size), # double (trie) to support very large sizes
-      'content_file_roles_ssim' => files.map(&:use).compact,
+      'content_file_roles_ssim' => files.filter_map(&:use),
       # first_shelved_image is neither indexed nor multiple
       'first_shelved_image_ss' => first_shelved_image
     }

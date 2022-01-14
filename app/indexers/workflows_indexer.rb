@@ -10,7 +10,7 @@ class WorkflowsIndexer
 
   # @return [Hash] the partial solr document for workflow concerns
   def to_solr
-    Rails.logger.debug "In #{self.class}"
+    Rails.logger.debug { "In #{self.class}" }
 
     WorkflowSolrDocument.new do |combined_doc|
       workflows.each do |wf|

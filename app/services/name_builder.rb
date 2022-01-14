@@ -49,6 +49,6 @@ class NameBuilder
   end
 
   def self.join_parts(parts, joiner)
-    parts.reject(&:blank?).join(joiner)
+    parts.compact_blank.join(joiner)
   end
 end

@@ -417,7 +417,7 @@ RSpec.describe DescriptiveMetadataIndexer do
                       }
                     ],
                     type: 'publication',
-                    "encoding": {
+                    encoding: {
                       code: 'marc'
                     }
                   }
@@ -516,7 +516,7 @@ RSpec.describe DescriptiveMetadataIndexer do
                   value: '1940-01-01',
                   type: 'creation',
                   status: 'primary',
-                  "encoding": {
+                  encoding: {
                     code: 'w3cdtf'
                   }
                 },
@@ -839,7 +839,7 @@ RSpec.describe DescriptiveMetadataIndexer do
                       }
                     ],
                     type: 'creation',
-                    "encoding": {
+                    encoding: {
                       code: 'marc'
                     }
                   }

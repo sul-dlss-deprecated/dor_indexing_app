@@ -10,7 +10,7 @@ class ReleasableIndexer
 
   # @return [Hash] the partial solr document for releasable concerns
   def to_solr
-    Rails.logger.debug "In #{self.class}"
+    Rails.logger.debug { "In #{self.class}" }
 
     # Item tags have precidence over collection tags, so if the collection is release=true
     # and the item is release=false, then it is not released

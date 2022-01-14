@@ -9,7 +9,7 @@ class RightsMetadataIndexer
 
   # @return [Hash] the partial solr document for rightsMetadata
   def to_solr
-    Rails.logger.debug "In #{self.class}"
+    Rails.logger.debug { "In #{self.class}" }
 
     {
       'copyright_ssim' => cocina.access.copyright,

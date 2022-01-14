@@ -58,7 +58,7 @@ class Indexer
   # @param [Cocina::Models::DRO,Cocina::Models::Collection,Cocina::Model::AdminPolicy] model
   # @param [Hash<String,String>] metadata
   def self.for(model:, metadata:)
-    Rails.logger.debug("Fetching indexer for #{model.type}")
+    Rails.logger.debug { "Fetching indexer for #{model.type}" }
     parent_collections = load_parent_collections(model)
     INDEXERS.fetch(model.type, ITEM_INDEXER).new(id: model.externalIdentifier,
                                                  cocina: model,
@@ -69,11 +69,11 @@ class Indexer
   def self.load_parent_collections(model)
     return [] unless model.dro?
 
-    Array(model.structural.isMemberOf).map do |rel_druid|
+    Array(model.structural.isMemberOf).filter_map do |rel_druid|
       Dor::Services::Client.object(rel_druid).find
     rescue Dor::Services::Client::UnexpectedResponse, Dor::Services::Client::NotFoundResponse
       Honeybadger.notify("Bad association found on #{model.externalIdentifier}. #{rel_druid} could not be found")
       # This may happen if the referenced Collection does not exist (bad data)
-    end.compact
+    end
   end
 end

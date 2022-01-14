@@ -14,7 +14,7 @@ class WorkflowFields
 
   # @return [Hash] the partial solr document for processable concerns
   def result
-    Rails.logger.debug "In #{self.class}"
+    Rails.logger.debug { "In #{self.class}" }
 
     {}.tap do |solr_doc|
       add_sortable_milestones(solr_doc)
