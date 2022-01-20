@@ -13,9 +13,9 @@ class NameBuilder
   end
 
   def self.build_name(name)
-    if name.groupedValue
+    if name.groupedValue.present?
       name.groupedValue.find { |grouped_value| grouped_value.type == 'name' }&.value
-    elsif name.structuredValue
+    elsif name.structuredValue.present?
       name_part = joined_name_parts(name, 'name', '. ').presence
       surname = joined_name_parts(name, 'surname', ' ')
       forename = joined_name_parts(name, 'forename', ' ')
@@ -41,7 +41,7 @@ class NameBuilder
   end
 
   def self.flat_names_for(names)
-    names.flat_map { |name| name.parallelValue || name }
+    names.flat_map { |name| name.parallelValue.presence || name }
   end
 
   def self.joined_name_parts(name, type, joiner)

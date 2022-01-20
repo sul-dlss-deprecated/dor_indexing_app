@@ -31,7 +31,7 @@ class PublisherNameBuilder
 
   def self.flat_name(value)
     primary_name = value.parallelValue&.find { |role| role.status == 'primary' }
-    return parallel_name(value.parallelValue) if !primary_name && value.parallelValue
+    return parallel_name(value.parallelValue) if !primary_name && value.parallelValue.present?
 
     return name_for(primary_name) if primary_name
 
@@ -39,7 +39,7 @@ class PublisherNameBuilder
   end
 
   def self.name_for(name)
-    name.structuredValue ? name.structuredValue.map(&:value).join('. ') : name.value
+    name.structuredValue.present? ? name.structuredValue.map(&:value).join('. ') : name.value
   end
 
   def self.parallel_name(names)

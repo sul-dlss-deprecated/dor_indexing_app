@@ -33,6 +33,6 @@ class AuthorBuilder
   end
 
   def flat_contributors
-    @flat_contributors ||= contributors.flat_map { |contributor| contributor.parallelContributor || contributor }
+    @flat_contributors ||= contributors.flat_map { |contributor| contributor.parallelContributor.presence || contributor }
   end
 end

@@ -19,7 +19,7 @@ class GeographicBuilder
     (
       build_place_nodes(local_subjects.select { |node| node.type == 'place' }) +
       local_subjects.reject(&:type).flat_map do |subject|
-        next extract_place_from_subjects(subject.parallelValue) if subject.parallelValue
+        next extract_place_from_subjects(subject.parallelValue) if subject.parallelValue.present?
 
         build_place_nodes(Array(subject.structuredValue).select { |node| node.type == 'place' })
       end

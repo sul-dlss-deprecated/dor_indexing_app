@@ -19,7 +19,7 @@ class TemporalBuilder
     (
       build_temporal_nodes(local_subjects.select { |node| node.type == 'time' }) +
       local_subjects.reject(&:type).flat_map do |subject|
-        next extract_temporal_from_subjects(subject.parallelValue) if subject.parallelValue
+        next extract_temporal_from_subjects(subject.parallelValue) if subject.parallelValue.present?
 
         build_temporal_nodes(Array(subject.structuredValue).select { |node| node.type == 'time' })
       end

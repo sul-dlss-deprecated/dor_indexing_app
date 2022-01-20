@@ -36,12 +36,12 @@ class EventPlaceBuilder
 
   def flat_locations
     @flat_locations ||= begin
-      locations = if event.parallelEvent
+      locations = if event.parallelEvent.present?
                     event.parallelEvent.flat_map { |parallel_event| Array(parallel_event.location) }
                   else
                     Array(event.location)
                   end
-      locations.flat_map { |location| location.parallelValue || location.structuredValue || location }
+      locations.flat_map { |location| location.parallelValue.presence || location.structuredValue.presence || location }
     end
   end
 
