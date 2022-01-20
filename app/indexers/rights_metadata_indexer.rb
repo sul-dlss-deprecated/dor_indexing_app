@@ -39,7 +39,7 @@ class RightsMetadataIndexer
     'https://creativecommons.org/publicdomain/mark/1.0/' => 'PDM',
     'https://opendatacommons.org/licenses/pddl/1-0/' => 'PDDL-1.0',
     'https://opendatacommons.org/licenses/by/1-0/' => 'ODC-By-1.0',
-    'https://opendatacommons.org/licenses/odbl/1-0/' => ' ODbL-1.0'
+    'https://opendatacommons.org/licenses/odbl/1-0/' => 'ODbL-1.0'
   }.freeze
 
   # @return [String] the code if we've defined one, or the URI if we haven't.
