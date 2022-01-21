@@ -43,9 +43,9 @@ class TitleBuilder # rubocop:disable Metrics/ClassLength
   def build_title(cocina_title)
     result = if cocina_title.value
                cocina_title.value
-             elsif cocina_title.structuredValue
+             elsif cocina_title.structuredValue.present?
                title_from_structured_values(cocina_title.structuredValue, non_sorting_char_count(cocina_title))
-             elsif cocina_title.parallelValue
+             elsif cocina_title.parallelValue.present?
                return build(cocina_title.parallelValue)
              end
     remove_trailing_punctuation(result.strip) if result.present?
@@ -67,7 +67,7 @@ class TitleBuilder # rubocop:disable Metrics/ClassLength
     structured_values.each do |structured_value|
       # There can be a structuredValue inside a structuredValue.  For example,
       #   a uniform title where both the name and the title have internal StructuredValue
-      return title_from_structured_values(structured_value.structuredValue, non_sorting_char_count) if structured_value.structuredValue
+      return title_from_structured_values(structured_value.structuredValue, non_sorting_char_count) if structured_value.structuredValue.present?
 
       value = structured_value.value&.strip
       next unless value

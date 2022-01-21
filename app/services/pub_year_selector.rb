@@ -57,13 +57,13 @@ class PubYearSelector
 
   def date_value(date)
     return date.value if date.value
-    return unless date.parallelValue
+    return if date.parallelValue.blank?
 
     primary = date.parallelValue.find { |val| val.status == 'primary' }
     return primary.value if primary
 
     structured_values = date.parallelValue.first.structuredValue
-    return find_within_structured_values(structured_values) if structured_values
+    return find_within_structured_values(structured_values) if structured_values.present?
 
     date.parallelValue.first.value
   end
@@ -73,7 +73,7 @@ class PubYearSelector
     return if dates.blank?
 
     structured_values = dates.first.structuredValue
-    return unless structured_values
+    return if structured_values.blank?
 
     find_within_structured_values(structured_values)
   end

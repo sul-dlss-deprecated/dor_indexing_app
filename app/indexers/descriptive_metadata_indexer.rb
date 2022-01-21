@@ -79,7 +79,7 @@ class DescriptiveMetadataIndexer
   end
 
   def genres
-    @genres ||= forms.flat_map { |form| form.parallelValue || form }.select { |form| form.type == 'genre' }.map(&:value)
+    @genres ||= forms.flat_map { |form| form.parallelValue.presence || form }.select { |form| form.type == 'genre' }.map(&:value)
   end
 
   # See https://github.com/sul-dlss/stanford-mods/blob/master/lib/stanford-mods/searchworks.rb#L244
@@ -193,11 +193,11 @@ class DescriptiveMetadataIndexer
   end
 
   def flat_event(event)
-    event.parallelEvent || Array(event)
+    event.parallelEvent.presence || Array(event)
   end
 
   def flat_value(value)
-    value.parallelValue || value.groupedValue || value.structuredValue || Array(value)
+    value.parallelValue.presence || value.groupedValue.presence || value.structuredValue.presence || Array(value)
   end
 end
 # rubocop:enable Metrics/ClassLength
