@@ -2,10 +2,11 @@
 
 # Indexing provided by ActiveFedora
 class DataIndexer
-  attr_reader :last_modified, :cocina
+  attr_reader :last_modified, :created_at, :cocina
 
   def initialize(metadata:, cocina:, **)
     @last_modified = metadata.fetch('Last-Modified')
+    @created_at = metadata.fetch('X-Created-At')
     @cocina = cocina
   end
 
@@ -17,6 +18,7 @@ class DataIndexer
       solr_doc['obj_label_tesim'] = cocina.label
 
       solr_doc['modified_latest_dttsi'] = last_modified.to_datetime.strftime('%FT%TZ')
+      solr_doc['created_at_dttsi'] = created_at.to_datetime.strftime('%FT%TZ')
 
       # These are required as long as dor-services-app uses ActiveFedora for querying:
       solr_doc['has_model_ssim'] = legacy_model
