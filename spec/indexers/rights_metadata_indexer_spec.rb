@@ -31,7 +31,8 @@ RSpec.describe RightsMetadataIndexer do
             'hasAdminPolicy' => 'druid:xx000xx0000'
           },
           'description' => {
-            'title' => [{ 'value' => 'Test obj' }]
+            'title' => [{ 'value' => 'Test obj' }],
+            'purl' => 'https://purl.stanford.edu/rt923jk3429'
           }
         }
       )
@@ -60,7 +61,8 @@ RSpec.describe RightsMetadataIndexer do
             'hasAdminPolicy' => 'druid:xx000xx0000'
           },
           'description' => {
-            'title' => [{ 'value' => 'Test obj' }]
+            'title' => [{ 'value' => 'Test obj' }],
+            'purl' => 'https://purl.stanford.edu/rt923jk3429'
           },
           'structural' => structural
         }
