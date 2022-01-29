@@ -29,7 +29,8 @@ RSpec.describe EmbargoMetadataIndexer do
           'hasAdminPolicy' => apo_id
         },
         'description' => {
-          'title' => [{ 'value' => 'embargo indexing object' }]
+          'title' => [{ 'value' => 'embargo indexing object' }],
+          'purl' => 'https://purl.stanford.edu/zz666yy9999'
         }
       }
     )
@@ -78,7 +79,8 @@ RSpec.describe EmbargoMetadataIndexer do
               'hasAdminPolicy' => apo_id
             },
             'description' => {
-              'title' => [{ 'value' => 'embargo indexing object' }]
+              'title' => [{ 'value' => 'embargo indexing object' }],
+              'purl' => 'https://purl.stanford.edu/zz666yy9999'
             }
           }
         )

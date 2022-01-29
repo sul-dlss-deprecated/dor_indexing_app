@@ -15,7 +15,8 @@ RSpec.describe ReleasableIndexer do
         'access' => {},
         'administrative' => administrative,
         'description' => {
-          'title' => [{ 'value' => 'Test obj' }]
+          'title' => [{ 'value' => 'Test obj' }],
+          'purl' => 'https://purl.stanford.edu/pz263ny9658'
         },
         'structural' => {},
         'identification' => {

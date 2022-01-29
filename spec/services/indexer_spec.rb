@@ -65,7 +65,8 @@ RSpec.describe Indexer do
             },
             'access' => {},
             'description' => {
-              'title' => [{ 'value' => 'Test object' }]
+              'title' => [{ 'value' => 'Test object' }],
+              'purl' => 'https://purl.stanford.edu/bc999df2323'
             }
           }
         )
@@ -103,7 +104,8 @@ RSpec.describe Indexer do
           'label' => 'Test APO',
           'version' => 1,
           'administrative' => {
-            hasAdminPolicy: 'druid:gf999hb9999'
+            hasAdminPolicy: 'druid:gf999hb9999',
+            hasAgreement: 'druid:bb033gt0615'
           },
           'externalIdentifier' => druid
         }
@@ -165,10 +167,12 @@ RSpec.describe Indexer do
           'version' => 1,
           'label' => 'testing',
           'administrative' => {
-            'hasAdminPolicy' => 'druid:xx000xx0000'
+            'hasAdminPolicy' => 'druid:xx000xx0000',
+            'hasAgreement' => 'druid:bb033gt0615'
           },
           'description' => {
-            'title' => [{ 'value' => 'APO title' }]
+            'title' => [{ 'value' => 'APO title' }],
+            'purl' => 'https://purl.stanford.edu/bd999bd9999'
           }
         }
       )
@@ -195,6 +199,7 @@ RSpec.describe Indexer do
             },
             'description' => {
               'title' => [{ 'value' => 'Test obj' }],
+              'purl' => 'https://purl.stanford.edu/bd999bd9999',
               'subject' => [{ 'type' => 'topic', 'value' => 'word' }],
               'event' => [
                 {
@@ -263,10 +268,12 @@ RSpec.describe Indexer do
             'label' => 'testing',
             'administrative' => {
               'hasAdminPolicy' => apo_id,
-              'defaultObjectRights' => '<rightsMetadata/>'
+              'defaultObjectRights' => '<rightsMetadata/>',
+              'hasAgreement' => 'druid:bb033gt0615'
             },
             'description' => {
-              'title' => [{ 'value' => 'Test obj' }]
+              'title' => [{ 'value' => 'Test obj' }],
+              'purl' => 'https://purl.stanford.edu/bd999bd9999'
             }
           }
         )
@@ -287,10 +294,12 @@ RSpec.describe Indexer do
             'label' => 'testing',
             'administrative' => {
               'hasAdminPolicy' => apo_id,
-              'defaultObjectRights' => '<rightsMetadata/>'
+              'defaultObjectRights' => '<rightsMetadata/>',
+              'hasAgreement' => 'druid:bb033gt0615'
             },
             'description' => {
-              'title' => [{ 'value' => 'Test obj' }]
+              'title' => [{ 'value' => 'Test obj' }],
+              'purl' => 'https://purl.stanford.edu/bd999bd9999'
             }
           }
         )
