@@ -23,7 +23,7 @@ gem 'rubydora'
 gem 'solrizer'
 
 # DLSS gems
-gem 'dor-services-client', '~> 7.0'
+gem 'dor-services-client', '~> 7.9'
 gem 'dor-workflow-client', '~> 3.20'
 gem 'parse_date'
 
