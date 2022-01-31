@@ -2,13 +2,10 @@
 
 # Indexing provided by ActiveFedora
 class DataIndexer
-  attr_reader :last_modified, :created_at, :cocina
+  attr_reader :metadata, :cocina
 
   def initialize(metadata:, cocina:, **)
-    @last_modified = metadata.fetch('Last-Modified')
-    # NOTE: once we ensure the X-Created-At header is working from DSA, remove the nil default
-    #  Jan 31 2022 Peter Mangiafico
-    @created_at = metadata.fetch('X-Created-At', nil)
+    @metadata = metadata
     @cocina = cocina
   end
 
@@ -19,14 +16,22 @@ class DataIndexer
       solr_doc['current_version_isi'] = cocina.version # Argo Facet field "Version"
       solr_doc['obj_label_tesim'] = cocina.label
 
-      solr_doc['modified_latest_dttsi'] = last_modified.to_datetime.strftime('%FT%TZ')
-      solr_doc['created_at_dttsi'] = created_at&.to_datetime&.strftime('%FT%TZ')
+      solr_doc['modified_latest_dttsi'] = modified_latest
+      solr_doc['created_at_dttsi'] = created_at
 
       # These are required as long as dor-services-app uses ActiveFedora for querying:
       solr_doc['has_model_ssim'] = legacy_model
       solr_doc['is_governed_by_ssim'] = legacy_apo
       solr_doc['is_member_of_collection_ssim'] = legacy_collections
     end.merge(WorkflowFields.for(druid: cocina.externalIdentifier, version: cocina.version))
+  end
+
+  def modified_latest
+    metadata.updated_at.to_datetime.strftime('%FT%TZ')
+  end
+
+  def created_at
+    metadata.created_at.to_datetime.strftime('%FT%TZ')
   end
 
   def legacy_collections

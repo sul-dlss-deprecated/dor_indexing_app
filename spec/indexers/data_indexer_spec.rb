@@ -25,8 +25,9 @@ RSpec.describe DataIndexer do
 
   describe '#to_solr' do
     let(:metadata) do
-      { 'Last-Modified' => 'Thu, 04 Mar 2021 23:05:34 GMT',
-        'X-Created-At' => 'Wed, 01 Jan 2020 12:00:01 GMT' }
+      instance_double(Dor::Services::Client::ObjectMetadata,
+                      updated_at: 'Thu, 04 Mar 2021 23:05:34 GMT',
+                      created_at: 'Wed, 01 Jan 2020 12:00:01 GMT')
     end
     let(:indexer) do
       CompositeIndexer.new(

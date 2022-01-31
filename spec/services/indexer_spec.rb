@@ -6,8 +6,9 @@ RSpec.describe Indexer do
   subject(:indexer) { described_class.for(model: cocina, metadata: metadata) }
 
   let(:metadata) do
-    { 'Last-Modified' => 'Thu, 04 Mar 2021 23:05:34 GMT',
-      'X-Created-At' => 'Wed, 01 Jan 2020 12:00:01 GMT' }
+    instance_double(Dor::Services::Client::ObjectMetadata,
+                    updated_at: 'Thu, 04 Mar 2021 23:05:34 GMT',
+                    created_at: 'Wed, 01 Jan 2020 12:00:01 GMT')
   end
   let(:druid) { 'druid:xx999xx9999' }
   let(:releasable) do
