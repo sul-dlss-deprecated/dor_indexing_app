@@ -20,7 +20,7 @@ class DataIndexer
       solr_doc['obj_label_tesim'] = cocina.label
 
       solr_doc['modified_latest_dttsi'] = last_modified.to_datetime.strftime('%FT%TZ')
-      solr_doc['created_at_dttsi'] = created_at.to_datetime.strftime('%FT%TZ')
+      solr_doc['created_at_dttsi'] = created_at&.to_datetime&.strftime('%FT%TZ')
 
       # These are required as long as dor-services-app uses ActiveFedora for querying:
       solr_doc['has_model_ssim'] = legacy_model
