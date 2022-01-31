@@ -9,6 +9,7 @@ RSpec.describe DescriptiveMetadataIndexer do
   let(:json) do
     <<~JSON
       {
+        "cocinaVersion": "0.0.1",
       	"type": "http://cocina.sul.stanford.edu/models/image.jsonld",
       	"externalIdentifier": "druid:qy781dy0220",
       	"label": "SUL Logo for forebrain",
@@ -23,7 +24,7 @@ RSpec.describe DescriptiveMetadataIndexer do
       		"hasAdminPolicy": "druid:zx485kb6348",
       		"partOfProject": "H2"
       	},
-      	"description": #{JSON.generate(description)},
+        "description": #{JSON.generate(description.merge(purl: 'https://purl.stanford.edu/qy781dy0220'))},
       	"identification": {
       		"sourceId": "hydrus:object-6"
       	},

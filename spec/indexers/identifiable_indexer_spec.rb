@@ -18,7 +18,8 @@ RSpec.describe IdentifiableIndexer do
         },
         'description' => {
           'title' => [{ 'value' => 'Test obj' }],
-          'subject' => [{ 'type' => 'topic', 'value' => 'word' }]
+          'subject' => [{ 'type' => 'topic', 'value' => 'word' }],
+          'purl' => 'https://purl.stanford.edu/rt923jk3422'
         },
         'structural' => {
           'contains' => [],
@@ -60,10 +61,12 @@ RSpec.describe IdentifiableIndexer do
           'version' => 1,
           'label' => 'testing',
           'administrative' => {
-            'hasAdminPolicy' => apo_id
+            'hasAdminPolicy' => apo_id,
+            'hasAgreement' => 'druid:bb033gt0615'
           },
           'description' => {
-            'title' => [{ 'value' => 'Test object' }]
+            'title' => [{ 'value' => 'Test object' }],
+            'purl' => 'https://purl.stanford.edu/rt923jk3422'
           }
         }
       )
@@ -105,7 +108,8 @@ RSpec.describe IdentifiableIndexer do
             },
             'access' => {},
             'description' => {
-              'title' => [{ 'value' => 'Test object' }]
+              'title' => [{ 'value' => 'Test object' }],
+              'purl' => 'https://purl.stanford.edu/rt923jk3422'
             }
           }
         )
@@ -143,7 +147,8 @@ RSpec.describe IdentifiableIndexer do
             },
             'description' => {
               'title' => [{ 'value' => 'Test obj' }],
-              'subject' => [{ 'type' => 'topic', 'value' => 'word' }]
+              'subject' => [{ 'type' => 'topic', 'value' => 'word' }],
+              'purl' => 'https://purl.stanford.edu/rt923jk3422'
             },
             'structural' => {}
           }

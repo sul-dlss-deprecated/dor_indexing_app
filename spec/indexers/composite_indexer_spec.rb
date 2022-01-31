@@ -15,10 +15,12 @@ RSpec.describe CompositeIndexer do
         'version' => 1,
         'label' => 'testing',
         'administrative' => {
-          'hasAdminPolicy' => apo_id
+          'hasAdminPolicy' => apo_id,
+          'hasAgreement' => 'druid:hp308wm0436'
         },
         'description' => {
-          'title' => [{ 'value' => 'APO title' }]
+          'title' => [{ 'value' => 'APO title' }],
+          'purl' => 'https://purl.stanford.edu/gf999hb9999'
         }
       }
     )
@@ -44,7 +46,8 @@ RSpec.describe CompositeIndexer do
         },
         'description' => {
           'title' => [{ 'value' => 'Test obj' }],
-          'subject' => [{ 'type' => 'topic', 'value' => 'word' }]
+          'subject' => [{ 'type' => 'topic', 'value' => 'word' }],
+          'purl' => 'https://purl.stanford.edu/mx123ms3333'
         },
         'structural' => {
           'contains' => []

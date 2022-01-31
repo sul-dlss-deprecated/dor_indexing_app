@@ -12,6 +12,7 @@ RSpec.describe DefaultObjectRightsIndexer do
         'externalIdentifier' => 'druid:cb123cd4567',
         'administrative' => {
           hasAdminPolicy: 'druid:hv992ry2431',
+          hasAgreement: 'druid:bb033gt0615',
           defaultAccess: {
             useAndReproductionStatement: 'Rights are owned by Stanford University Libraries.',
             copyright: 'Additional copyright info'

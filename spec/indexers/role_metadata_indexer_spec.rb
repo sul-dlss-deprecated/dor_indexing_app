@@ -13,6 +13,7 @@ RSpec.describe RoleMetadataIndexer do
         'label' => 'testing',
         'administrative' => {
           'hasAdminPolicy' => apo_id,
+          'hasAgreement' => 'druid:bb033gt0615',
           'roles' => [
             { 'name' => 'dor-apo-manager',
               'members' => [
@@ -32,7 +33,8 @@ RSpec.describe RoleMetadataIndexer do
           ]
         },
         'description' => {
-          'title' => [{ 'value' => 'APO title' }]
+          'title' => [{ 'value' => 'APO title' }],
+          'purl' => 'https://purl.stanford.edu/gf999hb9999'
         }
       }
     )
