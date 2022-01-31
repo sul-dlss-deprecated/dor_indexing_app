@@ -6,7 +6,9 @@ class DataIndexer
 
   def initialize(metadata:, cocina:, **)
     @last_modified = metadata.fetch('Last-Modified')
-    @created_at = metadata.fetch('X-Created-At')
+    # NOTE: once we ensure the X-Created-At header is working from DSA, remove the nil default
+    #  Jan 31 2022 Peter Mangiafico
+    @created_at = metadata.fetch('X-Created-At', nil)
     @cocina = cocina
   end
 
