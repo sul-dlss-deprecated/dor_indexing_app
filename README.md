@@ -12,6 +12,15 @@ For more information about the fields and their purpose see: https://docs.google
 * There is a Karaf job that runs on a single node: `sulmq-prod-a:/opt/app/karaf/current/deploy/dor_prod_reindexing.xml` that queries solr for the least-recently-indexed items and indexes them
 * There is a Camel route that sends messages from the fedora update topic https://github.com/sul-dlss/dor-camel-routes/blob/master/deploy/edu_stanford_dor-indexing-app-prod.indexing.xml#L116-L137
 
+## Rolling indexer
+This helps keep the index fresh by reindexing the oldest data.
+
+```
+RAILS_ENV=production bin/rolling_index start
+RAILS_ENV=production bin/rolling_index stop
+
+```
+
 ## API
 
 See https://sul-dlss.github.io/dor_indexing_app/

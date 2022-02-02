@@ -5,6 +5,7 @@ source 'https://rubygems.org'
 gem 'bootsnap', '>= 1.1.0', require: false # Reduces boot times through caching; required in config/boot.rb
 gem 'committee' # Validates HTTP requests/responses per OpenAPI specification
 gem 'config'
+gem 'daemons' # for rolling indexer
 gem 'dry-monads', '~> 1.3'
 gem 'erubis'
 gem 'faraday'
