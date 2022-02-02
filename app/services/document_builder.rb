@@ -2,7 +2,7 @@
 
 require 'dry/monads/maybe'
 
-class Indexer
+class DocumentBuilder
   ADMIN_POLICY_INDEXER = CompositeIndexer.new(
     AdministrativeTagIndexer,
     DataIndexer,

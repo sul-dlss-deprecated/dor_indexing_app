@@ -43,7 +43,7 @@ class DorController < ApplicationController
     to_solr_stats = Benchmark.measure('to_solr') do
       solr_doc = if cocina_with_metadata.success?
                    model, metadata = cocina_with_metadata.value!
-                   Indexer.for(model: model, metadata: metadata).to_solr
+                   DocumentBuilder.for(model: model, metadata: metadata).to_solr
                  else
                    logger.debug("Fetching fallback indexer because cocina model couldn't be retrieved.")
                    FallbackIndexer.new(id: pid).to_solr
@@ -58,6 +58,6 @@ class DorController < ApplicationController
   end
 
   def solr
-    RSolr.connect(read_timeout: 120, open_timeout: 120, url: Settings.solrizer_url)
+    RSolr.connect(timeout: 120, open_timeout: 120, url: Settings.solrizer_url)
   end
 end
