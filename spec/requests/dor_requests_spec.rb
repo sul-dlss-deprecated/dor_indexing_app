@@ -9,7 +9,7 @@ RSpec.describe 'DOR', type: :request do
     before do
       allow(Logger).to receive(:new).and_return(mock_logger)
       allow(RSolr).to receive(:connect).and_return(mock_solr_conn)
-      allow(Indexer).to receive(:for).with(model: cocina, metadata: metadata).and_return(mock_indexer)
+      allow(DocumentBuilder).to receive(:for).with(model: cocina, metadata: metadata).and_return(mock_indexer)
       allow(Dor::Services::Client).to receive(:object).with(druid).and_return(object_service)
       allow(Rubydora).to receive(:connect).and_return(connection)
     end

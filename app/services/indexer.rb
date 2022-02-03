@@ -1,79 +1,48 @@
 # frozen_string_literal: true
 
-require 'dry/monads/maybe'
-
 class Indexer
-  ADMIN_POLICY_INDEXER = CompositeIndexer.new(
-    AdministrativeTagIndexer,
-    DataIndexer,
-    RoleMetadataIndexer,
-    DefaultObjectRightsIndexer,
-    IdentityMetadataIndexer,
-    DescriptiveMetadataIndexer,
-    IdentifiableIndexer,
-    WorkflowsIndexer
-  )
+  include Dry::Monads[:result]
 
-  COLLECTION_INDEXER = CompositeIndexer.new(
-    AdministrativeTagIndexer,
-    DataIndexer,
-    RightsMetadataIndexer,
-    IdentityMetadataIndexer,
-    DescriptiveMetadataIndexer,
-    IdentifiableIndexer,
-    ReleasableIndexer,
-    WorkflowsIndexer
-  )
-
-  ITEM_INDEXER = CompositeIndexer.new(
-    AdministrativeTagIndexer,
-    DataIndexer,
-    RightsMetadataIndexer,
-    IdentityMetadataIndexer,
-    DescriptiveMetadataIndexer,
-    EmbargoMetadataIndexer,
-    ContentMetadataIndexer,
-    IdentifiableIndexer,
-    CollectionTitleIndexer,
-    ReleasableIndexer,
-    WorkflowsIndexer
-  )
-
-  SET_INDEXER = CompositeIndexer.new(
-    AdministrativeTagIndexer,
-    DataIndexer,
-    RightsMetadataIndexer,
-    IdentityMetadataIndexer,
-    DescriptiveMetadataIndexer,
-    IdentifiableIndexer,
-    WorkflowsIndexer
-  )
-
-  INDEXERS = {
-    Cocina::Models::Vocab.agreement => ITEM_INDEXER, # Agreement uses same indexer as item
-    Cocina::Models::Vocab.admin_policy => ADMIN_POLICY_INDEXER,
-    Cocina::Models::Vocab.collection => COLLECTION_INDEXER
-  }.freeze
-
-  # @param [Cocina::Models::DRO,Cocina::Models::Collection,Cocina::Model::AdminPolicy] model
-  # @param [Hash<String,String>] metadata
-  def self.for(model:, metadata:)
-    Rails.logger.debug { "Fetching indexer for #{model.type}" }
-    parent_collections = load_parent_collections(model)
-    INDEXERS.fetch(model.type, ITEM_INDEXER).new(id: model.externalIdentifier,
-                                                 cocina: model,
-                                                 parent_collections: parent_collections,
-                                                 metadata: metadata)
+  def initialize(solr:)
+    @solr = solr
   end
 
-  def self.load_parent_collections(model)
-    return [] unless model.dro?
+  # retrieves a single Dor object by pid, indexes the object to solr, does some logging
+  # doesn't commit automatically.
+  def reindex_pid(pid, add_attributes:)
+    solr_doc = nil
+    cocina_with_metadata = nil
 
-    Array(model.structural.isMemberOf).filter_map do |rel_druid|
-      Dor::Services::Client.object(rel_druid).find
-    rescue Dor::Services::Client::UnexpectedResponse, Dor::Services::Client::NotFoundResponse
-      Honeybadger.notify("Bad association found on #{model.externalIdentifier}. #{rel_druid} could not be found")
-      # This may happen if the referenced Collection does not exist (bad data)
-    end
+    # benchmark how long it takes to load the object
+    load_stats = Benchmark.measure('load_instance') do
+      cocina_with_metadata = begin
+        Success(Dor::Services::Client.object(pid).find_with_metadata)
+      rescue StandardError
+        Failure(:conversion_error)
+      end
+    end.format('%n realtime %rs total CPU %ts').gsub(/[()]/, '')
+    logger.info 'document found, now generating document solr'
+    # benchmark how long it takes to convert the object to a Solr document
+    to_solr_stats = Benchmark.measure('to_solr') do
+      solr_doc = if cocina_with_metadata.success?
+                   model, metadata = cocina_with_metadata.value!
+                   DocumentBuilder.for(model: model, metadata: metadata).to_solr
+                 else
+                   logger.debug("Fetching fallback indexer because cocina model couldn't be retrieved.")
+                   FallbackIndexer.new(id: pid).to_solr
+                 end
+      logger.debug 'solr doc created'
+      @solr.add(solr_doc, add_attributes: add_attributes)
+    end.format('%n realtime %rs total CPU %ts').gsub(/[()]/, '')
+
+    logger.info "successfully updated index for #{pid} (metrics: #{load_stats}; #{to_solr_stats})"
+
+    solr_doc
+  end
+
+  delegate :logger, to: :Rails
+
+  def commit
+    @solr.commit
   end
 end

@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Indexer do
+RSpec.describe DocumentBuilder do
   subject(:indexer) { described_class.for(model: cocina, metadata: metadata) }
 
   let(:metadata) do
