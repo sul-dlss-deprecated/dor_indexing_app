@@ -3,6 +3,7 @@
 source 'https://rubygems.org'
 
 gem 'bootsnap', '>= 1.1.0', require: false # Reduces boot times through caching; required in config/boot.rb
+gem 'bunny', '~> 2.19' # for rabbitmq
 gem 'committee' # Validates HTTP requests/responses per OpenAPI specification
 gem 'config'
 gem 'daemons' # for rolling indexer
@@ -21,6 +22,7 @@ gem 'rack-timeout', '~> 0.5.1'
 gem 'rails', '~> 7.0.0'
 gem 'rsolr', '~> 2.0'
 gem 'rubydora'
+gem 'sneakers', '~> 2.11'
 gem 'solrizer'
 
 # DLSS gems
