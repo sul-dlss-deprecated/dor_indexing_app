@@ -20,3 +20,10 @@ workflow_url: 'https://workflow.example.edu/'
 dor_services:
   url: 'http://localhost:3003'
   token: 'not-a-real-token'
+
+
+rabbitmq:
+  hostname: localhost
+  vhost: /
+  username: guest
+  password: guest
