@@ -3,24 +3,17 @@
 class Indexer
   include Dry::Monads[:result]
 
-  def initialize(solr:)
+  # @param [RSolr::Client] solr
+  # @param [String] pid
+  def initialize(solr:, pid:)
     @solr = solr
+    @pid = pid
   end
 
   # retrieves a single Dor object by pid, indexes the object to solr, does some logging
   # doesn't commit automatically.
-  def reindex_pid(pid, add_attributes:)
+  def reindex_pid(add_attributes:, cocina_with_metadata:)
     solr_doc = nil
-    cocina_with_metadata = nil
-
-    # benchmark how long it takes to load the object
-    load_stats = Benchmark.measure('load_instance') do
-      cocina_with_metadata = begin
-        Success(Dor::Services::Client.object(pid).find_with_metadata)
-      rescue StandardError
-        Failure(:conversion_error)
-      end
-    end.format('%n realtime %rs total CPU %ts').gsub(/[()]/, '')
     logger.info 'document found, now generating document solr'
     # benchmark how long it takes to convert the object to a Solr document
     to_solr_stats = Benchmark.measure('to_solr') do
@@ -35,12 +28,28 @@ class Indexer
       @solr.add(solr_doc, add_attributes: add_attributes)
     end.format('%n realtime %rs total CPU %ts').gsub(/[()]/, '')
 
-    logger.info "successfully updated index for #{pid} (metrics: #{load_stats}; #{to_solr_stats})"
+    logger.info "successfully updated index for #{pid} (metrics: #{to_solr_stats})"
 
     solr_doc
   end
 
+  # @returns [Success,Failure] the result of finding the model with metadata
+  def fetch_model_with_metadata
+    cocina_with_metadata = nil
+    # benchmark how long it takes to load the object
+    load_stats = Benchmark.measure('load_instance') do
+      cocina_with_metadata = begin
+        Success(Dor::Services::Client.object(pid).find_with_metadata)
+      rescue StandardError
+        Failure(:conversion_error)
+      end
+    end.format('%n realtime %rs total CPU %ts').gsub(/[()]/, '')
+    logger.info "Load metrics: #{load_stats}"
+    cocina_with_metadata
+  end
+
   delegate :logger, to: :Rails
+  attr_reader :pid
 
   def commit
     @solr.commit

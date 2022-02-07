@@ -15,7 +15,8 @@ RSpec.describe ReindexJob do
                             administrative: { hasAdminPolicy: 'druid:xx999xx9999' })
   end
 
-  let(:indexer) { instance_double(Indexer, reindex_pid: true) }
+  let(:result) { Success(double) }
+  let(:indexer) { instance_double(Indexer, reindex_pid: true, fetch_model_with_metadata: result) }
 
   before do
     allow(Indexer).to receive(:new).and_return(indexer)
@@ -23,6 +24,7 @@ RSpec.describe ReindexJob do
 
   it 'updates the druid' do
     described_class.new.work(message)
-    expect(indexer).to have_received(:reindex_pid).with(druid, add_attributes: { commitWithin: 1000 })
+    expect(indexer).to have_received(:reindex_pid)
+      .with(add_attributes: { commitWithin: 1000 }, cocina_with_metadata: result)
   end
 end
