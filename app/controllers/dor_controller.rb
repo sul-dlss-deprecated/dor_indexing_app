@@ -21,10 +21,6 @@ class DorController < ApplicationController
     render plain: params[:pid]
   end
 
-  def queue_size
-    render status: :ok, json: { value: QueueStatus.all.queue_size }
-  end
-
   private
 
   def solr

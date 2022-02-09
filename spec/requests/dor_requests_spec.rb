@@ -75,15 +75,4 @@ RSpec.describe 'DOR', type: :request do
       expect(mock_solr_conn).not_to have_received(:commit)
     end
   end
-
-  describe '#queue_size' do
-    let(:mock_status) { instance_double(QueueStatus::All, queue_size: 15) }
-
-    it 'retrives the size of the backing message queues' do
-      allow(QueueStatus).to receive(:all).and_return(mock_status)
-      get '/dor/queue_size'
-      expect(QueueStatus).to have_received(:all).once
-      expect(JSON.parse(response.body)).to include('value' => 15)
-    end
-  end
 end

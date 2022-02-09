@@ -11,8 +11,6 @@ workflow:
   shift_age: 'weekly'
   timeout: 60
 
-message_queues: []
-
 fedora_url: 'https://user:password@fedora.example.com:1000/fedora'
 solrizer_url: 'https://solr.example.com/solr/collection'
 workflow_url: 'https://workflow.example.edu/'
