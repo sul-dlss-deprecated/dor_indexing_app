@@ -23,6 +23,3 @@ OkComputer::Registry.register 'version', VersionCheck.new
 # EXTERNAL Services
 
 OkComputer::Registry.register 'external-solr', OkComputer::HttpCheck.new("#{Settings.solrizer_url.gsub(%r{/$}, '')}/admin/ping")
-OkComputer::Registry.register 'external-queue-size', (OkComputer::SizeThresholdCheck.new('Total queue size', 50_000) do
-  QueueStatus.all.queue_size
-end)
