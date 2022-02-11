@@ -23,6 +23,9 @@ class DataIndexer
       solr_doc['has_model_ssim'] = legacy_model
       solr_doc['is_governed_by_ssim'] = legacy_apo
       solr_doc['is_member_of_collection_ssim'] = legacy_collections
+
+      # Used so that DSA can generate public XML whereas a constituent can find the virtual object it is part of.
+      solr_doc['has_constituents_ssim'] = virtual_object_constituents
     end.merge(WorkflowFields.for(druid: cocina.externalIdentifier, version: cocina.version))
   end
 
@@ -41,6 +44,12 @@ class DataIndexer
     else
       Array(cocina.structural.isMemberOf).map { |col_id| "info:fedora/#{col_id}" }
     end
+  end
+
+  def virtual_object_constituents
+    return unless cocina.dro?
+
+    cocina.structural.hasMemberOrders.first&.members
   end
 
   def legacy_apo
