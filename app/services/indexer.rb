@@ -8,6 +8,8 @@ class Indexer
   def initialize(solr:, pid:)
     @solr = solr
     @pid = pid
+    # Give Honeybadger some context in case an error occurs
+    Honeybadger.context({ pid: pid })
   end
 
   # retrieves a single Dor object by pid, indexes the object to solr, does some logging
