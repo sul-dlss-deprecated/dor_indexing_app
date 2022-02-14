@@ -9,10 +9,10 @@ class IdentityMetadataIndexer
 
   # @return [Hash] the partial solr document for identityMetadata
   def to_solr
-    return { 'objectType_ssim' => [object_type] } if object_type == 'adminPolicy' || cocina_object.identification.nil?
+    return { 'objectType_ssim' => object_types } if object_types.include?('adminPolicy') || cocina_object.identification.nil?
 
     {
-      'objectType_ssim' => [object_type],
+      'objectType_ssim' => object_types,
       'dor_id_tesim' => [source_id_value, barcode, catkey].compact,
       'identifier_ssim' => prefixed_identifiers,
       'identifier_tesim' => prefixed_identifiers,
@@ -33,21 +33,24 @@ class IdentityMetadataIndexer
   end
 
   def barcode
-    @barcode ||= object_type == 'collection' ? nil : cocina_object.identification.barcode
+    @barcode ||= object_types.include?('collection') ? nil : cocina_object.identification.barcode
   end
 
   def catkey
     @catkey ||= Array(cocina_object.identification.catalogLinks).find { |link| link.catalog == 'symphony' }&.catalogRecordId
   end
 
-  def object_type
+  def object_types
     case cocina_object
     when Cocina::Models::AdminPolicy
-      'adminPolicy'
+      ['adminPolicy']
     when Cocina::Models::Collection
-      'collection'
+      ['collection']
     else
-      cocina_object.type == Cocina::Models::Vocab.agreement ? 'agreement' : 'item'
+      return ['agreement'] if cocina_object.type == Cocina::Models::Vocab.agreement
+      return ['item'] unless cocina_object.structural&.hasMemberOrders&.first&.members
+
+      %w[item virtualObject]
     end
   end
 
