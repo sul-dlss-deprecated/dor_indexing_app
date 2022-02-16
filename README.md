@@ -25,13 +25,15 @@ RAILS_ENV=production bin/rolling_index stop
 
 See https://sul-dlss.github.io/dor_indexing_app/
 
-## Setup RabbitMQ
-You must set up the durable rabbitmq queues that bind to the exchange where workflow messages are published.
+## RabbitMQ Setup
+
+NOTE: This is done automatically by Capistrano on deployment, so one generally shouldn't need to run this task manually. This is for informational purposes only.
+
+In order for Sneakers jobs to work off durable queues populated by RabbitMQ, queues must first be bound to their corresponding topic exchanges (the ones to which appropriate messages are published):
 
 ```sh
 RAILS_ENV=production bin/rake rabbitmq:setup
 ```
-This is going to create queues for this application that bind to some topics.
 
 ## RabbitMQ queue workers
 In a development environment you can start sneakers this way:
