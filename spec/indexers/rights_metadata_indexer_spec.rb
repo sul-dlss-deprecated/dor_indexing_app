@@ -11,14 +11,8 @@ RSpec.describe RightsMetadataIndexer do
   end
 
   context 'with a collection' do
-    let(:access) do
-      {
-        'access' => 'world',
-        'license' => license,
-        'copyright' => 'Copyright © World Trade Organization',
-        'useAndReproductionStatement' => 'Official WTO documents are free for public use.'
-      }
-    end
+    let(:access) { 'world' }
+
     let(:cocina) do
       Cocina::Models.build(
         {
@@ -26,7 +20,12 @@ RSpec.describe RightsMetadataIndexer do
           'type' => Cocina::Models::Vocab.collection,
           'version' => 1,
           'label' => 'testing',
-          'access' => access,
+          'access' => {
+            'access' => access,
+            'license' => license,
+            'copyright' => 'Copyright © World Trade Organization',
+            'useAndReproductionStatement' => 'Official WTO documents are free for public use.'
+          },
           'administrative' => {
             'hasAdminPolicy' => 'druid:xx000xx0000'
           },
@@ -38,13 +37,30 @@ RSpec.describe RightsMetadataIndexer do
       )
     end
 
-    it 'has the fields used by argo' do
-      expect(doc).to include(
-        'copyright_ssim' => 'Copyright © World Trade Organization',
-        'use_statement_ssim' => 'Official WTO documents are free for public use.',
-        'use_license_machine_ssi' => 'CC0-1.0',
-        'rights_descriptions_ssim' => 'world'
-      )
+    context 'with world access' do
+      let(:access) { 'world' }
+
+      it 'has the fields used by argo' do
+        expect(doc).to include(
+          'copyright_ssim' => 'Copyright © World Trade Organization',
+          'use_statement_ssim' => 'Official WTO documents are free for public use.',
+          'use_license_machine_ssi' => 'CC0-1.0',
+          'rights_descriptions_ssim' => 'world'
+        )
+      end
+    end
+
+    context 'with dark access' do
+      let(:access) { 'dark' }
+
+      it 'has the fields used by argo' do
+        expect(doc).to include(
+          'copyright_ssim' => 'Copyright © World Trade Organization',
+          'use_statement_ssim' => 'Official WTO documents are free for public use.',
+          'use_license_machine_ssi' => 'CC0-1.0',
+          'rights_descriptions_ssim' => 'dark'
+        )
+      end
     end
   end
 

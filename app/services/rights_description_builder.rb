@@ -22,7 +22,7 @@ class RightsDescriptionBuilder
     when 'world'
       'world'
     else
-      'citation'
+      'dark'
     end
   end
 
