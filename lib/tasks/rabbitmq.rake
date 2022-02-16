@@ -27,6 +27,12 @@ namespace :rabbitmq do
     queue = channel.queue('dor.indexing-with-model', durable: true)
     queue.bind(update_exchange, routing_key: '#')
     queue.bind(create_exchange, routing_key: '#')
+
+    # These messages look like this: { druid: 'druid:bc123kh8976', deleted_at: 'timestamp here' }
+    delete_exchange = channel.topic('sdr.objects.deleted')
+    queue = channel.queue('dor.deleting-by-druid', durable: true)
+    queue.bind(delete_exchange, routing_key: '#')
+
     conn.close
   end
 end
