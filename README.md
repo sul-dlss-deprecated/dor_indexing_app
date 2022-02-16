@@ -36,7 +36,7 @@ This is going to create queues for this application that bind to some topics.
 ## RabbitMQ queue workers
 In a development environment you can start sneakers this way:
 ```sh
-WORKERS=ReindexJob,ReindexByDruidJob bin/rake sneakers:run
+WORKERS=ReindexJob,ReindexByDruidJob,DeleteByDruidJob bin/rake sneakers:run
 ```
 
 but on the production machines we use systemd to do the same:
