@@ -15,7 +15,7 @@ class RightsMetadataIndexer
       'copyright_ssim' => cocina.access.copyright,
       'use_statement_ssim' => cocina.access.useAndReproductionStatement,
       'use_license_machine_ssi' => license,
-      'rights_descriptions_ssim' => RightsDescriptionBuilder.build(cocina)
+      'rights_descriptions_ssim' => cocina.dro? ? RightsDescriptionBuilder.build(cocina) : CollectionRightsDescriptionBuilder.build(cocina)
     }.compact
   end
 

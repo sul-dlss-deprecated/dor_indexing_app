@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Rights description builder for items and apos
 class RightsDescriptionBuilder
   def self.build(cocina)
     new(cocina).build
@@ -11,23 +12,6 @@ class RightsDescriptionBuilder
   end
 
   def build
-    cocina.collection? ? rights_descriptions_for_collection : rights_descriptions_for_item_and_apo
-  end
-
-  private
-
-  attr_reader :cocina, :root_access_node
-
-  def rights_descriptions_for_collection
-    case @root_access_node.access
-    when 'world'
-      'world'
-    else
-      'dark'
-    end
-  end
-
-  def rights_descriptions_for_item_and_apo
     return 'controlled digital lending' if @root_access_node.controlledDigitalLending
 
     return ['dark'] if @root_access_node.access == 'dark'
@@ -36,6 +20,10 @@ class RightsDescriptionBuilder
     rights += access_level_from_files.uniq.map { |str| "#{str} (file)" } if @cocina.dro?
     rights
   end
+
+  private
+
+  attr_reader :cocina, :root_access_node
 
   def access_level_from_files
     # dark access doesn't permit any file access
