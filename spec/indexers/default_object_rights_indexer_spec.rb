@@ -37,7 +37,7 @@ RSpec.describe DefaultObjectRightsIndexer do
       expect(doc).to match a_hash_including('use_statement_ssim' =>
         'Rights are owned by Stanford University Libraries.')
       expect(doc).to match a_hash_including('copyright_ssim' => 'Additional copyright info')
-      expect(doc).to match a_hash_including('rights_descriptions_ssim' => 'Dark')
+      expect(doc).to match a_hash_including('rights_descriptions_ssim' => 'dark')
       expect(doc).to match a_hash_including('default_rights_descriptions_ssim' => ['location: spec'])
     end
   end
