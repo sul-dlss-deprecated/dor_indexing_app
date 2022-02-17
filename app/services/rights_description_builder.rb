@@ -7,18 +7,19 @@ class RightsDescriptionBuilder
 
   def initialize(cocina)
     @cocina = cocina
+    @root_access_node = cocina.admin_policy? ? cocina.administrative.defaultAccess : cocina.access
   end
 
   def build
-    cocina.dro? ? rights_descriptions_for_item : rights_descriptions_for_collection
+    cocina.collection? ? rights_descriptions_for_collection : rights_descriptions_for_item_and_apo
   end
 
   private
 
-  attr_reader :cocina
+  attr_reader :cocina, :root_access_node
 
   def rights_descriptions_for_collection
-    case cocina.access.access
+    case @root_access_node.access
     when 'world'
       'world'
     else
@@ -26,17 +27,19 @@ class RightsDescriptionBuilder
     end
   end
 
-  def rights_descriptions_for_item
-    return 'controlled digital lending' if cocina.access.controlledDigitalLending
+  def rights_descriptions_for_item_and_apo
+    return 'controlled digital lending' if @root_access_node.controlledDigitalLending
 
-    return ['dark'] if cocina.access.access == 'dark'
+    return ['dark'] if @root_access_node.access == 'dark'
 
-    object_level_access + access_level_from_files.uniq.map { |str| "#{str} (file)" }
+    rights = object_level_access
+    rights += access_level_from_files.uniq.map { |str| "#{str} (file)" } if @cocina.dro?
+    rights
   end
 
   def access_level_from_files
     # dark access doesn't permit any file access
-    return [] if cocina.access.access == 'dark'
+    return [] if @root_access_node.access == 'dark'
 
     file_access_nodes.reject { |fa| same_as_object_access?(fa) }.flat_map do |fa|
       file_access_from_file(fa)
@@ -67,8 +70,8 @@ class RightsDescriptionBuilder
   end
 
   def same_as_object_access?(file_access)
-    (file_access[:access] == cocina.access.access && file_access[:download] == cocina.access.download) ||
-      (cocina.access.access == 'citation-only' && file_access[:access] == 'dark')
+    (file_access[:access] == @root_access_node.access && file_access[:download] == @root_access_node.download) ||
+      (@root_access_node.access == 'citation-only' && file_access[:access] == 'dark')
   end
 
   def file_access_nodes
@@ -79,17 +82,17 @@ class RightsDescriptionBuilder
   end
 
   def object_level_access
-    case cocina.access.access
+    case @root_access_node.access
     when 'citation-only'
       ['citation']
     when 'world'
       world_object_access
     when 'location-based'
-      case cocina.access.download
+      case @root_access_node.download
       when 'none'
-        ["location: #{cocina.access.readLocation} (no-download)"]
+        ["location: #{@root_access_node.readLocation} (no-download)"]
       else
-        ["location: #{cocina.access.readLocation}"]
+        ["location: #{@root_access_node.readLocation}"]
       end
     when 'stanford'
       stanford_object_access
@@ -97,19 +100,19 @@ class RightsDescriptionBuilder
   end
 
   def stanford_object_access
-    case cocina.access.download
+    case @root_access_node.download
     when 'none'
       ['stanford (no-download)']
     when 'location-based'
       # this is an odd case we might want to move away from. See https://github.com/sul-dlss/cocina-models/issues/258
-      ['stanford (no-download)', "location: #{cocina.access.readLocation}"]
+      ['stanford (no-download)', "location: #{@root_access_node.readLocation}"]
     else
       ['stanford']
     end
   end
 
   def world_object_access
-    case cocina.access.download
+    case @root_access_node.download
     when 'stanford'
       ['stanford', 'world (no-download)']
     when 'none'
@@ -118,7 +121,7 @@ class RightsDescriptionBuilder
       ['world']
     when 'location-based'
       # this is an odd case we might want to move away from. See https://github.com/sul-dlss/cocina-models/issues/258
-      ['world (no-download)', "location: #{cocina.access.readLocation}"]
+      ['world (no-download)', "location: #{@root_access_node.readLocation}"]
     end
   end
 end
