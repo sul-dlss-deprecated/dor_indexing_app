@@ -13,7 +13,9 @@ class DefaultObjectRightsIndexer
 
     {
       'use_statement_ssim' => use_statement,
-      'copyright_ssim' => copyright
+      'copyright_ssim' => copyright,
+      'rights_descriptions_ssim' => 'Dark',
+      'default_rights_descriptions_ssim' => RightsDescriptionBuilder.build(cocina)
     }
   end
 

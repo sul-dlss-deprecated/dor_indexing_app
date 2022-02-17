@@ -15,7 +15,10 @@ RSpec.describe DefaultObjectRightsIndexer do
           hasAgreement: 'druid:bb033gt0615',
           defaultAccess: {
             useAndReproductionStatement: 'Rights are owned by Stanford University Libraries.',
-            copyright: 'Additional copyright info'
+            copyright: 'Additional copyright info',
+            access: 'location-based',
+            download: 'location-based',
+            readLocation: 'spec'
           }
         }
       }
@@ -34,6 +37,8 @@ RSpec.describe DefaultObjectRightsIndexer do
       expect(doc).to match a_hash_including('use_statement_ssim' =>
         'Rights are owned by Stanford University Libraries.')
       expect(doc).to match a_hash_including('copyright_ssim' => 'Additional copyright info')
+      expect(doc).to match a_hash_including('rights_descriptions_ssim' => 'Dark')
+      expect(doc).to match a_hash_including('default_rights_descriptions_ssim' => ['location: spec'])
     end
   end
 end
