@@ -1,86 +1,46 @@
 # frozen_string_literal: true
 
-# Rights description builder for items and apos
+# Rights description builder for apos and the subclass of DroRightsDescriptionBuilder
 class RightsDescriptionBuilder
-  def self.build(cocina)
-    new(cocina).build
+  # @param [Cocina::Models::AdminPolicy, Cocina::Models::DRO] cocina_object
+  def self.build(cocina_object)
+    new(cocina_object).build
   end
 
-  def initialize(cocina)
-    @cocina = cocina
-    @root_access_node = cocina.admin_policy? ? cocina.administrative.defaultAccess : cocina.access
+  def initialize(cocina_object)
+    @cocina = cocina_object
+  end
+
+  # This is set up to work for APOs, but this method is to be overridden on sub classes
+  # @return [Cocina::Models::AdminPolicyDefaultAccess]
+  def object_access
+    @object_access ||= cocina.administrative.defaultAccess
   end
 
   def build
-    return 'controlled digital lending' if @root_access_node.controlledDigitalLending
+    return 'controlled digital lending' if object_access.controlledDigitalLending
 
-    return ['dark'] if @root_access_node.access == 'dark'
+    return ['dark'] if object_access.access == 'dark'
 
-    rights = object_level_access
-    rights += access_level_from_files.uniq.map { |str| "#{str} (file)" } if @cocina.dro?
-    rights
+    object_level_access
   end
 
   private
 
-  attr_reader :cocina, :root_access_node
-
-  def access_level_from_files
-    # dark access doesn't permit any file access
-    return [] if @root_access_node.access == 'dark'
-
-    file_access_nodes.reject { |fa| same_as_object_access?(fa) }.flat_map do |fa|
-      file_access_from_file(fa)
-    end
-  end
-
-  def file_access_from_file(file_access)
-    basic_access = if file_access[:access] == 'location-based'
-                     "location: #{file_access[:readLocation]}"
-                   else
-                     file_access[:access]
-                   end
-
-    return [basic_access] if file_access[:access] == file_access[:download]
-
-    basic_access += ' (no-download)' if file_access[:access] != 'dark'
-
-    case file_access[:download]
-    when 'stanford'
-      # Here we're using readLocation to mean download location. https://github.com/sul-dlss/cocina-models/issues/258
-      [basic_access, 'stanford']
-    when 'location-based'
-      # Here we're using readLocation to mean download location. https://github.com/sul-dlss/cocina-models/issues/258
-      [basic_access, "location: #{file_access[:readLocation]}"]
-    else
-      [basic_access]
-    end
-  end
-
-  def same_as_object_access?(file_access)
-    (file_access[:access] == @root_access_node.access && file_access[:download] == @root_access_node.download) ||
-      (@root_access_node.access == 'citation-only' && file_access[:access] == 'dark')
-  end
-
-  def file_access_nodes
-    Array(cocina.structural.contains)
-      .flat_map { |fs| Array(fs.structural.contains) }
-      .map { |file| file.access.to_h }
-      .uniq
-  end
+  attr_reader :cocina
 
   def object_level_access
-    case @root_access_node.access
+    case object_access.access
     when 'citation-only'
       ['citation']
     when 'world'
       world_object_access
     when 'location-based'
-      case @root_access_node.download
+      case object_access.download
       when 'none'
-        ["location: #{@root_access_node.readLocation} (no-download)"]
+        ["location: #{object_access.readLocation} (no-download)"]
       else
-        ["location: #{@root_access_node.readLocation}"]
+        ["location: #{object_access.readLocation}"]
       end
     when 'stanford'
       stanford_object_access
@@ -88,19 +48,19 @@ class RightsDescriptionBuilder
   end
 
   def stanford_object_access
-    case @root_access_node.download
+    case object_access.download
     when 'none'
       ['stanford (no-download)']
     when 'location-based'
       # this is an odd case we might want to move away from. See https://github.com/sul-dlss/cocina-models/issues/258
-      ['stanford (no-download)', "location: #{@root_access_node.readLocation}"]
+      ['stanford (no-download)', "location: #{object_access.readLocation}"]
     else
       ['stanford']
     end
   end
 
   def world_object_access
-    case @root_access_node.download
+    case object_access.download
     when 'stanford'
       ['stanford', 'world (no-download)']
     when 'none'
@@ -109,7 +69,7 @@ class RightsDescriptionBuilder
       ['world']
     when 'location-based'
       # this is an odd case we might want to move away from. See https://github.com/sul-dlss/cocina-models/issues/258
-      ['world (no-download)', "location: #{@root_access_node.readLocation}"]
+      ['world (no-download)', "location: #{object_access.readLocation}"]
     end
   end
 end

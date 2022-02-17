@@ -15,7 +15,7 @@ class RightsMetadataIndexer
       'copyright_ssim' => cocina.access.copyright,
       'use_statement_ssim' => cocina.access.useAndReproductionStatement,
       'use_license_machine_ssi' => license,
-      'rights_descriptions_ssim' => cocina.dro? ? RightsDescriptionBuilder.build(cocina) : CollectionRightsDescriptionBuilder.build(cocina)
+      'rights_descriptions_ssim' => rights_description
     }.compact
   end
 
@@ -41,6 +41,12 @@ class RightsMetadataIndexer
     'https://opendatacommons.org/licenses/by/1-0/' => 'ODC-By-1.0',
     'https://opendatacommons.org/licenses/odbl/1-0/' => 'ODbL-1.0'
   }.freeze
+
+  def rights_description
+    return CollectionRightsDescriptionBuilder.build(cocina) if cocina.collection?
+
+    DroRightsDescriptionBuilder.build(cocina)
+  end
 
   # @return [String] the code if we've defined one, or the URI if we haven't.
   def license
