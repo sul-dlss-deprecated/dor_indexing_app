@@ -12,6 +12,9 @@ set :deploy_to, '/opt/app/dor_indexer/dor_indexing_app'
 set :linked_dirs, %w[log config/settings tmp/pids tmp/cache tmp/sockets vendor/bundle]
 set :linked_files, %w[config/secrets.yml config/honeybadger.yml config/newrelic.yml]
 
+set :rails_env, 'production'
+set :bundle_without, %w[test development deployment].join(' ')
+
 # honeybadger_env otherwise defaults to rails_env
 set :honeybadger_env, fetch(:stage)
 
