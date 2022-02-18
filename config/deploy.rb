@@ -23,3 +23,38 @@ set :sneakers_systemd_use_hooks, true
 
 # update shared_configs before restarting app
 before 'deploy:restart', 'shared_configs:update'
+
+# Tasks for managing the rolling indexer
+namespace :rolling_indexer do
+  desc 'Stop rolling indexer'
+  task :stop do
+    on roles(:rolling_indexer) do
+      sudo :systemctl, 'stop', 'rolling-index'
+    end
+  end
+
+  desc 'Start rolling indexer'
+  task :start do
+    on roles(:rolling_indexer) do
+      sudo :systemctl, 'start', 'rolling-index'
+    end
+  end
+
+  desc 'Restart rolling indexer'
+  task :restart do
+    on roles(:rolling_indexer) do
+      sudo :systemctl, 'restart', 'rolling-index', raise_on_non_zero_exit: false
+    end
+  end
+
+  desc 'Print status of rolling indexer'
+  task :status do
+    on roles(:rolling_indexer) do
+      sudo :systemctl, 'status', 'rolling-index'
+    end
+  end
+end
+
+after 'deploy:failed', 'rolling_indexer:restart'
+after 'deploy:published', 'rolling_indexer:start'
+after 'deploy:starting', 'rolling_indexer:stop'

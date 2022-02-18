@@ -13,13 +13,26 @@ For more information about the fields and their purpose see: https://docs.google
 * There is a Camel route that sends messages from the fedora update topic https://github.com/sul-dlss/dor-camel-routes/blob/master/deploy/edu_stanford_dor-indexing-app-prod.indexing.xml#L116-L137
 
 ## Rolling indexer
-This helps keep the index fresh by reindexing the oldest data.
 
-```
-RAILS_ENV=production bin/rolling_index start
-RAILS_ENV=production bin/rolling_index stop
+This helps keep the index fresh by reindexing the oldest data. It is managed as a systemd service. To interact with it from your machine, you can use Capistrano:
 
+```shell
+$ cap ENV rolling_indexer:status
+$ cap ENV rolling_indexer:start
+$ cap ENV rolling_indexer:stop
+$ cap ENV rolling_indexer:restart
 ```
+
+Or if you're on a server that has the `rolling_indexer` capistrano role, use systemd commands:
+
+```shell
+$ sudo systemctl status rolling_index
+$ sudo systemctl start rolling_index
+$ sudo systemctl stop rolling_index
+$ sudo systemctl restart rolling_index
+```
+
+**NOTE**: The rolling indexer is automatically restarted during deployments.
 
 ## API
 
