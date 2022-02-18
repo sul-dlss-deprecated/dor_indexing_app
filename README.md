@@ -33,6 +33,7 @@ $ sudo systemctl restart rolling_index
 ```
 
 **NOTE 1**: The rolling indexer is automatically restarted during deployments.
+
 **NOTE 2**: The rolling indexer runs only on one node per environment. Conventionally, this is the `-a` node.
 
 ## API
