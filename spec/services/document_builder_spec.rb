@@ -272,7 +272,6 @@ RSpec.describe DocumentBuilder do
             'label' => 'testing',
             'administrative' => {
               'hasAdminPolicy' => apo_id,
-              'defaultObjectRights' => '<rightsMetadata/>',
               'hasAgreement' => 'druid:bb033gt0615'
             },
             'description' => {
@@ -298,7 +297,6 @@ RSpec.describe DocumentBuilder do
             'label' => 'testing',
             'administrative' => {
               'hasAdminPolicy' => apo_id,
-              'defaultObjectRights' => '<rightsMetadata/>',
               'hasAgreement' => 'druid:bb033gt0615'
             },
             'description' => {
