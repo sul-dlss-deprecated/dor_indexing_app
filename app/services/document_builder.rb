@@ -74,6 +74,7 @@ class DocumentBuilder
     rescue Dor::Services::Client::UnexpectedResponse, Dor::Services::Client::NotFoundResponse
       Honeybadger.notify("Bad association found on #{model.externalIdentifier}. #{rel_druid} could not be found")
       # This may happen if the referenced Collection does not exist (bad data)
+      nil
     end
   end
 end
