@@ -93,8 +93,15 @@ RSpec.describe DocumentBuilder do
       end
 
       it 'logs to honeybadger' do
-        allow(Honeybadger).to receive(:notify)
+        allow(Honeybadger).to receive(:notify).and_return('16ae4ff7-9449-43af-9988-77772858878c')
         expect(indexer).to be_instance_of CompositeIndexer::Instance
+
+        # Ensure that errors are stripped out of parent_collections
+        expect(AdministrativeTagIndexer).to have_received(:new)
+          .with(cocina: Cocina::Models::DRO,
+                id: String,
+                metadata: metadata,
+                parent_collections: [])
         expect(Honeybadger).to have_received(:notify).with('Bad association found on druid:xx999xx9999. druid:bc999df2323 could not be found')
       end
     end
