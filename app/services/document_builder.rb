@@ -39,16 +39,6 @@ class DocumentBuilder
     WorkflowsIndexer
   )
 
-  SET_INDEXER = CompositeIndexer.new(
-    AdministrativeTagIndexer,
-    DataIndexer,
-    RightsMetadataIndexer,
-    IdentityMetadataIndexer,
-    DescriptiveMetadataIndexer,
-    IdentifiableIndexer,
-    WorkflowsIndexer
-  )
-
   INDEXERS = {
     Cocina::Models::Vocab.agreement => ITEM_INDEXER, # Agreement uses same indexer as item
     Cocina::Models::Vocab.admin_policy => ADMIN_POLICY_INDEXER,
