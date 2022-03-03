@@ -57,6 +57,28 @@ paths:
           required: false
           schema:
             type: integer
+        - name: cocina_model_json
+          in: query
+          description: the JSON serialization of the Cocina object
+          required: false
+          content:
+            application/json:
+              schema:
+                type: object
+        - name: created_at
+          in: query
+          description: the creation date of the Cocina object
+          required: false
+          schema:
+            type: string
+            format: date-time
+        - name: updated_at
+          in: query
+          description: the most recent modification date of the Cocina object
+          required: false
+          schema:
+            type: string
+            format: date-time
       responses:
         '200':
           description: Object successfully reindexed
