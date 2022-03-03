@@ -6,7 +6,7 @@ RSpec.describe AdministrativeTagIndexer do
   describe '#to_solr' do
     subject(:document) { indexer.to_solr }
 
-    let(:indexer) { described_class.new(id: 'druid:rt923jk234') }
+    let(:indexer) { described_class.new(id: 'druid:rt923jk234', administrative_tags: tags) }
 
     let(:tags) do
       [
@@ -17,11 +17,6 @@ RSpec.describe AdministrativeTagIndexer do
         'DPG : Beautiful Books : Octavo : newpri',
         'Remediated By : 4.15.4'
       ]
-    end
-
-    before do
-      # Don't actually hit the dor-services-app API endpoint
-      allow(indexer).to receive(:administrative_tags).and_return(tags)
     end
 
     it 'indexes all administrative tags' do

@@ -22,8 +22,7 @@ RSpec.describe DescriptiveMetadataIndexer do
           "useAndReproductionStatement": "This document is available only to the Stanford faculty, staff and student community."
         },
         "administrative": {
-          "hasAdminPolicy": "druid:zx485kb6348",
-          "partOfProject": "H2"
+          "hasAdminPolicy": "druid:zx485kb6348"
         },
         "description": #{JSON.generate(description.merge(purl: 'https://purl.stanford.edu/qy781dy0220'))},
         "identification": {

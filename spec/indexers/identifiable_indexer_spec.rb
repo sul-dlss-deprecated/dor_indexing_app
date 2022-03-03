@@ -93,8 +93,6 @@ RSpec.describe IdentifiableIndexer do
     end
 
     context 'when APO is found' do
-      let(:project) { 'Google Books' }
-
       let(:related) do
         Cocina::Models.build(
           {
@@ -103,7 +101,6 @@ RSpec.describe IdentifiableIndexer do
             'version' => 1,
             'label' => 'testing',
             'administrative' => {
-              'partOfProject' => project,
               'hasAdminPolicy' => apo_id
             },
             'access' => {},

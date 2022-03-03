@@ -9,8 +9,9 @@ class AdministrativeTagIndexer
 
   attr_reader :id
 
-  def initialize(id:, **)
+  def initialize(id:, administrative_tags:, **)
     @id = id
+    @administrative_tags = administrative_tags
   end
 
   # @return [Hash] the partial solr document for administrative tags
@@ -33,6 +34,8 @@ class AdministrativeTagIndexer
 
   private
 
+  attr_reader :administrative_tags
+
   # solrize each possible prefix for the tag, inclusive of the full tag.
   # e.g., for a tag such as "A : B : C", this will solrize to an _ssim field
   # that contains ["A",  "A : B",  "A : B : C"].
@@ -42,11 +45,5 @@ class AdministrativeTagIndexer
     1.upto(tag_parts.count).map do |i|
       tag_parts.take(i).join(TAG_PART_DELIMITER)
     end
-  end
-
-  def administrative_tags
-    Dor::Services::Client.object(id).administrative_tags.list
-  rescue Dor::Services::Client::NotFoundResponse
-    []
   end
 end

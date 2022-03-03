@@ -56,14 +56,19 @@ class DocumentBuilder
   }.freeze
 
   # @param [Cocina::Models::DRO,Cocina::Models::Collection,Cocina::Model::AdminPolicy] model
-  # @param [Hash<String,String>] metadata
+  # @param [Hash<String,String>] metadata this contains the updated and created dates
   def self.for(model:, metadata:)
+    id = model.externalIdentifier
     Rails.logger.debug { "Fetching indexer for #{model.type}" }
-    parent_collections = load_parent_collections(model)
-    INDEXERS.fetch(model.type, ITEM_INDEXER).new(id: model.externalIdentifier,
-                                                 cocina: model,
-                                                 parent_collections: parent_collections,
-                                                 metadata: metadata)
+    indexer_for_type(model.type).new(id: id,
+                                     cocina: model,
+                                     parent_collections: load_parent_collections(model),
+                                     administrative_tags: administrative_tags(id),
+                                     metadata: metadata)
+  end
+
+  def self.indexer_for_type(type)
+    INDEXERS.fetch(type, ITEM_INDEXER)
   end
 
   def self.load_parent_collections(model)
@@ -76,5 +81,11 @@ class DocumentBuilder
       # This may happen if the referenced Collection does not exist (bad data)
       nil
     end
+  end
+
+  def self.administrative_tags(id)
+    Dor::Services::Client.object(id).administrative_tags.list
+  rescue Dor::Services::Client::NotFoundResponse
+    []
   end
 end

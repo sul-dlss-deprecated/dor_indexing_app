@@ -17,7 +17,13 @@ class FallbackIndexer
   attr_reader :id
 
   def to_solr
-    FALLBACK_INDEXER.new(id: id, resource: fetch_object).to_solr
+    FALLBACK_INDEXER.new(id: id, resource: fetch_object, administrative_tags: administrative_tags).to_solr
+  end
+
+  def administrative_tags
+    Dor::Services::Client.object(id).administrative_tags.list
+  rescue Dor::Services::Client::NotFoundResponse
+    []
   end
 
   def fetch_object
