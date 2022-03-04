@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe 'DOR', type: :request do
   let(:druid) { 'druid:bc123df5678' }
 
-  describe 'POST #reindex' do
+  describe 'reindexing' do
     before do
       allow(Logger).to receive(:new).and_return(mock_logger)
       allow(RSolr).to receive(:connect).and_return(mock_solr_conn)
@@ -23,39 +23,41 @@ RSpec.describe 'DOR', type: :request do
     let(:mock_indexer) { instance_double(CompositeIndexer::Instance, to_solr: mock_solr_doc) }
     let(:mock_solr_doc) { { id: druid, text_field_tesim: 'a field to be searched' } }
 
-    it 'reindexes an object with default commitWithin param and a hard commit' do
-      post "/dor/reindex/#{druid}"
-      expect(mock_solr_conn).to have_received(:add).with({ id: druid, text_field_tesim: 'a field to be searched' }, add_attributes: { commitWithin: 1000 })
-      expect(mock_solr_conn).to have_received(:commit)
-      expect(response.body).to eq "Successfully updated index for #{druid}"
-      expect(response.code).to eq '200'
+    describe 'POST #reindex' do
+      it 'reindexes an object with default commitWithin param and a hard commit' do
+        post "/dor/reindex/#{druid}"
+        expect(mock_solr_conn).to have_received(:add).with({ id: druid, text_field_tesim: 'a field to be searched' }, add_attributes: { commitWithin: 1000 })
+        expect(mock_solr_conn).to have_received(:commit)
+        expect(response.body).to eq "Successfully updated index for #{druid}"
+        expect(response.code).to eq '200'
+      end
+
+      it 'reindexes an object with specified commitWithin param and no hard commit' do
+        post "/dor/reindex/#{druid}", params: { commitWithin: 10_000 }
+        expect(mock_solr_conn).to have_received(:add).with({ id: druid, text_field_tesim: 'a field to be searched' }, add_attributes: { commitWithin: 10_000 })
+        expect(mock_solr_conn).not_to have_received(:commit)
+        expect(response.body).to eq "Successfully updated index for #{druid}"
+        expect(response.code).to eq '200'
+      end
+
+      it 'can be used with asynchronous commits' do
+        post "/dor/reindex/#{druid}", params: { commitWithin: 2 }
+        expect(mock_solr_conn).to have_received(:add)
+        expect(mock_solr_conn).not_to have_received(:commit)
+        expect(response.body).to eq "Successfully updated index for #{druid}"
+        expect(response.code).to eq '200'
+      end
+
+      it 'gives the right status if an object is not found' do
+        allow(object_service).to receive(:find_with_metadata).and_raise(Dor::Services::Client::NotFoundResponse)
+        allow(connection).to receive(:find).and_raise(Rubydora::RecordNotFound)
+        post "/dor/reindex/#{druid}"
+        expect(response.body).to eq 'Object does not exist in the repository'
+        expect(response.code).to eq '404'
+      end
     end
 
-    it 'reindexes an object with specified commitWithin param and no hard commit' do
-      post "/dor/reindex/#{druid}", params: { commitWithin: 10_000 }
-      expect(mock_solr_conn).to have_received(:add).with({ id: druid, text_field_tesim: 'a field to be searched' }, add_attributes: { commitWithin: 10_000 })
-      expect(mock_solr_conn).not_to have_received(:commit)
-      expect(response.body).to eq "Successfully updated index for #{druid}"
-      expect(response.code).to eq '200'
-    end
-
-    it 'can be used with asynchronous commits' do
-      post "/dor/reindex/#{druid}", params: { commitWithin: 2 }
-      expect(mock_solr_conn).to have_received(:add)
-      expect(mock_solr_conn).not_to have_received(:commit)
-      expect(response.body).to eq "Successfully updated index for #{druid}"
-      expect(response.code).to eq '200'
-    end
-
-    it 'gives the right status if an object is not found' do
-      allow(object_service).to receive(:find_with_metadata).and_raise(Dor::Services::Client::NotFoundResponse)
-      allow(connection).to receive(:find).and_raise(Rubydora::RecordNotFound)
-      post "/dor/reindex/#{druid}"
-      expect(response.body).to eq 'Object does not exist in the repository'
-      expect(response.code).to eq '404'
-    end
-
-    context 'when cocina is provided by caller' do
+    describe 'PUT #reindex_from_cocina' do
       let(:cocina_json) { '{ "some": "json" }' }
       let(:cocina_model_metadata) { instance_double(Dor::Services::Client::ObjectMetadata) }
       let(:created_at) { '2022-02-27' }
@@ -67,19 +69,30 @@ RSpec.describe 'DOR', type: :request do
 
       it 'uses the provided cocina without hitting dor-services-app' do
         allow(Cocina::Models).to receive(:build).with(JSON.parse(cocina_json)).and_return(cocina) # pretend our bogus test JSON is valid
-        post "/dor/reindex/#{druid}",
-             params: { cocina_object: cocina_json, created_at: created_at, updated_at: updated_at }.to_json,
-             headers: { 'CONTENT_TYPE' => 'application/json' }
+        put "/dor/reindex_from_cocina/#{druid}",
+            params: { cocina_object: cocina_json, created_at: created_at, updated_at: updated_at }.to_json,
+            headers: { 'CONTENT_TYPE' => 'application/json' }
         expect(response.body).to eq "Successfully updated index for #{druid}"
         expect(response.code).to eq '200'
         expect(mock_solr_conn).to have_received(:add).with(mock_solr_doc, add_attributes: { commitWithin: 1000 })
         expect(object_service).not_to have_received(:find_with_metadata)
       end
 
+      it 'reindexes an object with specified commitWithin param and no hard commit' do
+        allow(Cocina::Models).to receive(:build).with(JSON.parse(cocina_json)).and_return(cocina) # pretend our bogus test JSON is valid
+        put "/dor/reindex_from_cocina/#{druid}",
+            params: { cocina_object: cocina_json, created_at: created_at, updated_at: updated_at, commitWithin: 10_000 }.to_json,
+            headers: { 'CONTENT_TYPE' => 'application/json' }
+        expect(response.body).to eq "Successfully updated index for #{druid}"
+        expect(response.code).to eq '200'
+        expect(mock_solr_conn).to have_received(:add).with(mock_solr_doc, add_attributes: { commitWithin: 10_000 })
+        expect(mock_solr_conn).not_to have_received(:commit)
+      end
+
       it 'requires both the cocina json and the created_at/updated_at metadata' do
-        post "/dor/reindex/#{druid}",
-             params: { cocina_object: cocina_json, updated_at: updated_at }.to_json,
-             headers: { 'CONTENT_TYPE' => 'application/json' }
+        put "/dor/reindex_from_cocina/#{druid}",
+            params: { cocina_object: cocina_json, updated_at: updated_at }.to_json,
+            headers: { 'CONTENT_TYPE' => 'application/json' }
         expect(response.code).to eq '400'
         expect(response.body).to match(/missing required parameters: created_at/)
       end
@@ -87,9 +100,9 @@ RSpec.describe 'DOR', type: :request do
       it 'provides the caller with a useful error if invalid cocina is provided' do
         # Cocina::Models.build will be called with our bogus JSON, which will throw an error
         allow(Honeybadger).to receive(:notify).and_call_original
-        post "/dor/reindex/#{druid}",
-             params: { cocina_object: cocina_json, created_at: created_at, updated_at: updated_at }.to_json,
-             headers: { 'CONTENT_TYPE' => 'application/json' }
+        put "/dor/reindex_from_cocina/#{druid}",
+            params: { cocina_object: cocina_json, created_at: created_at, updated_at: updated_at }.to_json,
+            headers: { 'CONTENT_TYPE' => 'application/json' }
         expect(response.code).to eq '422' # the caller should've provided valid Cocina JSON
         expect(response.body).to eq "Error building Cocina model for #{druid}"
         expect(Honeybadger).to have_received(:notify) do |msg, context:, backtrace:|
