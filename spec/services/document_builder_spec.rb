@@ -20,8 +20,15 @@ RSpec.describe DocumentBuilder do
   let(:admin_tags) do
     instance_double(AdministrativeTagIndexer, to_solr: { 'tag_ssim' => ['Test : Tag'] })
   end
+  let(:admin_tags_client) do
+    instance_double(Dor::Services::Client::AdministrativeTags, list: [])
+  end
+  let(:object_client) do
+    instance_double(Dor::Services::Client::Object, administrative_tags: admin_tags_client)
+  end
 
   before do
+    allow(Dor::Services::Client).to receive(:object).and_return(object_client)
     allow(WorkflowFields).to receive(:for).and_return({ 'milestones_ssim' => %w[foo bar] })
     allow(ReleasableIndexer).to receive(:new).and_return(releasable)
     allow(WorkflowsIndexer).to receive(:new).and_return(workflows)
@@ -55,7 +62,7 @@ RSpec.describe DocumentBuilder do
 
     context 'with collections' do
       let(:object_client) do
-        instance_double(Dor::Services::Client::Object, find: related)
+        instance_double(Dor::Services::Client::Object, find: related, administrative_tags: admin_tags_client)
       end
       let(:related) do
         Cocina::Models.build(
@@ -78,10 +85,6 @@ RSpec.describe DocumentBuilder do
 
       let(:collections) { ['druid:bc999df2323'] }
 
-      before do
-        allow(Dor::Services::Client).to receive(:object).and_return(object_client)
-      end
-
       it { is_expected.to be_instance_of CompositeIndexer::Instance }
     end
 
@@ -101,6 +104,7 @@ RSpec.describe DocumentBuilder do
           .with(cocina: Cocina::Models::DRO,
                 id: String,
                 metadata: metadata,
+                administrative_tags: [],
                 parent_collections: [])
         expect(Honeybadger).to have_received(:notify).with('Bad association found on druid:xx999xx9999. druid:bc999df2323 could not be found')
       end

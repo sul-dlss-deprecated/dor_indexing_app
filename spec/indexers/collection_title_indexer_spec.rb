@@ -30,7 +30,7 @@ RSpec.describe CollectionTitleIndexer do
   end
 
   let(:indexer) do
-    described_class.new(cocina: cocina, parent_collections: collections)
+    described_class.new(cocina: cocina, parent_collections: collections, administrative_tags: [])
   end
 
   describe '#to_solr' do
@@ -47,7 +47,6 @@ RSpec.describe CollectionTitleIndexer do
     end
 
     context 'when related collections are provided' do
-      let(:project) { 'Google Books' }
       let(:collections) { [collection] }
 
       let(:collection) do
@@ -58,7 +57,6 @@ RSpec.describe CollectionTitleIndexer do
             'version' => 1,
             'label' => 'testing',
             'administrative' => {
-              'partOfProject' => project,
               'hasAdminPolicy' => apo_id
             },
             'access' => {},
