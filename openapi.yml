@@ -57,28 +57,31 @@ paths:
           required: false
           schema:
             type: integer
-        - name: cocina_object
-          in: query
-          description: the JSON serialization of the Cocina object
-          required: false
-          content:
-            application/json:
-              schema:
-                type: object
-        - name: created_at
-          in: query
-          description: the creation date of the Cocina object
-          required: false
-          schema:
-            type: string
-            format: date-time
-        - name: updated_at
-          in: query
-          description: the most recent modification date of the Cocina object
-          required: false
-          schema:
-            type: string
-            format: date-time
+      requestBody:
+        required: false
+        content:
+          '*/*':
+            schema:
+              type: object
+          application/json:
+            schema:
+              type: object
+              required:
+                - cocina_object
+                - created_at
+                - updated_at
+              properties:
+                cocina_object:
+                  description: JSON serialization of the Cocina object.  to be used, created_at and updated_at must also be provided.
+                  type: string
+                created_at:
+                  description: the creation date of the Cocina object
+                  type: string
+                  format: date-time
+                updated_at:
+                  description: the most recent modification date of the Cocina object
+                  type: string
+                  format: date-time
       responses:
         '200':
           description: Object successfully reindexed
