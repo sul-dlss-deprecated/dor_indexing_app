@@ -33,8 +33,8 @@ class DorController < ApplicationController
     RSolr.connect(timeout: 120, open_timeout: 120, url: Settings.solrizer_url)
   end
 
-  def build_model_and_metadata(cocina_model_json:, created_at:, updated_at:)
-    model = Cocina::Models.build(JSON.parse(cocina_model_json))
+  def build_model_and_metadata(cocina_json:, created_at:, updated_at:)
+    model = Cocina::Models.build(JSON.parse(cocina_json))
     metadata = Dor::Services::Client::ObjectMetadata.new(created_at: created_at, updated_at: updated_at)
     Success([model, metadata])
   rescue StandardError
@@ -43,12 +43,12 @@ class DorController < ApplicationController
 
   # @returns [Success,Failure] the result of finding/parsing the model with metadata
   def cocina_with_metadata
-    cocina_model_json = params[:cocina_model_json].presence
+    cocina_json = params[:cocina_object].presence
     created_at = params[:created_at].presence
     updated_at = params[:updated_at].presence
-    return indexer.fetch_model_with_metadata unless cocina_model_json && created_at && updated_at
+    return indexer.fetch_model_with_metadata unless cocina_json && created_at && updated_at
 
-    build_model_and_metadata(cocina_model_json: cocina_model_json, created_at: created_at, updated_at: updated_at)
+    build_model_and_metadata(cocina_json: cocina_json, created_at: created_at, updated_at: updated_at)
   end
 
   def reindex_pid

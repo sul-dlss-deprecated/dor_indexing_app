@@ -56,7 +56,7 @@ RSpec.describe 'DOR', type: :request do
     end
 
     context 'when cocina is provided by caller' do
-      let(:cocina_model_json) { '{ "some": "json" }' }
+      let(:cocina_json) { '{ "some": "json" }' }
       let(:cocina_model_metadata) { instance_double(Dor::Services::Client::ObjectMetadata) }
       let(:created_at) { '2022-02-27' }
       let(:updated_at) { '2022-02-28' }
@@ -66,8 +66,10 @@ RSpec.describe 'DOR', type: :request do
       end
 
       it 'uses the provided cocina without hitting dor-services-app' do
-        allow(Cocina::Models).to receive(:build).with(JSON.parse(cocina_model_json)).and_return(cocina) # pretend our bogus test JSON is valid
-        post "/dor/reindex/#{druid}", params: { cocina_model_json: cocina_model_json, created_at: created_at, updated_at: updated_at }
+        allow(Cocina::Models).to receive(:build).with(JSON.parse(cocina_json)).and_return(cocina) # pretend our bogus test JSON is valid
+        post "/dor/reindex/#{druid}",
+             params: { cocina_object: cocina_json, created_at: created_at, updated_at: updated_at }.to_json,
+             headers: { 'CONTENT_TYPE' => 'application/json' }
         expect(response.body).to eq "Successfully updated index for #{druid}"
         expect(response.code).to eq '200'
         expect(mock_solr_conn).to have_received(:add).with(mock_solr_doc, add_attributes: { commitWithin: 1000 })
@@ -75,16 +77,19 @@ RSpec.describe 'DOR', type: :request do
       end
 
       it 'requires both the cocina json and the created_at/updated_at metadata' do
-        post "/dor/reindex/#{druid}", params: { cocina_model_json: cocina_model_json, updated_at: updated_at }
-        expect(response.code).to eq '200'
-        expect(mock_solr_conn).to have_received(:add).with(mock_solr_doc, add_attributes: { commitWithin: 1000 })
-        expect(object_service).to have_received(:find_with_metadata)
+        post "/dor/reindex/#{druid}",
+             params: { cocina_object: cocina_json, updated_at: updated_at }.to_json,
+             headers: { 'CONTENT_TYPE' => 'application/json' }
+        expect(response.code).to eq '400'
+        expect(response.body).to match(/missing required parameters: created_at/)
       end
 
       it 'provides the caller with a useful error if invalid cocina is provided' do
         # Cocina::Models.build will be called with our bogus JSON, which will throw an error
         allow(Honeybadger).to receive(:notify).and_call_original
-        post "/dor/reindex/#{druid}", params: { cocina_model_json: cocina_model_json, created_at: created_at, updated_at: updated_at }
+        post "/dor/reindex/#{druid}",
+             params: { cocina_object: cocina_json, created_at: created_at, updated_at: updated_at }.to_json,
+             headers: { 'CONTENT_TYPE' => 'application/json' }
         expect(response.code).to eq '422' # the caller should've provided valid Cocina JSON
         expect(response.body).to eq "Error building Cocina model for #{druid}"
         expect(Honeybadger).to have_received(:notify) do |msg, context:, backtrace:|
