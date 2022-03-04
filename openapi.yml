@@ -41,7 +41,7 @@ paths:
     post:
       tags:
         - indexing
-      summary: Reindex a repository object
+      summary: Reindex a repository object, using a network call to retrieve the Cocina model
       description: ''
       operationId: 'dor#reindex'
       parameters:
@@ -57,12 +57,42 @@ paths:
           required: false
           schema:
             type: integer
+      responses:
+        '200':
+          description: Object successfully reindexed
+          content:
+            text/plain: # This is why we can't enable Committee response validation. See TODO in config/application.rb
+              schema:
+                type: string
+        '404':
+          description: Object not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /dor/reindex_from_cocina/{pid}:
+    put:
+      tags:
+        - indexing
+      summary: Reindex a repository object using Cocina JSON provided by the caller
+      description: ''
+      operationId: 'dor#reindex_from_cocina'
+      parameters:
+        - name: pid
+          in: path
+          description: 'a digital repository identifier'
+          required: true
+          schema:
+            $ref: '#/components/schemas/Druid'
       requestBody:
         required: false
         content:
-          '*/*':
-            schema:
-              type: object
           application/json:
             schema:
               type: object
@@ -82,6 +112,9 @@ paths:
                   description: the most recent modification date of the Cocina object
                   type: string
                   format: date-time
+                commitWithin:
+                  description: 'time within which to trigger Solr commit'
+                  type: integer
       responses:
         '200':
           description: Object successfully reindexed
@@ -89,8 +122,8 @@ paths:
             text/plain: # This is why we can't enable Committee response validation. See TODO in config/application.rb
               schema:
                 type: string
-        '404':
-          description: Object not found
+        '422':
+          description: Unprocessable entity (the caller must provide valid Cocina)
           content:
             application/json:
               schema:

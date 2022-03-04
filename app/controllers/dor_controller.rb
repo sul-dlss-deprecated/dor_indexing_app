@@ -7,12 +7,19 @@ class DorController < ApplicationController
   class CocinaModelBuildError < StandardError; end
 
   def reindex
-    @indexer = Indexer.new(solr: solr, pid: params[:pid])
-
-    reindex_pid
+    cocina_with_metadata = indexer.fetch_model_with_metadata
+    reindex_pid(cocina_with_metadata)
     render status: :ok, plain: "Successfully updated index for #{params[:pid]}"
   rescue Dor::Services::Client::NotFoundResponse, Rubydora::RecordNotFound
     render status: :not_found, plain: 'Object does not exist in the repository'
+  end
+
+  def reindex_from_cocina
+    cocina_with_metadata = build_model_and_metadata(cocina_json: params[:cocina_object].presence,
+                                                    created_at: params[:created_at].presence,
+                                                    updated_at: params[:updated_at].presence)
+    reindex_pid(cocina_with_metadata)
+    render status: :ok, plain: "Successfully updated index for #{params[:pid]}"
   rescue CocinaModelBuildError => e
     request.session # TODO: calling this as a hack to address bad Rails/HB interaction, remove when https://github.com/rails/rails/issues/43922 is fixed
     Honeybadger.notify('Error building Cocina model', context: { druid: params[:pid], build_error: e.cause.message }, backtrace: e.cause.backtrace)
@@ -27,8 +34,6 @@ class DorController < ApplicationController
 
   private
 
-  attr_reader :indexer
-
   def solr
     RSolr.connect(timeout: 120, open_timeout: 120, url: Settings.solrizer_url)
   end
@@ -41,17 +46,11 @@ class DorController < ApplicationController
     raise CocinaModelBuildError
   end
 
-  # @returns [Success,Failure] the result of finding/parsing the model with metadata
-  def cocina_with_metadata
-    cocina_json = params[:cocina_object].presence
-    created_at = params[:created_at].presence
-    updated_at = params[:updated_at].presence
-    return indexer.fetch_model_with_metadata unless cocina_json && created_at && updated_at
-
-    build_model_and_metadata(cocina_json: cocina_json, created_at: created_at, updated_at: updated_at)
+  def indexer
+    @indexer ||= Indexer.new(solr: solr, pid: params[:pid])
   end
 
-  def reindex_pid
+  def reindex_pid(cocina_with_metadata)
     @solr_doc = indexer.reindex_pid(
       add_attributes: { commitWithin: params.fetch(:commitWithin, 1000).to_i },
       cocina_with_metadata: cocina_with_metadata
