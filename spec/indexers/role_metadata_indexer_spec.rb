@@ -30,7 +30,8 @@ RSpec.describe RoleMetadataIndexer do
                   'identifier' => 'tcramer'
                 }
               ] }
-          ]
+          ],
+          'defaultAccess' => { 'access' => 'world', 'download' => 'world' }
         },
         'description' => {
           'title' => [{ 'value' => 'APO title' }],

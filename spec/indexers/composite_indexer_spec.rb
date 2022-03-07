@@ -16,7 +16,8 @@ RSpec.describe CompositeIndexer do
         'label' => 'testing',
         'administrative' => {
           'hasAdminPolicy' => apo_id,
-          'hasAgreement' => 'druid:hp308wm0436'
+          'hasAgreement' => 'druid:hp308wm0436',
+          'defaultAccess' => { 'access' => 'world', 'download' => 'world' }
         },
         'description' => {
           'title' => [{ 'value' => 'APO title' }],

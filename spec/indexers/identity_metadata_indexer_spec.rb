@@ -9,6 +9,10 @@ RSpec.describe IdentityMetadataIndexer do
       type: type,
       version: 1,
       label: 'Squirrels of North America',
+      description: {
+        title: [{ value: 'Squirrels of North America' }],
+        purl: 'https://purl.stanford.edu/rt923jk3421'
+      },
       access: {},
       administrative: {
         hasAdminPolicy: 'druid:bd999bd9999'

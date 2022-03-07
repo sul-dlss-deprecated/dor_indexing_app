@@ -8,6 +8,10 @@ RSpec.describe DataIndexer do
                             type: Cocina::Models::Vocab.map,
                             label: 'test label',
                             version: 4,
+                            description: {
+                              title: [{ value: 'test label' }],
+                              purl: 'https://purl.stanford.edu/xx999xx9999'
+                            },
                             access: {},
                             administrative: { hasAdminPolicy: 'druid:vv888vv8888' },
                             structural: structural)
