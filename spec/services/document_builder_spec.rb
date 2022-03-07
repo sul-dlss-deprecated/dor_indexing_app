@@ -45,6 +45,10 @@ RSpec.describe DocumentBuilder do
           },
           'label' => 'Test DRO',
           'version' => 1,
+          'description' => {
+            'title' => [{ 'value' => 'Test DRO' }],
+            'purl' => "https://purl.stanford.edu/#{druid.delete_prefix('druid:')}"
+          },
           'administrative' => {
             hasAdminPolicy: 'druid:gf999hb9999'
           },
@@ -120,7 +124,8 @@ RSpec.describe DocumentBuilder do
           'version' => 1,
           'administrative' => {
             hasAdminPolicy: 'druid:gf999hb9999',
-            hasAgreement: 'druid:bb033gt0615'
+            hasAgreement: 'druid:bb033gt0615',
+            defaultAccess: { access: 'world', download: 'world' }
           },
           'externalIdentifier' => druid
         }
@@ -137,6 +142,10 @@ RSpec.describe DocumentBuilder do
           'type' => Cocina::Models::Vocab.collection,
           'label' => 'Test Collection',
           'version' => 1,
+          'description' => {
+            'title' => [{ 'value' => 'Test Collection' }],
+            'purl' => "https://purl.stanford.edu/#{druid.delete_prefix('druid:')}"
+          },
           'administrative' => {
             hasAdminPolicy: 'druid:gf999hb9999'
           },
@@ -157,6 +166,10 @@ RSpec.describe DocumentBuilder do
           'structural' => {},
           'label' => 'Test Agreement',
           'version' => 1,
+          'description' => {
+            'title' => [{ 'value' => 'Test Agreement' }],
+            'purl' => "https://purl.stanford.edu/#{druid.delete_prefix('druid:')}"
+          },
           'administrative' => {
             hasAdminPolicy: 'druid:gf999hb9999'
           },
@@ -183,7 +196,8 @@ RSpec.describe DocumentBuilder do
           'label' => 'testing',
           'administrative' => {
             'hasAdminPolicy' => 'druid:xx000xx0000',
-            'hasAgreement' => 'druid:bb033gt0615'
+            'hasAgreement' => 'druid:bb033gt0615',
+            'defaultAccess' => { 'access' => 'world', 'download' => 'world' }
           },
           'description' => {
             'title' => [{ 'value' => 'APO title' }],
@@ -283,7 +297,8 @@ RSpec.describe DocumentBuilder do
             'label' => 'testing',
             'administrative' => {
               'hasAdminPolicy' => apo_id,
-              'hasAgreement' => 'druid:bb033gt0615'
+              'hasAgreement' => 'druid:bb033gt0615',
+              'defaultAccess' => { 'access' => 'world', 'download' => 'world' }
             },
             'description' => {
               'title' => [{ 'value' => 'Test obj' }],
@@ -308,7 +323,8 @@ RSpec.describe DocumentBuilder do
             'label' => 'testing',
             'administrative' => {
               'hasAdminPolicy' => apo_id,
-              'hasAgreement' => 'druid:bb033gt0615'
+              'hasAgreement' => 'druid:bb033gt0615',
+              'defaultAccess' => { 'access' => 'world', 'download' => 'world' }
             },
             'description' => {
               'title' => [{ 'value' => 'Test obj' }],

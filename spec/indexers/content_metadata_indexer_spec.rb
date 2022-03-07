@@ -10,6 +10,10 @@ RSpec.describe ContentMetadataIndexer do
         "externalIdentifier": "druid:cs178jh7817",
         "label": "Some more screenshots",
         "version": 1,
+        "description": {
+          "title": [{ "value": "Some more screenshots" }],
+          "purl": "https://purl.stanford.edu/cs178jh7817"
+        },
         "access": {
           "access": "world",
           "download": "world"
