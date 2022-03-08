@@ -112,14 +112,14 @@ RSpec.describe RightsMetadataIndexer do
           contains: [
             {
               type: Cocina::Models::Vocab::Resources.page,
-              externalIdentifier: 'http://cocina.sul.stanford.edu/fileSet/d906da21-aca1-4b95-b7d1-c14c23cd93e6',
+              externalIdentifier: 'https://cocina.sul.stanford.edu/fileSet/d906da21-aca1-4b95-b7d1-c14c23cd93e6',
               label: 'Page 1',
               version: 5,
               structural: {
                 contains: [
                   {
                     type: Cocina::Models::Vocab.file,
-                    externalIdentifier: 'http://cocina.sul.stanford.edu/file/4d88213d-f150-45ae-a58a-08b1045db2a0',
+                    externalIdentifier: 'https://cocina.sul.stanford.edu/file/4d88213d-f150-45ae-a58a-08b1045db2a0',
                     label: '50807230_0001.jp2',
                     filename: '50807230_0001.jp2',
                     size: 3_575_822,
@@ -352,14 +352,14 @@ RSpec.describe RightsMetadataIndexer do
             contains: [
               {
                 type: Cocina::Models::Vocab::Resources.page,
-                externalIdentifier: 'http://cocina.sul.stanford.edu/fileSet/d906da21-aca1-4b95-b7d1-c14c23cd93e6',
+                externalIdentifier: 'https://cocina.sul.stanford.edu/fileSet/d906da21-aca1-4b95-b7d1-c14c23cd93e6',
                 label: 'Page 1',
                 version: 5,
                 structural: {
                   contains: [
                     {
                       type: Cocina::Models::Vocab.file,
-                      externalIdentifier: 'http://cocina.sul.stanford.edu/file/4d88213d-f150-45ae-a58a-08b1045db2a0',
+                      externalIdentifier: 'https://cocina.sul.stanford.edu/file/4d88213d-f150-45ae-a58a-08b1045db2a0',
                       label: '50807230_0001.jp2',
                       filename: '50807230_0001.jp2',
                       size: 3_575_822,
@@ -413,14 +413,14 @@ RSpec.describe RightsMetadataIndexer do
             contains: [
               {
                 type: Cocina::Models::Vocab::Resources.page,
-                externalIdentifier: 'http://cocina.sul.stanford.edu/fileSet/d906da21-aca1-4b95-b7d1-c14c23cd93e6',
+                externalIdentifier: 'https://cocina.sul.stanford.edu/fileSet/d906da21-aca1-4b95-b7d1-c14c23cd93e6',
                 label: 'Page 1',
                 version: 5,
                 structural: {
                   contains: [
                     {
                       type: Cocina::Models::Vocab.file,
-                      externalIdentifier: 'http://cocina.sul.stanford.edu/file/4d88213d-f150-45ae-a58a-08b1045db2a0',
+                      externalIdentifier: 'https://cocina.sul.stanford.edu/file/4d88213d-f150-45ae-a58a-08b1045db2a0',
                       label: '50807230_0001.jp2',
                       filename: '50807230_0001.jp2',
                       size: 3_575_822,
@@ -475,14 +475,14 @@ RSpec.describe RightsMetadataIndexer do
             contains: [
               {
                 type: Cocina::Models::Vocab::Resources.page,
-                externalIdentifier: 'http://cocina.sul.stanford.edu/fileSet/d906da21-aca1-4b95-b7d1-c14c23cd93e6',
+                externalIdentifier: 'https://cocina.sul.stanford.edu/fileSet/d906da21-aca1-4b95-b7d1-c14c23cd93e6',
                 label: 'Page 1',
                 version: 5,
                 structural: {
                   contains: [
                     {
                       type: Cocina::Models::Vocab.file,
-                      externalIdentifier: 'http://cocina.sul.stanford.edu/file/4d88213d-f150-45ae-a58a-08b1045db2a0',
+                      externalIdentifier: 'https://cocina.sul.stanford.edu/file/4d88213d-f150-45ae-a58a-08b1045db2a0',
                       label: '50807230_0001.jp2',
                       filename: '50807230_0001.jp2',
                       size: 3_575_822,
@@ -537,14 +537,14 @@ RSpec.describe RightsMetadataIndexer do
             contains: [
               {
                 type: Cocina::Models::Vocab::Resources.page,
-                externalIdentifier: 'http://cocina.sul.stanford.edu/fileSet/d906da21-aca1-4b95-b7d1-c14c23cd93e6',
+                externalIdentifier: 'https://cocina.sul.stanford.edu/fileSet/d906da21-aca1-4b95-b7d1-c14c23cd93e6',
                 label: 'Page 1',
                 version: 5,
                 structural: {
                   contains: [
                     {
                       type: Cocina::Models::Vocab.file,
-                      externalIdentifier: 'http://cocina.sul.stanford.edu/file/4d88213d-f150-45ae-a58a-08b1045db2a0',
+                      externalIdentifier: 'https://cocina.sul.stanford.edu/file/4d88213d-f150-45ae-a58a-08b1045db2a0',
                       label: '50807230_0001.jp2',
                       filename: '50807230_0001.jp2',
                       size: 3_575_822,
