@@ -6,7 +6,7 @@ RSpec.describe ContentMetadataIndexer do
   let(:json) do
     <<~JSON
       {
-        "type": "http://cocina.sul.stanford.edu/models/map.jsonld",
+        "type": "#{Cocina::Models::Vocab.map}",
         "externalIdentifier": "druid:cs178jh7817",
         "label": "Some more screenshots",
         "version": 1,
@@ -42,14 +42,14 @@ RSpec.describe ContentMetadataIndexer do
         <<~JSON
           "contains": [
             {
-              "type": "http://cocina.sul.stanford.edu/models/resources/file.jsonld",
+              "type": "#{Cocina::Models::Vocab::Resources.file}",
               "externalIdentifier": "0001",
               "label": "0001",
               "version": 1,
               "structural": {
                 "contains": [
                   {
-                    "type": "http://cocina.sul.stanford.edu/models/file.jsonld",
+                    "type": "#{Cocina::Models::Vocab.file}",
                     "externalIdentifier": "druid:cs178jh7817/gw177fc7976_05_0001.jp2",
                     "label": "gw177fc7976_05_0001.jp2",
                     "filename": "gw177fc7976_05_0001.jp2",
@@ -81,7 +81,7 @@ RSpec.describe ContentMetadataIndexer do
                     }
                   },
                   {
-                    "type": "http://cocina.sul.stanford.edu/models/file.jsonld",
+                    "type": "#{Cocina::Models::Vocab.file}",
                     "externalIdentifier": "druid:cs178jh7817/gw177fc7976_05_0001.gif",
                     "label": "gw177fc7976_05_0001.gif",
                     "filename": "gw177fc7976_05_0001.gif",
@@ -114,7 +114,7 @@ RSpec.describe ContentMetadataIndexer do
                     }
                   },
                   {
-                    "type": "http://cocina.sul.stanford.edu/models/file.jsonld",
+                    "type": "#{Cocina::Models::Vocab.file}",
                     "externalIdentifier": "druid:cs178jh7817/gw177fc7976_00_0001.tif",
                     "label": "gw177fc7976_00_0001.tif",
                     "filename": "gw177fc7976_00_0001.tif",
@@ -146,7 +146,7 @@ RSpec.describe ContentMetadataIndexer do
                     }
                   },
                   {
-                    "type": "http://cocina.sul.stanford.edu/models/file.jsonld",
+                    "type": "#{Cocina::Models::Vocab.file}",
                     "externalIdentifier": "druid:cs178jh7817/gw177fc7976_00_0002.tif",
                     "label": "gw177fc7976_00_0002.tif",
                     "filename": "gw177fc7976_00_0002.tif",
