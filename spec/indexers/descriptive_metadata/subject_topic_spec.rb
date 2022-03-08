@@ -10,7 +10,7 @@ RSpec.describe DescriptiveMetadataIndexer do
     <<~JSON
       {
         "cocinaVersion": "0.0.1",
-        "type": "http://cocina.sul.stanford.edu/models/image.jsonld",
+        "type": "#{Cocina::Models::Vocab.image}",
         "externalIdentifier": "druid:qy781dy0220",
         "label": "SUL Logo for forebrain",
         "version": 1,
@@ -29,13 +29,13 @@ RSpec.describe DescriptiveMetadataIndexer do
         },
         "structural": {
           "contains": [{
-            "type": "http://cocina.sul.stanford.edu/models/resources/file.jsonld",
+            "type": "#{Cocina::Models::Vocab::Resources.file}",
             "externalIdentifier": "qy781dy0220_1",
             "label": "qy781dy0220_1",
             "version": 1,
             "structural": {
               "contains": [{
-                "type": "http://cocina.sul.stanford.edu/models/file.jsonld",
+                "type": "#{Cocina::Models::Vocab.file}",
                 "externalIdentifier": "druid:qy781dy0220/sul-logo.png",
                 "label": "sul-logo.png",
                 "filename": "sul-logo.png",
