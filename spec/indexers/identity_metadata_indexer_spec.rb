@@ -29,7 +29,7 @@ RSpec.describe IdentityMetadataIndexer do
     subject(:doc) { indexer.to_solr }
 
     context 'with an item' do
-      let(:type) { Cocina::Models::Vocab.book }
+      let(:type) { Cocina::Models::ObjectType.book }
       let(:identification) do
         {
           sourceId: 'google:STANFORD_342837261527',
@@ -59,7 +59,7 @@ RSpec.describe IdentityMetadataIndexer do
     end
 
     context 'with an agreement' do
-      let(:type) { Cocina::Models::Vocab.agreement }
+      let(:type) { Cocina::Models::ObjectType.agreement }
       let(:identification) { {} }
 
       it 'has the fields used by argo' do
@@ -76,7 +76,7 @@ RSpec.describe IdentityMetadataIndexer do
     end
 
     context 'with a collection' do
-      let(:type) { Cocina::Models::Vocab.collection }
+      let(:type) { Cocina::Models::ObjectType.collection }
       let(:identification) do
         {
           sourceId: 'google:STANFORD_342837261527',

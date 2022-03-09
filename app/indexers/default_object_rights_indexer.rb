@@ -9,7 +9,7 @@ class DefaultObjectRightsIndexer
 
   # @return [Hash] the partial solr document for defaultObjectRights
   def to_solr
-    return {} unless cocina.administrative.defaultAccess
+    return {} unless cocina.administrative.accessTemplate
 
     {
       'use_statement_ssim' => use_statement,
@@ -22,10 +22,10 @@ class DefaultObjectRightsIndexer
   private
 
   def use_statement
-    cocina.administrative.defaultAccess.useAndReproductionStatement
+    cocina.administrative.accessTemplate.useAndReproductionStatement
   end
 
   def copyright
-    cocina.administrative.defaultAccess.copyright
+    cocina.administrative.accessTemplate.copyright
   end
 end

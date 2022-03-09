@@ -8,7 +8,7 @@ RSpec.describe RoleMetadataIndexer do
     Cocina::Models.build(
       {
         'externalIdentifier' => apo_id,
-        'type' => Cocina::Models::Vocab.admin_policy,
+        'type' => Cocina::Models::ObjectType.admin_policy,
         'version' => 1,
         'label' => 'testing',
         'administrative' => {
@@ -31,7 +31,7 @@ RSpec.describe RoleMetadataIndexer do
                 }
               ] }
           ],
-          'defaultAccess' => { 'access' => 'world', 'download' => 'world' }
+          'accessTemplate' => { 'view' => 'world', 'download' => 'world' }
         },
         'description' => {
           'title' => [{ 'value' => 'APO title' }],

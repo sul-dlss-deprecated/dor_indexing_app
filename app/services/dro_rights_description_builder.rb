@@ -18,7 +18,7 @@ class DroRightsDescriptionBuilder < RightsDescriptionBuilder
 
   def access_level_from_files
     # dark access doesn't permit any file access
-    return [] if object_access.access == 'dark'
+    return [] if object_access.view == 'dark'
 
     file_access_nodes.reject { |fa| same_as_object_access?(fa) }.flat_map do |fa|
       file_access_from_file(fa)
@@ -26,31 +26,30 @@ class DroRightsDescriptionBuilder < RightsDescriptionBuilder
   end
 
   def file_access_from_file(file_access)
-    basic_access = if file_access[:access] == 'location-based'
-                     "location: #{file_access[:readLocation]}"
+    basic_access = if file_access[:view] == 'location-based'
+                     "location: #{file_access[:location]}"
                    else
-                     file_access[:access]
+                     file_access[:view]
                    end
 
-    return [basic_access] if file_access[:access] == file_access[:download]
+    return [basic_access] if file_access[:view] == file_access[:download]
 
-    basic_access += ' (no-download)' if file_access[:access] != 'dark'
+    basic_access += ' (no-download)' if file_access[:view] != 'dark'
 
     case file_access[:download]
     when 'stanford'
-      # Here we're using readLocation to mean download location. https://github.com/sul-dlss/cocina-models/issues/258
       [basic_access, 'stanford']
     when 'location-based'
-      # Here we're using readLocation to mean download location. https://github.com/sul-dlss/cocina-models/issues/258
-      [basic_access, "location: #{file_access[:readLocation]}"]
+      # Here we're using location to mean download location.
+      [basic_access, "location: #{file_access[:location]}"]
     else
       [basic_access]
     end
   end
 
   def same_as_object_access?(file_access)
-    (file_access[:access] == object_access.access && file_access[:download] == object_access.download) ||
-      (object_access.access == 'citation-only' && file_access[:access] == 'dark')
+    (file_access[:view] == object_access.view && file_access[:download] == object_access.download) ||
+      (object_access.view == 'citation-only' && file_access[:view] == 'dark')
   end
 
   def file_access_nodes

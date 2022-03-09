@@ -14,13 +14,13 @@ class RightsDescriptionBuilder
   # This is set up to work for APOs, but this method is to be overridden on sub classes
   # @return [Cocina::Models::AdminPolicyDefaultAccess]
   def object_access
-    @object_access ||= cocina.administrative.defaultAccess
+    @object_access ||= cocina.administrative.accessTemplate
   end
 
   def build
     return 'controlled digital lending' if object_access.controlledDigitalLending
 
-    return ['dark'] if object_access.access == 'dark'
+    return ['dark'] if object_access.view == 'dark'
 
     object_level_access
   end
@@ -30,7 +30,7 @@ class RightsDescriptionBuilder
   attr_reader :cocina
 
   def object_level_access
-    case object_access.access
+    case object_access.view
     when 'citation-only'
       ['citation']
     when 'world'
@@ -38,9 +38,9 @@ class RightsDescriptionBuilder
     when 'location-based'
       case object_access.download
       when 'none'
-        ["location: #{object_access.readLocation} (no-download)"]
+        ["location: #{object_access.location} (no-download)"]
       else
-        ["location: #{object_access.readLocation}"]
+        ["location: #{object_access.location}"]
       end
     when 'stanford'
       stanford_object_access
@@ -53,7 +53,7 @@ class RightsDescriptionBuilder
       ['stanford (no-download)']
     when 'location-based'
       # this is an odd case we might want to move away from. See https://github.com/sul-dlss/cocina-models/issues/258
-      ['stanford (no-download)', "location: #{object_access.readLocation}"]
+      ['stanford (no-download)', "location: #{object_access.location}"]
     else
       ['stanford']
     end
@@ -69,7 +69,7 @@ class RightsDescriptionBuilder
       ['world']
     when 'location-based'
       # this is an odd case we might want to move away from. See https://github.com/sul-dlss/cocina-models/issues/258
-      ['world (no-download)', "location: #{object_access.readLocation}"]
+      ['world (no-download)', "location: #{object_access.location}"]
     end
   end
 end

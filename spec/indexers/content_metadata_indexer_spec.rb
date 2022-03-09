@@ -6,7 +6,7 @@ RSpec.describe ContentMetadataIndexer do
   let(:json) do
     <<~JSON
       {
-        "type": "#{Cocina::Models::Vocab.map}",
+        "type": "#{Cocina::Models::ObjectType.map}",
         "externalIdentifier": "druid:cs178jh7817",
         "label": "Some more screenshots",
         "version": 1,
@@ -15,7 +15,7 @@ RSpec.describe ContentMetadataIndexer do
           "purl": "https://purl.stanford.edu/cs178jh7817"
         },
         "access": {
-          "access": "world",
+          "view": "world",
           "download": "world"
         },
         "administrative": {
@@ -42,14 +42,14 @@ RSpec.describe ContentMetadataIndexer do
         <<~JSON
           "contains": [
             {
-              "type": "#{Cocina::Models::Vocab::Resources.file}",
+              "type": "#{Cocina::Models::FileSetType.file}",
               "externalIdentifier": "0001",
               "label": "0001",
               "version": 1,
               "structural": {
                 "contains": [
                   {
-                    "type": "#{Cocina::Models::Vocab.file}",
+                    "type": "#{Cocina::Models::ObjectType.file}",
                     "externalIdentifier": "druid:cs178jh7817/gw177fc7976_05_0001.jp2",
                     "label": "gw177fc7976_05_0001.jp2",
                     "filename": "gw177fc7976_05_0001.jp2",
@@ -67,7 +67,7 @@ RSpec.describe ContentMetadataIndexer do
                       }
                     ],
                     "access": {
-                      "access": "world",
+                      "view": "world",
                       "download": "world"
                     },
                     "administrative": {
@@ -81,7 +81,7 @@ RSpec.describe ContentMetadataIndexer do
                     }
                   },
                   {
-                    "type": "#{Cocina::Models::Vocab.file}",
+                    "type": "#{Cocina::Models::ObjectType.file}",
                     "externalIdentifier": "druid:cs178jh7817/gw177fc7976_05_0001.gif",
                     "label": "gw177fc7976_05_0001.gif",
                     "filename": "gw177fc7976_05_0001.gif",
@@ -100,7 +100,7 @@ RSpec.describe ContentMetadataIndexer do
                       }
                     ],
                     "access": {
-                      "access": "dark",
+                      "view": "dark",
                       "download": "none"
                     },
                     "administrative": {
@@ -114,7 +114,7 @@ RSpec.describe ContentMetadataIndexer do
                     }
                   },
                   {
-                    "type": "#{Cocina::Models::Vocab.file}",
+                    "type": "#{Cocina::Models::ObjectType.file}",
                     "externalIdentifier": "druid:cs178jh7817/gw177fc7976_00_0001.tif",
                     "label": "gw177fc7976_00_0001.tif",
                     "filename": "gw177fc7976_00_0001.tif",
@@ -132,7 +132,7 @@ RSpec.describe ContentMetadataIndexer do
                       }
                     ],
                     "access": {
-                      "access": "dark",
+                      "view": "dark",
                       "download": "none"
                     },
                     "administrative": {
@@ -146,7 +146,7 @@ RSpec.describe ContentMetadataIndexer do
                     }
                   },
                   {
-                    "type": "#{Cocina::Models::Vocab.file}",
+                    "type": "#{Cocina::Models::ObjectType.file}",
                     "externalIdentifier": "druid:cs178jh7817/gw177fc7976_00_0002.tif",
                     "label": "gw177fc7976_00_0002.tif",
                     "filename": "gw177fc7976_00_0002.tif",
@@ -164,7 +164,7 @@ RSpec.describe ContentMetadataIndexer do
                       }
                     ],
                     "access": {
-                      "access": "dark",
+                      "view": "dark",
                       "download": "none"
                     },
                     "administrative": {

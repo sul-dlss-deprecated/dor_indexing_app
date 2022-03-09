@@ -9,7 +9,7 @@ RSpec.describe IdentifiableIndexer do
     Cocina::Models.build(
       {
         'externalIdentifier' => druid,
-        'type' => Cocina::Models::Vocab.image,
+        'type' => Cocina::Models::ObjectType.image,
         'version' => 1,
         'label' => 'testing',
         'access' => {},
@@ -57,13 +57,13 @@ RSpec.describe IdentifiableIndexer do
       Cocina::Models.build(
         {
           'externalIdentifier' => apo_id,
-          'type' => Cocina::Models::Vocab.admin_policy,
+          'type' => Cocina::Models::ObjectType.admin_policy,
           'version' => 1,
           'label' => 'testing',
           'administrative' => {
             'hasAdminPolicy' => apo_id,
             'hasAgreement' => 'druid:bb033gt0615',
-            'defaultAccess' => { 'access' => 'world', 'download' => 'world' }
+            'accessTemplate' => { 'view' => 'world', 'download' => 'world' }
           },
           'description' => {
             'title' => [{ 'value' => 'Test object' }],
@@ -98,7 +98,7 @@ RSpec.describe IdentifiableIndexer do
         Cocina::Models.build(
           {
             'externalIdentifier' => mock_rel_druid,
-            'type' => Cocina::Models::Vocab.collection,
+            'type' => Cocina::Models::ObjectType.collection,
             'version' => 1,
             'label' => 'testing',
             'administrative' => {
@@ -136,7 +136,7 @@ RSpec.describe IdentifiableIndexer do
         Cocina::Models.build(
           {
             'externalIdentifier' => druid,
-            'type' => Cocina::Models::Vocab.image,
+            'type' => Cocina::Models::ObjectType.image,
             'version' => 1,
             'label' => 'testing',
             'access' => {},

@@ -9,18 +9,18 @@ RSpec.describe EmbargoMetadataIndexer do
   let(:cocina) do
     Cocina::Models.build(
       {
-        'type' => Cocina::Models::Vocab.object,
+        'type' => Cocina::Models::ObjectType.object,
         'externalIdentifier' => druid,
         'label' => 'testing embargo indexing',
         'version' => 1,
         'access' => {
-          'access' => 'world',
+          'view' => 'world',
           'download' => 'none',
           'copyright' => 'some student',
           'useAndReproductionStatement' => 'restricted until embargo lifted',
           'embargo' => {
             'releaseDate' => release_date,
-            'access' => 'world',
+            'view' => 'world',
             'download' => 'world',
             'useAndReproductionStatement' => 'freedom reigns'
           }
@@ -65,12 +65,12 @@ RSpec.describe EmbargoMetadataIndexer do
       let(:cocina) do
         Cocina::Models.build(
           {
-            'type' => Cocina::Models::Vocab.object,
+            'type' => Cocina::Models::ObjectType.object,
             'externalIdentifier' => druid,
             'label' => 'testing embargo indexing',
             'version' => 1,
             'access' => {
-              'access' => 'world',
+              'view' => 'world',
               'download' => 'none',
               'copyright' => 'some student',
               'useAndReproductionStatement' => 'restricted until embargo lifted'

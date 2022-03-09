@@ -11,7 +11,7 @@ class CollectionRightsDescriptionBuilder
   end
 
   def build
-    case cocina.access.access
+    case cocina.access.view
     when 'world'
       'world'
     else

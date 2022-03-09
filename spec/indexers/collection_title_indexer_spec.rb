@@ -9,7 +9,7 @@ RSpec.describe CollectionTitleIndexer do
     Cocina::Models.build(
       {
         'externalIdentifier' => druid,
-        'type' => Cocina::Models::Vocab.image,
+        'type' => Cocina::Models::ObjectType.image,
         'version' => 1,
         'label' => 'testing',
         'access' => {},
@@ -53,7 +53,7 @@ RSpec.describe CollectionTitleIndexer do
         Cocina::Models.build(
           {
             'externalIdentifier' => mock_rel_druid,
-            'type' => Cocina::Models::Vocab.collection,
+            'type' => Cocina::Models::ObjectType.collection,
             'version' => 1,
             'label' => 'testing',
             'administrative' => {

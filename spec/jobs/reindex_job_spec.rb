@@ -8,7 +8,7 @@ RSpec.describe ReindexJob do
 
   let(:model) do
     Cocina::Models::DRO.new(externalIdentifier: druid,
-                            type: Cocina::Models::Vocab.object,
+                            type: Cocina::Models::ObjectType.object,
                             label: 'my repository object',
                             version: 1,
                             description: {
