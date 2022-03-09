@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe DataIndexer do
   let(:cocina) do
     Cocina::Models::DRO.new(externalIdentifier: 'druid:xx999xx9999',
-                            type: Cocina::Models::Vocab.map,
+                            type: Cocina::Models::ObjectType.map,
                             label: 'test label',
                             version: 4,
                             description: {

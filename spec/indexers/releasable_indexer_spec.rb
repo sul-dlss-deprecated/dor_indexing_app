@@ -9,7 +9,7 @@ RSpec.describe ReleasableIndexer do
     Cocina::Models.build(
       {
         'externalIdentifier' => 'druid:pz263ny9658',
-        'type' => Cocina::Models::Vocab.image,
+        'type' => Cocina::Models::ObjectType.image,
         'version' => 1,
         'label' => 'testing',
         'access' => {},

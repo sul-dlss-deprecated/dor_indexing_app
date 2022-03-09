@@ -40,9 +40,9 @@ class DocumentBuilder
   )
 
   INDEXERS = {
-    Cocina::Models::Vocab.agreement => ITEM_INDEXER, # Agreement uses same indexer as item
-    Cocina::Models::Vocab.admin_policy => ADMIN_POLICY_INDEXER,
-    Cocina::Models::Vocab.collection => COLLECTION_INDEXER
+    Cocina::Models::ObjectType.agreement => ITEM_INDEXER, # Agreement uses same indexer as item
+    Cocina::Models::ObjectType.admin_policy => ADMIN_POLICY_INDEXER,
+    Cocina::Models::ObjectType.collection => COLLECTION_INDEXER
   }.freeze
 
   # @param [Cocina::Models::DRO,Cocina::Models::Collection,Cocina::Model::AdminPolicy] model

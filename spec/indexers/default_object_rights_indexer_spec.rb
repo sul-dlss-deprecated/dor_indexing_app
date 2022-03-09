@@ -8,17 +8,17 @@ RSpec.describe DefaultObjectRightsIndexer do
       {
         'label' => 'The APO',
         'version' => 1,
-        'type' => Cocina::Models::Vocab.admin_policy,
+        'type' => Cocina::Models::ObjectType.admin_policy,
         'externalIdentifier' => 'druid:cb123cd4567',
         'administrative' => {
           hasAdminPolicy: 'druid:hv992ry2431',
           hasAgreement: 'druid:bb033gt0615',
-          defaultAccess: {
+          accessTemplate: {
             useAndReproductionStatement: 'Rights are owned by Stanford University Libraries.',
             copyright: 'Additional copyright info',
-            access: 'location-based',
+            view: 'location-based',
             download: 'location-based',
-            readLocation: 'spec'
+            location: 'spec'
           }
         }
       }

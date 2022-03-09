@@ -10,12 +10,12 @@ RSpec.describe DescriptiveMetadataIndexer do
     <<~JSON
       {
         "cocinaVersion": "0.0.1",
-      	"type": "#{Cocina::Models::Vocab.image}",
+      	"type": "#{Cocina::Models::ObjectType.image}",
       	"externalIdentifier": "druid:qy781dy0220",
       	"label": "SUL Logo for forebrain",
       	"version": 1,
       	"access": {
-      		"access": "world",
+      		"view": "world",
       		"copyright": "This work is copyrighted by the creator.",
       		"download": "world",
       		"useAndReproductionStatement": "This document is available only to the Stanford faculty, staff and student community."
@@ -29,13 +29,13 @@ RSpec.describe DescriptiveMetadataIndexer do
       	},
       	"structural": {
       		"contains": [{
-      			"type": "#{Cocina::Models::Vocab::Resources.file}",
+      			"type": "#{Cocina::Models::FileSetType.file}",
       			"externalIdentifier": "qy781dy0220_1",
       			"label": "qy781dy0220_1",
       			"version": 1,
       			"structural": {
       				"contains": [{
-      					"type": "#{Cocina::Models::Vocab.file}",
+      					"type": "#{Cocina::Models::ObjectType.file}",
       					"externalIdentifier": "druid:qy781dy0220/sul-logo.png",
       					"label": "sul-logo.png",
       					"filename": "sul-logo.png",
@@ -52,7 +52,7 @@ RSpec.describe DescriptiveMetadataIndexer do
       						}
       					],
       					"access": {
-      						"access": "world",
+      						"view": "world",
       						"download": "world"
       					},
       					"administrative": {

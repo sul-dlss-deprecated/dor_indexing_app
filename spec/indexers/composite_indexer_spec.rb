@@ -11,13 +11,13 @@ RSpec.describe CompositeIndexer do
     Cocina::Models.build(
       {
         'externalIdentifier' => apo_id,
-        'type' => Cocina::Models::Vocab.admin_policy,
+        'type' => Cocina::Models::ObjectType.admin_policy,
         'version' => 1,
         'label' => 'testing',
         'administrative' => {
           'hasAdminPolicy' => apo_id,
           'hasAgreement' => 'druid:hp308wm0436',
-          'defaultAccess' => { 'access' => 'world', 'download' => 'world' }
+          'accessTemplate' => { 'view' => 'world', 'download' => 'world' }
         },
         'description' => {
           'title' => [{ 'value' => 'APO title' }],
@@ -38,7 +38,7 @@ RSpec.describe CompositeIndexer do
     Cocina::Models.build(
       {
         'externalIdentifier' => druid,
-        'type' => Cocina::Models::Vocab.image,
+        'type' => Cocina::Models::ObjectType.image,
         'version' => 1,
         'label' => 'testing',
         'access' => {},

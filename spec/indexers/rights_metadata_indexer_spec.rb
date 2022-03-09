@@ -17,11 +17,11 @@ RSpec.describe RightsMetadataIndexer do
       Cocina::Models.build(
         {
           'externalIdentifier' => 'druid:rt923jk3429',
-          'type' => Cocina::Models::Vocab.collection,
+          'type' => Cocina::Models::ObjectType.collection,
           'version' => 1,
           'label' => 'testing',
           'access' => {
-            'access' => access,
+            'view' => access,
             'license' => license,
             'copyright' => 'Copyright © World Trade Organization',
             'useAndReproductionStatement' => 'Official WTO documents are free for public use.'
@@ -69,7 +69,7 @@ RSpec.describe RightsMetadataIndexer do
       Cocina::Models.build(
         {
           'externalIdentifier' => 'druid:rt923jk3429',
-          'type' => Cocina::Models::Vocab.image,
+          'type' => Cocina::Models::ObjectType.image,
           'version' => 1,
           'label' => 'testing',
           'access' => access,
@@ -87,7 +87,7 @@ RSpec.describe RightsMetadataIndexer do
     let(:structural) { {} }
     let(:access) do
       {
-        'access' => 'world',
+        'view' => 'world',
         'download' => 'world',
         'license' => license,
         'copyright' => 'Copyright © World Trade Organization',
@@ -111,14 +111,14 @@ RSpec.describe RightsMetadataIndexer do
         {
           contains: [
             {
-              type: Cocina::Models::Vocab::Resources.page,
+              type: Cocina::Models::FileSetType.page,
               externalIdentifier: 'https://cocina.sul.stanford.edu/fileSet/d906da21-aca1-4b95-b7d1-c14c23cd93e6',
               label: 'Page 1',
               version: 5,
               structural: {
                 contains: [
                   {
-                    type: Cocina::Models::Vocab.file,
+                    type: Cocina::Models::ObjectType.file,
                     externalIdentifier: 'https://cocina.sul.stanford.edu/file/4d88213d-f150-45ae-a58a-08b1045db2a0',
                     label: '50807230_0001.jp2',
                     filename: '50807230_0001.jp2',
@@ -153,14 +153,14 @@ RSpec.describe RightsMetadataIndexer do
       context 'when citation only' do
         let(:access) do
           {
-            'access' => 'citation-only',
+            'view' => 'citation-only',
             'download' => 'none'
           }
         end
 
         let(:file_access) do
           {
-            'access' => 'dark',
+            'view' => 'dark',
             'download' => 'none'
           }
         end
@@ -171,7 +171,7 @@ RSpec.describe RightsMetadataIndexer do
       context 'when controlled digital lending' do
         let(:access) do
           {
-            'access' => 'stanford',
+            'view' => 'stanford',
             'download' => 'none',
             'controlledDigitalLending' => true
           }
@@ -179,7 +179,7 @@ RSpec.describe RightsMetadataIndexer do
 
         let(:file_access) do
           {
-            'access' => 'stanford',
+            'view' => 'stanford',
             'download' => 'none',
             'controlledDigitalLending' => false
           }
@@ -191,14 +191,14 @@ RSpec.describe RightsMetadataIndexer do
       context 'when dark' do
         let(:access) do
           {
-            'access' => 'dark',
+            'view' => 'dark',
             'download' => 'none'
           }
         end
 
         let(:file_access) do
           {
-            'access' => 'dark',
+            'view' => 'dark',
             'download' => 'none'
           }
         end
@@ -210,17 +210,17 @@ RSpec.describe RightsMetadataIndexer do
         context 'when downloadable' do
           let(:access) do
             {
-              'access' => 'location-based',
+              'view' => 'location-based',
               'download' => 'location-based',
-              'readLocation' => 'spec'
+              'location' => 'spec'
             }
           end
 
           let(:file_access) do
             {
-              'access' => 'location-based',
+              'view' => 'location-based',
               'download' => 'location-based',
-              'readLocation' => 'spec'
+              'location' => 'spec'
             }
           end
 
@@ -230,17 +230,17 @@ RSpec.describe RightsMetadataIndexer do
         context 'when not downloadable' do
           let(:access) do
             {
-              'access' => 'location-based',
+              'view' => 'location-based',
               'download' => 'none',
-              'readLocation' => 'spec'
+              'location' => 'spec'
             }
           end
 
           let(:file_access) do
             {
-              'access' => 'location-based',
+              'view' => 'location-based',
               'download' => 'none',
-              'readLocation' => 'spec'
+              'location' => 'spec'
             }
           end
 
@@ -251,17 +251,17 @@ RSpec.describe RightsMetadataIndexer do
       context 'when world readable and location download' do
         let(:access) do
           {
-            'access' => 'world',
+            'view' => 'world',
             'download' => 'location-based',
-            'readLocation' => 'spec'
+            'location' => 'spec'
           }
         end
 
         let(:file_access) do
           {
-            'access' => 'world',
+            'view' => 'world',
             'download' => 'location-based',
-            'readLocation' => 'spec'
+            'location' => 'spec'
           }
         end
 
@@ -271,17 +271,17 @@ RSpec.describe RightsMetadataIndexer do
       context 'when stanford readable and location download' do
         let(:access) do
           {
-            'access' => 'stanford',
+            'view' => 'stanford',
             'download' => 'location-based',
-            'readLocation' => 'spec'
+            'location' => 'spec'
           }
         end
 
         let(:file_access) do
           {
-            'access' => 'stanford',
+            'view' => 'stanford',
             'download' => 'location-based',
-            'readLocation' => 'spec'
+            'location' => 'spec'
           }
         end
 
@@ -291,14 +291,14 @@ RSpec.describe RightsMetadataIndexer do
       context 'when world readable and no-download' do
         let(:access) do
           {
-            'access' => 'world',
+            'view' => 'world',
             'download' => 'none'
           }
         end
 
         let(:file_access) do
           {
-            'access' => 'world',
+            'view' => 'world',
             'download' => 'none'
           }
         end
@@ -309,7 +309,7 @@ RSpec.describe RightsMetadataIndexer do
       context 'when stanford readable and no-download' do
         let(:access) do
           {
-            'access' => 'stanford',
+            'view' => 'stanford',
             'download' => 'none',
             'controlledDigitalLending' => false
           }
@@ -317,7 +317,7 @@ RSpec.describe RightsMetadataIndexer do
 
         let(:file_access) do
           {
-            'access' => 'stanford',
+            'view' => 'stanford',
             'download' => 'none',
             'controlledDigitalLending' => false
           }
@@ -330,14 +330,14 @@ RSpec.describe RightsMetadataIndexer do
         # via https://argo.stanford.edu/view/druid:hz651dj0129
         let(:access) do
           {
-            'access' => 'stanford',
+            'view' => 'stanford',
             'download' => 'stanford'
           }
         end
 
         let(:file_access) do
           {
-            access: 'dark',
+            view: 'dark',
             download: 'none'
           }
         end
@@ -351,14 +351,14 @@ RSpec.describe RightsMetadataIndexer do
           {
             contains: [
               {
-                type: Cocina::Models::Vocab::Resources.page,
+                type: Cocina::Models::FileSetType.page,
                 externalIdentifier: 'https://cocina.sul.stanford.edu/fileSet/d906da21-aca1-4b95-b7d1-c14c23cd93e6',
                 label: 'Page 1',
                 version: 5,
                 structural: {
                   contains: [
                     {
-                      type: Cocina::Models::Vocab.file,
+                      type: Cocina::Models::ObjectType.file,
                       externalIdentifier: 'https://cocina.sul.stanford.edu/file/4d88213d-f150-45ae-a58a-08b1045db2a0',
                       label: '50807230_0001.jp2',
                       filename: '50807230_0001.jp2',
@@ -391,14 +391,14 @@ RSpec.describe RightsMetadataIndexer do
         end
         let(:access) do
           {
-            'access' => 'stanford',
+            'view' => 'stanford',
             'download' => 'stanford'
           }
         end
 
         let(:file_access) do
           {
-            access: 'world',
+            view: 'world',
             download: 'world'
           }
         end
@@ -412,14 +412,14 @@ RSpec.describe RightsMetadataIndexer do
           {
             contains: [
               {
-                type: Cocina::Models::Vocab::Resources.page,
+                type: Cocina::Models::FileSetType.page,
                 externalIdentifier: 'https://cocina.sul.stanford.edu/fileSet/d906da21-aca1-4b95-b7d1-c14c23cd93e6',
                 label: 'Page 1',
                 version: 5,
                 structural: {
                   contains: [
                     {
-                      type: Cocina::Models::Vocab.file,
+                      type: Cocina::Models::ObjectType.file,
                       externalIdentifier: 'https://cocina.sul.stanford.edu/file/4d88213d-f150-45ae-a58a-08b1045db2a0',
                       label: '50807230_0001.jp2',
                       filename: '50807230_0001.jp2',
@@ -453,14 +453,14 @@ RSpec.describe RightsMetadataIndexer do
 
         let(:access) do
           {
-            'access' => 'citation-only',
+            'view' => 'citation-only',
             'download' => 'none'
           }
         end
 
         let(:file_access) do
           {
-            access: 'world',
+            view: 'world',
             download: 'world'
           }
         end
@@ -474,14 +474,14 @@ RSpec.describe RightsMetadataIndexer do
           {
             contains: [
               {
-                type: Cocina::Models::Vocab::Resources.page,
+                type: Cocina::Models::FileSetType.page,
                 externalIdentifier: 'https://cocina.sul.stanford.edu/fileSet/d906da21-aca1-4b95-b7d1-c14c23cd93e6',
                 label: 'Page 1',
                 version: 5,
                 structural: {
                   contains: [
                     {
-                      type: Cocina::Models::Vocab.file,
+                      type: Cocina::Models::ObjectType.file,
                       externalIdentifier: 'https://cocina.sul.stanford.edu/file/4d88213d-f150-45ae-a58a-08b1045db2a0',
                       label: '50807230_0001.jp2',
                       filename: '50807230_0001.jp2',
@@ -514,14 +514,14 @@ RSpec.describe RightsMetadataIndexer do
         end
         let(:access) do
           {
-            'access' => 'world',
+            'view' => 'world',
             'download' => 'none'
           }
         end
 
         let(:file_access) do
           {
-            access: 'stanford',
+            view: 'stanford',
             download: 'none',
             controlledDigitalLending: false
           }
@@ -536,14 +536,14 @@ RSpec.describe RightsMetadataIndexer do
           {
             contains: [
               {
-                type: Cocina::Models::Vocab::Resources.page,
+                type: Cocina::Models::FileSetType.page,
                 externalIdentifier: 'https://cocina.sul.stanford.edu/fileSet/d906da21-aca1-4b95-b7d1-c14c23cd93e6',
                 label: 'Page 1',
                 version: 5,
                 structural: {
                   contains: [
                     {
-                      type: Cocina::Models::Vocab.file,
+                      type: Cocina::Models::ObjectType.file,
                       externalIdentifier: 'https://cocina.sul.stanford.edu/file/4d88213d-f150-45ae-a58a-08b1045db2a0',
                       label: '50807230_0001.jp2',
                       filename: '50807230_0001.jp2',
@@ -576,14 +576,14 @@ RSpec.describe RightsMetadataIndexer do
         end
         let(:access) do
           {
-            'access' => 'world',
+            'view' => 'world',
             'download' => 'stanford'
           }
         end
 
         let(:file_access) do
           {
-            access: 'world',
+            view: 'world',
             download: 'world'
           }
         end
@@ -594,16 +594,16 @@ RSpec.describe RightsMetadataIndexer do
       context 'when file level access has a read location' do
         let(:access) do
           {
-            'access' => 'citation-only',
+            'view' => 'citation-only',
             'download' => 'none'
           }
         end
 
         let(:file_access) do
           {
-            access: 'location-based',
+            view: 'location-based',
             download: 'none',
-            readLocation: 'm&m'
+            location: 'm&m'
           }
         end
 
@@ -613,16 +613,16 @@ RSpec.describe RightsMetadataIndexer do
       context 'when file level access has stanford and a download location' do
         let(:access) do
           {
-            'access' => 'citation-only',
+            'view' => 'citation-only',
             'download' => 'none'
           }
         end
 
         let(:file_access) do
           {
-            access: 'stanford',
+            view: 'stanford',
             download: 'location-based',
-            readLocation: 'm&m'
+            location: 'm&m'
           }
         end
 
@@ -632,16 +632,16 @@ RSpec.describe RightsMetadataIndexer do
       context 'when file level access has world and a download location' do
         let(:access) do
           {
-            'access' => 'citation-only',
+            'view' => 'citation-only',
             'download' => 'none'
           }
         end
 
         let(:file_access) do
           {
-            access: 'world',
+            view: 'world',
             download: 'location-based',
-            readLocation: 'm&m'
+            location: 'm&m'
           }
         end
 
@@ -651,14 +651,14 @@ RSpec.describe RightsMetadataIndexer do
       context 'when file level access has world and stanford download' do
         let(:access) do
           {
-            'access' => 'citation-only',
+            'view' => 'citation-only',
             'download' => 'none'
           }
         end
 
         let(:file_access) do
           {
-            access: 'world',
+            view: 'world',
             download: 'stanford'
           }
         end

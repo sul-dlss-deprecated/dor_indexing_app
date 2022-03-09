@@ -39,7 +39,7 @@ RSpec.describe DocumentBuilder do
     let(:cocina) do
       Cocina::Models.build(
         {
-          'type' => Cocina::Models::Vocab.object,
+          'type' => Cocina::Models::ObjectType.object,
           'structural' => {
             isMemberOf: collections
           },
@@ -72,7 +72,7 @@ RSpec.describe DocumentBuilder do
         Cocina::Models.build(
           {
             'externalIdentifier' => 'druid:bc999df2323',
-            'type' => Cocina::Models::Vocab.collection,
+            'type' => Cocina::Models::ObjectType.collection,
             'version' => 1,
             'label' => 'testing',
             'administrative' => {
@@ -119,13 +119,13 @@ RSpec.describe DocumentBuilder do
     let(:cocina) do
       Cocina::Models.build(
         {
-          'type' => Cocina::Models::Vocab.admin_policy,
+          'type' => Cocina::Models::ObjectType.admin_policy,
           'label' => 'Test APO',
           'version' => 1,
           'administrative' => {
             hasAdminPolicy: 'druid:gf999hb9999',
             hasAgreement: 'druid:bb033gt0615',
-            defaultAccess: { access: 'world', download: 'world' }
+            accessTemplate: { view: 'world', download: 'world' }
           },
           'externalIdentifier' => druid
         }
@@ -139,7 +139,7 @@ RSpec.describe DocumentBuilder do
     let(:cocina) do
       Cocina::Models.build(
         {
-          'type' => Cocina::Models::Vocab.collection,
+          'type' => Cocina::Models::ObjectType.collection,
           'label' => 'Test Collection',
           'version' => 1,
           'description' => {
@@ -162,7 +162,7 @@ RSpec.describe DocumentBuilder do
     let(:cocina) do
       Cocina::Models.build(
         {
-          'type' => Cocina::Models::Vocab.agreement,
+          'type' => Cocina::Models::ObjectType.agreement,
           'structural' => {},
           'label' => 'Test Agreement',
           'version' => 1,
@@ -191,13 +191,13 @@ RSpec.describe DocumentBuilder do
       Cocina::Models.build(
         {
           'externalIdentifier' => apo_id,
-          'type' => Cocina::Models::Vocab.admin_policy,
+          'type' => Cocina::Models::ObjectType.admin_policy,
           'version' => 1,
           'label' => 'testing',
           'administrative' => {
             'hasAdminPolicy' => 'druid:xx000xx0000',
             'hasAgreement' => 'druid:bb033gt0615',
-            'defaultAccess' => { 'access' => 'world', 'download' => 'world' }
+            'accessTemplate' => { 'view' => 'world', 'download' => 'world' }
           },
           'description' => {
             'title' => [{ 'value' => 'APO title' }],
@@ -219,7 +219,7 @@ RSpec.describe DocumentBuilder do
         Cocina::Models.build(
           {
             'externalIdentifier' => druid,
-            'type' => Cocina::Models::Vocab.image,
+            'type' => Cocina::Models::ObjectType.image,
             'version' => 1,
             'label' => 'testing',
             'access' => {},
@@ -292,13 +292,13 @@ RSpec.describe DocumentBuilder do
         Cocina::Models.build(
           {
             'externalIdentifier' => druid,
-            'type' => Cocina::Models::Vocab.admin_policy,
+            'type' => Cocina::Models::ObjectType.admin_policy,
             'version' => 1,
             'label' => 'testing',
             'administrative' => {
               'hasAdminPolicy' => apo_id,
               'hasAgreement' => 'druid:bb033gt0615',
-              'defaultAccess' => { 'access' => 'world', 'download' => 'world' }
+              'accessTemplate' => { 'view' => 'world', 'download' => 'world' }
             },
             'description' => {
               'title' => [{ 'value' => 'Test obj' }],
@@ -318,13 +318,13 @@ RSpec.describe DocumentBuilder do
         Cocina::Models.build(
           {
             'externalIdentifier' => druid,
-            'type' => Cocina::Models::Vocab.admin_policy,
+            'type' => Cocina::Models::ObjectType.admin_policy,
             'version' => 1,
             'label' => 'testing',
             'administrative' => {
               'hasAdminPolicy' => apo_id,
               'hasAgreement' => 'druid:bb033gt0615',
-              'defaultAccess' => { 'access' => 'world', 'download' => 'world' }
+              'accessTemplate' => { 'view' => 'world', 'download' => 'world' }
             },
             'description' => {
               'title' => [{ 'value' => 'Test obj' }],

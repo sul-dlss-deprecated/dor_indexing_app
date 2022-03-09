@@ -47,7 +47,7 @@ class IdentityMetadataIndexer
     when Cocina::Models::Collection
       'collection'
     else
-      cocina_object.type == Cocina::Models::Vocab.agreement ? 'agreement' : 'item'
+      cocina_object.type == Cocina::Models::ObjectType.agreement ? 'agreement' : 'item'
     end
   end
 

@@ -107,7 +107,7 @@ RSpec.describe 'DOR', type: :request do
         expect(response.body).to eq "Error building Cocina model for #{druid}"
         expect(Honeybadger).to have_received(:notify) do |msg, context:, backtrace:|
           expect(msg).to eq 'Error building Cocina model'
-          expect(context).to eq({ druid: druid, build_error: 'key not found: "type"' }) # TODO: this will change with https://github.com/sul-dlss/cocina-models/issues/318
+          expect(context).to eq({ druid: druid, build_error: 'Type field not found' })
           expect(backtrace).to include(/cocina-models/)
         end
       end

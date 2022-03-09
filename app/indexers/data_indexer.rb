@@ -39,7 +39,7 @@ class DataIndexer
 
   def legacy_collections
     case cocina.type
-    when Cocina::Models::Vocab.admin_policy, Cocina::Models::Vocab.collection
+    when Cocina::Models::ObjectType.admin_policy, Cocina::Models::ObjectType.collection
       []
     else
       Array(cocina.structural.isMemberOf).map { |col_id| "info:fedora/#{col_id}" }
@@ -58,9 +58,9 @@ class DataIndexer
 
   def legacy_model
     case cocina.type
-    when Cocina::Models::Vocab.admin_policy
+    when Cocina::Models::ObjectType.admin_policy
       'info:fedora/afmodel:Dor_AdminPolicyObject'
-    when Cocina::Models::Vocab.collection
+    when Cocina::Models::ObjectType.collection
       'info:fedora/afmodel:Dor_Collection'
     else
       'info:fedora/afmodel:Dor_Item'
