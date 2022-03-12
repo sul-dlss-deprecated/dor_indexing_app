@@ -21,6 +21,7 @@ RSpec.describe 'DOR', type: :request do
     let(:cocina) { instance_double(Cocina::Models::DRO) }
     let(:object_service) { instance_double(Dor::Services::Client::Object, find_with_metadata: [cocina, metadata]) }
     let(:mock_indexer) { instance_double(CompositeIndexer::Instance, to_solr: mock_solr_doc) }
+    let(:mock_fallback_indexer) { instance_double(FallbackIndexer, to_solr: mock_solr_doc) }
     let(:mock_solr_doc) { { id: druid, text_field_tesim: 'a field to be searched' } }
 
     describe 'POST #reindex' do
@@ -54,6 +55,20 @@ RSpec.describe 'DOR', type: :request do
         post "/dor/reindex/#{druid}"
         expect(response.body).to eq 'Object does not exist in the repository'
         expect(response.code).to eq '404'
+      end
+
+      it 'invokes fallback indexer for UnexpectedResponse' do
+        allow(object_service).to receive(:find_with_metadata).and_raise(Dor::Services::Client::UnexpectedResponse)
+        allow(FallbackIndexer).to receive(:new).with(id: druid).and_return(mock_fallback_indexer)
+        post "/dor/reindex/#{druid}"
+        expect(response.body).to eq "Successfully updated index for #{druid}"
+        expect(response.code).to eq '200'
+        expect(mock_fallback_indexer).to have_received(:to_solr)
+      end
+
+      it 'raises for other errors' do
+        allow(object_service).to receive(:find_with_metadata).and_raise(Faraday::ConnectionFailed)
+        expect { post "/dor/reindex/#{druid}" }.to raise_error(Faraday::ConnectionFailed)
       end
     end
 

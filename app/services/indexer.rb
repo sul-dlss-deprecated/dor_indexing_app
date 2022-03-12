@@ -42,7 +42,7 @@ class Indexer
     load_stats = Benchmark.measure('load_instance') do
       cocina_with_metadata = begin
         Success(Dor::Services::Client.object(pid).find_with_metadata)
-      rescue StandardError
+      rescue Dor::Services::Client::UnexpectedResponse
         Failure(:conversion_error)
       end
     end.format('%n realtime %rs total CPU %ts').gsub(/[()]/, '')
