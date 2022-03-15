@@ -12,9 +12,9 @@ class ReindexByDruidJob
     druid = druid_from_message(msg)
     # Since we don't have the metadata (namely created_at) in the message,
     # we need another API call. :(
-    indexer = Indexer.new(solr: solr, pid: druid)
+    indexer = Indexer.new(solr: solr, identifier: druid)
     cocina_with_metadata = indexer.fetch_model_with_metadata
-    indexer.reindex_pid(
+    indexer.reindex(
       add_attributes: { commitWithin: 1000 },
       cocina_with_metadata: cocina_with_metadata
     )

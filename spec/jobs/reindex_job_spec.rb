@@ -20,7 +20,7 @@ RSpec.describe ReindexJob do
   end
 
   let(:result) { Success(double) }
-  let(:indexer) { instance_double(Indexer, reindex_pid: true) }
+  let(:indexer) { instance_double(Indexer, reindex: true) }
 
   before do
     allow(Indexer).to receive(:new).and_return(indexer)
@@ -28,7 +28,7 @@ RSpec.describe ReindexJob do
 
   it 'updates the druid' do
     described_class.new.work(message)
-    expect(indexer).to have_received(:reindex_pid)
+    expect(indexer).to have_received(:reindex)
       .with(add_attributes: { commitWithin: 1000 }, cocina_with_metadata: Success(Array))
   end
 end

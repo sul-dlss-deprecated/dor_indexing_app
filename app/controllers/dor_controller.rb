@@ -8,7 +8,7 @@ class DorController < ApplicationController
 
   def reindex
     cocina_with_metadata = indexer.fetch_model_with_metadata
-    reindex_pid(cocina_with_metadata)
+    reindex_object(cocina_with_metadata)
     render status: :ok, plain: "Successfully updated index for #{params[:pid]}"
   rescue Dor::Services::Client::NotFoundResponse, Rubydora::RecordNotFound
     render status: :not_found, plain: 'Object does not exist in the repository'
@@ -18,7 +18,7 @@ class DorController < ApplicationController
     cocina_with_metadata = build_model_and_metadata(cocina_json: params[:cocina_object].presence,
                                                     created_at: params[:created_at].presence,
                                                     updated_at: params[:updated_at].presence)
-    reindex_pid(cocina_with_metadata)
+    reindex_object(cocina_with_metadata)
     render status: :ok, plain: "Successfully updated index for #{params[:pid]}"
   rescue CocinaModelBuildError => e
     request.session # TODO: calling this as a hack to address bad Rails/HB interaction, remove when https://github.com/rails/rails/issues/43922 is fixed
@@ -47,14 +47,14 @@ class DorController < ApplicationController
   end
 
   def indexer
-    @indexer ||= Indexer.new(solr: solr, pid: params[:pid])
+    @indexer ||= Indexer.new(solr: solr, identifier: params[:pid])
   end
 
-  def reindex_pid(cocina_with_metadata)
-    @solr_doc = indexer.reindex_pid(
+  def reindex_object(cocina_with_metadata)
+    @solr_doc = indexer.reindex(
       add_attributes: { commitWithin: params.fetch(:commitWithin, 1000).to_i },
       cocina_with_metadata: cocina_with_metadata
     )
-    indexer.commit unless params[:commitWithin] # reindex_pid doesn't commit, but callers of this method may expect the update to be committed immediately
+    indexer.commit unless params[:commitWithin] # reindex doesn't commit, but callers of this method may expect the update to be committed immediately
   end
 end

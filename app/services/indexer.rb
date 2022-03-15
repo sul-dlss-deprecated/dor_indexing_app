@@ -4,17 +4,17 @@ class Indexer
   include Dry::Monads[:result]
 
   # @param [RSolr::Client] solr
-  # @param [String] pid
-  def initialize(solr:, pid:)
+  # @param [String] identifier
+  def initialize(solr:, identifier:)
     @solr = solr
-    @pid = pid
+    @identifier = identifier
     # Give Honeybadger some context in case an error occurs
-    Honeybadger.context({ pid: pid })
+    Honeybadger.context({ identifier: identifier })
   end
 
-  # retrieves a single Dor object by pid, indexes the object to solr, does some logging
-  # doesn't commit automatically.
-  def reindex_pid(add_attributes:, cocina_with_metadata:)
+  # Indexes the provided Cocina object to solr
+  # NOTE: this doesn't commit automatically
+  def reindex(add_attributes:, cocina_with_metadata:)
     solr_doc = nil
     logger.info 'document found, now generating document solr'
     # benchmark how long it takes to convert the object to a Solr document
@@ -24,13 +24,13 @@ class Indexer
                    DocumentBuilder.for(model: model, metadata: metadata).to_solr
                  else
                    logger.debug("Fetching fallback indexer because cocina model couldn't be retrieved.")
-                   FallbackIndexer.new(id: pid).to_solr
+                   FallbackIndexer.new(id: identifier).to_solr
                  end
       logger.debug 'solr doc created'
       @solr.add(solr_doc, add_attributes: add_attributes)
     end.format('%n realtime %rs total CPU %ts').gsub(/[()]/, '')
 
-    logger.info "successfully updated index for #{pid} (metrics: #{to_solr_stats})"
+    logger.info "successfully updated index for #{identifier} (metrics: #{to_solr_stats})"
 
     solr_doc
   end
@@ -41,7 +41,7 @@ class Indexer
     # benchmark how long it takes to load the object
     load_stats = Benchmark.measure('load_instance') do
       cocina_with_metadata = begin
-        Success(Dor::Services::Client.object(pid).find_with_metadata)
+        Success(Dor::Services::Client.object(identifier).find_with_metadata)
       rescue Dor::Services::Client::UnexpectedResponse
         Failure(:conversion_error)
       end
@@ -51,7 +51,7 @@ class Indexer
   end
 
   delegate :logger, to: :Rails
-  attr_reader :pid
+  attr_reader :identifier
 
   def commit
     @solr.commit
