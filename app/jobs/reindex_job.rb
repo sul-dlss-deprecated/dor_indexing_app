@@ -13,8 +13,8 @@ class ReindexJob
   def work(msg)
     cocina_with_metadata = build_cocina_model_from_json_str(msg)
     pid = cocina_with_metadata.value!.first.externalIdentifier
-    indexer = Indexer.new(solr: solr, pid: pid)
-    indexer.reindex_pid(
+    indexer = Indexer.new(solr: solr, identifier: pid)
+    indexer.reindex(
       add_attributes: { commitWithin: 1000 },
       cocina_with_metadata: cocina_with_metadata
     )
