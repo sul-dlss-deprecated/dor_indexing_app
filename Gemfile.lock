@@ -72,6 +72,7 @@ GEM
       sshkit (>= 1.6.1, != 1.7.0)
     amq-protocol (2.3.2)
     ast (2.4.2)
+    attr_extras (6.2.5)
     bootsnap (1.11.1)
       msgpack (~> 1.2)
     builder (3.2.4)
@@ -98,12 +99,13 @@ GEM
     capistrano-passenger (0.2.1)
       capistrano (~> 3.0)
     capistrano-shared_configs (0.2.2)
-    cocina-models (0.68.0)
+    cocina-models (0.69.0)
       activesupport
       dry-struct (~> 1.0)
       dry-types (~> 1.1)
       openapi3_parser
       openapi_parser (>= 0.11.1, < 1.0)
+      super_diff
       thor
       zeitwerk (~> 2.1)
     committee (4.4.0)
@@ -132,9 +134,9 @@ GEM
     docile (1.4.0)
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
-    dor-services-client (8.2.0)
+    dor-services-client (8.3.0)
       activesupport (>= 4.2, < 8)
-      cocina-models (~> 0.68.0)
+      cocina-models (~> 0.69.0)
       deprecation
       faraday (~> 2.0)
       faraday-retry
@@ -258,11 +260,14 @@ GEM
       commonmarker (~> 0.17)
       psych (~> 3.1)
     openapi_parser (0.15.0)
+    optimist (3.0.1)
     parallel (1.21.0)
     parse_date (0.4.3)
       zeitwerk (~> 2.1)
     parser (3.1.1.0)
       ast (~> 2.4.1)
+    patience_diff (1.2.0)
+      optimist (~> 3.0)
     psych (3.3.2)
     public_suffix (4.0.6)
     puma (5.6.2)
@@ -391,6 +396,10 @@ GEM
       net-scp (>= 1.1.2)
       net-ssh (>= 2.8.0)
     strscan (3.0.1)
+    super_diff (0.8.0)
+      attr_extras (>= 6.2.4)
+      diff-lcs
+      patience_diff
     thor (1.2.1)
     timeout (0.2.0)
     tzinfo (2.0.4)
@@ -459,4 +468,4 @@ DEPENDENCIES
   webmock
 
 BUNDLED WITH
-   2.3.7
+   2.3.9
