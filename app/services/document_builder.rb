@@ -64,7 +64,7 @@ class DocumentBuilder
   def self.load_parent_collections(model)
     return [] unless model.dro?
 
-    Array(model.structural.isMemberOf).filter_map do |rel_druid|
+    Array(model.structural&.isMemberOf).filter_map do |rel_druid|
       Dor::Services::Client.object(rel_druid).find
     rescue Dor::Services::Client::UnexpectedResponse, Dor::Services::Client::NotFoundResponse
       Honeybadger.notify("Bad association found on #{model.externalIdentifier}. #{rel_druid} could not be found")
