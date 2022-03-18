@@ -9,7 +9,7 @@ class DorController < ApplicationController
   def reindex
     cocina_with_metadata = indexer.fetch_model_with_metadata
     reindex_object(cocina_with_metadata)
-    render status: :ok, plain: "Successfully updated index for #{params[:pid]}"
+    render status: :ok, plain: "Successfully updated index for #{params[:id]}"
   rescue Dor::Services::Client::NotFoundResponse, Rubydora::RecordNotFound
     render status: :not_found, plain: 'Object does not exist in the repository'
   end
@@ -19,17 +19,17 @@ class DorController < ApplicationController
                                                     created_at: params[:created_at].presence,
                                                     updated_at: params[:updated_at].presence)
     reindex_object(cocina_with_metadata)
-    render status: :ok, plain: "Successfully updated index for #{params[:pid]}"
+    render status: :ok, plain: "Successfully updated index for #{params[:id]}"
   rescue CocinaModelBuildError => e
     request.session # TODO: calling this as a hack to address bad Rails/HB interaction, remove when https://github.com/rails/rails/issues/43922 is fixed
-    Honeybadger.notify('Error building Cocina model', context: { druid: params[:pid], build_error: e.cause.message }, backtrace: e.cause.backtrace)
-    render status: :unprocessable_entity, plain: "Error building Cocina model for #{params[:pid]}"
+    Honeybadger.notify('Error building Cocina model', context: { druid: params[:id], build_error: e.cause.message }, backtrace: e.cause.backtrace)
+    render status: :unprocessable_entity, plain: "Error building Cocina model for #{params[:id]}"
   end
 
   def delete_from_index
-    solr.delete_by_id(params[:pid], commitWithin: params.fetch(:commitWithin, 1000).to_i)
+    solr.delete_by_id(params[:id], commitWithin: params.fetch(:commitWithin, 1000).to_i)
     solr.commit unless params[:commitWithin]
-    render plain: params[:pid]
+    render plain: params[:id]
   end
 
   private
@@ -47,7 +47,7 @@ class DorController < ApplicationController
   end
 
   def indexer
-    @indexer ||= Indexer.new(solr: solr, identifier: params[:pid])
+    @indexer ||= Indexer.new(solr: solr, identifier: params[:id])
   end
 
   def reindex_object(cocina_with_metadata)
