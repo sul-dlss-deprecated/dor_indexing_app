@@ -8,17 +8,17 @@ RSpec.describe 'Dor routing', type: :routing do
       expect(get: '/dor/reindex/druid:abc123').to route_to(
         controller: 'dor',
         action: 'reindex',
-        pid: 'druid:abc123'
+        id: 'druid:abc123'
       )
       expect(post: '/dor/reindex/druid:abc123').to route_to(
         controller: 'dor',
         action: 'reindex',
-        pid: 'druid:abc123'
+        id: 'druid:abc123'
       )
       expect(put: '/dor/reindex/druid:abc123').to route_to(
         controller: 'dor',
         action: 'reindex',
-        pid: 'druid:abc123'
+        id: 'druid:abc123'
       )
     end
   end
