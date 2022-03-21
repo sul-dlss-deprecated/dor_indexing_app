@@ -265,10 +265,6 @@ RSpec.describe DocumentBuilder do
                 }
               ]
             },
-            'structural' => {
-              'contains' => [],
-              'isMemberOf' => []
-            },
             'identification' => {
               'catalogLinks' => [{ 'catalog' => 'symphony', 'catalogRecordId' => '1234' }]
             }
