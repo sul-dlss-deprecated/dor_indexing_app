@@ -42,14 +42,14 @@ class DataIndexer
     when Cocina::Models::ObjectType.admin_policy, Cocina::Models::ObjectType.collection
       []
     else
-      Array(cocina.structural.isMemberOf).map { |col_id| "info:fedora/#{col_id}" }
+      Array(cocina.structural&.isMemberOf).map { |col_id| "info:fedora/#{col_id}" }
     end
   end
 
   def virtual_object_constituents
     return unless cocina.dro?
 
-    cocina.structural.hasMemberOrders.first&.members
+    Array(cocina.structural&.hasMemberOrders).first&.members
   end
 
   def legacy_apo
