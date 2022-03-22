@@ -18,12 +18,13 @@ class DorController < ApplicationController
     cocina_with_metadata = build_model_and_metadata(cocina_json: params[:cocina_object].presence,
                                                     created_at: params[:created_at].presence,
                                                     updated_at: params[:updated_at].presence)
-    reindex_object(cocina_with_metadata)
-    render status: :ok, plain: "Successfully updated index for #{params[:id]}"
+    druid = cocina_with_metadata.first.externalIdentifier
+    reindex_object(Success(cocina_with_metadata))
+    render status: :ok, plain: "Successfully updated index for #{druid}"
   rescue CocinaModelBuildError => e
     request.session # TODO: calling this as a hack to address bad Rails/HB interaction, remove when https://github.com/rails/rails/issues/43922 is fixed
-    Honeybadger.notify('Error building Cocina model', context: { druid: params[:id], build_error: e.cause.message }, backtrace: e.cause.backtrace)
-    render status: :unprocessable_entity, plain: "Error building Cocina model for #{params[:id]}"
+    Honeybadger.notify('Error building Cocina model', context: { cocina: params[:cocina_object], build_error: e.cause.message }, backtrace: e.cause.backtrace)
+    render status: :unprocessable_entity, plain: "Error building Cocina model from json: #{params[:cocina_object]}"
   end
 
   def delete_from_index
@@ -41,7 +42,7 @@ class DorController < ApplicationController
   def build_model_and_metadata(cocina_json:, created_at:, updated_at:)
     model = Cocina::Models.build(JSON.parse(cocina_json))
     metadata = Dor::Services::Client::ObjectMetadata.new(created_at: created_at, updated_at: updated_at)
-    Success([model, metadata])
+    [model, metadata]
   rescue StandardError
     raise CocinaModelBuildError
   end

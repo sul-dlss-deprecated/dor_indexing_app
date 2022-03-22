@@ -76,20 +76,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /dor/reindex_from_cocina/{pid}:
+  /dor/reindex_from_cocina:
     put:
       tags:
         - indexing
       summary: Reindex a repository object using Cocina JSON provided by the caller
       description: ''
       operationId: 'dor#reindex_from_cocina'
-      parameters:
-        - name: pid
-          in: path
-          description: 'a digital repository identifier'
-          required: true
-          schema:
-            $ref: '#/components/schemas/Druid'
       requestBody:
         required: false
         content:

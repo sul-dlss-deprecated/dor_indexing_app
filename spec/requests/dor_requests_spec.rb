@@ -18,7 +18,7 @@ RSpec.describe 'DOR', type: :request do
     let(:mock_logger) { instance_double(Logger, :formatter= => true, info: true) }
     let(:mock_solr_conn) { instance_double(RSolr::Client, add: true, commit: true) }
     let(:metadata) { instance_double(Dor::Services::Client::ObjectMetadata) }
-    let(:cocina) { instance_double(Cocina::Models::DRO) }
+    let(:cocina) { instance_double(Cocina::Models::DRO, externalIdentifier: druid) }
     let(:object_service) { instance_double(Dor::Services::Client::Object, find_with_metadata: [cocina, metadata]) }
     let(:mock_indexer) { instance_double(CompositeIndexer::Instance, to_solr: mock_solr_doc) }
     let(:mock_fallback_indexer) { instance_double(FallbackIndexer, to_solr: mock_solr_doc) }
@@ -84,7 +84,7 @@ RSpec.describe 'DOR', type: :request do
 
       it 'uses the provided cocina without hitting dor-services-app' do
         allow(Cocina::Models).to receive(:build).with(JSON.parse(cocina_json)).and_return(cocina) # pretend our bogus test JSON is valid
-        put "/dor/reindex_from_cocina/#{druid}",
+        put '/dor/reindex_from_cocina',
             params: { cocina_object: cocina_json, created_at: created_at, updated_at: updated_at }.to_json,
             headers: { 'CONTENT_TYPE' => 'application/json' }
         expect(response.body).to eq "Successfully updated index for #{druid}"
@@ -95,7 +95,7 @@ RSpec.describe 'DOR', type: :request do
 
       it 'reindexes an object with specified commitWithin param and no hard commit' do
         allow(Cocina::Models).to receive(:build).with(JSON.parse(cocina_json)).and_return(cocina) # pretend our bogus test JSON is valid
-        put "/dor/reindex_from_cocina/#{druid}",
+        put '/dor/reindex_from_cocina',
             params: { cocina_object: cocina_json, created_at: created_at, updated_at: updated_at, commitWithin: 10_000 }.to_json,
             headers: { 'CONTENT_TYPE' => 'application/json' }
         expect(response.body).to eq "Successfully updated index for #{druid}"
@@ -105,7 +105,7 @@ RSpec.describe 'DOR', type: :request do
       end
 
       it 'requires both the cocina json and the created_at/updated_at metadata' do
-        put "/dor/reindex_from_cocina/#{druid}",
+        put '/dor/reindex_from_cocina',
             params: { cocina_object: cocina_json, updated_at: updated_at }.to_json,
             headers: { 'CONTENT_TYPE' => 'application/json' }
         expect(response.code).to eq '400'
@@ -115,14 +115,14 @@ RSpec.describe 'DOR', type: :request do
       it 'provides the caller with a useful error if invalid cocina is provided' do
         # Cocina::Models.build will be called with our bogus JSON, which will throw an error
         allow(Honeybadger).to receive(:notify).and_call_original
-        put "/dor/reindex_from_cocina/#{druid}",
+        put '/dor/reindex_from_cocina',
             params: { cocina_object: cocina_json, created_at: created_at, updated_at: updated_at }.to_json,
             headers: { 'CONTENT_TYPE' => 'application/json' }
         expect(response.code).to eq '422' # the caller should've provided valid Cocina JSON
-        expect(response.body).to eq "Error building Cocina model for #{druid}"
+        expect(response.body).to eq "Error building Cocina model from json: #{cocina_json}"
         expect(Honeybadger).to have_received(:notify) do |msg, context:, backtrace:|
           expect(msg).to eq 'Error building Cocina model'
-          expect(context).to eq({ druid: druid, build_error: 'Type field not found' })
+          expect(context).to eq({ cocina: cocina_json, build_error: 'Type field not found' })
           expect(backtrace).to include(/cocina-models/)
         end
       end
