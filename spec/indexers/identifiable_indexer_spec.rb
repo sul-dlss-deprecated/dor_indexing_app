@@ -108,7 +108,8 @@ RSpec.describe IdentifiableIndexer do
             'description' => {
               'title' => [{ 'value' => 'Test object' }],
               'purl' => 'https://purl.stanford.edu/rt923jk3422'
-            }
+            },
+            identification: {}
           }
         )
       end
@@ -148,7 +149,8 @@ RSpec.describe IdentifiableIndexer do
               'subject' => [{ 'type' => 'topic', 'value' => 'word' }],
               'purl' => 'https://purl.stanford.edu/rt923jk3422'
             },
-            'structural' => {}
+            'structural' => {},
+            identification: {}
           }
         )
       end

@@ -32,7 +32,8 @@ RSpec.describe RightsMetadataIndexer do
           'description' => {
             'title' => [{ 'value' => 'Test obj' }],
             'purl' => 'https://purl.stanford.edu/rt923jk3429'
-          }
+          },
+          identification: {}
         }
       )
     end
@@ -80,7 +81,8 @@ RSpec.describe RightsMetadataIndexer do
             'title' => [{ 'value' => 'Test obj' }],
             'purl' => 'https://purl.stanford.edu/rt923jk3429'
           },
-          'structural' => structural
+          'structural' => structural,
+          identification: {}
         }
       )
     end

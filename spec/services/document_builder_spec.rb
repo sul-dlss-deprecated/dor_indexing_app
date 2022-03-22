@@ -53,7 +53,8 @@ RSpec.describe DocumentBuilder do
             hasAdminPolicy: 'druid:gf999hb9999'
           },
           'access' => {},
-          'externalIdentifier' => druid
+          'externalIdentifier' => druid,
+          identification: {}
         }
       )
     end
@@ -82,7 +83,8 @@ RSpec.describe DocumentBuilder do
             'description' => {
               'title' => [{ 'value' => 'Test object' }],
               'purl' => 'https://purl.stanford.edu/bc999df2323'
-            }
+            },
+            identification: {}
           }
         )
       end
@@ -150,7 +152,8 @@ RSpec.describe DocumentBuilder do
             hasAdminPolicy: 'druid:gf999hb9999'
           },
           'access' => {},
-          'externalIdentifier' => druid
+          'externalIdentifier' => druid,
+          identification: {}
         }
       )
     end
@@ -174,7 +177,8 @@ RSpec.describe DocumentBuilder do
             hasAdminPolicy: 'druid:gf999hb9999'
           },
           'access' => {},
-          'externalIdentifier' => druid
+          'externalIdentifier' => druid,
+          identification: {}
         }
       )
     end
@@ -267,7 +271,8 @@ RSpec.describe DocumentBuilder do
             },
             'identification' => {
               'catalogLinks' => [{ 'catalog' => 'symphony', 'catalogRecordId' => '1234' }]
-            }
+            },
+            structural: {}
           }
         )
       end
