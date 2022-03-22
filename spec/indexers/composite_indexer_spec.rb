@@ -10,18 +10,18 @@ RSpec.describe CompositeIndexer do
   let(:apo) do
     Cocina::Models.build(
       {
-        'externalIdentifier' => apo_id,
-        'type' => Cocina::Models::ObjectType.admin_policy,
-        'version' => 1,
-        'label' => 'testing',
-        'administrative' => {
-          'hasAdminPolicy' => apo_id,
-          'hasAgreement' => 'druid:hp308wm0436',
-          'accessTemplate' => { 'view' => 'world', 'download' => 'world' }
+        externalIdentifier: apo_id,
+        type: Cocina::Models::ObjectType.admin_policy,
+        version: 1,
+        label: 'testing',
+        administrative: {
+          hasAdminPolicy: apo_id,
+          hasAgreement: 'druid:hp308wm0436',
+          accessTemplate: { view: 'world', download: 'world' }
         },
-        'description' => {
-          'title' => [{ 'value' => 'APO title' }],
-          'purl' => 'https://purl.stanford.edu/gf999hb9999'
+        description: {
+          title: [{ value: 'APO title' }],
+          purl: 'https://purl.stanford.edu/gf999hb9999'
         }
       }
     )
@@ -37,24 +37,24 @@ RSpec.describe CompositeIndexer do
   let(:cocina) do
     Cocina::Models.build(
       {
-        'externalIdentifier' => druid,
-        'type' => Cocina::Models::ObjectType.image,
-        'version' => 1,
-        'label' => 'testing',
-        'access' => {},
-        'administrative' => {
-          'hasAdminPolicy' => apo_id
+        externalIdentifier: druid,
+        type: Cocina::Models::ObjectType.image,
+        version: 1,
+        label: 'testing',
+        access: {},
+        administrative: {
+          hasAdminPolicy: apo_id
         },
-        'description' => {
-          'title' => [{ 'value' => 'Test obj' }],
-          'subject' => [{ 'type' => 'topic', 'value' => 'word' }],
-          'purl' => 'https://purl.stanford.edu/mx123ms3333'
+        description: {
+          title: [{ value: 'Test obj' }],
+          subject: [{ type: 'topic', value: 'word' }],
+          purl: 'https://purl.stanford.edu/mx123ms3333'
         },
-        'structural' => {
-          'contains' => []
+        structural: {
+          contains: []
         },
-        'identification' => {
-          'catalogLinks' => [{ 'catalog' => 'symphony', 'catalogRecordId' => '1234' }]
+        identification: {
+          catalogLinks: [{ catalog: 'symphony', catalogRecordId: '1234' }]
         }
       }
     )
@@ -78,6 +78,7 @@ RSpec.describe CompositeIndexer do
     end
 
     it 'calls each of the provided indexers and combines the results' do
+      # rubocop:disable Style/StringHashKeys
       expect(doc).to eq(
         'metadata_format_ssim' => 'mods',
         'sw_display_title_tesim' => 'Test obj',
@@ -88,6 +89,7 @@ RSpec.describe CompositeIndexer do
         'topic_ssim' => ['word'],
         'topic_tesim' => ['word']
       )
+      # rubocop:enable Style/StringHashKeys
     end
   end
 end

@@ -9,28 +9,28 @@ RSpec.describe EmbargoMetadataIndexer do
   let(:cocina) do
     Cocina::Models.build(
       {
-        'type' => Cocina::Models::ObjectType.object,
-        'externalIdentifier' => druid,
-        'label' => 'testing embargo indexing',
-        'version' => 1,
-        'access' => {
-          'view' => 'world',
-          'download' => 'none',
-          'copyright' => 'some student',
-          'useAndReproductionStatement' => 'restricted until embargo lifted',
-          'embargo' => {
-            'releaseDate' => release_date,
-            'view' => 'world',
-            'download' => 'world',
-            'useAndReproductionStatement' => 'freedom reigns'
+        type: Cocina::Models::ObjectType.object,
+        externalIdentifier: druid,
+        label: 'testing embargo indexing',
+        version: 1,
+        access: {
+          view: 'world',
+          download: 'none',
+          copyright: 'some student',
+          useAndReproductionStatement: 'restricted until embargo lifted',
+          embargo: {
+            releaseDate: release_date,
+            view: 'world',
+            download: 'world',
+            useAndReproductionStatement: 'freedom reigns'
           }
         },
-        'administrative' => {
-          'hasAdminPolicy' => apo_id
+        administrative: {
+          hasAdminPolicy: apo_id
         },
-        'description' => {
-          'title' => [{ 'value' => 'embargo indexing object' }],
-          'purl' => 'https://purl.stanford.edu/zz666yy9999'
+        description: {
+          title: [{ value: 'embargo indexing object' }],
+          purl: 'https://purl.stanford.edu/zz666yy9999'
         },
         identification: {},
         structural: {}
@@ -48,41 +48,45 @@ RSpec.describe EmbargoMetadataIndexer do
     context 'when embargo.releaseDate is in the future' do
       let(:release_date) { '2024-06-06T07:00:00.000+09:00' }
 
+      # rubocop:disable Style/StringHashKeys
       it 'sets both embargo fields in Solr doc' do
         expect(doc).to eq('embargo_release_dtsim' => ['2024-06-05T22:00:00Z'],
                           'embargo_status_ssim' => ['embargoed'])
       end
+      # rubocop:enable Style/StringHashKeys
     end
 
     context 'when embargo.releaseDate is in the past' do
       let(:release_date) { '2020-06-06T07:00:00.000+09:00' }
 
+      # rubocop:disable Style/StringHashKeys
       it 'Solr doc has embargo fields' do
         expect(doc).to eq('embargo_release_dtsim' => ['2020-06-05T22:00:00Z'],
                           'embargo_status_ssim' => ['embargoed'])
       end
+      # rubocop:enable Style/StringHashKeys
     end
 
     context 'when there is no embargo' do
       let(:cocina) do
         Cocina::Models.build(
           {
-            'type' => Cocina::Models::ObjectType.object,
-            'externalIdentifier' => druid,
-            'label' => 'testing embargo indexing',
-            'version' => 1,
-            'access' => {
-              'view' => 'world',
-              'download' => 'none',
-              'copyright' => 'some student',
-              'useAndReproductionStatement' => 'restricted until embargo lifted'
+            type: Cocina::Models::ObjectType.object,
+            externalIdentifier: druid,
+            label: 'testing embargo indexing',
+            version: 1,
+            access: {
+              view: 'world',
+              download: 'none',
+              copyright: 'some student',
+              useAndReproductionStatement: 'restricted until embargo lifted'
             },
-            'administrative' => {
-              'hasAdminPolicy' => apo_id
+            administrative: {
+              hasAdminPolicy: apo_id
             },
-            'description' => {
-              'title' => [{ 'value' => 'embargo indexing object' }],
-              'purl' => 'https://purl.stanford.edu/zz666yy9999'
+            description: {
+              title: [{ value: 'embargo indexing object' }],
+              purl: 'https://purl.stanford.edu/zz666yy9999'
             },
             identification: {},
             structural: {}

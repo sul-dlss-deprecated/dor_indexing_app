@@ -8,30 +8,30 @@ RSpec.describe IdentifiableIndexer do
   let(:cocina) do
     Cocina::Models.build(
       {
-        'externalIdentifier' => druid,
-        'type' => Cocina::Models::ObjectType.image,
-        'version' => 1,
-        'label' => 'testing',
-        'access' => {},
-        'administrative' => {
-          'hasAdminPolicy' => apo_id
+        externalIdentifier: druid,
+        type: Cocina::Models::ObjectType.image,
+        version: 1,
+        label: 'testing',
+        access: {},
+        administrative: {
+          hasAdminPolicy: apo_id
         },
-        'description' => {
-          'title' => [{ 'value' => 'Test obj' }],
-          'subject' => [{ 'type' => 'topic', 'value' => 'word' }],
-          'purl' => 'https://purl.stanford.edu/rt923jk3422'
+        description: {
+          title: [{ value: 'Test obj' }],
+          subject: [{ type: 'topic', value: 'word' }],
+          purl: 'https://purl.stanford.edu/rt923jk3422'
         },
-        'structural' => {
-          'contains' => [],
-          'isMemberOf' => []
+        structural: {
+          contains: [],
+          isMemberOf: []
         },
-        'identification' => identification
+        identification: identification
       }
     )
   end
   let(:identification) do
     {
-      'catalogLinks' => [{ 'catalog' => 'symphony', 'catalogRecordId' => '1234' }]
+      catalogLinks: [{ catalog: 'symphony', catalogRecordId: '1234' }]
     }
   end
 
@@ -56,18 +56,18 @@ RSpec.describe IdentifiableIndexer do
     let(:related) do
       Cocina::Models.build(
         {
-          'externalIdentifier' => apo_id,
-          'type' => Cocina::Models::ObjectType.admin_policy,
-          'version' => 1,
-          'label' => 'testing',
-          'administrative' => {
-            'hasAdminPolicy' => apo_id,
-            'hasAgreement' => 'druid:bb033gt0615',
-            'accessTemplate' => { 'view' => 'world', 'download' => 'world' }
+          externalIdentifier: apo_id,
+          type: Cocina::Models::ObjectType.admin_policy,
+          version: 1,
+          label: 'testing',
+          administrative: {
+            hasAdminPolicy: apo_id,
+            hasAgreement: 'druid:bb033gt0615',
+            accessTemplate: { view: 'world', download: 'world' }
           },
-          'description' => {
-            'title' => [{ 'value' => 'Test object' }],
-            'purl' => 'https://purl.stanford.edu/rt923jk3422'
+          description: {
+            title: [{ value: 'Test object' }],
+            purl: 'https://purl.stanford.edu/rt923jk3422'
           }
         }
       )
@@ -97,17 +97,17 @@ RSpec.describe IdentifiableIndexer do
       let(:related) do
         Cocina::Models.build(
           {
-            'externalIdentifier' => mock_rel_druid,
-            'type' => Cocina::Models::ObjectType.collection,
-            'version' => 1,
-            'label' => 'testing',
-            'administrative' => {
-              'hasAdminPolicy' => apo_id
+            externalIdentifier: mock_rel_druid,
+            type: Cocina::Models::ObjectType.collection,
+            version: 1,
+            label: 'testing',
+            administrative: {
+              hasAdminPolicy: apo_id
             },
-            'access' => {},
-            'description' => {
-              'title' => [{ 'value' => 'Test object' }],
-              'purl' => 'https://purl.stanford.edu/rt923jk3422'
+            access: {},
+            description: {
+              title: [{ value: 'Test object' }],
+              purl: 'https://purl.stanford.edu/rt923jk3422'
             },
             identification: {}
           }
@@ -120,7 +120,9 @@ RSpec.describe IdentifiableIndexer do
       end
 
       it 'indexes metadata source' do
+        # rubocop:disable Style/StringHashKeys
         expect(doc).to match a_hash_including('metadata_source_ssi' => 'Symphony')
+        # rubocop:enable Style/StringHashKeys
       end
     end
 
@@ -128,7 +130,9 @@ RSpec.describe IdentifiableIndexer do
       let(:identification) { {} }
 
       it 'indexes metadata source' do
+        # rubocop:disable Style/StringHashKeys
         expect(doc).to match a_hash_including('metadata_source_ssi' => 'DOR')
+        # rubocop:enable Style/StringHashKeys
       end
     end
 
@@ -136,27 +140,29 @@ RSpec.describe IdentifiableIndexer do
       let(:cocina) do
         Cocina::Models.build(
           {
-            'externalIdentifier' => druid,
-            'type' => Cocina::Models::ObjectType.image,
-            'version' => 1,
-            'label' => 'testing',
-            'access' => {},
-            'administrative' => {
-              'hasAdminPolicy' => apo_id
+            externalIdentifier: druid,
+            type: Cocina::Models::ObjectType.image,
+            version: 1,
+            label: 'testing',
+            access: {},
+            administrative: {
+              hasAdminPolicy: apo_id
             },
-            'description' => {
-              'title' => [{ 'value' => 'Test obj' }],
-              'subject' => [{ 'type' => 'topic', 'value' => 'word' }],
-              'purl' => 'https://purl.stanford.edu/rt923jk3422'
+            description: {
+              title: [{ value: 'Test obj' }],
+              subject: [{ type: 'topic', value: 'word' }],
+              purl: 'https://purl.stanford.edu/rt923jk3422'
             },
-            'structural' => {},
+            structural: {},
             identification: {}
           }
         )
       end
 
       it 'indexes metadata source' do
+        # rubocop:disable Style/StringHashKeys
         expect(doc).to match a_hash_including('metadata_source_ssi' => 'DOR')
+        # rubocop:enable Style/StringHashKeys
       end
     end
   end
