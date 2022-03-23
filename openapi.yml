@@ -96,7 +96,7 @@ paths:
               properties:
                 cocina_object:
                   description: JSON serialization of the Cocina object.  to be used, created_at and updated_at must also be provided.
-                  type: string
+                  type: object
                 created_at:
                   description: the creation date of the Cocina object
                   type: string
