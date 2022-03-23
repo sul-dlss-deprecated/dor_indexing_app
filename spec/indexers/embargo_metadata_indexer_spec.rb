@@ -31,7 +31,9 @@ RSpec.describe EmbargoMetadataIndexer do
         'description' => {
           'title' => [{ 'value' => 'embargo indexing object' }],
           'purl' => 'https://purl.stanford.edu/zz666yy9999'
-        }
+        },
+        identification: {},
+        structural: {}
       }
     )
   end
@@ -81,7 +83,9 @@ RSpec.describe EmbargoMetadataIndexer do
             'description' => {
               'title' => [{ 'value' => 'embargo indexing object' }],
               'purl' => 'https://purl.stanford.edu/zz666yy9999'
-            }
+            },
+            identification: {},
+            structural: {}
           }
         )
       end

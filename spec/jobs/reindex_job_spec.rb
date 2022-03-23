@@ -16,7 +16,9 @@ RSpec.describe ReindexJob do
                               purl: "https://purl.stanford.edu/#{druid.delete_prefix('druid:')}"
                             },
                             access: {},
-                            administrative: { hasAdminPolicy: 'druid:xx999xx9999' })
+                            administrative: { hasAdminPolicy: 'druid:xx999xx9999' },
+                            identification: {},
+                            structural: {})
   end
 
   let(:result) { Success(double) }

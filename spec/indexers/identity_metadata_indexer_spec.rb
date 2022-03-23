@@ -17,7 +17,8 @@ RSpec.describe IdentityMetadataIndexer do
       administrative: {
         hasAdminPolicy: 'druid:bd999bd9999'
       },
-      identification: identification
+      identification: identification,
+      structural: {}
     }.with_indifferent_access)
   end
 
@@ -76,6 +77,24 @@ RSpec.describe IdentityMetadataIndexer do
     end
 
     context 'with a collection' do
+      # Collection objects have no structural attribute
+      let(:cocina) do
+        Cocina::Models.build({
+          externalIdentifier: 'druid:rt923jk3421',
+          type: type,
+          version: 1,
+          label: 'Squirrels of North America',
+          description: {
+            title: [{ value: 'Squirrels of North America' }],
+            purl: 'https://purl.stanford.edu/rt923jk3421'
+          },
+          access: {},
+          administrative: {
+            hasAdminPolicy: 'druid:bd999bd9999'
+          },
+          identification: identification
+        }.with_indifferent_access)
+      end
       let(:type) { Cocina::Models::ObjectType.collection }
       let(:identification) do
         {

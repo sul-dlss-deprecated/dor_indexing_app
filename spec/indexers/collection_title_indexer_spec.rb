@@ -24,7 +24,8 @@ RSpec.describe CollectionTitleIndexer do
         'structural' => {
           'contains' => [],
           'isMemberOf' => []
-        }
+        },
+        identification: {}
       }
     )
   end
@@ -63,7 +64,8 @@ RSpec.describe CollectionTitleIndexer do
             'description' => {
               'title' => [{ 'value' => 'Test object' }],
               'purl' => 'https://purl.stanford.edu/rt923jk3422'
-            }
+            },
+            identification: {}
           }
         )
       end
