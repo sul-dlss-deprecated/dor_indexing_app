@@ -8,22 +8,22 @@ RSpec.describe CollectionTitleIndexer do
   let(:cocina) do
     Cocina::Models.build(
       {
-        'externalIdentifier' => druid,
-        'type' => Cocina::Models::ObjectType.image,
-        'version' => 1,
-        'label' => 'testing',
-        'access' => {},
-        'administrative' => {
-          'hasAdminPolicy' => apo_id
+        externalIdentifier: druid,
+        type: Cocina::Models::ObjectType.image,
+        version: 1,
+        label: 'testing',
+        access: {},
+        administrative: {
+          hasAdminPolicy: apo_id
         },
-        'description' => {
-          'title' => [{ 'value' => 'Test obj' }],
-          'subject' => [{ 'type' => 'topic', 'value' => 'word' }],
-          'purl' => 'https://purl.stanford.edu/rt923jk3422'
+        description: {
+          title: [{ value: 'Test obj' }],
+          subject: [{ type: 'topic', value: 'word' }],
+          purl: 'https://purl.stanford.edu/rt923jk3422'
         },
-        'structural' => {
-          'contains' => [],
-          'isMemberOf' => []
+        structural: {
+          contains: [],
+          isMemberOf: []
         },
         identification: {}
       }
@@ -53,17 +53,17 @@ RSpec.describe CollectionTitleIndexer do
       let(:collection) do
         Cocina::Models.build(
           {
-            'externalIdentifier' => mock_rel_druid,
-            'type' => Cocina::Models::ObjectType.collection,
-            'version' => 1,
-            'label' => 'testing',
-            'administrative' => {
-              'hasAdminPolicy' => apo_id
+            externalIdentifier: mock_rel_druid,
+            type: Cocina::Models::ObjectType.collection,
+            version: 1,
+            label: 'testing',
+            administrative: {
+              hasAdminPolicy: apo_id
             },
-            'access' => {},
-            'description' => {
-              'title' => [{ 'value' => 'Test object' }],
-              'purl' => 'https://purl.stanford.edu/rt923jk3422'
+            access: {},
+            description: {
+              title: [{ value: 'Test object' }],
+              purl: 'https://purl.stanford.edu/rt923jk3422'
             },
             identification: {}
           }

@@ -41,8 +41,31 @@ RSpec/FilePath:
   Exclude:
     - 'spec/indexers/descriptive_metadata/*'
 
+RSpec/MultipleMemoizedHelpers:
+  Enabled: false
+
 RSpec/NestedGroups:
   Max: 5
+
+Style/HashSyntax:
+  Enabled: true
+  EnforcedStyle: ruby19
+
+Style/StringHashKeys:
+  Enabled: true
+  Exclude:
+    - 'app/indexers/**/*.rb'
+    - 'app/services/marc_country.rb'
+    - 'config/**/*'
+    - 'spec/indexers/descriptive_metadata/**/*'
+    - 'spec/indexers/content_metadata_indexer_spec.rb'
+    - 'spec/indexers/data_indexer_spec.rb'
+    - 'spec/indexers/data_quality_indexer_spec.rb'
+    - 'spec/indexers/fallback_indexer_spec.rb'
+    - 'spec/indexers/workflow_indexer_spec.rb'
+    - 'spec/indexers/workflows_indexer_spec.rb'
+    - 'spec/requests/dor_requests_spec.rb'
+    - 'spec/services/workflow_fields_spec.rb'
 
 Layout/BeginEndAlignment: # (new in 0.91)
   Enabled: true
@@ -358,4 +381,27 @@ RSpec/SubjectDeclaration: # new in 2.5
 RSpec/FactoryBot/SyntaxMethods: # new in 2.7
   Enabled: true
 RSpec/Rails/AvoidSetupHook: # new in 2.4
+  Enabled: true
+
+Style/NestedFileDirname: # new in 1.26
+  Enabled: true
+Rails/ActionControllerTestCase: # new in 2.14
+  Enabled: true
+Rails/DeprecatedActiveModelErrorsMethods: # new in 2.14
+  Enabled: true
+Rails/DuplicateAssociation: # new in 2.14
+  Enabled: true
+Rails/DuplicateScope: # new in 2.14
+  Enabled: true
+Rails/I18nLazyLookup: # new in 2.14
+  Enabled: true
+Rails/I18nLocaleTexts: # new in 2.14
+  Enabled: true
+Rails/MigrationClassName: # new in 2.14
+  Enabled: true
+Rails/TransactionExitStatement: # new in 2.14
+  Enabled: true
+RSpec/BeEq: # new in 2.9.0
+  Enabled: true
+RSpec/BeNil: # new in 2.9.0
   Enabled: true

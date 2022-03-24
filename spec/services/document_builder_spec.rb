@@ -11,6 +11,7 @@ RSpec.describe DocumentBuilder do
                     created_at: 'Wed, 01 Jan 2020 12:00:01 GMT')
   end
   let(:druid) { 'druid:xx999xx9999' }
+  # rubocop:disable Style/StringHashKeys
   let(:releasable) do
     instance_double(ReleasableIndexer, to_solr: { 'released_to_ssim' => %w[searchworks earthworks] })
   end
@@ -20,6 +21,7 @@ RSpec.describe DocumentBuilder do
   let(:admin_tags) do
     instance_double(AdministrativeTagIndexer, to_solr: { 'tag_ssim' => ['Test : Tag'] })
   end
+  # rubocop:enable Style/StringHashKeys
   let(:admin_tags_client) do
     instance_double(Dor::Services::Client::AdministrativeTags, list: [])
   end
@@ -29,7 +31,9 @@ RSpec.describe DocumentBuilder do
 
   before do
     allow(Dor::Services::Client).to receive(:object).and_return(object_client)
+    # rubocop:disable Style/StringHashKeys
     allow(WorkflowFields).to receive(:for).and_return({ 'milestones_ssim' => %w[foo bar] })
+    # rubocop:enable Style/StringHashKeys
     allow(ReleasableIndexer).to receive(:new).and_return(releasable)
     allow(WorkflowsIndexer).to receive(:new).and_return(workflows)
     allow(AdministrativeTagIndexer).to receive(:new).and_return(admin_tags)
@@ -39,21 +43,21 @@ RSpec.describe DocumentBuilder do
     let(:cocina) do
       Cocina::Models.build(
         {
-          'type' => Cocina::Models::ObjectType.object,
-          'structural' => {
+          type: Cocina::Models::ObjectType.object,
+          structural: {
             isMemberOf: collections
           },
-          'label' => 'Test DRO',
-          'version' => 1,
-          'description' => {
-            'title' => [{ 'value' => 'Test DRO' }],
-            'purl' => "https://purl.stanford.edu/#{druid.delete_prefix('druid:')}"
+          label: 'Test DRO',
+          version: 1,
+          description: {
+            title: [{ value: 'Test DRO' }],
+            purl: "https://purl.stanford.edu/#{druid.delete_prefix('druid:')}"
           },
-          'administrative' => {
+          administrative: {
             hasAdminPolicy: 'druid:gf999hb9999'
           },
-          'access' => {},
-          'externalIdentifier' => druid,
+          access: {},
+          externalIdentifier: druid,
           identification: {}
         }
       )
@@ -72,17 +76,17 @@ RSpec.describe DocumentBuilder do
       let(:related) do
         Cocina::Models.build(
           {
-            'externalIdentifier' => 'druid:bc999df2323',
-            'type' => Cocina::Models::ObjectType.collection,
-            'version' => 1,
-            'label' => 'testing',
-            'administrative' => {
-              'hasAdminPolicy' => 'druid:gf999hb9999'
+            externalIdentifier: 'druid:bc999df2323',
+            type: Cocina::Models::ObjectType.collection,
+            version: 1,
+            label: 'testing',
+            administrative: {
+              hasAdminPolicy: 'druid:gf999hb9999'
             },
-            'access' => {},
-            'description' => {
-              'title' => [{ 'value' => 'Test object' }],
-              'purl' => 'https://purl.stanford.edu/bc999df2323'
+            access: {},
+            description: {
+              title: [{ value: 'Test object' }],
+              purl: 'https://purl.stanford.edu/bc999df2323'
             },
             identification: {}
           }
@@ -121,15 +125,15 @@ RSpec.describe DocumentBuilder do
     let(:cocina) do
       Cocina::Models.build(
         {
-          'type' => Cocina::Models::ObjectType.admin_policy,
-          'label' => 'Test APO',
-          'version' => 1,
-          'administrative' => {
+          type: Cocina::Models::ObjectType.admin_policy,
+          label: 'Test APO',
+          version: 1,
+          administrative: {
             hasAdminPolicy: 'druid:gf999hb9999',
             hasAgreement: 'druid:bb033gt0615',
             accessTemplate: { view: 'world', download: 'world' }
           },
-          'externalIdentifier' => druid
+          externalIdentifier: druid
         }
       )
     end
@@ -141,18 +145,18 @@ RSpec.describe DocumentBuilder do
     let(:cocina) do
       Cocina::Models.build(
         {
-          'type' => Cocina::Models::ObjectType.collection,
-          'label' => 'Test Collection',
-          'version' => 1,
-          'description' => {
-            'title' => [{ 'value' => 'Test Collection' }],
-            'purl' => "https://purl.stanford.edu/#{druid.delete_prefix('druid:')}"
+          type: Cocina::Models::ObjectType.collection,
+          label: 'Test Collection',
+          version: 1,
+          description: {
+            title: [{ value: 'Test Collection' }],
+            purl: "https://purl.stanford.edu/#{druid.delete_prefix('druid:')}"
           },
-          'administrative' => {
+          administrative: {
             hasAdminPolicy: 'druid:gf999hb9999'
           },
-          'access' => {},
-          'externalIdentifier' => druid,
+          access: {},
+          externalIdentifier: druid,
           identification: {}
         }
       )
@@ -165,19 +169,19 @@ RSpec.describe DocumentBuilder do
     let(:cocina) do
       Cocina::Models.build(
         {
-          'type' => Cocina::Models::ObjectType.agreement,
-          'structural' => {},
-          'label' => 'Test Agreement',
-          'version' => 1,
-          'description' => {
-            'title' => [{ 'value' => 'Test Agreement' }],
-            'purl' => "https://purl.stanford.edu/#{druid.delete_prefix('druid:')}"
+          type: Cocina::Models::ObjectType.agreement,
+          structural: {},
+          label: 'Test Agreement',
+          version: 1,
+          description: {
+            title: [{ value: 'Test Agreement' }],
+            purl: "https://purl.stanford.edu/#{druid.delete_prefix('druid:')}"
           },
-          'administrative' => {
+          administrative: {
             hasAdminPolicy: 'druid:gf999hb9999'
           },
-          'access' => {},
-          'externalIdentifier' => druid,
+          access: {},
+          externalIdentifier: druid,
           identification: {}
         }
       )
@@ -194,18 +198,18 @@ RSpec.describe DocumentBuilder do
     let(:apo) do
       Cocina::Models.build(
         {
-          'externalIdentifier' => apo_id,
-          'type' => Cocina::Models::ObjectType.admin_policy,
-          'version' => 1,
-          'label' => 'testing',
-          'administrative' => {
-            'hasAdminPolicy' => 'druid:xx000xx0000',
-            'hasAgreement' => 'druid:bb033gt0615',
-            'accessTemplate' => { 'view' => 'world', 'download' => 'world' }
+          externalIdentifier: apo_id,
+          type: Cocina::Models::ObjectType.admin_policy,
+          version: 1,
+          label: 'testing',
+          administrative: {
+            hasAdminPolicy: 'druid:xx000xx0000',
+            hasAgreement: 'druid:bb033gt0615',
+            accessTemplate: { view: 'world', download: 'world' }
           },
-          'description' => {
-            'title' => [{ 'value' => 'APO title' }],
-            'purl' => 'https://purl.stanford.edu/bd999bd9999'
+          description: {
+            title: [{ value: 'APO title' }],
+            purl: 'https://purl.stanford.edu/bd999bd9999'
           }
         }
       )
@@ -222,57 +226,57 @@ RSpec.describe DocumentBuilder do
       let(:cocina) do
         Cocina::Models.build(
           {
-            'externalIdentifier' => druid,
-            'type' => Cocina::Models::ObjectType.image,
-            'version' => 1,
-            'label' => 'testing',
-            'access' => {},
-            'administrative' => {
-              'hasAdminPolicy' => apo_id
+            externalIdentifier: druid,
+            type: Cocina::Models::ObjectType.image,
+            version: 1,
+            label: 'testing',
+            access: {},
+            administrative: {
+              hasAdminPolicy: apo_id
             },
-            'description' => {
-              'title' => [{ 'value' => 'Test obj' }],
-              'purl' => 'https://purl.stanford.edu/bd999bd9999',
-              'subject' => [{ 'type' => 'topic', 'value' => 'word' }],
-              'event' => [
+            description: {
+              title: [{ value: 'Test obj' }],
+              purl: 'https://purl.stanford.edu/bd999bd9999',
+              subject: [{ type: 'topic', value: 'word' }],
+              event: [
                 {
-                  'type' => 'creation',
-                  'date' => [
+                  type: 'creation',
+                  date: [
                     {
-                      'value' => '2021-01-01',
-                      'status' => 'primary',
-                      'encoding' => {
-                        'code' => 'w3cdtf'
+                      value: '2021-01-01',
+                      status: 'primary',
+                      encoding: {
+                        code: 'w3cdtf'
                       },
-                      'type' => 'creation'
+                      type: 'creation'
                     }
                   ]
                 },
                 {
-                  'type' => 'publication',
-                  'location' => [
+                  type: 'publication',
+                  location: [
                     {
-                      'value' => 'Moskva'
+                      value: 'Moskva'
                     }
                   ],
-                  'contributor' => [
+                  contributor: [
                     {
-                      'name' => [
+                      name: [
                         {
-                          'value' => 'Izdatelʹstvo "Vesʹ Mir"'
+                          value: 'Izdatelʹstvo "Vesʹ Mir"'
                         }
                       ],
-                      'type' => 'organization',
-                      'role' => [{ 'value' => 'publisher' }]
+                      type: 'organization',
+                      role: [{ value: 'publisher' }]
                     }
                   ]
                 }
               ]
             },
-            'identification' => {
-              'catalogLinks' => [{ 'catalog' => 'symphony', 'catalogRecordId' => '1234' }]
-            },
-            structural: {}
+            structural: {},
+            identification: {
+              catalogLinks: [{ catalog: 'symphony', catalogRecordId: '1234' }]
+            }
           }
         )
       end
@@ -292,18 +296,18 @@ RSpec.describe DocumentBuilder do
       let(:cocina) do
         Cocina::Models.build(
           {
-            'externalIdentifier' => druid,
-            'type' => Cocina::Models::ObjectType.admin_policy,
-            'version' => 1,
-            'label' => 'testing',
-            'administrative' => {
-              'hasAdminPolicy' => apo_id,
-              'hasAgreement' => 'druid:bb033gt0615',
-              'accessTemplate' => { 'view' => 'world', 'download' => 'world' }
+            externalIdentifier: druid,
+            type: Cocina::Models::ObjectType.admin_policy,
+            version: 1,
+            label: 'testing',
+            administrative: {
+              hasAdminPolicy: apo_id,
+              hasAgreement: 'druid:bb033gt0615',
+              accessTemplate: { view: 'world', download: 'world' }
             },
-            'description' => {
-              'title' => [{ 'value' => 'Test obj' }],
-              'purl' => 'https://purl.stanford.edu/bd999bd9999'
+            description: {
+              title: [{ value: 'Test obj' }],
+              purl: 'https://purl.stanford.edu/bd999bd9999'
             }
           }
         )
@@ -318,18 +322,18 @@ RSpec.describe DocumentBuilder do
       let(:cocina) do
         Cocina::Models.build(
           {
-            'externalIdentifier' => druid,
-            'type' => Cocina::Models::ObjectType.admin_policy,
-            'version' => 1,
-            'label' => 'testing',
-            'administrative' => {
-              'hasAdminPolicy' => apo_id,
-              'hasAgreement' => 'druid:bb033gt0615',
-              'accessTemplate' => { 'view' => 'world', 'download' => 'world' }
+            externalIdentifier: druid,
+            type: Cocina::Models::ObjectType.admin_policy,
+            version: 1,
+            label: 'testing',
+            administrative: {
+              hasAdminPolicy: apo_id,
+              hasAgreement: 'druid:bb033gt0615',
+              accessTemplate: { view: 'world', download: 'world' }
             },
-            'description' => {
-              'title' => [{ 'value' => 'Test obj' }],
-              'purl' => 'https://purl.stanford.edu/bd999bd9999'
+            description: {
+              title: [{ value: 'Test obj' }],
+              purl: 'https://purl.stanford.edu/bd999bd9999'
             }
           }
         )

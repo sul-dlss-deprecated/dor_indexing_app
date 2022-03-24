@@ -20,7 +20,9 @@ RSpec.describe AdministrativeTagIndexer do
     end
 
     it 'indexes all administrative tags' do
+      # rubocop:disable Style/StringHashKeys
       expect(document).to include('tag_ssim' => tags)
+      # rubocop:enable Style/StringHashKeys
     end
 
     it 'indexes exploded tags' do
@@ -45,10 +47,12 @@ RSpec.describe AdministrativeTagIndexer do
     end
 
     it 'indexes prefixed tags' do
+      # rubocop:disable Style/StringHashKeys
       expect(document).to include(
         'project_tag_ssim' => ['Beautiful Books'],
         'registered_by_tag_ssim' => ['blalbrit']
       )
+      # rubocop:enable Style/StringHashKeys
     end
   end
 end

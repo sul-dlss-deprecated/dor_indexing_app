@@ -387,6 +387,7 @@ RSpec.describe DescriptiveMetadataIndexer do
   end
 
   describe '#to_solr' do
+    # rubocop:disable Style/StringHashKeys
     it 'populates expected fields' do
       expect(doc).to eq(
         'metadata_format_ssim' => 'mods',
@@ -405,6 +406,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         'topic_tesim' => %w[cats Economics]
       )
     end
+    # rubocop:enable Style/StringHashKeys
 
     it 'does not include empty values' do
       doc.keys.sort_by(&:to_s).each do |k|
@@ -455,10 +457,12 @@ RSpec.describe DescriptiveMetadataIndexer do
       end
 
       it 'populates expected fields' do
+        # rubocop:disable Style/StringHashKeys
         expect(doc).to eq(
           'metadata_format_ssim' => 'mods',
           'sw_display_title_tesim' => 'Toldot ha-Yehudim be-artsot ha-Islam : ha-ʻet ha-ḥadashah-ʻad emtsaʻ ha-meʼah ha-19'
         )
+        # rubocop:enable Style/StringHashKeys
       end
     end
   end

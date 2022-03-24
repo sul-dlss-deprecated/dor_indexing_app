@@ -16,28 +16,29 @@ RSpec.describe RightsMetadataIndexer do
     let(:cocina) do
       Cocina::Models.build(
         {
-          'externalIdentifier' => 'druid:rt923jk3429',
-          'type' => Cocina::Models::ObjectType.collection,
-          'version' => 1,
-          'label' => 'testing',
-          'access' => {
-            'view' => access,
-            'license' => license,
-            'copyright' => 'Copyright © World Trade Organization',
-            'useAndReproductionStatement' => 'Official WTO documents are free for public use.'
+          externalIdentifier: 'druid:rt923jk3429',
+          type: Cocina::Models::ObjectType.collection,
+          version: 1,
+          label: 'testing',
+          access: {
+            view: access,
+            license: license,
+            copyright: 'Copyright © World Trade Organization',
+            useAndReproductionStatement: 'Official WTO documents are free for public use.'
           },
-          'administrative' => {
-            'hasAdminPolicy' => 'druid:xx000xx0000'
+          administrative: {
+            hasAdminPolicy: 'druid:xx000xx0000'
           },
-          'description' => {
-            'title' => [{ 'value' => 'Test obj' }],
-            'purl' => 'https://purl.stanford.edu/rt923jk3429'
+          description: {
+            title: [{ value: 'Test obj' }],
+            purl: 'https://purl.stanford.edu/rt923jk3429'
           },
           identification: {}
         }
       )
     end
 
+    # rubocop:disable Style/StringHashKeys
     context 'with world access' do
       let(:access) { 'world' }
 
@@ -64,24 +65,25 @@ RSpec.describe RightsMetadataIndexer do
       end
     end
   end
+  # rubocop:enable Style/StringHashKeys
 
   context 'with an item' do
     let(:cocina) do
       Cocina::Models.build(
         {
-          'externalIdentifier' => 'druid:rt923jk3429',
-          'type' => Cocina::Models::ObjectType.image,
-          'version' => 1,
-          'label' => 'testing',
-          'access' => access,
-          'administrative' => {
-            'hasAdminPolicy' => 'druid:xx000xx0000'
+          externalIdentifier: 'druid:rt923jk3429',
+          type: Cocina::Models::ObjectType.image,
+          version: 1,
+          label: 'testing',
+          access: access,
+          administrative: {
+            hasAdminPolicy: 'druid:xx000xx0000'
           },
-          'description' => {
-            'title' => [{ 'value' => 'Test obj' }],
-            'purl' => 'https://purl.stanford.edu/rt923jk3429'
+          description: {
+            title: [{ value: 'Test obj' }],
+            purl: 'https://purl.stanford.edu/rt923jk3429'
           },
-          'structural' => structural,
+          structural: structural,
           identification: {}
         }
       )
@@ -89,14 +91,15 @@ RSpec.describe RightsMetadataIndexer do
     let(:structural) { {} }
     let(:access) do
       {
-        'view' => 'world',
-        'download' => 'world',
-        'license' => license,
-        'copyright' => 'Copyright © World Trade Organization',
-        'useAndReproductionStatement' => 'Official WTO documents are free for public use.'
+        view: 'world',
+        download: 'world',
+        license: license,
+        copyright: 'Copyright © World Trade Organization',
+        useAndReproductionStatement: 'Official WTO documents are free for public use.'
       }
     end
 
+    # rubocop:disable Style/StringHashKeys
     it 'has the fields used by argo' do
       expect(doc).to include(
         'copyright_ssim' => 'Copyright © World Trade Organization',
@@ -105,6 +108,7 @@ RSpec.describe RightsMetadataIndexer do
         'rights_descriptions_ssim' => ['world']
       )
     end
+    # rubocop:enable Style/StringHashKeys
 
     describe 'rights descriptions' do
       subject { doc['rights_descriptions_ssim'] }
@@ -155,15 +159,15 @@ RSpec.describe RightsMetadataIndexer do
       context 'when citation only' do
         let(:access) do
           {
-            'view' => 'citation-only',
-            'download' => 'none'
+            view: 'citation-only',
+            download: 'none'
           }
         end
 
         let(:file_access) do
           {
-            'view' => 'dark',
-            'download' => 'none'
+            view: 'dark',
+            download: 'none'
           }
         end
 
@@ -173,17 +177,17 @@ RSpec.describe RightsMetadataIndexer do
       context 'when controlled digital lending' do
         let(:access) do
           {
-            'view' => 'stanford',
-            'download' => 'none',
-            'controlledDigitalLending' => true
+            view: 'stanford',
+            download: 'none',
+            controlledDigitalLending: true
           }
         end
 
         let(:file_access) do
           {
-            'view' => 'stanford',
-            'download' => 'none',
-            'controlledDigitalLending' => false
+            view: 'stanford',
+            download: 'none',
+            controlledDigitalLending: false
           }
         end
 
@@ -193,15 +197,15 @@ RSpec.describe RightsMetadataIndexer do
       context 'when dark' do
         let(:access) do
           {
-            'view' => 'dark',
-            'download' => 'none'
+            view: 'dark',
+            download: 'none'
           }
         end
 
         let(:file_access) do
           {
-            'view' => 'dark',
-            'download' => 'none'
+            view: 'dark',
+            download: 'none'
           }
         end
 
@@ -212,17 +216,17 @@ RSpec.describe RightsMetadataIndexer do
         context 'when downloadable' do
           let(:access) do
             {
-              'view' => 'location-based',
-              'download' => 'location-based',
-              'location' => 'spec'
+              view: 'location-based',
+              download: 'location-based',
+              location: 'spec'
             }
           end
 
           let(:file_access) do
             {
-              'view' => 'location-based',
-              'download' => 'location-based',
-              'location' => 'spec'
+              view: 'location-based',
+              download: 'location-based',
+              location: 'spec'
             }
           end
 
@@ -232,17 +236,17 @@ RSpec.describe RightsMetadataIndexer do
         context 'when not downloadable' do
           let(:access) do
             {
-              'view' => 'location-based',
-              'download' => 'none',
-              'location' => 'spec'
+              view: 'location-based',
+              download: 'none',
+              location: 'spec'
             }
           end
 
           let(:file_access) do
             {
-              'view' => 'location-based',
-              'download' => 'none',
-              'location' => 'spec'
+              view: 'location-based',
+              download: 'none',
+              location: 'spec'
             }
           end
 
@@ -253,17 +257,17 @@ RSpec.describe RightsMetadataIndexer do
       context 'when world readable and location download' do
         let(:access) do
           {
-            'view' => 'world',
-            'download' => 'location-based',
-            'location' => 'spec'
+            view: 'world',
+            download: 'location-based',
+            location: 'spec'
           }
         end
 
         let(:file_access) do
           {
-            'view' => 'world',
-            'download' => 'location-based',
-            'location' => 'spec'
+            view: 'world',
+            download: 'location-based',
+            location: 'spec'
           }
         end
 
@@ -273,17 +277,17 @@ RSpec.describe RightsMetadataIndexer do
       context 'when stanford readable and location download' do
         let(:access) do
           {
-            'view' => 'stanford',
-            'download' => 'location-based',
-            'location' => 'spec'
+            view: 'stanford',
+            download: 'location-based',
+            location: 'spec'
           }
         end
 
         let(:file_access) do
           {
-            'view' => 'stanford',
-            'download' => 'location-based',
-            'location' => 'spec'
+            view: 'stanford',
+            download: 'location-based',
+            location: 'spec'
           }
         end
 
@@ -293,15 +297,15 @@ RSpec.describe RightsMetadataIndexer do
       context 'when world readable and no-download' do
         let(:access) do
           {
-            'view' => 'world',
-            'download' => 'none'
+            view: 'world',
+            download: 'none'
           }
         end
 
         let(:file_access) do
           {
-            'view' => 'world',
-            'download' => 'none'
+            view: 'world',
+            download: 'none'
           }
         end
 
@@ -311,17 +315,17 @@ RSpec.describe RightsMetadataIndexer do
       context 'when stanford readable and no-download' do
         let(:access) do
           {
-            'view' => 'stanford',
-            'download' => 'none',
-            'controlledDigitalLending' => false
+            view: 'stanford',
+            download: 'none',
+            controlledDigitalLending: false
           }
         end
 
         let(:file_access) do
           {
-            'view' => 'stanford',
-            'download' => 'none',
-            'controlledDigitalLending' => false
+            view: 'stanford',
+            download: 'none',
+            controlledDigitalLending: false
           }
         end
 
@@ -332,8 +336,8 @@ RSpec.describe RightsMetadataIndexer do
         # via https://argo.stanford.edu/view/druid:hz651dj0129
         let(:access) do
           {
-            'view' => 'stanford',
-            'download' => 'stanford'
+            view: 'stanford',
+            download: 'stanford'
           }
         end
 
@@ -393,8 +397,8 @@ RSpec.describe RightsMetadataIndexer do
         end
         let(:access) do
           {
-            'view' => 'stanford',
-            'download' => 'stanford'
+            view: 'stanford',
+            download: 'stanford'
           }
         end
 
@@ -455,8 +459,8 @@ RSpec.describe RightsMetadataIndexer do
 
         let(:access) do
           {
-            'view' => 'citation-only',
-            'download' => 'none'
+            view: 'citation-only',
+            download: 'none'
           }
         end
 
@@ -516,8 +520,8 @@ RSpec.describe RightsMetadataIndexer do
         end
         let(:access) do
           {
-            'view' => 'world',
-            'download' => 'none'
+            view: 'world',
+            download: 'none'
           }
         end
 
@@ -578,8 +582,8 @@ RSpec.describe RightsMetadataIndexer do
         end
         let(:access) do
           {
-            'view' => 'world',
-            'download' => 'stanford'
+            view: 'world',
+            download: 'stanford'
           }
         end
 
@@ -596,8 +600,8 @@ RSpec.describe RightsMetadataIndexer do
       context 'when file level access has a read location' do
         let(:access) do
           {
-            'view' => 'citation-only',
-            'download' => 'none'
+            view: 'citation-only',
+            download: 'none'
           }
         end
 
@@ -615,8 +619,8 @@ RSpec.describe RightsMetadataIndexer do
       context 'when file level access has stanford and a download location' do
         let(:access) do
           {
-            'view' => 'citation-only',
-            'download' => 'none'
+            view: 'citation-only',
+            download: 'none'
           }
         end
 
@@ -634,8 +638,8 @@ RSpec.describe RightsMetadataIndexer do
       context 'when file level access has world and a download location' do
         let(:access) do
           {
-            'view' => 'citation-only',
-            'download' => 'none'
+            view: 'citation-only',
+            download: 'none'
           }
         end
 
@@ -653,8 +657,8 @@ RSpec.describe RightsMetadataIndexer do
       context 'when file level access has world and stanford download' do
         let(:access) do
           {
-            'view' => 'citation-only',
-            'download' => 'none'
+            view: 'citation-only',
+            download: 'none'
           }
         end
 

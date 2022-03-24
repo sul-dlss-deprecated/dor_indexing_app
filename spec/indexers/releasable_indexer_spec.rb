@@ -8,19 +8,19 @@ RSpec.describe ReleasableIndexer do
   let(:cocina) do
     Cocina::Models.build(
       {
-        'externalIdentifier' => 'druid:pz263ny9658',
-        'type' => Cocina::Models::ObjectType.image,
-        'version' => 1,
-        'label' => 'testing',
-        'access' => {},
-        'administrative' => administrative,
-        'description' => {
-          'title' => [{ 'value' => 'Test obj' }],
-          'purl' => 'https://purl.stanford.edu/pz263ny9658'
+        externalIdentifier: 'druid:pz263ny9658',
+        type: Cocina::Models::ObjectType.image,
+        version: 1,
+        label: 'testing',
+        access: {},
+        administrative: administrative,
+        description: {
+          title: [{ value: 'Test obj' }],
+          purl: 'https://purl.stanford.edu/pz263ny9658'
         },
-        'structural' => {},
-        'identification' => {
-          'catalogLinks' => [{ 'catalog' => 'symphony', 'catalogRecordId' => '1234' }]
+        structural: {},
+        identification: {
+          catalogLinks: [{ catalog: 'symphony', catalogRecordId: '1234' }]
         }
       }
     )
@@ -35,27 +35,29 @@ RSpec.describe ReleasableIndexer do
       context 'when releaseTags are present' do
         let(:administrative) do
           {
-            'hasAdminPolicy' => apo_id,
-            'releaseTags' => [
-              { 'to' => 'Project', 'release' => true, 'date' => '2016-11-16T22:52:35.000+00:00' },
-              { 'to' => 'Project', 'release' => false, 'date' => '2016-12-21T17:31:18.000+00:00' },
-              { 'to' => 'Project', 'release' => true, 'date' => '2021-05-12T21:05:21.000+00:00' },
-              { 'to' => 'test_target', 'release' => true },
-              { 'to' => 'test_nontarget', 'release' => false, 'date' => '2016-12-16T22:52:35.000+00:00' },
-              { 'to' => 'test_nontarget', 'release' => true, 'date' => '2016-11-16T22:52:35.000+00:00' }
+            hasAdminPolicy: apo_id,
+            releaseTags: [
+              { to: 'Project', release: true, date: '2016-11-16T22:52:35.000+00:00' },
+              { to: 'Project', release: false, date: '2016-12-21T17:31:18.000+00:00' },
+              { to: 'Project', release: true, date: '2021-05-12T21:05:21.000+00:00' },
+              { to: 'test_target', release: true },
+              { to: 'test_nontarget', release: false, date: '2016-12-16T22:52:35.000+00:00' },
+              { to: 'test_nontarget', release: true, date: '2016-11-16T22:52:35.000+00:00' }
             ]
           }
         end
 
         it 'indexes release tags' do
+          # rubocop:disable Style/StringHashKeys
           expect(doc).to eq('released_to_ssim' => %w[Project test_target])
+          # rubocop:enable Style/StringHashKeys
         end
       end
 
       context 'when releaseTags are not present' do
         let(:administrative) do
           {
-            'hasAdminPolicy' => apo_id
+            hasAdminPolicy: apo_id
           }
         end
 
@@ -75,56 +77,60 @@ RSpec.describe ReleasableIndexer do
 
       let(:administrative) do
         {
-          'hasAdminPolicy' => apo_id
+          hasAdminPolicy: apo_id
         }
       end
 
       context 'when the parent collection has releaseTags' do
         let(:collection_release_tags) do
           [
-            Cocina::Models::ReleaseTag.new('to' => 'Project', 'release' => true, 'date' => '2016-11-16T22:52:35.000+00:00', what: 'self'),
-            Cocina::Models::ReleaseTag.new('to' => 'test_target', 'release' => true, 'date' => '2016-12-21T17:31:18.000+00:00', what: 'collection')
+            Cocina::Models::ReleaseTag.new(to: 'Project', release: true, date: '2016-11-16T22:52:35.000+00:00', what: 'self'),
+            Cocina::Models::ReleaseTag.new(to: 'test_target', release: true, date: '2016-12-21T17:31:18.000+00:00', what: 'collection')
           ]
         end
 
         it 'indexes release tags' do
+          # rubocop:disable Style/StringHashKeys
           expect(doc).to eq('released_to_ssim' => %w[test_target])
+          # rubocop:enable Style/StringHashKeys
         end
       end
 
       context 'when the parent collection has releaseTags and the item has the same' do
         let(:collection_release_tags) do
           [
-            Cocina::Models::ReleaseTag.new('to' => 'Project', 'release' => true, 'date' => '2016-11-16T22:52:35.000+00:00', what: 'self'),
-            Cocina::Models::ReleaseTag.new('to' => 'test_target', 'release' => true, 'date' => '2016-12-21T17:31:18.000+00:00', what: 'collection')
+            Cocina::Models::ReleaseTag.new(to: 'Project', release: true, date: '2016-11-16T22:52:35.000+00:00', what: 'self'),
+            Cocina::Models::ReleaseTag.new(to: 'test_target', release: true, date: '2016-12-21T17:31:18.000+00:00', what: 'collection')
           ]
         end
         let(:administrative) do
           {
-            'hasAdminPolicy' => apo_id,
-            'releaseTags' => [
-              { 'to' => 'test_target', 'release' => true }
+            hasAdminPolicy: apo_id,
+            releaseTags: [
+              { to: 'test_target', release: true }
             ]
           }
         end
 
         it 'indexes release tags' do
+          # rubocop:disable Style/StringHashKeys
           expect(doc).to eq('released_to_ssim' => %w[test_target])
+          # rubocop:enable Style/StringHashKeys
         end
       end
 
       context 'when the parent collection has release true and item has release false' do
         let(:collection_release_tags) do
           [
-            Cocina::Models::ReleaseTag.new('to' => 'Project', 'release' => true, 'date' => '2016-11-16T22:52:35.000+00:00', what: 'self'),
-            Cocina::Models::ReleaseTag.new('to' => 'test_target', 'release' => true, 'date' => '2016-12-21T17:31:18.000+00:00', what: 'collection')
+            Cocina::Models::ReleaseTag.new(to: 'Project', release: true, date: '2016-11-16T22:52:35.000+00:00', what: 'self'),
+            Cocina::Models::ReleaseTag.new(to: 'test_target', release: true, date: '2016-12-21T17:31:18.000+00:00', what: 'collection')
           ]
         end
         let(:administrative) do
           {
-            'hasAdminPolicy' => apo_id,
-            'releaseTags' => [
-              { 'to' => 'test_target', 'release' => false }
+            hasAdminPolicy: apo_id,
+            releaseTags: [
+              { to: 'test_target', release: false }
             ]
           }
         end
