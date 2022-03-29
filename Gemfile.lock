@@ -135,8 +135,6 @@ GEM
       capistrano-one_time_key
       capistrano-shared_configs
     docile (1.4.0)
-    domain_name (0.5.20190701)
-      unf (>= 0.0.5, < 1.0.0)
     dor-services-client (10.1.0)
       activesupport (>= 4.2, < 8)
       cocina-models (~> 0.76.0)
@@ -204,11 +202,6 @@ GEM
       activesupport (>= 5.0)
     hashdiff (1.0.1)
     honeybadger (4.12.1)
-    hooks (0.4.1)
-      uber (~> 0.0.14)
-    http-accept (1.7.0)
-    http-cookie (1.0.4)
-      domain_name (~> 0.5)
     i18n (1.10.0)
       concurrent-ruby (~> 1.0)
     ice_nine (0.11.2)
@@ -226,9 +219,6 @@ GEM
     marc-vocab (0.3.0)
     marcel (1.0.2)
     method_source (1.0.0)
-    mime-types (3.4.1)
-      mime-types-data (~> 3.2015)
-    mime-types-data (3.2022.0105)
     mini_mime (1.1.2)
     minitest (5.15.0)
     msgpack (1.5.1)
@@ -249,7 +239,6 @@ GEM
       net-protocol
       timeout
     net-ssh (6.1.0)
-    netrc (0.11.0)
     newrelic_rpm (8.6.0)
     nio4r (2.5.8)
     nokogiri (1.13.4-x86_64-darwin)
@@ -309,11 +298,6 @@ GEM
       ffi (~> 1.0)
     rbtree (0.4.5)
     regexp_parser (2.3.1)
-    rest-client (2.1.0)
-      http-accept (>= 1.7.0, < 2.0)
-      http-cookie (>= 1.0.2, < 2.0)
-      mime-types (>= 1.16, < 4.0)
-      netrc (~> 0.8)
     rexml (3.2.5)
     rsolr (2.5.0)
       builder (>= 2.1.2)
@@ -363,15 +347,6 @@ GEM
       rubocop (~> 1.19)
     ruby-progressbar (1.11.0)
     ruby2_keywords (0.0.5)
-    rubydora (2.1.0)
-      activemodel (>= 4.2.10)
-      activesupport
-      deprecation
-      equivalent-xml
-      hooks (~> 0.3)
-      mime-types
-      nokogiri
-      rest-client
     serverengine (2.0.7)
       sigdump (~> 0.2.2)
     set (1.0.2)
@@ -407,10 +382,6 @@ GEM
     timeout (0.2.0)
     tzinfo (2.0.4)
       concurrent-ruby (~> 1.0)
-    uber (0.0.15)
-    unf (0.1.4)
-      unf_ext
-    unf_ext (0.0.8.1)
     unicode-display_width (2.1.0)
     webmock (3.14.0)
       addressable (>= 2.8.0)
@@ -465,7 +436,6 @@ DEPENDENCIES
   rubocop-performance
   rubocop-rails
   rubocop-rspec
-  rubydora
   simplecov
   sneakers (~> 2.11)
   solrizer

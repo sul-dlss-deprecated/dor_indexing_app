@@ -10,7 +10,7 @@ class DorController < ApplicationController
     cocina_with_metadata = indexer.fetch_model_with_metadata
     reindex_object(cocina_with_metadata)
     render status: :ok, plain: "Successfully updated index for #{params[:id]}"
-  rescue Dor::Services::Client::NotFoundResponse, Rubydora::RecordNotFound
+  rescue Dor::Services::Client::NotFoundResponse
     render status: :not_found, plain: 'Object does not exist in the repository'
   end
 
