@@ -1,23 +1,20 @@
 # frozen_string_literal: true
 
-# Reindexes an object given a druid
+# Reindexes an object given a druid.
+# This worker will connect to "dor.indexing-by-druid" queue. This queue is populated when
+# the workflow service makes new RabbitMQ messages on the sdr.workflow exchange.
+# @see https://github.com/sul-dlss/dor_indexing_app/blob/8546e8aabb76d506fe3f5f5ea43ae499a442d75f/lib/tasks/rabbitmq.rake#L20-L21
 class ReindexByDruidJob
   include Sneakers::Worker
-  # This worker will connect to "dor.indexing-by-druid" queue
-  # env is set to nil since by default the actual queue name would be
-  # "dor.indexing-by-druid_development"
+
+  # env is set to nil since by default the queue name would be "dor.indexing-by-druid_development"
   from_queue 'dor.indexing-by-druid', env: nil
 
   def work(msg)
     druid = druid_from_message(msg)
     # Since we don't have the metadata (namely created_at) in the message,
     # we need another API call. :(
-    indexer = Indexer.new(solr: solr, identifier: druid)
-    cocina_with_metadata = indexer.fetch_model_with_metadata
-    indexer.reindex(
-      add_attributes: { commitWithin: 1000 },
-      cocina_with_metadata: cocina_with_metadata
-    )
+    Indexer.new(solr: solr, identifier: druid).load_and_index
     ack!
   rescue Dor::Services::Client::NotFoundResponse, Rubydora::RecordNotFound
     Honeybadger.notify('Cannot reindex since not found. This may be because applications (e.g., PresCat) are creating workflow steps for deleted objects.',

@@ -10,13 +10,8 @@ Daemons.run_proc('rolling index') do
     solr_conn = RSolr.connect(timeout: 120, open_timeout: 120, url: Settings.solrizer_url)
     response = solr_conn.get 'select', params: QUERY
     response['response']['docs'].each do |doc|
-      puts "Doc #{doc}"
       indexer = Indexer.new(solr: solr_conn, identifier: doc['id'])
-      cocina_with_metadata = indexer.fetch_model_with_metadata
-      indexer.reindex(
-        add_attributes: { commitWithin: 1000 },
-        cocina_with_metadata: cocina_with_metadata
-      )
+      indexer.load_and_index
     end
     sleep(5) # This was just a wild guess.  We can turn this up/down as necessary.
   end

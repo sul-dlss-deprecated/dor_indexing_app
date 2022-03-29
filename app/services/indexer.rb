@@ -12,6 +12,19 @@ class Indexer
     Honeybadger.context({ identifier: identifier })
   end
 
+  def load_and_index
+    cocina_with_metadata = fetch_model_with_metadata
+    if cocina_with_metadata.success?
+      reindex(
+        add_attributes: { commitWithin: 1000 },
+        cocina_with_metadata: cocina_with_metadata
+      )
+    else
+      Honeybadger.notify("Didn't get an expected response from dor-services-app",
+                         { druid: identifier, failure: cocina_with_metadata.failure })
+    end
+  end
+
   # Indexes the provided Cocina object to solr
   # NOTE: this doesn't commit automatically
   def reindex(add_attributes:, cocina_with_metadata:)
@@ -36,6 +49,7 @@ class Indexer
   end
 
   # @returns [Success,Failure] the result of finding the model with metadata
+  # @raises [Dor::Services::Client::NotFoundResponse] if the model isn't found
   def fetch_model_with_metadata
     cocina_with_metadata = nil
     # benchmark how long it takes to load the object
