@@ -76,20 +76,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /dor/reindex_from_cocina/{pid}:
+  /dor/reindex_from_cocina:
     put:
       tags:
         - indexing
       summary: Reindex a repository object using Cocina JSON provided by the caller
       description: ''
       operationId: 'dor#reindex_from_cocina'
-      parameters:
-        - name: pid
-          in: path
-          description: 'a digital repository identifier'
-          required: true
-          schema:
-            $ref: '#/components/schemas/Druid'
       requestBody:
         required: false
         content:
@@ -103,7 +96,7 @@ paths:
               properties:
                 cocina_object:
                   description: JSON serialization of the Cocina object.  to be used, created_at and updated_at must also be provided.
-                  type: string
+                  type: object
                 created_at:
                   description: the creation date of the Cocina object
                   type: string
