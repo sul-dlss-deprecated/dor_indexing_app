@@ -58,7 +58,7 @@ RSpec.describe DocumentBuilder do
           },
           access: {},
           externalIdentifier: druid,
-          identification: {}
+          identification: { sourceId: 'sul:1234' }
         }
       )
     end
@@ -88,7 +88,7 @@ RSpec.describe DocumentBuilder do
               title: [{ value: 'Test object' }],
               purl: 'https://purl.stanford.edu/bc999df2323'
             },
-            identification: {}
+            identification: { sourceId: 'sul:1234' }
           }
         )
       end
@@ -157,7 +157,7 @@ RSpec.describe DocumentBuilder do
           },
           access: {},
           externalIdentifier: druid,
-          identification: {}
+          identification: { sourceId: 'sul:1234' }
         }
       )
     end
@@ -182,7 +182,7 @@ RSpec.describe DocumentBuilder do
           },
           access: {},
           externalIdentifier: druid,
-          identification: {}
+          identification: { sourceId: 'sul:1234' }
         }
       )
     end
@@ -275,7 +275,8 @@ RSpec.describe DocumentBuilder do
             },
             structural: {},
             identification: {
-              catalogLinks: [{ catalog: 'symphony', catalogRecordId: '1234' }]
+              catalogLinks: [{ catalog: 'symphony', catalogRecordId: '1234' }],
+              sourceId: 'sul:1234'
             }
           }
         )

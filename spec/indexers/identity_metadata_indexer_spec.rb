@@ -63,18 +63,18 @@ RSpec.describe IdentityMetadataIndexer do
 
     context 'with an agreement' do
       let(:type) { Cocina::Models::ObjectType.agreement }
-      let(:identification) { {} }
+      let(:identification) { { sourceId: 'sul:1234' } }
 
       # rubocop:disable Style/StringHashKeys
       it 'has the fields used by argo' do
         expect(doc).to include(
           'barcode_id_ssim' => [],
           'catkey_id_ssim' => [],
-          'dor_id_tesim' => [],
-          'identifier_ssim' => [],
-          'identifier_tesim' => [],
+          'dor_id_tesim' => ['1234'],
+          'identifier_ssim' => ['sul:1234'],
+          'identifier_tesim' => ['sul:1234'],
           'objectType_ssim' => ['agreement'],
-          'source_id_ssim' => []
+          'source_id_ssim' => ['sul:1234']
         )
       end
       # rubocop:enable Style/StringHashKeys

@@ -25,7 +25,7 @@ RSpec.describe CollectionTitleIndexer do
           contains: [],
           isMemberOf: []
         },
-        identification: {}
+        identification: { sourceId: 'sul:1234' }
       }
     )
   end
@@ -65,7 +65,7 @@ RSpec.describe CollectionTitleIndexer do
               title: [{ value: 'Test object' }],
               purl: 'https://purl.stanford.edu/rt923jk3422'
             },
-            identification: {}
+            identification: { sourceId: 'sul:1234' }
           }
         )
       end
