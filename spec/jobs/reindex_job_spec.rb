@@ -17,7 +17,7 @@ RSpec.describe ReindexJob do
                             },
                             access: {},
                             administrative: { hasAdminPolicy: 'druid:xx999xx9999' },
-                            identification: {},
+                            identification: { sourceId: 'sul:1234' },
                             structural: {})
   end
 

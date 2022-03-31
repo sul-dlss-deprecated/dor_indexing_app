@@ -31,7 +31,8 @@ RSpec.describe IdentifiableIndexer do
   end
   let(:identification) do
     {
-      catalogLinks: [{ catalog: 'symphony', catalogRecordId: '1234' }]
+      catalogLinks: [{ catalog: 'symphony', catalogRecordId: '1234' }],
+      sourceId: 'sul:1234'
     }
   end
 
@@ -109,7 +110,7 @@ RSpec.describe IdentifiableIndexer do
               title: [{ value: 'Test object' }],
               purl: 'https://purl.stanford.edu/rt923jk3422'
             },
-            identification: {}
+            identification: { sourceId: 'sul:1234' }
           }
         )
       end
@@ -127,7 +128,7 @@ RSpec.describe IdentifiableIndexer do
     end
 
     context 'without catalogLinks' do
-      let(:identification) { {} }
+      let(:identification) { { sourceId: 'sul:1234' } }
 
       it 'indexes metadata source' do
         # rubocop:disable Style/StringHashKeys
@@ -154,7 +155,7 @@ RSpec.describe IdentifiableIndexer do
               purl: 'https://purl.stanford.edu/rt923jk3422'
             },
             structural: {},
-            identification: {}
+            identification: { sourceId: 'sul:1234' }
           }
         )
       end

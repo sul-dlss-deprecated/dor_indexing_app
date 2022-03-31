@@ -15,7 +15,7 @@ RSpec.describe DataIndexer do
                             access: {},
                             administrative: { hasAdminPolicy: 'druid:vv888vv8888' },
                             structural: structural,
-                            identification: {})
+                            identification: { sourceId: 'sul:1234' })
   end
 
   before do

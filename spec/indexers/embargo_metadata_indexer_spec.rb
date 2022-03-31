@@ -32,7 +32,7 @@ RSpec.describe EmbargoMetadataIndexer do
           title: [{ value: 'embargo indexing object' }],
           purl: 'https://purl.stanford.edu/zz666yy9999'
         },
-        identification: {},
+        identification: { sourceId: 'sul:1234' },
         structural: {}
       }
     )
@@ -88,7 +88,7 @@ RSpec.describe EmbargoMetadataIndexer do
               title: [{ value: 'embargo indexing object' }],
               purl: 'https://purl.stanford.edu/zz666yy9999'
             },
-            identification: {},
+            identification: { sourceId: 'sul:1234' },
             structural: {}
           }
         )
