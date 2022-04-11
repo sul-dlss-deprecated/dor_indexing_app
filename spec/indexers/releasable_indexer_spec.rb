@@ -20,7 +20,7 @@ RSpec.describe ReleasableIndexer do
         },
         structural: {},
         identification: {
-          catalogLinks: [{ catalog: 'symphony', catalogRecordId: '1234' }],
+          catalogLinks: [{ catalog: 'symphony', catalogRecordId: '1234', refresh: true }],
           sourceId: 'sul:1234'
         }
       }
