@@ -37,7 +37,8 @@ RSpec.describe IdentityMetadataIndexer do
           catalogLinks: [
             {
               catalog: 'symphony',
-              catalogRecordId: '129483625'
+              catalogRecordId: '129483625',
+              refresh: true
             }
           ],
           barcode: '36105049267078'
@@ -106,7 +107,8 @@ RSpec.describe IdentityMetadataIndexer do
           catalogLinks: [
             {
               catalog: 'symphony',
-              catalogRecordId: '129483625'
+              catalogRecordId: '129483625',
+              refresh: true
             }
           ]
         }
