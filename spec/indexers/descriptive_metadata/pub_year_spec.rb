@@ -78,8 +78,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         {
           title: [
             {
-              value: 'pub dates are fun',
-              type: 'main title'
+              value: 'pub dates are fun'
             }
           ],
           event: [
@@ -117,8 +116,7 @@ RSpec.describe DescriptiveMetadataIndexer do
           {
             title: [
               {
-                value: 'pub dates are fun',
-                type: 'main title'
+                value: 'pub dates are fun'
               }
             ],
             event: [
@@ -205,8 +203,7 @@ RSpec.describe DescriptiveMetadataIndexer do
             {
               structuredValue: [
                 {
-                  value: 'Work & social justice',
-                  type: 'main title'
+                  value: 'Work & social justice'
                 }
               ]
             }
@@ -251,8 +248,7 @@ RSpec.describe DescriptiveMetadataIndexer do
           {
             title: [
               {
-                value: 'pub dates are fun',
-                type: 'main title'
+                value: 'pub dates are fun'
               }
             ],
             event: [
@@ -497,8 +493,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         {
           title: [
             {
-              value: 'pub dates are fun',
-              type: 'main title'
+              value: 'pub dates are fun'
             }
           ],
           event: [
@@ -539,8 +534,7 @@ RSpec.describe DescriptiveMetadataIndexer do
           {
             title: [
               {
-                value: 'pub dates are fun',
-                type: 'main title'
+                value: 'pub dates are fun'
               }
             ],
             event: [
@@ -627,8 +621,7 @@ RSpec.describe DescriptiveMetadataIndexer do
             {
               structuredValue: [
                 {
-                  value: 'Work & social justice',
-                  type: 'main title'
+                  value: 'Work & social justice'
                 }
               ]
             }
@@ -673,8 +666,7 @@ RSpec.describe DescriptiveMetadataIndexer do
           {
             title: [
               {
-                value: 'pub dates are fun',
-                type: 'main title'
+                value: 'pub dates are fun'
               }
             ],
             event: [

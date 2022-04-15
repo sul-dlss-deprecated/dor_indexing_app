@@ -607,17 +607,14 @@ RSpec.describe DescriptiveMetadataIndexer do
         {
           title: [
             {
-              structuredValue: [
+              value: 'Title',
+              type: 'uniform',
+              note: [
                 {
                   value: 'Author, An',
-                  type: 'name'
-                },
-                {
-                  value: 'Title',
-                  type: 'Title'
+                  type: 'associated name'
                 }
-              ],
-              type: 'uniform'
+              ]
             }
           ]
         }
