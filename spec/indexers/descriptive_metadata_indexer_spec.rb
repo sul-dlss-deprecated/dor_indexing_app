@@ -235,16 +235,7 @@ RSpec.describe DescriptiveMetadataIndexer do
       identifier: [{
         value: 'druid:pz263ny9658',
         type: 'local',
-        displayLabel: 'SUL Resource ID',
-        note: [{
-          value: 'local',
-          type: 'type',
-          uri: 'http://id.loc.gov/vocabulary/identifiers/local',
-          source: {
-            uri: 'http://id.loc.gov/vocabulary/identifiers/',
-            value: 'Standard Identifier Schemes'
-          }
-        }]
+        displayLabel: 'SUL Resource ID'
       }],
       subject: [
         {
