@@ -19,7 +19,7 @@ RSpec.describe CollectionTitleIndexer do
         description: {
           title: [{ value: 'Test obj' }],
           subject: [{ type: 'topic', value: 'word' }],
-          purl: 'https://purl.stanford.edu/rt923jk3422'
+          purl: "https://purl.stanford.edu/#{druid.delete_prefix('druid:')}"
         },
         structural: {
           contains: [],
@@ -63,7 +63,7 @@ RSpec.describe CollectionTitleIndexer do
             access: {},
             description: {
               title: [{ value: 'Test object' }],
-              purl: 'https://purl.stanford.edu/rt923jk3422'
+              purl: "https://purl.stanford.edu/#{mock_rel_druid.delete_prefix('druid:')}"
             },
             identification: { sourceId: 'sul:1234' }
           }

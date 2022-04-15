@@ -236,7 +236,7 @@ RSpec.describe DocumentBuilder do
             },
             description: {
               title: [{ value: 'Test obj' }],
-              purl: 'https://purl.stanford.edu/bd999bd9999',
+              purl: "https://purl.stanford.edu/#{druid.delete_prefix('druid:')}",
               subject: [{ type: 'topic', value: 'word' }],
               event: [
                 {
@@ -308,7 +308,7 @@ RSpec.describe DocumentBuilder do
             },
             description: {
               title: [{ value: 'Test obj' }],
-              purl: 'https://purl.stanford.edu/bd999bd9999'
+              purl: "https://purl.stanford.edu/#{druid.delete_prefix('druid:')}"
             }
           }
         )
@@ -334,7 +334,7 @@ RSpec.describe DocumentBuilder do
             },
             description: {
               title: [{ value: 'Test obj' }],
-              purl: 'https://purl.stanford.edu/bd999bd9999'
+              purl: "https://purl.stanford.edu/#{druid.delete_prefix('druid:')}"
             }
           }
         )
