@@ -75,7 +75,7 @@ class TopicBuilder
   end
 
   def create_title(title)
-    titles = Cocina::Models::TitleBuilder.build([title], strategy: :all, add_punctuation: false)
+    titles = Cocina::Models::Builders::TitleBuilder.build([title], strategy: :all, add_punctuation: false)
     titles.map { |value| Cocina::Models::DescriptiveValue.new(value: value) }
   end
 

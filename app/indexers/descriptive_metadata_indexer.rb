@@ -52,7 +52,7 @@ class DescriptiveMetadataIndexer
   end
 
   def title
-    Cocina::Models::TitleBuilder.build(cocina.description.title)
+    Cocina::Models::Builders::TitleBuilder.build(cocina.description.title)
   end
 
   def forms

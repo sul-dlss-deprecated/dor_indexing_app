@@ -62,7 +62,7 @@ class IdentifiableIndexer
       # APOs don't have projects, and since Hydrus is set to be retired, I don't want to
       # add the cocina property. Just check the tags service instead.
       is_from_hydrus = has_hydrus_tag?(rel_druid)
-      title = Cocina::Models::TitleBuilder.build(related_obj.description.title)
+      title = Cocina::Models::Builders::TitleBuilder.build(related_obj.description.title)
       { 'related_obj_title' => title, 'is_from_hydrus' => is_from_hydrus }
     rescue Dor::Services::Client::UnexpectedResponse, Dor::Services::Client::NotFoundResponse
       Honeybadger.notify("Bad association found on #{cocina.externalIdentifier}. #{rel_druid} could not be found")

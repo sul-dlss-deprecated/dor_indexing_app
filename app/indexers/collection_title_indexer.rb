@@ -15,7 +15,7 @@ class CollectionTitleIndexer
 
     {}.tap do |solr_doc|
       parent_collections.each do |related_obj|
-        title = Cocina::Models::TitleBuilder.build(related_obj.description.title)
+        title = Cocina::Models::Builders::TitleBuilder.build(related_obj.description.title)
 
         if part_of_project_hydrus?
           # create/append hydrus_collection_title_ssim

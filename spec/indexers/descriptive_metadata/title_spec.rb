@@ -616,6 +616,15 @@ RSpec.describe DescriptiveMetadataIndexer do
                 }
               ]
             }
+          ],
+          contributor: [
+            {
+              name: [
+                {
+                  value: 'Author, An'
+                }
+              ]
+            }
           ]
         }
       end
