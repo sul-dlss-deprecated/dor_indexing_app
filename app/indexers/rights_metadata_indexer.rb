@@ -45,7 +45,7 @@ class RightsMetadataIndexer
   def rights_description
     return CollectionRightsDescriptionBuilder.build(cocina) if cocina.collection?
 
-    Cocina::Models::DroRightsDescriptionBuilder.build(cocina)
+    Cocina::Models::Builders::DroRightsDescriptionBuilder.build(cocina)
   end
 
   # @return [String] the code if we've defined one, or the URI if we haven't.
