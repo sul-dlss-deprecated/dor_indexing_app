@@ -58,7 +58,7 @@ RSpec.describe 'DOR', type: :request do
       end
 
       it 'invokes fallback indexer for UnexpectedResponse' do
-        allow(object_service).to receive(:find_with_metadata).and_raise(Dor::Services::Client::UnexpectedResponse)
+        allow(object_service).to receive(:find_with_metadata).and_raise(Dor::Services::Client::UnexpectedResponse.new(response: ''))
         allow(FallbackIndexer).to receive(:new).with(id: druid).and_return(mock_fallback_indexer)
         post "/dor/reindex/#{druid}"
         expect(response.body).to eq "Successfully updated index for #{druid}"

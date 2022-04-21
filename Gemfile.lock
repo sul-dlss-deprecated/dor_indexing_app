@@ -135,7 +135,7 @@ GEM
     docile (1.4.0)
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
-    dor-services-client (9.0.0)
+    dor-services-client (10.0.0)
       activesupport (>= 4.2, < 8)
       cocina-models (~> 0.75.0)
       deprecation
@@ -435,7 +435,7 @@ DEPENDENCIES
   config
   daemons
   dlss-capistrano
-  dor-services-client (~> 9.0)
+  dor-services-client (~> 10.0)
   dor-workflow-client (~> 4.0)
   dry-monads (~> 1.3)
   erubis
