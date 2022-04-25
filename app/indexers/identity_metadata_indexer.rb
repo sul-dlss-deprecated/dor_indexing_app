@@ -42,9 +42,9 @@ class IdentityMetadataIndexer
 
   def object_type
     case cocina_object
-    when Cocina::Models::AdminPolicy
+    when Cocina::Models::AdminPolicyWithMetadata
       'adminPolicy'
-    when Cocina::Models::Collection
+    when Cocina::Models::CollectionWithMetadata
       'collection'
     else
       cocina_object.type == Cocina::Models::ObjectType.agreement ? 'agreement' : 'item'

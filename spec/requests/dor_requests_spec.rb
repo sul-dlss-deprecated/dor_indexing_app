@@ -9,7 +9,7 @@ RSpec.describe 'DOR', type: :request do
     before do
       allow(Logger).to receive(:new).and_return(mock_logger)
       allow(RSolr).to receive(:connect).and_return(mock_solr_conn)
-      allow(DocumentBuilder).to receive(:for).with(model: cocina, metadata: metadata).and_return(mock_indexer)
+      allow(DocumentBuilder).to receive(:for).with(model: cocina).and_return(mock_indexer)
       allow(Dor::Services::Client).to receive(:object).with(druid).and_return(object_service)
       allow(Rubydora).to receive(:connect).and_return(connection)
     end
@@ -17,9 +17,8 @@ RSpec.describe 'DOR', type: :request do
     let(:connection) { instance_double(Rubydora::Repository) }
     let(:mock_logger) { instance_double(Logger, :formatter= => true, info: true) }
     let(:mock_solr_conn) { instance_double(RSolr::Client, add: true, commit: true) }
-    let(:metadata) { instance_double(Dor::Services::Client::ObjectMetadata) }
-    let(:cocina) { instance_double(Cocina::Models::DRO, externalIdentifier: druid) }
-    let(:object_service) { instance_double(Dor::Services::Client::Object, find_with_metadata: [cocina, metadata]) }
+    let(:cocina) { instance_double(Cocina::Models::DROWithMetadata, externalIdentifier: druid) }
+    let(:object_service) { instance_double(Dor::Services::Client::Object, find: cocina) }
     let(:mock_indexer) { instance_double(CompositeIndexer::Instance, to_solr: mock_solr_doc) }
     let(:mock_fallback_indexer) { instance_double(FallbackIndexer, to_solr: mock_solr_doc) }
     let(:mock_solr_doc) { { id: druid, text_field_tesim: 'a field to be searched' } }
@@ -50,7 +49,7 @@ RSpec.describe 'DOR', type: :request do
       end
 
       it 'gives the right status if an object is not found' do
-        allow(object_service).to receive(:find_with_metadata).and_raise(Dor::Services::Client::NotFoundResponse)
+        allow(object_service).to receive(:find).and_raise(Dor::Services::Client::NotFoundResponse)
         allow(connection).to receive(:find).and_raise(Rubydora::RecordNotFound)
         post "/dor/reindex/#{druid}"
         expect(response.body).to eq 'Object does not exist in the repository'
@@ -58,7 +57,7 @@ RSpec.describe 'DOR', type: :request do
       end
 
       it 'invokes fallback indexer for UnexpectedResponse' do
-        allow(object_service).to receive(:find_with_metadata).and_raise(Dor::Services::Client::UnexpectedResponse.new(response: ''))
+        allow(object_service).to receive(:find).and_raise(Dor::Services::Client::UnexpectedResponse.new(response: ''))
         allow(FallbackIndexer).to receive(:new).with(id: druid).and_return(mock_fallback_indexer)
         post "/dor/reindex/#{druid}"
         expect(response.body).to eq "Successfully updated index for #{druid}"
@@ -67,7 +66,7 @@ RSpec.describe 'DOR', type: :request do
       end
 
       it 'raises for other errors' do
-        allow(object_service).to receive(:find_with_metadata).and_raise(Faraday::ConnectionFailed)
+        allow(object_service).to receive(:find).and_raise(Faraday::ConnectionFailed)
         expect { post "/dor/reindex/#{druid}" }.to raise_error(Faraday::ConnectionFailed)
       end
     end
@@ -75,12 +74,11 @@ RSpec.describe 'DOR', type: :request do
     describe 'PUT #reindex_from_cocina' do
       let(:cocina_hash) { { some: 'json' } }
       let(:cocina_json) { cocina_hash.to_json }
-      let(:cocina_model_metadata) { instance_double(Dor::Services::Client::ObjectMetadata) }
       let(:created_at) { '2022-02-27' }
       let(:updated_at) { '2022-02-28' }
 
       before do
-        allow(Dor::Services::Client::ObjectMetadata).to receive(:new).with(created_at: created_at, updated_at: updated_at).and_return(metadata)
+        allow(Cocina::Models).to receive(:with_metadata).with(cocina, String, created: DateTime.parse(created_at), modified: DateTime.parse(updated_at)).and_return(cocina)
       end
 
       it 'uses the provided cocina without hitting dor-services-app' do
@@ -91,7 +89,7 @@ RSpec.describe 'DOR', type: :request do
         expect(response.body).to eq "Successfully updated index for #{druid}"
         expect(response.code).to eq '200'
         expect(mock_solr_conn).to have_received(:add).with(mock_solr_doc, add_attributes: { commitWithin: 1000 })
-        expect(object_service).not_to have_received(:find_with_metadata)
+        expect(object_service).not_to have_received(:find)
       end
 
       it 'reindexes an object with specified commitWithin param and no hard commit' do

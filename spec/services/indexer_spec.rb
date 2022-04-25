@@ -19,8 +19,7 @@ RSpec.describe Indexer do
       let(:doc_builder) { instance_double(CompositeIndexer::Instance, to_solr: doc) }
       let(:doc) { instance_double(Hash) }
       let(:model) { instance_double(Object) }
-      let(:metadata) { instance_double(Object) }
-      let(:object_client) { instance_double(Dor::Services::Client::Object, find_with_metadata: [model, metadata]) }
+      let(:object_client) { instance_double(Dor::Services::Client::Object, find: model) }
 
       before do
         allow(DocumentBuilder).to receive(:for).and_return(doc_builder)
@@ -28,7 +27,7 @@ RSpec.describe Indexer do
 
       it 'works' do
         load_and_index
-        expect(DocumentBuilder).to have_received(:for).with(model: model, metadata: metadata)
+        expect(DocumentBuilder).to have_received(:for).with(model: model)
         expect(doc_builder).to have_received(:to_solr)
         expect(solr).to have_received(:add).with(doc, { add_attributes: { commitWithin: 1000 } })
       end
@@ -38,7 +37,7 @@ RSpec.describe Indexer do
       let(:object_client) { instance_double(Dor::Services::Client::Object) }
 
       before do
-        allow(object_client).to receive(:find_with_metadata).and_raise(Dor::Services::Client::NotFoundResponse)
+        allow(object_client).to receive(:find).and_raise(Dor::Services::Client::NotFoundResponse)
       end
 
       it 'does not update the druid' do

@@ -31,6 +31,6 @@ RSpec.describe ReindexJob do
   it 'updates the druid' do
     described_class.new.work(message)
     expect(indexer).to have_received(:reindex)
-      .with(add_attributes: { commitWithin: 1000 }, cocina_with_metadata: Success(Array))
+      .with(add_attributes: { commitWithin: 1000 }, cocina_with_metadata: Success(Cocina::Models::DROWithMetadata))
   end
 end

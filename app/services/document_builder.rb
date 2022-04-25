@@ -45,16 +45,14 @@ class DocumentBuilder
     Cocina::Models::ObjectType.collection => COLLECTION_INDEXER
   }.freeze
 
-  # @param [Cocina::Models::DRO,Cocina::Models::Collection,Cocina::Model::AdminPolicy] model
-  # @param [Hash<String,String>] metadata this contains the updated and created dates
-  def self.for(model:, metadata:)
+  # @param [Cocina::Models::DROWithMetadata,Cocina::Models::CollectionWithMetadata,Cocina::Model::AdminPolicyWithMetadata] model
+  def self.for(model:)
     id = model.externalIdentifier
     Rails.logger.debug { "Fetching indexer for #{model.type}" }
     indexer_for_type(model.type).new(id: id,
                                      cocina: model,
                                      parent_collections: load_parent_collections(model),
-                                     administrative_tags: administrative_tags(id),
-                                     metadata: metadata)
+                                     administrative_tags: administrative_tags(id))
   end
 
   def self.indexer_for_type(type)
