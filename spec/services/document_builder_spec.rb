@@ -3,13 +3,12 @@
 require 'rails_helper'
 
 RSpec.describe DocumentBuilder do
-  subject(:indexer) { described_class.for(model: cocina, metadata: metadata) }
+  subject(:indexer) { described_class.for(model: cocina_with_metadata) }
 
-  let(:metadata) do
-    instance_double(Dor::Services::Client::ObjectMetadata,
-                    updated_at: 'Thu, 04 Mar 2021 23:05:34 GMT',
-                    created_at: 'Wed, 01 Jan 2020 12:00:01 GMT')
+  let(:cocina_with_metadata) do
+    Cocina::Models.with_metadata(cocina, 'unknown_lock', created: DateTime.parse('Wed, 01 Jan 2020 12:00:01 GMT'), modified: DateTime.parse('Thu, 04 Mar 2021 23:05:34 GMT'))
   end
+
   let(:druid) { 'druid:xx999xx9999' }
   # rubocop:disable Style/StringHashKeys
   let(:releasable) do
@@ -111,9 +110,8 @@ RSpec.describe DocumentBuilder do
 
         # Ensure that errors are stripped out of parent_collections
         expect(AdministrativeTagIndexer).to have_received(:new)
-          .with(cocina: Cocina::Models::DRO,
+          .with(cocina: Cocina::Models::DROWithMetadata,
                 id: String,
-                metadata: metadata,
                 administrative_tags: [],
                 parent_collections: [])
         expect(Honeybadger).to have_received(:notify).with('Bad association found on druid:xx999xx9999. druid:bc999df2323 could not be found')

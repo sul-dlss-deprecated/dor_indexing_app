@@ -2,10 +2,9 @@
 
 # Indexing provided by ActiveFedora
 class DataIndexer
-  attr_reader :metadata, :cocina
+  attr_reader :cocina
 
-  def initialize(metadata:, cocina:, **)
-    @metadata = metadata
+  def initialize(cocina:, **)
     @cocina = cocina
   end
 
@@ -30,11 +29,11 @@ class DataIndexer
   end
 
   def modified_latest
-    metadata.updated_at.to_datetime.strftime('%FT%TZ')
+    cocina.modified.to_datetime.strftime('%FT%TZ')
   end
 
   def created_at
-    metadata.created_at.to_datetime.strftime('%FT%TZ')
+    cocina.created.to_datetime.strftime('%FT%TZ')
   end
 
   def legacy_collections

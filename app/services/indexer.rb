@@ -33,8 +33,8 @@ class Indexer
     # benchmark how long it takes to convert the object to a Solr document
     to_solr_stats = Benchmark.measure('to_solr') do
       solr_doc = if cocina_with_metadata.success?
-                   model, metadata = cocina_with_metadata.value!
-                   DocumentBuilder.for(model: model, metadata: metadata).to_solr
+                   model = cocina_with_metadata.value!
+                   DocumentBuilder.for(model: model).to_solr
                  else
                    logger.debug("Fetching fallback indexer because cocina model couldn't be retrieved.")
                    FallbackIndexer.new(id: identifier).to_solr
@@ -55,7 +55,7 @@ class Indexer
     # benchmark how long it takes to load the object
     load_stats = Benchmark.measure('load_instance') do
       cocina_with_metadata = begin
-        Success(Dor::Services::Client.object(identifier).find_with_metadata)
+        Success(Dor::Services::Client.object(identifier).find)
       rescue Dor::Services::Client::UnexpectedResponse
         Failure(:conversion_error)
       end

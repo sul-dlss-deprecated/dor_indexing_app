@@ -18,7 +18,7 @@ class IdentifiableIndexer
     {}.tap do |solr_doc|
       add_apo_titles(solr_doc, cocina.administrative.hasAdminPolicy)
 
-      solr_doc['metadata_source_ssi'] = identity_metadata_source unless cocina.is_a? Cocina::Models::AdminPolicy
+      solr_doc['metadata_source_ssi'] = identity_metadata_source unless cocina.is_a? Cocina::Models::AdminPolicyWithMetadata
       # This used to be added to the index by https://github.com/sul-dlss/dor-services/commit/11b80d249d19326ef591411ffeb634900e75c2c3
       # and was called dc_identifier_druid_tesim
       # It is used to search based on druid.

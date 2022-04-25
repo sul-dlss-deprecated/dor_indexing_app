@@ -20,7 +20,7 @@ class DorController < ApplicationController
     cocina_with_metadata = build_model_and_metadata(cocina_hash: cocina_hash,
                                                     created_at: params[:created_at].presence,
                                                     updated_at: params[:updated_at].presence)
-    druid = cocina_with_metadata.first.externalIdentifier
+    druid = cocina_with_metadata.externalIdentifier
     reindex_object(Success(cocina_with_metadata))
     render status: :ok, plain: "Successfully updated index for #{druid}"
   rescue CocinaModelBuildError => e
@@ -44,8 +44,8 @@ class DorController < ApplicationController
 
   def build_model_and_metadata(cocina_hash:, created_at:, updated_at:)
     model = Cocina::Models.build(cocina_hash)
-    metadata = Dor::Services::Client::ObjectMetadata.new(created_at: created_at, updated_at: updated_at)
-    [model, metadata]
+    # Lock is required, but we don't know what it is. Since not updating, that is OK.
+    Cocina::Models.with_metadata(model, 'unknown_lock', created: DateTime.parse(created_at), modified: DateTime.parse(updated_at))
   rescue StandardError
     raise CocinaModelBuildError
   end

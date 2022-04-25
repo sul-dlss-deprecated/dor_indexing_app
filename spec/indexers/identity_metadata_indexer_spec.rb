@@ -84,7 +84,7 @@ RSpec.describe IdentityMetadataIndexer do
     context 'with a collection' do
       # Collection objects have no structural attribute
       let(:cocina) do
-        Cocina::Models.build({
+        collection = Cocina::Models.build({
           externalIdentifier: 'druid:rt923jk3421',
           type: type,
           version: 1,
@@ -99,6 +99,7 @@ RSpec.describe IdentityMetadataIndexer do
           },
           identification: identification
         }.with_indifferent_access)
+        Cocina::Models.with_metadata(collection, 'abc123')
       end
       let(:type) { Cocina::Models::ObjectType.collection }
       let(:identification) do
