@@ -3,28 +3,9 @@
 require 'rails_helper'
 
 RSpec.describe IdentityMetadataIndexer do
-  let(:cocina) do
-    Cocina::Models.build({
-      externalIdentifier: 'druid:rt923jk3421',
-      type: type,
-      version: 1,
-      label: 'Squirrels of North America',
-      description: {
-        title: [{ value: 'Squirrels of North America' }],
-        purl: 'https://purl.stanford.edu/rt923jk3421'
-      },
-      access: {},
-      administrative: {
-        hasAdminPolicy: 'druid:bd999bd9999'
-      },
-      identification: identification,
-      structural: {}
-    }.with_indifferent_access)
-  end
-
-  let(:indexer) do
-    described_class.new(cocina: cocina)
-  end
+  let(:druid) { 'druid:rt923jk3421' }
+  let(:cocina_object) { build(:dro_with_metadata, type: type, id: druid).new(identification: identification) }
+  let(:indexer) { described_class.new(cocina: cocina_object) }
 
   describe '#to_solr' do
     subject(:doc) { indexer.to_solr }
@@ -83,25 +64,7 @@ RSpec.describe IdentityMetadataIndexer do
 
     context 'with a collection' do
       # Collection objects have no structural attribute
-      let(:cocina) do
-        collection = Cocina::Models.build({
-          externalIdentifier: 'druid:rt923jk3421',
-          type: type,
-          version: 1,
-          label: 'Squirrels of North America',
-          description: {
-            title: [{ value: 'Squirrels of North America' }],
-            purl: 'https://purl.stanford.edu/rt923jk3421'
-          },
-          access: {},
-          administrative: {
-            hasAdminPolicy: 'druid:bd999bd9999'
-          },
-          identification: identification
-        }.with_indifferent_access)
-        Cocina::Models.with_metadata(collection, 'abc123')
-      end
-      let(:type) { Cocina::Models::ObjectType.collection }
+      let(:cocina_object) { build(:collection_with_metadata, id: druid).new(identification: identification) }
       let(:identification) do
         {
           sourceId: 'google:STANFORD_342837261527',

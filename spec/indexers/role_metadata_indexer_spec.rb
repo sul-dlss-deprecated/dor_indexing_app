@@ -5,38 +5,28 @@ require 'rails_helper'
 RSpec.describe RoleMetadataIndexer do
   let(:apo_id) { 'druid:gf999hb9999' }
   let(:cocina) do
-    Cocina::Models.build(
-      {
-        externalIdentifier: apo_id,
-        type: Cocina::Models::ObjectType.admin_policy,
-        version: 1,
-        label: 'testing',
-        administrative: {
-          hasAdminPolicy: apo_id,
-          hasAgreement: 'druid:bb033gt0615',
-          roles: [
-            { name: 'dor-apo-manager',
-              members: [
-                {
-                  type: 'workgroup',
-                  identifier: 'dlss:dor-admin'
-                },
-                {
-                  type: 'workgroup',
-                  identifier: 'sdr:developer'
-                },
-                {
-                  type: 'sunetid',
-                  identifier: 'tcramer'
-                }
-              ] }
-          ],
-          accessTemplate: { view: 'world', download: 'world' }
-        },
-        description: {
-          title: [{ value: 'APO title' }],
-          purl: 'https://purl.stanford.edu/gf999hb9999'
-        }
+    build(:admin_policy, id: apo_id).new(
+      administrative: {
+        hasAdminPolicy: apo_id,
+        hasAgreement: 'druid:bb033gt0615',
+        roles: [
+          { name: 'dor-apo-manager',
+            members: [
+              {
+                type: 'workgroup',
+                identifier: 'dlss:dor-admin'
+              },
+              {
+                type: 'workgroup',
+                identifier: 'sdr:developer'
+              },
+              {
+                type: 'sunetid',
+                identifier: 'tcramer'
+              }
+            ] }
+        ],
+        accessTemplate: { view: 'world', download: 'world' }
       }
     )
   end

@@ -40,24 +40,9 @@ RSpec.describe DocumentBuilder do
 
   context 'when the model is an item' do
     let(:cocina) do
-      Cocina::Models.build(
-        {
-          type: Cocina::Models::ObjectType.object,
-          structural: {
-            isMemberOf: collections
-          },
-          label: 'Test DRO',
-          version: 1,
-          description: {
-            title: [{ value: 'Test DRO' }],
-            purl: "https://purl.stanford.edu/#{druid.delete_prefix('druid:')}"
-          },
-          administrative: {
-            hasAdminPolicy: 'druid:gf999hb9999'
-          },
-          access: {},
-          externalIdentifier: druid,
-          identification: { sourceId: 'sul:1234' }
+      build(:dro, id: druid).new(
+        structural: {
+          isMemberOf: collections
         }
       )
     end
@@ -72,26 +57,7 @@ RSpec.describe DocumentBuilder do
       let(:object_client) do
         instance_double(Dor::Services::Client::Object, find: related, administrative_tags: admin_tags_client)
       end
-      let(:related) do
-        Cocina::Models.build(
-          {
-            externalIdentifier: 'druid:bc999df2323',
-            type: Cocina::Models::ObjectType.collection,
-            version: 1,
-            label: 'testing',
-            administrative: {
-              hasAdminPolicy: 'druid:gf999hb9999'
-            },
-            access: {},
-            description: {
-              title: [{ value: 'Test object' }],
-              purl: 'https://purl.stanford.edu/bc999df2323'
-            },
-            identification: { sourceId: 'sul:1234' }
-          }
-        )
-      end
-
+      let(:related) { build(:collection) }
       let(:collections) { ['druid:bc999df2323'] }
 
       it { is_expected.to be_instance_of CompositeIndexer::Instance }
@@ -120,70 +86,19 @@ RSpec.describe DocumentBuilder do
   end
 
   context 'when the model is an admin policy' do
-    let(:cocina) do
-      Cocina::Models.build(
-        {
-          type: Cocina::Models::ObjectType.admin_policy,
-          label: 'Test APO',
-          version: 1,
-          administrative: {
-            hasAdminPolicy: 'druid:gf999hb9999',
-            hasAgreement: 'druid:bb033gt0615',
-            accessTemplate: { view: 'world', download: 'world' }
-          },
-          externalIdentifier: druid
-        }
-      )
-    end
+    let(:cocina) { build(:admin_policy) }
 
     it { is_expected.to be_instance_of CompositeIndexer::Instance }
   end
 
   context 'when the model is a collection' do
-    let(:cocina) do
-      Cocina::Models.build(
-        {
-          type: Cocina::Models::ObjectType.collection,
-          label: 'Test Collection',
-          version: 1,
-          description: {
-            title: [{ value: 'Test Collection' }],
-            purl: "https://purl.stanford.edu/#{druid.delete_prefix('druid:')}"
-          },
-          administrative: {
-            hasAdminPolicy: 'druid:gf999hb9999'
-          },
-          access: {},
-          externalIdentifier: druid,
-          identification: { sourceId: 'sul:1234' }
-        }
-      )
-    end
+    let(:cocina) { build(:collection) }
 
     it { is_expected.to be_instance_of CompositeIndexer::Instance }
   end
 
   context 'when the model is an agreement' do
-    let(:cocina) do
-      Cocina::Models.build(
-        {
-          type: Cocina::Models::ObjectType.agreement,
-          structural: {},
-          label: 'Test Agreement',
-          version: 1,
-          description: {
-            title: [{ value: 'Test Agreement' }],
-            purl: "https://purl.stanford.edu/#{druid.delete_prefix('druid:')}"
-          },
-          administrative: {
-            hasAdminPolicy: 'druid:gf999hb9999'
-          },
-          access: {},
-          externalIdentifier: druid,
-          identification: { sourceId: 'sul:1234' }
-        }
-      )
-    end
+    let(:cocina) { build(:dro, type: Cocina::Models::ObjectType.agreement) }
 
     it { is_expected.to be_instance_of CompositeIndexer::Instance }
   end
@@ -192,27 +107,7 @@ RSpec.describe DocumentBuilder do
     subject(:solr_doc) { indexer.to_solr }
 
     let(:apo_id) { 'druid:bd999bd9999' }
-
-    let(:apo) do
-      Cocina::Models.build(
-        {
-          externalIdentifier: apo_id,
-          type: Cocina::Models::ObjectType.admin_policy,
-          version: 1,
-          label: 'testing',
-          administrative: {
-            hasAdminPolicy: 'druid:xx000xx0000',
-            hasAgreement: 'druid:bb033gt0615',
-            accessTemplate: { view: 'world', download: 'world' }
-          },
-          description: {
-            title: [{ value: 'APO title' }],
-            purl: 'https://purl.stanford.edu/bd999bd9999'
-          }
-        }
-      )
-    end
-
+    let(:apo) { build(:admin_policy, id: apo_id) }
     let(:apo_object_client) { instance_double(Dor::Services::Client::Object, find: apo) }
 
     before do
@@ -222,60 +117,45 @@ RSpec.describe DocumentBuilder do
 
     context 'when the model is an item' do
       let(:cocina) do
-        Cocina::Models.build(
-          {
-            externalIdentifier: druid,
-            type: Cocina::Models::ObjectType.image,
-            version: 1,
-            label: 'testing',
-            access: {},
-            administrative: {
-              hasAdminPolicy: apo_id
-            },
-            description: {
-              title: [{ value: 'Test obj' }],
-              purl: "https://purl.stanford.edu/#{druid.delete_prefix('druid:')}",
-              subject: [{ type: 'topic', value: 'word' }],
-              event: [
-                {
-                  type: 'creation',
-                  date: [
-                    {
-                      value: '2021-01-01',
-                      status: 'primary',
-                      encoding: {
-                        code: 'w3cdtf'
-                      },
-                      type: 'creation'
-                    }
-                  ]
-                },
-                {
-                  type: 'publication',
-                  location: [
-                    {
-                      value: 'Moskva'
-                    }
-                  ],
-                  contributor: [
-                    {
-                      name: [
-                        {
-                          value: 'Izdatelʹstvo "Vesʹ Mir"'
-                        }
-                      ],
-                      type: 'organization',
-                      role: [{ value: 'publisher' }]
-                    }
-                  ]
-                }
-              ]
-            },
-            structural: {},
-            identification: {
-              catalogLinks: [{ catalog: 'symphony', catalogRecordId: '1234', refresh: true }],
-              sourceId: 'sul:1234'
-            }
+        build(:dro, id: druid, admin_policy_id: apo_id).new(
+          description: {
+            title: [{ value: 'Test obj' }],
+            purl: "https://purl.stanford.edu/#{druid.delete_prefix('druid:')}",
+            subject: [{ type: 'topic', value: 'word' }],
+            event: [
+              {
+                type: 'creation',
+                date: [
+                  {
+                    value: '2021-01-01',
+                    status: 'primary',
+                    encoding: {
+                      code: 'w3cdtf'
+                    },
+                    type: 'creation'
+                  }
+                ]
+              },
+              {
+                type: 'publication',
+                location: [
+                  {
+                    value: 'Moskva'
+                  }
+                ],
+                contributor: [
+                  {
+                    name: [
+                      {
+                        value: 'Izdatelʹstvo "Vesʹ Mir"'
+                      }
+                    ],
+                    type: 'organization',
+                    role: [{ value: 'publisher' }]
+                  }
+                ]
+              }
+            ]
           }
         )
       end
@@ -291,23 +171,12 @@ RSpec.describe DocumentBuilder do
 
     context 'when the model is an admin policy' do
       let(:model) { Dor::AdminPolicyObject.new(pid: druid) }
-
       let(:cocina) do
-        Cocina::Models.build(
-          {
-            externalIdentifier: druid,
-            type: Cocina::Models::ObjectType.admin_policy,
-            version: 1,
-            label: 'testing',
-            administrative: {
-              hasAdminPolicy: apo_id,
-              hasAgreement: 'druid:bb033gt0615',
-              accessTemplate: { view: 'world', download: 'world' }
-            },
-            description: {
-              title: [{ value: 'Test obj' }],
-              purl: "https://purl.stanford.edu/#{druid.delete_prefix('druid:')}"
-            }
+        build(:admin_policy, id: druid).new(
+          administrative: {
+            hasAdminPolicy: apo_id,
+            hasAgreement: 'druid:bb033gt0615',
+            accessTemplate: { view: 'world', download: 'world' }
           }
         )
       end
@@ -317,23 +186,12 @@ RSpec.describe DocumentBuilder do
 
     context 'when the model is a hydrus apo' do
       let(:model) { Hydrus::AdminPolicyObject.new(pid: druid) }
-
       let(:cocina) do
-        Cocina::Models.build(
-          {
-            externalIdentifier: druid,
-            type: Cocina::Models::ObjectType.admin_policy,
-            version: 1,
-            label: 'testing',
-            administrative: {
-              hasAdminPolicy: apo_id,
-              hasAgreement: 'druid:bb033gt0615',
-              accessTemplate: { view: 'world', download: 'world' }
-            },
-            description: {
-              title: [{ value: 'Test obj' }],
-              purl: "https://purl.stanford.edu/#{druid.delete_prefix('druid:')}"
-            }
+        build(:admin_policy, id: druid).new(
+          administrative: {
+            hasAdminPolicy: apo_id,
+            hasAgreement: 'druid:bb033gt0615',
+            accessTemplate: { view: 'world', download: 'world' }
           }
         )
       end

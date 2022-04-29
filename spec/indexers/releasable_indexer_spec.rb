@@ -4,28 +4,7 @@ require 'rails_helper'
 
 RSpec.describe ReleasableIndexer do
   let(:apo_id) { 'druid:gf999hb9999' }
-
-  let(:cocina) do
-    Cocina::Models.build(
-      {
-        externalIdentifier: 'druid:pz263ny9658',
-        type: Cocina::Models::ObjectType.image,
-        version: 1,
-        label: 'testing',
-        access: {},
-        administrative: administrative,
-        description: {
-          title: [{ value: 'Test obj' }],
-          purl: 'https://purl.stanford.edu/pz263ny9658'
-        },
-        structural: {},
-        identification: {
-          catalogLinks: [{ catalog: 'symphony', catalogRecordId: '1234', refresh: true }],
-          sourceId: 'sul:1234'
-        }
-      }
-    )
-  end
+  let(:cocina) { build(:dro).new(administrative: administrative) }
 
   describe 'to_solr' do
     let(:doc) { described_class.new(cocina: cocina, parent_collections: parent_collections).to_solr }

@@ -5,71 +5,13 @@ require 'rails_helper'
 RSpec.describe DescriptiveMetadataIndexer do
   subject(:indexer) { described_class.new(cocina: cocina) }
 
-  let(:cocina) { Cocina::Models.build(JSON.parse(json)) }
+  let(:bare_druid) { 'qy781dy0220' }
+  let(:druid) { "druid:#{bare_druid}" }
   let(:doc) { indexer.to_solr }
-  let(:json) do
-    <<~JSON
-      {
-        "cocinaVersion": "0.0.1",
-        "type": "#{Cocina::Models::ObjectType.image}",
-        "externalIdentifier": "druid:qy781dy0220",
-        "label": "SUL Logo for forebrain",
-        "version": 1,
-        "access": {
-          "view": "world",
-          "copyright": "This work is copyrighted by the creator.",
-          "download": "world",
-          "useAndReproductionStatement": "This document is available only to the Stanford faculty, staff and student community."
-        },
-        "administrative": {
-          "hasAdminPolicy": "druid:zx485kb6348"
-        },
-        "description": #{JSON.generate(description.merge(purl: 'https://purl.stanford.edu/qy781dy0220'))},
-        "identification": {
-          "sourceId": "hydrus:object-6"
-        },
-        "structural": {
-          "contains": [{
-            "type": "#{Cocina::Models::FileSetType.file}",
-            "externalIdentifier": "qy781dy0220_1",
-            "label": "qy781dy0220_1",
-            "version": 1,
-            "structural": {
-              "contains": [{
-                "type": "#{Cocina::Models::ObjectType.file}",
-                "externalIdentifier": "druid:qy781dy0220/sul-logo.png",
-                "label": "sul-logo.png",
-                "filename": "sul-logo.png",
-                "size": 19823,
-                "version": 1,
-                "hasMimeType": "image/png",
-                "hasMessageDigests": [{
-                    "type": "sha1",
-                    "digest": "b5f3221455c8994afb85214576bc2905d6b15418"
-                  },
-                  {
-                    "type": "md5",
-                    "digest": "7142ce948827c16120cc9e19b05acd49"
-                  }
-                ],
-                "access": {
-                  "view": "world",
-                  "download": "world"
-                },
-                "administrative": {
-                  "publish": true,
-                  "sdrPreserve": true,
-                  "shelve": true
-                }
-              }]
-            }
-          }],
-          "isMemberOf": [
-            "druid:nb022qg2431"
-          ]
-        }
-      }
-    JSON
+  let(:cocina) do
+    build(:dro, id: druid).new(
+      description: description.merge(purl: "https://purl.stanford.edu/#{bare_druid}")
+    )
   end
 
   describe 'date mappings from Cocina to Solr originInfo_date_created_tesim' do

@@ -14,26 +14,12 @@ RSpec.describe RightsMetadataIndexer do
     let(:access) { 'world' }
 
     let(:cocina) do
-      Cocina::Models.build(
-        {
-          externalIdentifier: 'druid:rt923jk3429',
-          type: Cocina::Models::ObjectType.collection,
-          version: 1,
-          label: 'testing',
-          access: {
-            view: access,
-            license: license,
-            copyright: 'Copyright © World Trade Organization',
-            useAndReproductionStatement: 'Official WTO documents are free for public use.'
-          },
-          administrative: {
-            hasAdminPolicy: 'druid:xx000xx0000'
-          },
-          description: {
-            title: [{ value: 'Test obj' }],
-            purl: 'https://purl.stanford.edu/rt923jk3429'
-          },
-          identification: { sourceId: 'sul:1234' }
+      build(:collection).new(
+        access: {
+          view: access,
+          license: license,
+          copyright: 'Copyright © World Trade Organization',
+          useAndReproductionStatement: 'Official WTO documents are free for public use.'
         }
       )
     end
@@ -69,23 +55,9 @@ RSpec.describe RightsMetadataIndexer do
 
   context 'with an item' do
     let(:cocina) do
-      Cocina::Models.build(
-        {
-          externalIdentifier: 'druid:rt923jk3429',
-          type: Cocina::Models::ObjectType.image,
-          version: 1,
-          label: 'testing',
-          access: access,
-          administrative: {
-            hasAdminPolicy: 'druid:xx000xx0000'
-          },
-          description: {
-            title: [{ value: 'Test obj' }],
-            purl: 'https://purl.stanford.edu/rt923jk3429'
-          },
-          structural: structural,
-          identification: { sourceId: 'sul:1234' }
-        }
+      build(:dro).new(
+        access: access,
+        structural: structural
       )
     end
     let(:structural) { {} }

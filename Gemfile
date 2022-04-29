@@ -36,6 +36,7 @@ end
 
 group :development, :test do
   gem 'byebug'
+  gem 'rspec', '~> 3.0' # need this to use cocina-models factories
   gem 'rspec_junit_formatter'
   gem 'rspec-rails', '~> 5.0'
   gem 'simplecov'
