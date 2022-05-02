@@ -11,16 +11,13 @@ RSpec.describe 'DOR', type: :request do
       allow(RSolr).to receive(:connect).and_return(mock_solr_conn)
       allow(DocumentBuilder).to receive(:for).with(model: cocina).and_return(mock_indexer)
       allow(Dor::Services::Client).to receive(:object).with(druid).and_return(object_service)
-      allow(Rubydora).to receive(:connect).and_return(connection)
     end
 
-    let(:connection) { instance_double(Rubydora::Repository) }
     let(:mock_logger) { instance_double(Logger, :formatter= => true, info: true) }
     let(:mock_solr_conn) { instance_double(RSolr::Client, add: true, commit: true) }
     let(:cocina) { instance_double(Cocina::Models::DROWithMetadata, externalIdentifier: druid) }
     let(:object_service) { instance_double(Dor::Services::Client::Object, find: cocina) }
     let(:mock_indexer) { instance_double(CompositeIndexer::Instance, to_solr: mock_solr_doc) }
-    let(:mock_fallback_indexer) { instance_double(FallbackIndexer, to_solr: mock_solr_doc) }
     let(:mock_solr_doc) { { id: druid, text_field_tesim: 'a field to be searched' } }
 
     describe 'POST #reindex' do
@@ -50,19 +47,14 @@ RSpec.describe 'DOR', type: :request do
 
       it 'gives the right status if an object is not found' do
         allow(object_service).to receive(:find).and_raise(Dor::Services::Client::NotFoundResponse)
-        allow(connection).to receive(:find).and_raise(Rubydora::RecordNotFound)
         post "/dor/reindex/#{druid}"
         expect(response.body).to eq 'Object does not exist in the repository'
         expect(response.code).to eq '404'
       end
 
-      it 'invokes fallback indexer for UnexpectedResponse' do
-        allow(object_service).to receive(:find).and_raise(Dor::Services::Client::UnexpectedResponse.new(response: ''))
-        allow(FallbackIndexer).to receive(:new).with(id: druid).and_return(mock_fallback_indexer)
-        post "/dor/reindex/#{druid}"
-        expect(response.body).to eq "Successfully updated index for #{druid}"
-        expect(response.code).to eq '200'
-        expect(mock_fallback_indexer).to have_received(:to_solr)
+      it 'raises an error for UnexpectedResponse' do
+        allow(object_service).to receive(:find).and_raise(Dor::Services::Client::UnexpectedResponse.new(response: nil))
+        expect { post "/dor/reindex/#{druid}" }.to raise_error 'Unable to retrieve data from dor-services-app. conversion_error'
       end
 
       it 'raises for other errors' do

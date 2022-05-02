@@ -36,8 +36,7 @@ class Indexer
                    model = cocina_with_metadata.value!
                    DocumentBuilder.for(model: model).to_solr
                  else
-                   logger.debug("Fetching fallback indexer because cocina model couldn't be retrieved.")
-                   FallbackIndexer.new(id: identifier).to_solr
+                   raise "Unable to retrieve data from dor-services-app. #{cocina_with_metadata.failure}"
                  end
       logger.debug 'solr doc created'
       @solr.add(solr_doc, add_attributes: add_attributes)

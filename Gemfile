@@ -21,7 +21,6 @@ gem 'puma', '~> 5.3' # app server
 gem 'rack-timeout', '~> 0.5.1'
 gem 'rails', '~> 7.0.0'
 gem 'rsolr', '~> 2.0'
-gem 'rubydora'
 gem 'sneakers', '~> 2.11'
 gem 'solrizer'
 
