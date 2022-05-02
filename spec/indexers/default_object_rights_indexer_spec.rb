@@ -3,23 +3,17 @@
 require 'rails_helper'
 
 RSpec.describe DefaultObjectRightsIndexer do
-  let(:cocina) do
-    Cocina::Models.build(
-      {
-        label: 'The APO',
-        version: 1,
-        type: Cocina::Models::ObjectType.admin_policy,
-        externalIdentifier: 'druid:cb123cd4567',
-        administrative: {
-          hasAdminPolicy: 'druid:hv992ry2431',
-          hasAgreement: 'druid:bb033gt0615',
-          accessTemplate: {
-            useAndReproductionStatement: 'Rights are owned by Stanford University Libraries.',
-            copyright: 'Additional copyright info',
-            view: 'location-based',
-            download: 'location-based',
-            location: 'spec'
-          }
+  let(:cocina_apo) do
+    build(:admin_policy, id: 'druid:bb123cd4567').new(
+      administrative: {
+        hasAdminPolicy: 'druid:hv992ry2431',
+        hasAgreement: 'druid:bb033gt0615',
+        accessTemplate: {
+          useAndReproductionStatement: 'Rights are owned by Stanford University Libraries.',
+          copyright: 'Additional copyright info',
+          view: 'location-based',
+          download: 'location-based',
+          location: 'spec'
         }
       }
     )
@@ -29,7 +23,7 @@ RSpec.describe DefaultObjectRightsIndexer do
     let(:indexer) do
       CompositeIndexer.new(
         described_class
-      ).new(id: 'druid:ab123cd4567', cocina: cocina)
+      ).new(id: 'druid:bb123cd4567', cocina: cocina_apo)
     end
     let(:doc) { indexer.to_solr }
 

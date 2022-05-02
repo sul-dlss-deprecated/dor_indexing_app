@@ -3,30 +3,9 @@
 require 'rails_helper'
 
 RSpec.describe CompositeIndexer do
-  let(:model) { Dor::Abstract }
   let(:druid) { 'druid:mx123ms3333' }
   let(:apo_id) { 'druid:gf999hb9999' }
-
-  let(:apo) do
-    Cocina::Models.build(
-      {
-        externalIdentifier: apo_id,
-        type: Cocina::Models::ObjectType.admin_policy,
-        version: 1,
-        label: 'testing',
-        administrative: {
-          hasAdminPolicy: apo_id,
-          hasAgreement: 'druid:hp308wm0436',
-          accessTemplate: { view: 'world', download: 'world' }
-        },
-        description: {
-          title: [{ value: 'APO title' }],
-          purl: 'https://purl.stanford.edu/gf999hb9999'
-        }
-      }
-    )
-  end
-
+  let(:apo) { build(:admin_policy, id: apo_id, title: 'test admin policy') }
   let(:indexer) do
     described_class.new(
       DescriptiveMetadataIndexer,
@@ -34,29 +13,12 @@ RSpec.describe CompositeIndexer do
     )
   end
 
-  let(:cocina) do
-    Cocina::Models.build(
-      {
-        externalIdentifier: druid,
-        type: Cocina::Models::ObjectType.image,
-        version: 1,
-        label: 'testing',
-        access: {},
-        administrative: {
-          hasAdminPolicy: apo_id
-        },
-        description: {
-          title: [{ value: 'Test obj' }],
-          subject: [{ type: 'topic', value: 'word' }],
-          purl: 'https://purl.stanford.edu/mx123ms3333'
-        },
-        structural: {
-          contains: []
-        },
-        identification: {
-          catalogLinks: [{ catalog: 'symphony', catalogRecordId: '1234', refresh: true }],
-          sourceId: 'sul:1234'
-        }
+  let(:cocina_item) do
+    build(:dro, id: druid).new(
+      description: {
+        title: [{ value: 'Test item' }],
+        subject: [{ type: 'topic', value: 'word' }],
+        purl: 'https://purl.stanford.edu/mx123ms3333'
       }
     )
   end
@@ -72,7 +34,7 @@ RSpec.describe CompositeIndexer do
       instance_double(Dor::Workflow::Client::Status, milestones: {}, info: {}, display: 'bad')
     end
     let(:workflow_client) { instance_double(Dor::Workflow::Client, status: status) }
-    let(:doc) { indexer.new(id: 'druid:ab123cd4567', cocina: cocina).to_solr }
+    let(:doc) { indexer.new(id: druid, cocina: cocina_item).to_solr }
 
     before do
       allow(Dor::Workflow::Client).to receive(:new).and_return(workflow_client)
@@ -82,10 +44,10 @@ RSpec.describe CompositeIndexer do
       # rubocop:disable Style/StringHashKeys
       expect(doc).to eq(
         'metadata_format_ssim' => 'mods',
-        'sw_display_title_tesim' => 'Test obj',
-        'nonhydrus_apo_title_ssim' => ['APO title'],
-        'apo_title_ssim' => ['APO title'],
-        'metadata_source_ssi' => 'Symphony',
+        'sw_display_title_tesim' => 'Test item',
+        'nonhydrus_apo_title_ssim' => ['test admin policy'],
+        'apo_title_ssim' => ['test admin policy'],
+        'metadata_source_ssi' => 'DOR',
         'objectId_tesim' => ['druid:mx123ms3333', 'mx123ms3333'],
         'topic_ssim' => ['word'],
         'topic_tesim' => ['word']

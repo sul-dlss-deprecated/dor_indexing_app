@@ -3,43 +3,27 @@
 require 'rails_helper'
 
 RSpec.describe EmbargoMetadataIndexer do
-  let(:apo_id) { 'druid:gf999hb9999' }
   let(:druid) { 'druid:zz666yy9999' }
   let(:release_date) { '2024-06-06' }
-  let(:cocina) do
-    Cocina::Models.build(
-      {
-        type: Cocina::Models::ObjectType.object,
-        externalIdentifier: druid,
-        label: 'testing embargo indexing',
-        version: 1,
-        access: {
+  let(:cocina_item) do
+    build(:dro, id: druid).new(
+      access: {
+        view: 'world',
+        download: 'none',
+        copyright: 'some student',
+        useAndReproductionStatement: 'restricted until embargo lifted',
+        embargo: {
+          releaseDate: release_date,
           view: 'world',
-          download: 'none',
-          copyright: 'some student',
-          useAndReproductionStatement: 'restricted until embargo lifted',
-          embargo: {
-            releaseDate: release_date,
-            view: 'world',
-            download: 'world',
-            useAndReproductionStatement: 'freedom reigns'
-          }
-        },
-        administrative: {
-          hasAdminPolicy: apo_id
-        },
-        description: {
-          title: [{ value: 'embargo indexing object' }],
-          purl: 'https://purl.stanford.edu/zz666yy9999'
-        },
-        identification: { sourceId: 'sul:1234' },
-        structural: {}
+          download: 'world',
+          useAndReproductionStatement: 'freedom reigns'
+        }
       }
     )
   end
 
   let(:indexer) do
-    described_class.new(cocina: cocina)
+    described_class.new(cocina: cocina_item)
   end
 
   describe '#to_solr' do
@@ -68,31 +52,7 @@ RSpec.describe EmbargoMetadataIndexer do
     end
 
     context 'when there is no embargo' do
-      let(:cocina) do
-        Cocina::Models.build(
-          {
-            type: Cocina::Models::ObjectType.object,
-            externalIdentifier: druid,
-            label: 'testing embargo indexing',
-            version: 1,
-            access: {
-              view: 'world',
-              download: 'none',
-              copyright: 'some student',
-              useAndReproductionStatement: 'restricted until embargo lifted'
-            },
-            administrative: {
-              hasAdminPolicy: apo_id
-            },
-            description: {
-              title: [{ value: 'embargo indexing object' }],
-              purl: 'https://purl.stanford.edu/zz666yy9999'
-            },
-            identification: { sourceId: 'sul:1234' },
-            structural: {}
-          }
-        )
-      end
+      let(:cocina_item) { build(:dro, id: druid) }
 
       it 'Solr doc does not have embargo fields' do
         expect(doc).to eq({})

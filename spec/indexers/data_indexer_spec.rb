@@ -4,18 +4,13 @@ require 'rails_helper'
 
 RSpec.describe DataIndexer do
   let(:cocina) do
-    dro = Cocina::Models::DRO.new(externalIdentifier: 'druid:xx999xx9999',
-                                  type: Cocina::Models::ObjectType.map,
-                                  label: 'test label',
-                                  version: 4,
-                                  description: {
-                                    title: [{ value: 'test label' }],
-                                    purl: 'https://purl.stanford.edu/xx999xx9999'
-                                  },
-                                  access: {},
-                                  administrative: { hasAdminPolicy: 'druid:vv888vv8888' },
-                                  structural: structural,
-                                  identification: { sourceId: 'sul:1234' })
+    dro = build(
+      :dro,
+      id: 'druid:xx999xx9999',
+      admin_policy_id: 'druid:vv888vv8888',
+      label: 'item label',
+      version: 4
+    ).new(structural: structural)
     Cocina::Models.with_metadata(dro, 'abc123', created: DateTime.parse('Wed, 01 Jan 2020 12:00:01 GMT'),
                                                 modified: DateTime.parse('Thu, 04 Mar 2021 23:05:34 GMT'))
   end
@@ -39,7 +34,7 @@ RSpec.describe DataIndexer do
 
       it 'makes a solr doc' do
         expect(doc).to eq(
-          'obj_label_tesim' => 'test label',
+          'obj_label_tesim' => 'item label',
           'current_version_isi' => 4,
           'milestones_ssim' => %w[foo bar],
           'has_constituents_ssim' => nil,
@@ -60,7 +55,7 @@ RSpec.describe DataIndexer do
 
       it 'makes a solr doc' do
         expect(doc).to eq(
-          'obj_label_tesim' => 'test label',
+          'obj_label_tesim' => 'item label',
           'current_version_isi' => 4,
           'milestones_ssim' => %w[foo bar],
           'has_model_ssim' => 'info:fedora/afmodel:Dor_Item',
@@ -81,7 +76,7 @@ RSpec.describe DataIndexer do
 
       it 'makes a solr doc' do
         expect(doc).to eq(
-          'obj_label_tesim' => 'test label',
+          'obj_label_tesim' => 'item label',
           'current_version_isi' => 4,
           'milestones_ssim' => %w[foo bar],
           'has_constituents_ssim' => ['druid:bb777bb7777', 'druid:dd666dd6666'],
