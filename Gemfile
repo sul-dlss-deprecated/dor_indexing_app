@@ -25,7 +25,7 @@ gem 'sneakers', '~> 2.11'
 gem 'solrizer'
 
 # DLSS gems
-gem 'dor-services-client', '~> 11.0'
+gem 'dor-services-client', '~> 12.0'
 gem 'dor-workflow-client', '~> 4.0'
 gem 'parse_date'
 
