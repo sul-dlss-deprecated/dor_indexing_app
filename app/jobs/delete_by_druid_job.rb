@@ -11,9 +11,7 @@ class DeleteByDruidJob
 
   def work(msg)
     druid = druid_from_message(msg)
-
-    solr.delete_by_id(druid, commitWithin: 1000)
-    solr.commit
+    Indexer.delete(solr: solr, identifier: druid)
 
     ack!
   end

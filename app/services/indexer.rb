@@ -1,72 +1,66 @@
 # frozen_string_literal: true
 
 class Indexer
-  include Dry::Monads[:result]
-
   # @param [RSolr::Client] solr
-  # @param [String] identifier
-  def initialize(solr:, identifier:)
-    @solr = solr
-    @identifier = identifier
-    # Give Honeybadger some context in case an error occurs
-    Honeybadger.context({ identifier: identifier })
+  # @param [String] identifier for cocina object
+  # @param [Integer] commit within milliseconds; if nil, then immediately committed.
+  # @raise [Dor::Services::Client::NotFoundResponse]
+  # @raise [Dor::Services::Client::UnexpectedResponse]
+  # @return [Hash,Nil] solr document or nil if indexing failed
+  def self.load_and_index(solr:, identifier:, commit_within: 1000)
+    new(solr: solr, commit_within: commit_within).load_and_index(identifier: identifier)
   end
 
-  def load_and_index
-    cocina_with_metadata = fetch_model_with_metadata
-    if cocina_with_metadata.success?
-      reindex(
-        add_attributes: { commitWithin: 1000 },
-        cocina_with_metadata: cocina_with_metadata
-      )
-    else
-      Honeybadger.notify("Didn't get an expected response from dor-services-app",
-                         { druid: identifier, failure: cocina_with_metadata.failure })
-    end
+  # @param [RSolr::Client] solr
+  # @param [Cocina::Models::DROWithMetadata|CollectionWithMetadata|AdminPolicyWithMetadata] cocina object to index
+  # @param [Integer] commit within milliseconds; if nil, then immediately committed.
+  # @return [Hash,Nil] solr document or nil if indexing failed
+  def self.reindex(solr:, cocina_with_metadata:, commit_within: 1000)
+    new(solr: solr, commit_within: commit_within).reindex(cocina_with_metadata: cocina_with_metadata)
+  end
+
+  # @param [RSolr::Client] solr
+  # @param [String] identifier for cocina object
+  # @param [Integer] commit within milliseconds; if nil, then immediately committed.
+  # @return [Hash,Nil] solr document or nil if indexing failed
+  def self.delete(solr:, identifier:, commit_within: 1000)
+    new(solr: solr, commit_within: commit_within).delete(identifier: identifier)
+  end
+
+  def initialize(solr:, commit_within: 1000)
+    @solr = solr
+    @commit_within = commit_within
+  end
+
+  def load_and_index(identifier:)
+    Honeybadger.context({ identifier: identifier })
+    cocina_with_metadata = Dor::Services::Client.object(identifier).find
+    reindex(cocina_with_metadata: cocina_with_metadata)
   end
 
   # Indexes the provided Cocina object to solr
-  # NOTE: this doesn't commit automatically
-  def reindex(add_attributes:, cocina_with_metadata:)
-    solr_doc = nil
-    logger.info 'document found, now generating document solr'
-    # benchmark how long it takes to convert the object to a Solr document
-    to_solr_stats = Benchmark.measure('to_solr') do
-      solr_doc = if cocina_with_metadata.success?
-                   model = cocina_with_metadata.value!
-                   DocumentBuilder.for(model: model).to_solr
-                 else
-                   raise "Unable to retrieve data from dor-services-app. #{cocina_with_metadata.failure}"
-                 end
-      logger.debug 'solr doc created'
-      @solr.add(solr_doc, add_attributes: add_attributes)
-    end.format('%n realtime %rs total CPU %ts').gsub(/[()]/, '')
+  def reindex(cocina_with_metadata:)
+    Honeybadger.context({ identifier: cocina_with_metadata.externalIdentifier })
 
-    logger.info "successfully updated index for #{identifier} (metrics: #{to_solr_stats})"
+    solr_doc = DocumentBuilder.for(model: cocina_with_metadata).to_solr
+    logger.debug 'solr doc created'
+    solr.add(solr_doc, add_attributes: { commitWithin: commit_within || 1000 })
+    solr.commit if commit_within.nil?
+
+    logger.info "successfully updated index for #{cocina_with_metadata.externalIdentifier}"
 
     solr_doc
   end
 
-  # @returns [Success,Failure] the result of finding the model with metadata
-  # @raises [Dor::Services::Client::NotFoundResponse] if the model isn't found
-  def fetch_model_with_metadata
-    cocina_with_metadata = nil
-    # benchmark how long it takes to load the object
-    load_stats = Benchmark.measure('load_instance') do
-      cocina_with_metadata = begin
-        Success(Dor::Services::Client.object(identifier).find)
-      rescue Dor::Services::Client::UnexpectedResponse
-        Failure(:conversion_error)
-      end
-    end.format('%n realtime %rs total CPU %ts').gsub(/[()]/, '')
-    logger.info "Load metrics: #{load_stats}"
-    cocina_with_metadata
+  def delete(identifier:)
+    solr.delete_by_id(identifier, commitWithin: commit_within || 1000)
+    solr.commit if commit_within.nil?
+
+    logger.info "successfully deleted #{identifier}"
   end
+
+  private
 
   delegate :logger, to: :Rails
-  attr_reader :identifier
-
-  def commit
-    @solr.commit
-  end
+  attr_reader :solr, :commit_within
 end

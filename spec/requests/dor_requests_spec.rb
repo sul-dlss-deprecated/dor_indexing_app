@@ -53,8 +53,9 @@ RSpec.describe 'DOR', type: :request do
       end
 
       it 'raises an error for UnexpectedResponse' do
-        allow(object_service).to receive(:find).and_raise(Dor::Services::Client::UnexpectedResponse.new(response: nil))
-        expect { post "/dor/reindex/#{druid}" }.to raise_error 'Unable to retrieve data from dor-services-app. conversion_error'
+        allow(object_service).to receive(:find).and_raise(Dor::Services::Client::UnexpectedResponse.new(response: '',
+                                                                                                        errors: [{ title: 'Oops!' }]))
+        expect { post "/dor/reindex/#{druid}" }.to raise_error Dor::Services::Client::UnexpectedResponse
       end
 
       it 'raises for other errors' do
