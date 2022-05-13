@@ -14,9 +14,9 @@ class ReindexByDruidJob
     druid = druid_from_message(msg)
     # Since we don't have the metadata (namely created_at) in the message,
     # we need another API call. :(
-    Indexer.new(solr: solr, identifier: druid).load_and_index
+    Indexer.load_and_index(solr: solr, identifier: druid)
     ack!
-  rescue Dor::Services::Client::NotFoundResponse, Rubydora::RecordNotFound
+  rescue Dor::Services::Client::NotFoundResponse
     Honeybadger.notify('Cannot reindex since not found. This may be because applications (e.g., PresCat) are creating workflow steps for deleted objects.',
                        { druid: druid_from_message(msg) })
     Rails.logger.info("Cannot reindex #{druid_from_message(msg)} by druid since it is not found.")
