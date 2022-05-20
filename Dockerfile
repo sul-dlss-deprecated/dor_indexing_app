@@ -19,4 +19,4 @@ RUN bundle install --without production
 
 COPY . ./
 
-ENTRYPOINT ["./docker-entrypoint.sh"]
+CMD ["./docker/invoke.sh"]
