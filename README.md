@@ -75,3 +75,10 @@ Publish:
 ```
 docker push suldlss/dor-indexing-app:latest
 ```
+
+#### Note
+When running the workers, you need to ensure that rabbitmq is up first. You can do this by running:
+
+```
+sh -c "docker/wait-port.sh rabbitmq 5672 ; bin/rake sneakers:run"
+```
