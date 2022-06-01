@@ -11,19 +11,30 @@ class ReleasableIndexer
   # @return [Hash] the partial solr document for releasable concerns
   def to_solr
     Rails.logger.debug { "In #{self.class}" }
-
-    # Item tags have precidence over collection tags, so if the collection is release=true
-    # and the item is release=false, then it is not released
-    values = tags_from_collection.merge(tags_from_item).values.select(&:release).map(&:to)
-
-    return {} if values.blank?
+    return {} if tags.blank?
 
     {
-      'released_to_ssim' => values.uniq
-    }
+      'released_to_ssim' => tags.map(&:to).uniq,
+      'released_to_searchworks_dtsi' => searchworks_release_date,
+      'released_to_earthworks_dtsi' => earthworks_release_date
+    }.compact
   end
 
   private
+
+  def earthworks_release_date
+    tags.find { |tag| tag.to == 'Earthworks' }&.date&.utc&.iso8601
+  end
+
+  def searchworks_release_date
+    tags.find { |tag| tag.to == 'Searchworks' }&.date&.utc&.iso8601
+  end
+
+  # Item tags have precidence over collection tags, so if the collection is release=true
+  # and the item is release=false, then it is not released
+  def tags
+    @tags ||= tags_from_collection.merge(tags_from_item).values.select(&:release)
+  end
 
   def tags_from_collection
     parent_collections.each_with_object({}) do |collection, result|
