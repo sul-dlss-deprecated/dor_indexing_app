@@ -12,7 +12,7 @@ RSpec.describe ReleasableIndexer do
     context 'with no parent collection' do
       let(:parent_collections) { [] }
 
-      context 'when releaseTags are present' do
+      context 'when multiple releaseTags are present for the same destination' do
         let(:administrative) do
           {
             hasAdminPolicy: apo_id,
@@ -30,6 +30,28 @@ RSpec.describe ReleasableIndexer do
         it 'indexes release tags' do
           # rubocop:disable Style/StringHashKeys
           expect(doc).to eq('released_to_ssim' => %w[Project test_target])
+          # rubocop:enable Style/StringHashKeys
+        end
+      end
+
+      context 'when Searchworks and Earthworks tags are present' do
+        let(:administrative) do
+          {
+            hasAdminPolicy: apo_id,
+            releaseTags: [
+              { to: 'Searchworks', release: true, date: '2021-05-12T21:05:21.000+00:00' },
+              { to: 'Earthworks', release: true, date: '2016-11-16T22:52:35.000+00:00' }
+            ]
+          }
+        end
+
+        it 'indexes release tags' do
+          # rubocop:disable Style/StringHashKeys
+          expect(doc).to eq(
+            'released_to_ssim' => %w[Searchworks Earthworks],
+            'released_to_earthworks_dtsi' => '2016-11-16T22:52:35Z',
+            'released_to_searchworks_dtsi' => '2021-05-12T21:05:21Z'
+          )
           # rubocop:enable Style/StringHashKeys
         end
       end
