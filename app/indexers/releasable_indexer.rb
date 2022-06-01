@@ -15,8 +15,8 @@ class ReleasableIndexer
 
     {
       'released_to_ssim' => tags.map(&:to).uniq,
-      'released_to_searchworks_dtsi' => searchworks_release_date,
-      'released_to_earthworks_dtsi' => earthworks_release_date
+      'released_to_searchworks_dttsi' => searchworks_release_date,
+      'released_to_earthworks_dttsi' => earthworks_release_date
     }.compact
   end
 
