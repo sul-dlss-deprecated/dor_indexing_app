@@ -44,26 +44,20 @@ class ContentMetadataIndexer
     @file_sets ||= Array(cocina.structural&.contains)
   end
 
+  TYPES = {
+    Cocina::Models::ObjectType.image => 'image',
+    Cocina::Models::ObjectType.manuscript => 'image',
+    Cocina::Models::ObjectType.book => 'book',
+    Cocina::Models::ObjectType.map => 'map',
+    Cocina::Models::ObjectType.three_dimensional => '3d',
+    Cocina::Models::ObjectType.media => 'media',
+    Cocina::Models::ObjectType.webarchive_seed => 'webarchive-seed',
+    Cocina::Models::ObjectType.webarchive_binary => 'webarchive-binary',
+    Cocina::Models::ObjectType.geo => 'geo',
+    Cocina::Models::ObjectType.document => 'document'
+  }.freeze
+
   def type(object_type)
-    case object_type
-    when Cocina::Models::ObjectType.image, Cocina::Models::ObjectType.manuscript
-      'image'
-    when Cocina::Models::ObjectType.book
-      'book'
-    when Cocina::Models::ObjectType.map
-      'map'
-    when Cocina::Models::ObjectType.three_dimensional
-      '3d'
-    when Cocina::Models::ObjectType.media
-      'media'
-    when Cocina::Models::ObjectType.webarchive_seed
-      'webarchive-seed'
-    when Cocina::Models::ObjectType.geo
-      'geo'
-    when Cocina::Models::ObjectType.document
-      'document'
-    else
-      'file'
-    end
+    TYPES.fetch(object_type, 'file')
   end
 end
