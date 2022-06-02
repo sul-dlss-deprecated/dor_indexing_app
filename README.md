@@ -8,10 +8,6 @@
 The dor_indexing_app is the primary API for indexing DOR objects into the Argo index.
 For more information about the fields and their purpose see: https://docs.google.com/spreadsheets/d/1_uYZvh-oihcxAM_Q24qJ_3nSaqAybmS362SYlDYwYqg/edit#gid=0
 
-## Known Consumers
-* There is a Karaf job that runs on a single node: `sulmq-prod-a:/opt/app/karaf/current/deploy/dor_prod_reindexing.xml` that queries solr for the least-recently-indexed items and indexes them
-* There is a Camel route that sends messages from the fedora update topic https://github.com/sul-dlss/dor-camel-routes/blob/master/deploy/edu_stanford_dor-indexing-app-prod.indexing.xml#L116-L137
-
 ## Rolling indexer
 
 This helps keep the index fresh by reindexing the oldest data. It is managed as a systemd service. To interact with it from your machine, you can use Capistrano:
