@@ -183,6 +183,91 @@ RSpec.describe ContentMetadataIndexer do
       end
     end
 
+    context 'when the object contains a file with no size' do
+      let(:structural) do
+        {
+          contains: [
+            {
+              type: Cocina::Models::FileSetType.file,
+              externalIdentifier: '0001',
+              label: '0001',
+              version: 1,
+              structural: {
+                contains: [
+                  {
+                    type: Cocina::Models::ObjectType.file,
+                    externalIdentifier: 'druid:cs178jh7817/gw177fc7976_05_0001.jp2',
+                    label: 'gw177fc7976_05_0001.jp2',
+                    filename: 'gw177fc7976_05_0001.jp2',
+                    version: 1,
+                    hasMimeType: 'image/jp2',
+                    hasMessageDigests: [
+                      {
+                        type: 'sha1',
+                        digest: 'ca1eb0edd09a21f9dd9e3a89abc790daf4d04916'
+                      },
+                      {
+                        type: 'md5',
+                        digest: '3d3ff46d98f3d517d0bf086571e05c18'
+                      }
+                    ],
+                    access: {
+                      view: 'world',
+                      download: 'world'
+                    },
+                    administrative: {
+                      publish: true,
+                      sdrPreserve: true,
+                      shelve: true
+                    }
+                  },
+                  {
+                    type: Cocina::Models::ObjectType.file,
+                    externalIdentifier: 'druid:cs178jh7817/gw177fc7976_05_0001.gif',
+                    label: 'gw177fc7976_05_0001.gif',
+                    filename: 'gw177fc7976_05_0001.gif',
+                    size: 4_128_877,
+                    version: 1,
+                    hasMimeType: 'image/gif',
+                    use: 'derivative',
+                    hasMessageDigests: [
+                      {
+                        type: 'sha1',
+                        digest: '61940d4fad097cba98a3e9dd9f12a90dde0be1ac'
+                      },
+                      {
+                        type: 'md5',
+                        digest: '406d5d80fdd9ecc0352d339badb4a8fb'
+                      }
+                    ],
+                    access: {
+                      view: 'dark',
+                      download: 'none'
+                    },
+                    administrative: {
+                      publish: false,
+                      sdrPreserve: true,
+                      shelve: false
+                    },
+                    presentation: {
+                      height: 4580,
+                      width: 5939
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      end
+
+      it 'ignores the nil sizes without erroring' do
+        expect(doc).to include(
+          'preserved_size_dbtsi' => 4_128_877
+        )
+      end
+    end
+
     context 'when the object contains no file_sets' do
       let(:structural) { {} }
 
