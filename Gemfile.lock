@@ -132,13 +132,13 @@ GEM
       activesupport
     diff-lcs (1.5.0)
     digest (3.1.0)
-    dlss-capistrano (4.2.1)
+    dlss-capistrano (4.3.0)
       capistrano (~> 3.0)
       capistrano-bundle_audit (>= 0.3.0)
       capistrano-one_time_key
       capistrano-shared_configs
     docile (1.4.0)
-    dor-services-client (12.4.0)
+    dor-services-client (12.5.0)
       activesupport (>= 4.2, < 8)
       cocina-models (~> 0.82.0)
       deprecation
@@ -212,6 +212,7 @@ GEM
       concurrent-ruby (~> 1.0)
     ice_nine (0.11.2)
     iso-639 (0.3.5)
+    json (2.6.2)
     json_schema (0.21.0)
     jsonpath (1.1.2)
       multi_json
@@ -228,8 +229,8 @@ GEM
     marcel (1.0.2)
     method_source (1.0.0)
     mini_mime (1.1.2)
-    minitest (5.16.1)
-    msgpack (1.5.2)
+    minitest (5.16.2)
+    msgpack (1.5.3)
     multi_json (1.15.0)
     net-imap (0.2.3)
       digest
@@ -270,8 +271,8 @@ GEM
     puma (5.6.4)
       nio4r (~> 2.0)
     racc (1.6.0)
-    rack (2.2.3.1)
-    rack-test (2.0.1)
+    rack (2.2.4)
+    rack-test (2.0.2)
       rack (>= 1.3)
     rack-timeout (0.5.2)
     rails (7.0.3)
@@ -336,7 +337,8 @@ GEM
       rspec-core (>= 2, < 4, != 2.12.0)
     rss (0.2.9)
       rexml
-    rubocop (1.31.0)
+    rubocop (1.31.1)
+      json (~> 2.3)
       parallel (~> 1.10)
       parser (>= 3.1.0.0)
       rainbow (>= 2.2.2, < 4.0)
@@ -354,8 +356,8 @@ GEM
       activesupport (>= 4.2.0)
       rack (>= 1.1)
       rubocop (>= 1.7.0, < 2.0)
-    rubocop-rspec (2.11.1)
-      rubocop (~> 1.19)
+    rubocop-rspec (2.12.1)
+      rubocop (~> 1.31)
     ruby-progressbar (1.11.0)
     ruby2_keywords (0.0.5)
     serverengine (2.0.7)
@@ -453,4 +455,4 @@ DEPENDENCIES
   webmock
 
 BUNDLED WITH
-   2.3.9
+   2.3.17
