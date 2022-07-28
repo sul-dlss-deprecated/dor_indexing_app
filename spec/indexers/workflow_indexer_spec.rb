@@ -37,7 +37,7 @@ RSpec.describe WorkflowIndexer do
       end
 
       it 'creates the workflow_status field with the workflow repository included, and indicates that the workflow is still active' do
-        expect(solr_doc[Solrizer.solr_name('workflow_status', :symbol)].first).to eq('accessionWF|active|0')
+        expect(solr_doc['workflow_status_ssim'].first).to eq('accessionWF|active|0')
       end
     end
 
@@ -59,7 +59,7 @@ RSpec.describe WorkflowIndexer do
       end
 
       it 'indicates that the workflow is complete' do
-        expect(solr_doc[Solrizer.solr_name('workflow_status', :symbol)].first).to eq('accessionWF|completed|0')
+        expect(solr_doc['workflow_status_ssim'].first).to eq('accessionWF|completed|0')
       end
     end
 
