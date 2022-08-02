@@ -49,7 +49,7 @@ class TopicBuilder
       value.parallelValue.flat_map { |topic| flat_topic(topic) }
     elsif remove_trailing_punctuation?
       # comma, semicolon, and backslash are dropped
-      Array(value.value.sub(/[ ,;\\]+$/, ''))
+      Array(value.value&.sub(/[ ,;\\]+$/, ''))
     else
       Array(value.value)
     end

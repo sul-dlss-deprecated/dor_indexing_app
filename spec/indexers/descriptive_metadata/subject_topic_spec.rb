@@ -985,5 +985,30 @@ RSpec.describe DescriptiveMetadataIndexer do
         expect(doc).to include('topic_tesim' => ['Cats.'])
       end
     end
+
+    context 'when subject is missing a value' do
+      let(:description) do
+        {
+          title: [
+            {
+              value: 'Title'
+            }
+          ],
+          subject: [
+            {
+              value: 'Cats.',
+              type: 'topic'
+            },
+            {
+              type: 'topic'
+            }
+          ]
+        }
+      end
+
+      it 'ignores subjects that are missing a value' do
+        expect(doc).to include('topic_tesim' => ['Cats.'])
+      end
+    end
   end
 end
