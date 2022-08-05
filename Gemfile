@@ -26,7 +26,7 @@ gem 'solrizer'
 
 # DLSS gems
 gem 'dor-services-client', '~> 12.0'
-gem 'dor-workflow-client', '~> 4.0'
+gem 'dor-workflow-client', '~> 5.0'
 gem 'parse_date'
 
 group :production do
