@@ -112,7 +112,7 @@ class DescriptiveMetadataIndexer
 
     return resource_type_formats if resource_type_formats == ['Book']
 
-    genre_formats = flat_forms_for('genre').map { |form| form.value.capitalize }.uniq
+    genre_formats = flat_forms_for('genre').map { |form| form.value&.capitalize }.uniq
 
     (resource_type_formats + genre_formats).presence
   end

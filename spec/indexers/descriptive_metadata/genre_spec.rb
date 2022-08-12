@@ -203,5 +203,31 @@ RSpec.describe DescriptiveMetadataIndexer do
         expect(doc).to include('sw_genre_ssim' => ['technical report', 'Technical report'])
       end
     end
+
+    context 'when genre has no value' do
+      # from zv340pg2457
+      let(:description) do
+        {
+          title: [
+            {
+              value: 'title'
+            }
+          ],
+          form: [
+            {
+              type: 'genre',
+              source: {
+                code: 'aat',
+                uri: 'http://vocab.getty.edu/aat/'
+              }
+            }
+          ]
+        }
+      end
+
+      it 'does not throw error' do
+        expect(doc).to include('sw_genre_ssim' => [''])
+      end
+    end
   end
 end
