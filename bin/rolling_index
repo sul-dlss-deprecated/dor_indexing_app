@@ -19,6 +19,8 @@ Daemons.run_proc('rolling index') do
         Honeybadger.notify('Rolling indexer cannot reindex since not found.', { druid: identifier })
         # Clean up cruft in QA and stage
         Indexer.delete(solr: solr_conn, identifier: identifier) if ['stage', 'qa'].include?(ENV['HONEYBADGER_ENV'])
+      rescue Dor::Services::Client::UnexpectedResponse
+        Honeybadger.notify('Unexpected response from Dor Services App for ', { druid: identifier })
       end
     end
     sleep(5) # This was just a wild guess.  We can turn this up/down as necessary.
