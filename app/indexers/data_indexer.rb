@@ -18,10 +18,10 @@ class DataIndexer
       solr_doc['modified_latest_dttsi'] = modified_latest
       solr_doc['created_at_dttsi'] = created_at
 
-      # These are required as long as dor-services-app uses ActiveFedora for querying:
-      solr_doc['has_model_ssim'] = legacy_model
-      solr_doc['is_governed_by_ssim'] = legacy_apo
+      # is_member_of_collection_ssim is used by dor-services-app for querying for members of a
+      # collection and it is a facet in Argo
       solr_doc['is_member_of_collection_ssim'] = legacy_collections
+      solr_doc['is_governed_by_ssim'] = legacy_apo # Argo facet
 
       # Used so that DSA can generate public XML whereas a constituent can find the virtual object it is part of.
       solr_doc['has_constituents_ssim'] = virtual_object_constituents
@@ -53,16 +53,5 @@ class DataIndexer
 
   def legacy_apo
     "info:fedora/#{cocina.administrative.hasAdminPolicy}"
-  end
-
-  def legacy_model
-    case cocina.type
-    when Cocina::Models::ObjectType.admin_policy
-      'info:fedora/afmodel:Dor_AdminPolicyObject'
-    when Cocina::Models::ObjectType.collection
-      'info:fedora/afmodel:Dor_Collection'
-    else
-      'info:fedora/afmodel:Dor_Item'
-    end
   end
 end
