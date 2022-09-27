@@ -14,7 +14,7 @@ class AuthorBuilder
   end
 
   def build
-    contributor = primary_contributor || flat_contributors.first
+    contributor = primary_contributor || contributors.first
     build_contributor(contributor)
   end
 
@@ -29,10 +29,6 @@ class AuthorBuilder
   end
 
   def primary_contributor
-    flat_contributors.find { |contributor| contributor.status == 'primary' }
-  end
-
-  def flat_contributors
-    @flat_contributors ||= contributors.flat_map { |contributor| contributor.parallelContributor.presence || contributor }
+    contributors.find { |contributor| contributor.status == 'primary' }
   end
 end
