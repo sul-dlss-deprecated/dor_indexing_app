@@ -12,7 +12,7 @@ OkComputer::Registry.deregister 'database' # we don't have a database
 # Simple echo of the VERSION file
 class VersionCheck < OkComputer::AppVersionCheck
   def version
-    File.read(Rails.root.join('VERSION')).chomp
+    Rails.root.join('VERSION').read.chomp
   rescue Errno::ENOENT
     raise UnknownRevision
   end
