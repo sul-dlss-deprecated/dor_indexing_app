@@ -23,7 +23,7 @@ RSpec.describe Indexer do
     context 'when object is found' do
       let(:object_client) { instance_double(Dor::Services::Client::Object, find: model) }
 
-      it 'works' do
+      it 'is properly indexed' do
         expect(load_and_index).to eq(doc)
         expect(DocumentBuilder).to have_received(:for).with(model: model)
         expect(doc_builder).to have_received(:to_solr)

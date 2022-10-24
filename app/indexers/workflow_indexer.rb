@@ -30,7 +30,7 @@ class WorkflowIndexer
   def definition_process_names
     @definition_process_names ||= begin
       definition = WorkflowClientFactory.build.workflow_template(workflow_name)
-      definition['processes'].map { |p| p['name'] }
+      definition['processes'].pluck('name')
     end
   end
 
