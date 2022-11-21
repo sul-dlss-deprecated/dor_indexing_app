@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'Dor routing', type: :routing do
+RSpec.describe 'Dor routing' do
   describe 'reindexing' do
     it 'routes appropriately' do
       expect(get: '/dor/reindex/druid:abc123').to route_to(

@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'DOR', type: :request do
+RSpec.describe 'DOR' do
   let(:druid) { 'druid:bc123df5678' }
 
   describe 'reindexing' do
