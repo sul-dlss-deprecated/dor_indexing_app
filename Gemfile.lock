@@ -72,7 +72,7 @@ GEM
       sshkit (>= 1.6.1, != 1.7.0)
     amq-protocol (2.3.2)
     ast (2.4.2)
-    attr_extras (7.0.0)
+    attr_extras (7.1.0)
     bootsnap (1.16.0)
       msgpack (~> 1.2)
     builder (3.2.4)
@@ -249,7 +249,7 @@ GEM
     net-smtp (0.3.3)
       net-protocol
     net-ssh (7.0.1)
-    newrelic_rpm (8.15.0)
+    newrelic_rpm (8.16.0)
     nio4r (2.5.8)
     nokogiri (1.14.1-x86_64-darwin)
       racc (~> 1.4)
@@ -263,7 +263,7 @@ GEM
     parallel (1.22.1)
     parse_date (0.4.3)
       zeitwerk (~> 2.1)
-    parser (3.2.0.0)
+    parser (3.2.1.0)
       ast (~> 2.4.1)
     patience_diff (1.2.0)
       optimist (~> 3.0)
@@ -307,7 +307,7 @@ GEM
     rb-inotify (0.10.1)
       ffi (~> 1.0)
     rbtree (0.4.6)
-    regexp_parser (2.6.2)
+    regexp_parser (2.7.0)
     rexml (3.2.5)
     rsolr (2.5.0)
       builder (>= 2.1.2)
@@ -337,7 +337,7 @@ GEM
       rspec-core (>= 2, < 4, != 2.12.0)
     rss (0.2.9)
       rexml
-    rubocop (1.44.1)
+    rubocop (1.45.1)
       json (~> 2.3)
       parallel (~> 1.10)
       parser (>= 3.2.0.0)
@@ -347,8 +347,8 @@ GEM
       rubocop-ast (>= 1.24.1, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 2.4.0, < 3.0)
-    rubocop-ast (1.24.1)
-      parser (>= 3.1.1.0)
+    rubocop-ast (1.26.0)
+      parser (>= 3.2.1.0)
     rubocop-capybara (2.17.0)
       rubocop (~> 1.41)
     rubocop-performance (1.16.0)
@@ -407,7 +407,7 @@ GEM
     websocket-extensions (0.1.5)
     xml-simple (1.1.9)
       rexml
-    zeitwerk (2.6.6)
+    zeitwerk (2.6.7)
 
 PLATFORMS
   x86_64-darwin-19
