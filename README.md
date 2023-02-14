@@ -36,6 +36,10 @@ $ sudo systemctl restart rolling_index
 
 See https://sul-dlss.github.io/dor_indexing_app/
 
+## Index Field Semantics
+
+DOR indexing app indexes data into dynamic Solr fields that have semantics originally adopted by Stanford and the Samvera community, e.g., `_ssi`, `_tesim`, & `_dtsi`. These are documented in a [common Solr schema](https://github.com/sul-dlss/argo/blob/main/solr_conf/conf/schema.xml#L19-L151). The general scheme is one or two characters indicating the field type (e.g., string, integer, datetime) with the rest of the characters indicating whether the field is stored or not, indexed or not, and multi-valued or not.
+
 ## Setup RabbitMQ
 You must set up the durable rabbitmq queues that bind to the exchange where workflow messages are published.
 
