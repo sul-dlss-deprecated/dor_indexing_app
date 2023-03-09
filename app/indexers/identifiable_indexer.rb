@@ -19,6 +19,8 @@ class IdentifiableIndexer
       add_apo_titles(solr_doc, cocina.administrative.hasAdminPolicy)
 
       solr_doc['metadata_source_ssi'] = identity_metadata_source unless cocina.is_a? Cocina::Models::AdminPolicyWithMetadata
+      # NOTE: This will replace `metadata_source_ssi`
+      solr_doc['metadata_source_ssim'] = identity_metadata_sources unless cocina.is_a? Cocina::Models::AdminPolicyWithMetadata
       # This used to be added to the index by https://github.com/sul-dlss/dor-services/commit/11b80d249d19326ef591411ffeb634900e75c2c3
       # and was called dc_identifier_druid_tesim
       # It is used to search based on druid.
@@ -35,12 +37,30 @@ class IdentifiableIndexer
     end
   end
 
+  # @return [Array<String>] calculated values for Solr index
+  def identity_metadata_sources
+    return ['DOR'] if !cocina.identification.respond_to?(:catalogLinks) || distinct_current_catalog_types.empty?
+
+    distinct_current_catalog_types.map(&:capitalize)
+  end
+
   # Clears out the cache of items. Used primarily in testing.
   def self.reset_cache!
     @@apo_hash = {}
   end
 
   private
+
+  def distinct_current_catalog_types
+    # Filter out e.g. "previous symphony", "previous folio"
+    @distinct_current_catalog_types ||=
+      cocina.identification
+            .catalogLinks
+            .map(&:catalog)
+            .uniq
+            .sort
+            .reject { |catalog_type| catalog_type.include?('previous') }
+  end
 
   # @param [Hash] solr_doc
   # @param [String] admin_policy_id

@@ -12,7 +12,13 @@ RSpec.describe IdentifiableIndexer do
   end
   let(:identification) do
     {
-      catalogLinks: [{ catalog: 'symphony', catalogRecordId: '1234', refresh: true }],
+      catalogLinks: [
+        { catalog: 'symphony', catalogRecordId: '1234', refresh: true },
+        { catalog: 'previous symphony', catalogRecordId: '12345', refresh: false },
+        { catalog: 'folio', catalogRecordId: 'a1234', refresh: true },
+        { catalog: 'previous folio', catalogRecordId: 'a12345', refresh: false },
+        { catalog: 'previous folio', catalogRecordId: 'a123456', refresh: false }
+      ],
       sourceId: 'sul:1234'
     }
   end
@@ -28,6 +34,12 @@ RSpec.describe IdentifiableIndexer do
   describe '#identity_metadata_source' do
     it 'indexes metadata source' do
       expect(indexer.identity_metadata_source).to eq 'Symphony'
+    end
+  end
+
+  describe '#identity_metadata_sources' do
+    it 'indexes metadata sources' do
+      expect(indexer.identity_metadata_sources).to eq %w[Folio Symphony]
     end
   end
 
@@ -66,6 +78,10 @@ RSpec.describe IdentifiableIndexer do
         expect(doc).to match a_hash_including('metadata_source_ssi' => 'Symphony')
         # rubocop:enable Style/StringHashKeys
       end
+
+      it 'indexes metadata sources' do
+        expect(doc).to match a_hash_including('metadata_source_ssim' => %w[Folio Symphony]) # rubocop:disable Style/StringHashKeys
+      end
     end
 
     context 'without catalogLinks' do
@@ -76,6 +92,33 @@ RSpec.describe IdentifiableIndexer do
         expect(doc).to match a_hash_including('metadata_source_ssi' => 'DOR')
         # rubocop:enable Style/StringHashKeys
       end
+
+      it 'indexes metadata sources' do
+        expect(doc).to match a_hash_including('metadata_source_ssim' => ['DOR']) # rubocop:disable Style/StringHashKeys
+      end
+    end
+
+    context 'with only previous-type catalogLinks' do
+      let(:identification) do
+        {
+          catalogLinks: [
+            { catalog: 'previous symphony', catalogRecordId: '12345', refresh: false },
+            { catalog: 'previous folio', catalogRecordId: 'a12345', refresh: false },
+            { catalog: 'previous folio', catalogRecordId: 'a123456', refresh: false }
+          ],
+          sourceId: 'sul:1234'
+        }
+      end
+
+      it 'indexes metadata source' do
+        # rubocop:disable Style/StringHashKeys
+        expect(doc).to match a_hash_including('metadata_source_ssi' => 'DOR')
+        # rubocop:enable Style/StringHashKeys
+      end
+
+      it 'indexes metadata sources' do
+        expect(doc).to match a_hash_including('metadata_source_ssim' => ['DOR']) # rubocop:disable Style/StringHashKeys
+      end
     end
 
     context 'with no identification sub-schema' do
@@ -85,6 +128,10 @@ RSpec.describe IdentifiableIndexer do
         # rubocop:disable Style/StringHashKeys
         expect(doc).to match a_hash_including('metadata_source_ssi' => 'DOR')
         # rubocop:enable Style/StringHashKeys
+      end
+
+      it 'indexes metadata sources' do
+        expect(doc).to match a_hash_including('metadata_source_ssim' => ['DOR']) # rubocop:disable Style/StringHashKeys
       end
     end
   end
