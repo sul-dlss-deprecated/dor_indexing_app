@@ -47,7 +47,6 @@ RSpec.describe CompositeIndexer do
         'sw_display_title_tesim' => 'Test item',
         'nonhydrus_apo_title_ssim' => ['test admin policy'],
         'apo_title_ssim' => ['test admin policy'],
-        'metadata_source_ssi' => 'DOR',
         'metadata_source_ssim' => ['DOR'],
         'objectId_tesim' => ['druid:mx123ms3333', 'mx123ms3333'],
         'topic_ssim' => ['word'],
