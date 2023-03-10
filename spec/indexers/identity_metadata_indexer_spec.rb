@@ -22,8 +22,23 @@ RSpec.describe IdentityMetadataIndexer do
               refresh: true
             },
             {
+              catalog: 'previous symphony',
+              catalogRecordId: '666',
+              refresh: true
+            },
+            {
+              catalog: 'previous symphony',
+              catalogRecordId: '999',
+              refresh: true
+            },
+            {
               catalog: 'folio',
               catalogRecordId: 'a129483625',
+              refresh: true
+            },
+            {
+              catalog: 'previous folio',
+              catalogRecordId: 'a777',
               refresh: true
             }
           ],
@@ -37,7 +52,7 @@ RSpec.describe IdentityMetadataIndexer do
           'barcode_id_ssim' => ['36105049267078'],
           'catkey_id_ssim' => ['129483625'],
           'folio_instance_hrid_ssim' => ['a129483625'],
-          'dor_id_tesim' => %w[STANFORD_342837261527 36105049267078 129483625 a129483625],
+          'dor_id_tesim' => %w[STANFORD_342837261527 36105049267078 129483625 a129483625 666 999 a777],
           'identifier_ssim' => ['google:STANFORD_342837261527', 'barcode:36105049267078',
                                 'catkey:129483625', 'folio:a129483625'],
           'identifier_tesim' => ['google:STANFORD_342837261527', 'barcode:36105049267078',
