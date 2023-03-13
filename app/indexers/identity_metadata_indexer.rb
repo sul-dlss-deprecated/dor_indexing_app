@@ -13,7 +13,7 @@ class IdentityMetadataIndexer
 
     {
       'objectType_ssim' => [object_type],
-      'dor_id_tesim' => [source_id_value, barcode, catkey, folio_instance_hrid].compact,
+      'dor_id_tesim' => [source_id_value, barcode, catkey, folio_instance_hrid, previous_ils_ids].flatten.compact,
       'identifier_ssim' => prefixed_identifiers,
       'identifier_tesim' => prefixed_identifiers,
       'barcode_id_ssim' => [barcode].compact,
@@ -41,8 +41,22 @@ class IdentityMetadataIndexer
     @catkey ||= Array(cocina_object.identification.catalogLinks).find { |link| link.catalog == 'symphony' }&.catalogRecordId
   end
 
+  def previous_catkeys
+    @previous_catkeys ||=
+      Array(cocina_object.identification.catalogLinks).filter_map { |link| link.catalogRecordId if link.catalog == 'previous symphony' }
+  end
+
   def folio_instance_hrid
     @folio_instance_hrid ||= Array(cocina_object.identification.catalogLinks).find { |link| link.catalog == 'folio' }&.catalogRecordId
+  end
+
+  def previous_folio_instance_hrids
+    @previous_folio_instance_hrids ||=
+      Array(cocina_object.identification.catalogLinks).filter_map { |link| link.catalogRecordId if link.catalog == 'previous folio' }
+  end
+
+  def previous_ils_ids
+    @previous_ils_ids ||= previous_catkeys + previous_folio_instance_hrids
   end
 
   def object_type
