@@ -556,7 +556,7 @@ RSpec.describe DescriptiveMetadataIndexer do
       end
 
       it 'constructs name subject for topic_ssim and selects topic subject' do
-        expect(doc['topic_ssim']).to match_array ['Sayers, Dorothy L.', 'Homes and haunts']
+        expect(doc['topic_ssim']).to contain_exactly('Sayers, Dorothy L.', 'Homes and haunts')
         expect(doc).to include('topic_tesim' => ['Homes and haunts'])
       end
     end
@@ -587,7 +587,7 @@ RSpec.describe DescriptiveMetadataIndexer do
       end
 
       it 'selects name and title subjects for topic_ssim' do
-        expect(doc['topic_ssim']).to match_array ['Sayers, Dorothy L.', 'Gaudy night']
+        expect(doc['topic_ssim']).to contain_exactly('Sayers, Dorothy L.', 'Gaudy night')
         expect(doc).not_to include('topic_tesim')
       end
     end
