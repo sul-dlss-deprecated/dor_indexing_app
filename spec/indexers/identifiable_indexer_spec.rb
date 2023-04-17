@@ -31,12 +31,6 @@ RSpec.describe IdentifiableIndexer do
     described_class.reset_cache!
   end
 
-  describe '#identity_metadata_source' do
-    it 'indexes metadata source' do
-      expect(indexer.identity_metadata_source).to eq 'Symphony'
-    end
-  end
-
   describe '#identity_metadata_sources' do
     it 'indexes metadata sources' do
       expect(indexer.identity_metadata_sources).to eq %w[Folio Symphony]
@@ -73,12 +67,6 @@ RSpec.describe IdentifiableIndexer do
         expect(doc[Solrizer.solr_name('nonhydrus_apo_title', :symbol)].first).to eq 'collection title'
       end
 
-      it 'indexes metadata source' do
-        # rubocop:disable Style/StringHashKeys
-        expect(doc).to match a_hash_including('metadata_source_ssi' => 'Symphony')
-        # rubocop:enable Style/StringHashKeys
-      end
-
       it 'indexes metadata sources' do
         expect(doc).to match a_hash_including('metadata_source_ssim' => %w[Folio Symphony]) # rubocop:disable Style/StringHashKeys
       end
@@ -86,12 +74,6 @@ RSpec.describe IdentifiableIndexer do
 
     context 'without catalogLinks' do
       let(:identification) { { sourceId: 'sul:1234' } }
-
-      it 'indexes metadata source' do
-        # rubocop:disable Style/StringHashKeys
-        expect(doc).to match a_hash_including('metadata_source_ssi' => 'DOR')
-        # rubocop:enable Style/StringHashKeys
-      end
 
       it 'indexes metadata sources' do
         expect(doc).to match a_hash_including('metadata_source_ssim' => ['DOR']) # rubocop:disable Style/StringHashKeys
@@ -110,12 +92,6 @@ RSpec.describe IdentifiableIndexer do
         }
       end
 
-      it 'indexes metadata source' do
-        # rubocop:disable Style/StringHashKeys
-        expect(doc).to match a_hash_including('metadata_source_ssi' => 'DOR')
-        # rubocop:enable Style/StringHashKeys
-      end
-
       it 'indexes metadata sources' do
         expect(doc).to match a_hash_including('metadata_source_ssim' => ['DOR']) # rubocop:disable Style/StringHashKeys
       end
@@ -123,12 +99,6 @@ RSpec.describe IdentifiableIndexer do
 
     context 'with no identification sub-schema' do
       let(:cocina_item) { build(:dro, id: druid, admin_policy_id: apo_id) }
-
-      it 'indexes metadata source' do
-        # rubocop:disable Style/StringHashKeys
-        expect(doc).to match a_hash_including('metadata_source_ssi' => 'DOR')
-        # rubocop:enable Style/StringHashKeys
-      end
 
       it 'indexes metadata sources' do
         expect(doc).to match a_hash_including('metadata_source_ssim' => ['DOR']) # rubocop:disable Style/StringHashKeys
