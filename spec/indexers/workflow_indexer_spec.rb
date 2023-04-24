@@ -15,10 +15,12 @@ RSpec.describe WorkflowIndexer do
     '{"processes":[{"name":"hello"},{"name":"goodbye"},{"name":"technical-metadata"},{"name":"some-other-step"}]}'
   end
 
+  # rubocop:disable RSpec/IndexedLet
   let(:step1) { 'hello' }
   let(:step2) { 'goodbye' }
   let(:step3) { 'technical-metadata' }
   let(:step4) { 'some-other-step' }
+  # rubocop:enable RSpec/IndexedLet
 
   describe '#to_solr' do
     subject(:solr_doc) { indexer.to_solr.to_h }

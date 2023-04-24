@@ -5,7 +5,7 @@ class MarcCountry
 
   MARC_COUNTRY_CODE = 'marccountry'
 
-  COUNTRY_CODES = {
+  COUNTRY_CODES = { # rubocop:disable Metrics/CollectionLiteralLength
     'aa' => 'Albania',
     'abc' => 'Alberta',
     'aca' => 'Australian Capital Territory',
