@@ -26,7 +26,7 @@ RSpec.describe 'DOR' do
         expect(mock_solr_conn).to have_received(:add).with({ id: druid, text_field_tesim: 'a field to be searched' }, add_attributes: { commitWithin: 1000 })
         expect(mock_solr_conn).to have_received(:commit)
         expect(response.body).to eq "Successfully updated index for #{druid}"
-        expect(response.code).to eq '200'
+        expect(response).to have_http_status :ok
       end
 
       it 'reindexes an object with specified commitWithin param and no hard commit' do
@@ -34,7 +34,7 @@ RSpec.describe 'DOR' do
         expect(mock_solr_conn).to have_received(:add).with({ id: druid, text_field_tesim: 'a field to be searched' }, add_attributes: { commitWithin: 10_000 })
         expect(mock_solr_conn).not_to have_received(:commit)
         expect(response.body).to eq "Successfully updated index for #{druid}"
-        expect(response.code).to eq '200'
+        expect(response).to have_http_status :ok
       end
 
       it 'can be used with asynchronous commits' do
@@ -42,14 +42,14 @@ RSpec.describe 'DOR' do
         expect(mock_solr_conn).to have_received(:add)
         expect(mock_solr_conn).not_to have_received(:commit)
         expect(response.body).to eq "Successfully updated index for #{druid}"
-        expect(response.code).to eq '200'
+        expect(response).to have_http_status :ok
       end
 
       it 'gives the right status if an object is not found' do
         allow(object_service).to receive(:find).and_raise(Dor::Services::Client::NotFoundResponse)
         post "/dor/reindex/#{druid}"
         expect(response.body).to eq 'Object does not exist in the repository'
-        expect(response.code).to eq '404'
+        expect(response).to have_http_status :not_found
       end
 
       it 'raises an error for UnexpectedResponse' do
@@ -80,7 +80,7 @@ RSpec.describe 'DOR' do
             params: { cocina_object: cocina_hash, created_at: created_at, updated_at: updated_at }.to_json,
             headers: { 'CONTENT_TYPE' => 'application/json' }
         expect(response.body).to eq "Successfully updated index for #{druid}"
-        expect(response.code).to eq '200'
+        expect(response).to have_http_status :ok
         expect(mock_solr_conn).to have_received(:add).with(mock_solr_doc, add_attributes: { commitWithin: 1000 })
         expect(object_service).not_to have_received(:find)
       end
@@ -91,7 +91,7 @@ RSpec.describe 'DOR' do
             params: { cocina_object: cocina_hash, created_at: created_at, updated_at: updated_at, commitWithin: 10_000 }.to_json,
             headers: { 'CONTENT_TYPE' => 'application/json' }
         expect(response.body).to eq "Successfully updated index for #{druid}"
-        expect(response.code).to eq '200'
+        expect(response).to have_http_status :ok
         expect(mock_solr_conn).to have_received(:add).with(mock_solr_doc, add_attributes: { commitWithin: 10_000 })
         expect(mock_solr_conn).not_to have_received(:commit)
       end
@@ -100,7 +100,7 @@ RSpec.describe 'DOR' do
         put '/dor/reindex_from_cocina',
             params: { cocina_object: cocina_hash, updated_at: updated_at }.to_json,
             headers: { 'CONTENT_TYPE' => 'application/json' }
-        expect(response.code).to eq '400'
+        expect(response).to have_http_status :bad_request
         expect(response.body).to match(/missing required parameters: created_at/)
       end
 
@@ -110,7 +110,7 @@ RSpec.describe 'DOR' do
         put '/dor/reindex_from_cocina',
             params: { cocina_object: cocina_hash, created_at: created_at, updated_at: updated_at }.to_json,
             headers: { 'CONTENT_TYPE' => 'application/json' }
-        expect(response.code).to eq '422' # the caller should've provided valid Cocina JSON
+        expect(response).to have_http_status :unprocessable_entity # the caller should've provided valid Cocina JSON
         expect(response.body).to eq "Error building Cocina model from json: 'Type field not found'; cocina=#{cocina_json}"
         expect(Honeybadger).to have_received(:notify) do |msg, context:, backtrace:|
           expect(msg).to eq 'Error building Cocina model'
