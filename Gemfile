@@ -29,10 +29,6 @@ gem 'dor-services-client', '~> 12.0'
 gem 'dor-workflow-client', '~> 5.0'
 gem 'parse_date'
 
-group :production do
-  gem 'newrelic_rpm'
-end
-
 group :development, :test do
   gem 'byebug'
   gem 'rspec', '~> 3.0' # need this to use cocina-models factories
