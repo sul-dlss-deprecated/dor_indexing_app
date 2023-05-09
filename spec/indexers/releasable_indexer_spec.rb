@@ -4,10 +4,10 @@ require 'rails_helper'
 
 RSpec.describe ReleasableIndexer do
   let(:apo_id) { 'druid:gf999hb9999' }
-  let(:cocina) { build(:dro).new(administrative: administrative) }
+  let(:cocina) { build(:dro).new(administrative:) }
 
   describe 'to_solr' do
-    let(:doc) { described_class.new(cocina: cocina, parent_collections: parent_collections).to_solr }
+    let(:doc) { described_class.new(cocina:, parent_collections:).to_solr }
 
     context 'with no parent collection' do
       let(:parent_collections) { [] }

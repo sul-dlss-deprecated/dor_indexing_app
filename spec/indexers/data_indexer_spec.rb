@@ -10,7 +10,7 @@ RSpec.describe DataIndexer do
       admin_policy_id: 'druid:vv888vv8888',
       label: 'item label',
       version: 4
-    ).new(structural: structural)
+    ).new(structural:)
     Cocina::Models.with_metadata(dro, 'abc123', created: DateTime.parse('Wed, 01 Jan 2020 12:00:01 GMT'),
                                                 modified: DateTime.parse('Thu, 04 Mar 2021 23:05:34 GMT'))
   end
@@ -23,7 +23,7 @@ RSpec.describe DataIndexer do
     let(:indexer) do
       CompositeIndexer.new(
         described_class
-      ).new(id: 'druid:ab123cd4567', cocina: cocina)
+      ).new(id: 'druid:ab123cd4567', cocina:)
     end
     let(:doc) { indexer.to_solr }
 

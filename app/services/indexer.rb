@@ -8,7 +8,7 @@ class Indexer
   # @raise [Dor::Services::Client::UnexpectedResponse]
   # @return [Hash,Nil] solr document or nil if indexing failed
   def self.load_and_index(solr:, identifier:, commit_within: 1000)
-    new(solr: solr, commit_within: commit_within).load_and_index(identifier: identifier)
+    new(solr:, commit_within:).load_and_index(identifier:)
   end
 
   # @param [RSolr::Client] solr
@@ -16,7 +16,7 @@ class Indexer
   # @param [Integer] commit within milliseconds; if nil, then immediately committed.
   # @return [Hash,Nil] solr document or nil if indexing failed
   def self.reindex(solr:, cocina_with_metadata:, commit_within: 1000)
-    new(solr: solr, commit_within: commit_within).reindex(cocina_with_metadata: cocina_with_metadata)
+    new(solr:, commit_within:).reindex(cocina_with_metadata:)
   end
 
   # @param [RSolr::Client] solr
@@ -24,7 +24,7 @@ class Indexer
   # @param [Integer] commit within milliseconds; if nil, then immediately committed.
   # @return [Hash,Nil] solr document or nil if indexing failed
   def self.delete(solr:, identifier:, commit_within: 1000)
-    new(solr: solr, commit_within: commit_within).delete(identifier: identifier)
+    new(solr:, commit_within:).delete(identifier:)
   end
 
   def initialize(solr:, commit_within: 1000)
@@ -33,9 +33,9 @@ class Indexer
   end
 
   def load_and_index(identifier:)
-    Honeybadger.context({ identifier: identifier })
+    Honeybadger.context({ identifier: })
     cocina_with_metadata = Dor::Services::Client.object(identifier).find
-    reindex(cocina_with_metadata: cocina_with_metadata)
+    reindex(cocina_with_metadata:)
   end
 
   # Indexes the provided Cocina object to solr

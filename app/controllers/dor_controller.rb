@@ -3,7 +3,7 @@
 # Main controller of application
 class DorController < ApplicationController
   def reindex
-    Indexer.load_and_index(solr: solr, identifier: params[:id], commit_within: commit_within_param)
+    Indexer.load_and_index(solr:, identifier: params[:id], commit_within: commit_within_param)
     render status: :ok, plain: "Successfully updated index for #{params[:id]}"
   rescue Dor::Services::Client::NotFoundResponse
     render status: :not_found, plain: 'Object does not exist in the repository'
@@ -12,10 +12,10 @@ class DorController < ApplicationController
   def reindex_from_cocina
     # params[:cocina_object] is itself an ActionController::Parameters instance, hence the #require and #to_unsafe_h
     cocina_hash = params.require(:cocina_object).to_unsafe_h
-    cocina_with_metadata = build_model_and_metadata(cocina_hash: cocina_hash,
+    cocina_with_metadata = build_model_and_metadata(cocina_hash:,
                                                     created_at: params[:created_at].presence,
                                                     updated_at: params[:updated_at].presence)
-    Indexer.reindex(solr: solr, cocina_with_metadata: cocina_with_metadata, commit_within: commit_within_param)
+    Indexer.reindex(solr:, cocina_with_metadata:, commit_within: commit_within_param)
     render status: :ok, plain: "Successfully updated index for #{cocina_with_metadata.externalIdentifier}"
   rescue Cocina::Models::Error => e
     request.session # TODO: calling this as a hack to address bad Rails/HB interaction, remove when https://github.com/rails/rails/issues/43922 is fixed
@@ -25,7 +25,7 @@ class DorController < ApplicationController
   end
 
   def delete_from_index
-    Indexer.delete(solr: solr, identifier: params[:id], commit_within: commit_within_param)
+    Indexer.delete(solr:, identifier: params[:id], commit_within: commit_within_param)
     render plain: params[:id]
   end
 

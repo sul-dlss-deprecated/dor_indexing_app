@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe ReindexByDruidJob do
-  let(:message) { { druid: druid }.to_json }
+  let(:message) { { druid: }.to_json }
   let(:druid) { 'druid:bc123df4567' }
 
   context 'when object is found' do

@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe ReindexJob do
-  let(:message) { { model: model, created_at: 'Wed, 01 Jan 2021 12:58:00 GMT', modified_at: 'Wed, 03 Mar 2021 18:58:00 GMT' }.to_json }
+  let(:message) { { model:, created_at: 'Wed, 01 Jan 2021 12:58:00 GMT', modified_at: 'Wed, 03 Mar 2021 18:58:00 GMT' }.to_json }
   let(:model) { build(:dro) }
   let(:result) { Success(double) }
 

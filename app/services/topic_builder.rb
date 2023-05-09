@@ -4,7 +4,7 @@ class TopicBuilder
   # @param [Array] subjects
   # @param [String] filter can either be 'topic' or 'name'
   def self.build(subjects, filter:, remove_trailing_punctuation: false)
-    new(filter: filter, remove_trailing_punctuation: remove_trailing_punctuation).build(subjects)
+    new(filter:, remove_trailing_punctuation:).build(subjects)
   end
 
   def initialize(filter:, remove_trailing_punctuation:)
@@ -76,12 +76,12 @@ class TopicBuilder
 
   def create_title(title)
     titles = Cocina::Models::Builders::TitleBuilder.build([title], strategy: :all, add_punctuation: false)
-    titles.map { |value| Cocina::Models::DescriptiveValue.new(value: value) }
+    titles.map { |value| Cocina::Models::DescriptiveValue.new(value:) }
   end
 
   def create_fullname(name)
     names = NameBuilder.build([name], strategy: :all)
-    names.map { |value| Cocina::Models::DescriptiveValue.new(value: value) }
+    names.map { |value| Cocina::Models::DescriptiveValue.new(value:) }
   end
 
   def type_matches_filter?(type)

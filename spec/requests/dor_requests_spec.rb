@@ -77,7 +77,7 @@ RSpec.describe 'DOR' do
       it 'uses the provided cocina without hitting dor-services-app' do
         allow(Cocina::Models).to receive(:build).with(cocina_hash).and_return(cocina) # pretend our bogus test JSON is valid
         put '/dor/reindex_from_cocina',
-            params: { cocina_object: cocina_hash, created_at: created_at, updated_at: updated_at }.to_json,
+            params: { cocina_object: cocina_hash, created_at:, updated_at: }.to_json,
             headers: { 'CONTENT_TYPE' => 'application/json' }
         expect(response.body).to eq "Successfully updated index for #{druid}"
         expect(response).to have_http_status :ok
@@ -88,7 +88,7 @@ RSpec.describe 'DOR' do
       it 'reindexes an object with specified commitWithin param and no hard commit' do
         allow(Cocina::Models).to receive(:build).with(cocina_hash).and_return(cocina) # pretend our bogus test JSON is valid
         put '/dor/reindex_from_cocina',
-            params: { cocina_object: cocina_hash, created_at: created_at, updated_at: updated_at, commitWithin: 10_000 }.to_json,
+            params: { cocina_object: cocina_hash, created_at:, updated_at:, commitWithin: 10_000 }.to_json,
             headers: { 'CONTENT_TYPE' => 'application/json' }
         expect(response.body).to eq "Successfully updated index for #{druid}"
         expect(response).to have_http_status :ok
@@ -98,7 +98,7 @@ RSpec.describe 'DOR' do
 
       it 'requires both the cocina json and the created_at/updated_at metadata' do
         put '/dor/reindex_from_cocina',
-            params: { cocina_object: cocina_hash, updated_at: updated_at }.to_json,
+            params: { cocina_object: cocina_hash, updated_at: }.to_json,
             headers: { 'CONTENT_TYPE' => 'application/json' }
         expect(response).to have_http_status :bad_request
         expect(response.body).to match(/missing required parameters: created_at/)
@@ -108,7 +108,7 @@ RSpec.describe 'DOR' do
         # Cocina::Models.build will be called with our bogus JSON, which will throw an error
         allow(Honeybadger).to receive(:notify).and_call_original # and_call_original used here to detect bugs around https://github.com/rails/rails/issues/43922
         put '/dor/reindex_from_cocina',
-            params: { cocina_object: cocina_hash, created_at: created_at, updated_at: updated_at }.to_json,
+            params: { cocina_object: cocina_hash, created_at:, updated_at: }.to_json,
             headers: { 'CONTENT_TYPE' => 'application/json' }
         expect(response).to have_http_status :unprocessable_entity # the caller should've provided valid Cocina JSON
         expect(response.body).to eq "Error building Cocina model from json: 'Type field not found'; cocina=#{cocina_json}"

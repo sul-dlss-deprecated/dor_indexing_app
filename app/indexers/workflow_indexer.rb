@@ -14,7 +14,7 @@ class WorkflowIndexer
 
       errors = 0 # The error count is used by the Report class in Argo
       processes.each do |process|
-        ProcessIndexer.new(solr_doc: solr_doc, workflow_name: workflow_name, process: process).to_solr
+        ProcessIndexer.new(solr_doc:, workflow_name:, process:).to_solr
         errors += 1 if process.status == 'error'
       end
       solr_doc.status = [workflow_name, workflow_status, errors].join('|')

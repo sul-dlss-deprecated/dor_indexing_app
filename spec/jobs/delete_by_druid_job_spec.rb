@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe DeleteByDruidJob do
-  let(:message) { { druid: druid, deleted_at: Time.zone.now }.to_json }
+  let(:message) { { druid:, deleted_at: Time.zone.now }.to_json }
   let(:druid) { 'druid:bc123df4567' }
 
   before do

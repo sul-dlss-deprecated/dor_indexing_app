@@ -14,7 +14,7 @@ RSpec.describe Indexer do
   end
 
   describe '#load_and_index' do
-    subject(:load_and_index) { described_class.load_and_index(solr: solr, identifier: identifier) }
+    subject(:load_and_index) { described_class.load_and_index(solr:, identifier:) }
 
     before do
       allow(Dor::Services::Client).to receive(:object).and_return(object_client)
@@ -25,7 +25,7 @@ RSpec.describe Indexer do
 
       it 'is properly indexed' do
         expect(load_and_index).to eq(doc)
-        expect(DocumentBuilder).to have_received(:for).with(model: model)
+        expect(DocumentBuilder).to have_received(:for).with(model:)
         expect(doc_builder).to have_received(:to_solr)
         expect(solr).to have_received(:add).with(doc, { add_attributes: { commitWithin: 1000 } })
       end
@@ -59,18 +59,18 @@ RSpec.describe Indexer do
   end
 
   describe '#reindex' do
-    subject(:reindex) { described_class.reindex(solr: solr, cocina_with_metadata: model) }
+    subject(:reindex) { described_class.reindex(solr:, cocina_with_metadata: model) }
 
     it 'updates solr' do
       expect(reindex).to eq(doc)
-      expect(DocumentBuilder).to have_received(:for).with(model: model)
+      expect(DocumentBuilder).to have_received(:for).with(model:)
       expect(doc_builder).to have_received(:to_solr)
       expect(solr).to have_received(:add).with(doc, { add_attributes: { commitWithin: 1000 } })
     end
   end
 
   describe '#delete' do
-    subject(:delete) { described_class.delete(solr: solr, identifier: identifier) }
+    subject(:delete) { described_class.delete(solr:, identifier:) }
 
     it 'updates solr' do
       delete
