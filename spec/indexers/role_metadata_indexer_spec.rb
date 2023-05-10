@@ -32,7 +32,7 @@ RSpec.describe RoleMetadataIndexer do
   end
 
   let(:indexer) do
-    described_class.new(cocina: cocina)
+    described_class.new(cocina:)
   end
 
   describe '#to_solr' do

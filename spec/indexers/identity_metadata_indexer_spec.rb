@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe IdentityMetadataIndexer do
   let(:druid) { 'druid:rt923jk3421' }
-  let(:cocina_object) { build(:dro_with_metadata, type: type, id: druid).new(identification: identification) }
+  let(:cocina_object) { build(:dro_with_metadata, type:, id: druid).new(identification:) }
   let(:indexer) { described_class.new(cocina: cocina_object) }
 
   describe '#to_solr' do
@@ -85,7 +85,7 @@ RSpec.describe IdentityMetadataIndexer do
 
     context 'with a collection' do
       # Collection objects have no structural attribute
-      let(:cocina_object) { build(:collection_with_metadata, id: druid).new(identification: identification) }
+      let(:cocina_object) { build(:collection_with_metadata, id: druid).new(identification:) }
       let(:identification) do
         {
           sourceId: 'google:STANFORD_342837261527',

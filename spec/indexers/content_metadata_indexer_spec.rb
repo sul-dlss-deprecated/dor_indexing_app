@@ -9,7 +9,7 @@ RSpec.describe ContentMetadataIndexer do
   let(:cocina) do
     build(:dro, id: druid, type: Cocina::Models::ObjectType.map).new(
       {
-        structural: structural,
+        structural:,
         access: {
           view: 'world',
           download: 'world'
@@ -17,7 +17,7 @@ RSpec.describe ContentMetadataIndexer do
       }
     )
   end
-  let(:indexer) { described_class.new(cocina: cocina) }
+  let(:indexer) { described_class.new(cocina:) }
 
   describe '#to_solr' do
     subject(:doc) { indexer.to_solr }

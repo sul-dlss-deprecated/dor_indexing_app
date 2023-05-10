@@ -43,13 +43,13 @@ RSpec.describe WorkflowFields do
 
     let(:status) do
       instance_double(Dor::Workflow::Client::Status,
-                      milestones: milestones,
+                      milestones:,
                       info: { status_code: 4 },
                       display: 'v4 In accessioning (described, published)',
                       display_simplified: 'In accessioning')
     end
 
-    let(:workflow_client) { instance_double(Dor::Workflow::Client, status: status) }
+    let(:workflow_client) { instance_double(Dor::Workflow::Client, status:) }
 
     before do
       allow(Dor::Workflow::Client).to receive(:new).and_return(workflow_client)

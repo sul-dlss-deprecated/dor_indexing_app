@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe DescriptiveMetadataIndexer do
-  subject(:indexer) { described_class.new(cocina: cocina) }
+  subject(:indexer) { described_class.new(cocina:) }
 
   let(:bare_druid) { 'qy781dy0220' }
   let(:druid) { "druid:#{bare_druid}" }

@@ -8,7 +8,7 @@ RSpec.describe WorkflowIndexer do
       .to_return(status: 200, body: workflow_template_json)
   end
 
-  let(:document) { Dor::Workflow::Response::Workflow.new(xml: xml) }
+  let(:document) { Dor::Workflow::Response::Workflow.new(xml:) }
   let(:indexer) { described_class.new(workflow: document) }
 
   let(:workflow_template_json) do

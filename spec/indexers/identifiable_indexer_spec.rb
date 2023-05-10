@@ -7,7 +7,7 @@ RSpec.describe IdentifiableIndexer do
   let(:apo_id) { 'druid:bd999bd9999' }
   let(:cocina_item) do
     build(:dro, id: druid, admin_policy_id: apo_id).new(
-      identification: identification
+      identification:
     )
   end
   let(:identification) do

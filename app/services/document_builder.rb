@@ -49,7 +49,7 @@ class DocumentBuilder
   def self.for(model:)
     id = model.externalIdentifier
     Rails.logger.debug { "Fetching indexer for #{model.type}" }
-    indexer_for_type(model.type).new(id: id,
+    indexer_for_type(model.type).new(id:,
                                      cocina: model,
                                      parent_collections: load_parent_collections(model),
                                      administrative_tags: administrative_tags(id))

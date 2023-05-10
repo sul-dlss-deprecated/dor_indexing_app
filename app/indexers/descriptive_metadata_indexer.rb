@@ -70,10 +70,10 @@ class DescriptiveMetadataIndexer
     return [] unless genres
 
     val = genres.map(&:to_s)
-    val << 'Thesis/Dissertation' if (genres & %w[thesis Thesis]).any?
-    val << 'Conference proceedings' if (genres & ['conference publication', 'Conference publication', 'Conference Publication']).any?
-    val << 'Government document' if (genres & ['government publication', 'Government publication', 'Government Publication']).any?
-    val << 'Technical report' if (genres & ['technical report', 'Technical report', 'Technical Report']).any?
+    val << 'Thesis/Dissertation' if genres.intersect?(%w[thesis Thesis])
+    val << 'Conference proceedings' if genres.intersect?(['conference publication', 'Conference publication', 'Conference Publication'])
+    val << 'Government document' if genres.intersect?(['government publication', 'Government publication', 'Government Publication'])
+    val << 'Technical report' if genres.intersect?(['technical report', 'Technical report', 'Technical Report'])
 
     val.uniq
   end

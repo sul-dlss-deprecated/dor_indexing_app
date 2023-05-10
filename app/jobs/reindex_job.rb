@@ -10,7 +10,7 @@ class ReindexJob
   from_queue 'dor.indexing-with-model', env: nil
 
   def work(msg)
-    Indexer.reindex(solr: solr, cocina_with_metadata: build_cocina_model(msg))
+    Indexer.reindex(solr:, cocina_with_metadata: build_cocina_model(msg))
     ack!
   end
 

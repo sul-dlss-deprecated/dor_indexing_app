@@ -7,7 +7,7 @@ RSpec.describe RightsMetadataIndexer do
 
   let(:license) { 'https://creativecommons.org/publicdomain/zero/1.0/legalcode' }
   let(:indexer) do
-    described_class.new(cocina: cocina)
+    described_class.new(cocina:)
   end
 
   context 'with a collection' do
@@ -17,7 +17,7 @@ RSpec.describe RightsMetadataIndexer do
       build(:collection).new(
         access: {
           view: access,
-          license: license,
+          license:,
           copyright: 'Copyright © World Trade Organization',
           useAndReproductionStatement: 'Official WTO documents are free for public use.'
         }
@@ -56,8 +56,8 @@ RSpec.describe RightsMetadataIndexer do
   context 'with an item' do
     let(:cocina) do
       build(:dro).new(
-        access: access,
-        structural: structural
+        access:,
+        structural:
       )
     end
     let(:structural) { {} }
@@ -65,7 +65,7 @@ RSpec.describe RightsMetadataIndexer do
       {
         view: 'world',
         download: 'world',
-        license: license,
+        license:,
         copyright: 'Copyright © World Trade Organization',
         useAndReproductionStatement: 'Official WTO documents are free for public use.'
       }

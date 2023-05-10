@@ -2,7 +2,7 @@
 
 class WorkflowFields
   def self.for(druid:, version:)
-    new(druid: druid, version: version).result
+    new(druid:, version:).result
   end
 
   attr_reader :druid, :version
@@ -25,7 +25,7 @@ class WorkflowFields
   private
 
   def status_service
-    @status_service ||= WorkflowClientFactory.build.status(druid: druid, version: version)
+    @status_service ||= WorkflowClientFactory.build.status(druid:, version:)
   end
 
   def add_status(solr_doc)
