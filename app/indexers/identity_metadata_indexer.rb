@@ -30,7 +30,7 @@ class IdentityMetadataIndexer
   end
 
   def source_id_value
-    @source_id_value ||= source_id ? source_id.split(/:/, 2)[1] : nil
+    @source_id_value ||= source_id ? source_id.split(':', 2)[1] : nil
   end
 
   def barcode
