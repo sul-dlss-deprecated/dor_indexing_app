@@ -592,3 +592,6 @@ RSpec/ReceiveMessages: # new in 2.23
   Enabled: true
 RSpec/Rails/NegationBeValid: # new in 2.23
   Enabled: true
+
+Performance/MapMethodChain: # new in 1.19
+  Enabled: true
