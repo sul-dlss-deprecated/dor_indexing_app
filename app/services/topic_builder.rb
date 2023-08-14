@@ -65,7 +65,7 @@ class TopicBuilder
     return create_fullname(subject) if filter == 'name' && subject.type == 'person'
     return create_title(subject) if filter == 'name' && subject.type == 'title'
 
-    return subject if type_matches_filter?(subject.type)
+    subject if type_matches_filter?(subject.type)
   end
 
   def structured_values(subject)
