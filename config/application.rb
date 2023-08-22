@@ -51,7 +51,8 @@ module DorIndexingApp
                                                                     error_class: JSONAPIError,
                                                                     accept_request_filter: accept_proc,
                                                                     parse_response_by_content_type: false,
-                                                                    query_hash_key: 'action_dispatch.request.query_parameters'
+                                                                    query_hash_key: 'action_dispatch.request.query_parameters',
+                                                                    parameter_overwite_by_rails_rule: false
 
     # TODO: Uncomment when API returns JSON or when Committee allows validating plain-text responses
     #
