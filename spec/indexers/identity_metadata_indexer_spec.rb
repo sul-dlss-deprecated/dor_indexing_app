@@ -42,7 +42,8 @@ RSpec.describe IdentityMetadataIndexer do
               refresh: true
             }
           ],
-          barcode: '36105049267078'
+          barcode: '36105049267078',
+          doi: '10.25740/yr775yn6440'
         }
       end
 
@@ -58,7 +59,8 @@ RSpec.describe IdentityMetadataIndexer do
           'identifier_tesim' => ['google:STANFORD_342837261527', 'barcode:36105049267078',
                                  'catkey:129483625', 'folio:a129483625'],
           'objectType_ssim' => ['item'],
-          'source_id_ssim' => ['google:STANFORD_342837261527']
+          'source_id_ssim' => ['google:STANFORD_342837261527'],
+          'doi_ssim' => ['10.25740/yr775yn6440']
         )
       end
       # rubocop:enable Style/StringHashKeys

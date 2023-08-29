@@ -19,7 +19,8 @@ class IdentityMetadataIndexer
       'barcode_id_ssim' => [barcode].compact,
       'catkey_id_ssim' => [catkey].compact,
       'source_id_ssim' => [source_id].compact,
-      'folio_instance_hrid_ssim' => [folio_instance_hrid].compact
+      'folio_instance_hrid_ssim' => [folio_instance_hrid].compact,
+      'doi_ssim' => [doi].compact
     }
   end
 
@@ -44,6 +45,10 @@ class IdentityMetadataIndexer
   def previous_catkeys
     @previous_catkeys ||=
       Array(cocina_object.identification.catalogLinks).filter_map { |link| link.catalogRecordId if link.catalog == 'previous symphony' }
+  end
+
+  def doi
+    @doi ||= object_type == 'item' ? cocina_object.identification.doi : nil
   end
 
   def folio_instance_hrid

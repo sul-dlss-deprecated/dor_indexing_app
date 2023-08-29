@@ -8,6 +8,7 @@ class DescriptiveMetadataIndexer
     @cocina = cocina
   end
 
+  # rubocop:disable Metrics/MethodLength
   # @return [Hash] the partial solr document for descriptive metadata
   def to_solr
     {
@@ -16,6 +17,7 @@ class DescriptiveMetadataIndexer
       'sw_format_ssim' => sw_format,
       'sw_genre_ssim' => display_genre,
       'sw_author_tesim' => author,
+      'contributor_orcids_ssim' => orcids,
       'sw_display_title_tesim' => title,
       'sw_subject_temporal_ssim' => subject_temporal,
       'sw_subject_geographic_ssim' => subject_geographic,
@@ -28,6 +30,7 @@ class DescriptiveMetadataIndexer
       'metadata_format_ssim' => 'mods' # NOTE: seriously? for cocina????
     }.select { |_k, v| v.present? }
   end
+  # rubocop:enable Metrics/MethodLength
 
   private
 
@@ -49,6 +52,11 @@ class DescriptiveMetadataIndexer
 
   def author
     AuthorBuilder.build(Array(cocina.description.contributor))
+  end
+
+  def orcids
+    cited_contributors = cocina.description.contributor.select { |contributor| cited?(contributor) }
+    cited_contributors.filter_map { |contributor| orcidid(contributor) }
   end
 
   def title
@@ -198,6 +206,21 @@ class DescriptiveMetadataIndexer
 
   def flat_value(value)
     value.parallelValue.presence || value.groupedValue.presence || value.structuredValue.presence || Array(value)
+  end
+
+  # @param [Cocina::Models::Contributor] contributor to check
+  # @return [Boolean] true unless the contributor has a citation status of false
+  def cited?(contributor)
+    contributor.note.none? { |note| note.type == 'citation status' && note.value == 'false' }
+  end
+
+  # @param [Cocina::Models::Contributor] contributor to check
+  # @return [String, nil] orcid id including host if present
+  def orcidid(contributor)
+    identifier = contributor.identifier.find { |id| id.type == 'ORCID' }
+    return unless identifier
+
+    URI.join(identifier.source.uri, identifier.value).to_s
   end
 end
 # rubocop:enable Metrics/ClassLength
