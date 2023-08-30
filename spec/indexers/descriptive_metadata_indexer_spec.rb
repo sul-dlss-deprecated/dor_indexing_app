@@ -57,7 +57,16 @@ RSpec.describe DescriptiveMetadataIndexer do
             source: {
               code: 'marcrelator'
             }
-          }]
+          }],
+          identifier: [
+            {
+              value: '0000-1111-2222-3333',
+              type: 'ORCID',
+              source: {
+                uri: 'https://orcid.org'
+              }
+            }
+          ]
         },
         {
           name: [
@@ -75,6 +84,28 @@ RSpec.describe DescriptiveMetadataIndexer do
             }
           ],
           type: 'person'
+        },
+        {
+          name: [
+            {
+              structuredValue: [
+                {
+                  value: 'George, Bush',
+                  type: 'name'
+                }
+              ]
+            }
+          ],
+          type: 'person',
+          identifier: [
+            {
+              value: '1111-2222-3333-4444',
+              type: 'ORCID',
+              source: {
+                uri: 'https://orcid.org'
+              }
+            }
+          ]
         }
       ],
       event: [{
@@ -336,7 +367,8 @@ RSpec.describe DescriptiveMetadataIndexer do
         'originInfo_publisher_tesim' => 'Doubleday, Page',
         'originInfo_place_placeTerm_tesim' => 'Garden City, N. Y',
         'topic_ssim' => %w[cats Economics],
-        'topic_tesim' => %w[cats Economics]
+        'topic_tesim' => %w[cats Economics],
+        'contributor_orcids_ssim' => ['https://orcid.org/0000-1111-2222-3333', 'https://orcid.org/1111-2222-3333-4444']
       )
     end
     # rubocop:enable Style/StringHashKeys

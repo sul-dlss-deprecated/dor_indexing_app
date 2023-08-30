@@ -8,6 +8,7 @@ class DescriptiveMetadataIndexer
     @cocina = cocina
   end
 
+  # rubocop:disable Metrics/MethodLength
   # @return [Hash] the partial solr document for descriptive metadata
   def to_solr
     {
@@ -16,6 +17,7 @@ class DescriptiveMetadataIndexer
       'sw_format_ssim' => sw_format,
       'sw_genre_ssim' => display_genre,
       'sw_author_tesim' => author,
+      'contributor_orcids_ssim' => orcids,
       'sw_display_title_tesim' => title,
       'sw_subject_temporal_ssim' => subject_temporal,
       'sw_subject_geographic_ssim' => subject_geographic,
@@ -28,6 +30,7 @@ class DescriptiveMetadataIndexer
       'metadata_format_ssim' => 'mods' # NOTE: seriously? for cocina????
     }.select { |_k, v| v.present? }
   end
+  # rubocop:enable Metrics/MethodLength
 
   private
 
@@ -49,6 +52,10 @@ class DescriptiveMetadataIndexer
 
   def author
     AuthorBuilder.build(Array(cocina.description.contributor))
+  end
+
+  def orcids
+    OrcidBuilder.build(Array(cocina.description.contributor))
   end
 
   def title
