@@ -55,8 +55,7 @@ class DescriptiveMetadataIndexer
   end
 
   def orcids
-    cited_contributors = cocina.description.contributor.select { |contributor| cited?(contributor) }
-    cited_contributors.filter_map { |contributor| orcidid(contributor) }
+    OrcidBuilder.build(Array(cocina.description.contributor))
   end
 
   def title
@@ -206,21 +205,6 @@ class DescriptiveMetadataIndexer
 
   def flat_value(value)
     value.parallelValue.presence || value.groupedValue.presence || value.structuredValue.presence || Array(value)
-  end
-
-  # @param [Cocina::Models::Contributor] contributor to check
-  # @return [Boolean] true unless the contributor has a citation status of false
-  def cited?(contributor)
-    contributor.note.none? { |note| note.type == 'citation status' && note.value == 'false' }
-  end
-
-  # @param [Cocina::Models::Contributor] contributor to check
-  # @return [String, nil] orcid id including host if present
-  def orcidid(contributor)
-    identifier = contributor.identifier.find { |id| id.type == 'ORCID' }
-    return unless identifier
-
-    URI.join(identifier.source.uri, identifier.value).to_s
   end
 end
 # rubocop:enable Metrics/ClassLength
