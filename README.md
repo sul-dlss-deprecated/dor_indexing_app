@@ -82,3 +82,10 @@ When running the workers, you need to ensure that rabbitmq is up first. You can 
 ```
 sh -c "docker/wait-port.sh rabbitmq 5672 ; bin/rake sneakers:run"
 ```
+
+## Reset Process (for QA/Stage)
+
+1. SSH to a DIA server.
+2. Delete the solr documents:
+   * QA: `curl -X POST -H 'Content-Type: application/json' --data-binary '{"delete":{"query":"*:*" }}' https://sul-solr.stanford.edu/solr/argo_qa/update`
+   * Stage: `curl -X POST -H 'Content-Type: application/json' --data-binary '{"delete":{"query":"*:*" }}' https://sul-solr.stanford.edu/solr/argo_stage/update`
