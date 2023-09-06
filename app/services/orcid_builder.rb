@@ -38,6 +38,9 @@ class OrcidBuilder
     identifier = contributor.identifier.find { |id| id.type == 'ORCID' }
     return unless identifier
 
+    # some records have the full ORCID URI in the data, just return it if so, e.g. druid:gf852zt8324
+    return identifier.uri if identifier.uri
+
     URI.join(identifier.source.uri, identifier.value).to_s
   end
 end

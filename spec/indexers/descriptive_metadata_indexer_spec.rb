@@ -99,10 +99,10 @@ RSpec.describe DescriptiveMetadataIndexer do
           type: 'person',
           identifier: [
             {
-              value: '1111-2222-3333-4444',
+              uri: 'https://orcid.org/1111-2222-3333-4444',
               type: 'ORCID',
               source: {
-                uri: 'https://orcid.org'
+                code: 'orcid'
               }
             }
           ]

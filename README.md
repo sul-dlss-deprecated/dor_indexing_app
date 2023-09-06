@@ -22,10 +22,10 @@ $ cap ENV rolling_indexer:restart
 Or if you're on a server that has the `rolling_indexer` capistrano role, use systemd commands:
 
 ```shell
-$ sudo systemctl status rolling_index
-$ sudo systemctl start rolling_index
-$ sudo systemctl stop rolling_index
-$ sudo systemctl restart rolling_index
+$ sudo systemctl status rolling-index
+$ sudo systemctl start rolling-index
+$ sudo systemctl stop rolling-index
+$ sudo systemctl restart rolling-index
 ```
 
 **NOTE 1**: The rolling indexer is automatically restarted during deployments.
