@@ -67,8 +67,8 @@ RSpec.describe 'DOR' do
     describe 'PUT #reindex_from_cocina' do
       let(:cocina_hash) { { some: 'json' } }
       let(:cocina_json) { cocina_hash.to_json }
-      let(:created_at) { '2022-02-27' }
-      let(:updated_at) { '2022-02-28' }
+      let(:created_at) { '2022-02-27T07:00:00.000+00:00' }
+      let(:updated_at) { '2022-02-28T07:00:00.000+00:00' }
 
       before do
         allow(Cocina::Models).to receive(:with_metadata).with(cocina, String, created: DateTime.parse(created_at), modified: DateTime.parse(updated_at)).and_return(cocina)
