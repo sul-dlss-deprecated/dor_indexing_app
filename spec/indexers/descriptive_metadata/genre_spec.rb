@@ -225,8 +225,8 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      it 'does not throw error' do
-        expect(doc).to include('sw_genre_ssim' => [''])
+      it 'doc does not include sw_genre_ssim' do
+        expect(doc).not_to include('sw_genre_ssim')
       end
     end
   end
