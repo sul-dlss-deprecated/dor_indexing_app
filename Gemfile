@@ -28,6 +28,7 @@ gem 'solrizer'
 gem 'dor-services-client', '~> 12.0'
 gem 'dor-workflow-client', '~> 5.0'
 gem 'parse_date'
+gem 'stanford-mods'
 
 group :development, :test do
   gem 'byebug'

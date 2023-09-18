@@ -1,11 +1,15 @@
 # frozen_string_literal: true
 
+require 'stanford-mods'
+
 # rubocop:disable Metrics/ClassLength
 class DescriptiveMetadataIndexer
-  attr_reader :cocina
+  attr_reader :cocina, :stanford_mods_record
 
   def initialize(cocina:, **)
     @cocina = cocina
+    mods_ng = Cocina::Models::Mapping::ToMods::Description.transform(cocina.description, cocina.externalIdentifier)
+    @stanford_mods_record = Stanford::Mods::Record.new.from_nk_node(mods_ng.root)
   end
 
   # rubocop:disable Metrics/MethodLength
@@ -15,7 +19,7 @@ class DescriptiveMetadataIndexer
       'sw_language_ssim' => language,
       'mods_typeOfResource_ssim' => resource_type,
       'sw_format_ssim' => sw_format,
-      'sw_genre_ssim' => display_genre,
+      'sw_genre_ssim' => stanford_mods_record.sw_genre,
       'sw_author_tesim' => author,
       'contributor_orcids_ssim' => orcids,
       'sw_display_title_tesim' => title,
@@ -71,22 +75,6 @@ class DescriptiveMetadataIndexer
       form.source&.value == 'MODS resource types' &&
         %w[collection manuscript].exclude?(form.value)
     end.map(&:value)
-  end
-
-  def display_genre
-    return [] unless genres
-
-    val = genres.map(&:to_s)
-    val << 'Thesis/Dissertation' if genres.intersect?(%w[thesis Thesis])
-    val << 'Conference proceedings' if genres.intersect?(['conference publication', 'Conference publication', 'Conference Publication'])
-    val << 'Government document' if genres.intersect?(['government publication', 'Government publication', 'Government Publication'])
-    val << 'Technical report' if genres.intersect?(['technical report', 'Technical report', 'Technical Report'])
-
-    val.uniq
-  end
-
-  def genres
-    @genres ||= forms.flat_map { |form| form.parallelValue.presence || form }.select { |form| form.type == 'genre' }.map(&:value)
   end
 
   # See https://github.com/sul-dlss/stanford-mods/blob/master/lib/stanford-mods/searchworks.rb#L244
