@@ -143,11 +143,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         {
           title: [
             {
-              structuredValue: [
-                {
-                  value: 'Work & social justice'
-                }
-              ]
+              value: 'Work & social justice'
             }
           ],
           event: [
@@ -561,11 +557,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         {
           title: [
             {
-              structuredValue: [
-                {
-                  value: 'Work & social justice'
-                }
-              ]
+              value: 'Work & social justice'
             }
           ],
           event: [

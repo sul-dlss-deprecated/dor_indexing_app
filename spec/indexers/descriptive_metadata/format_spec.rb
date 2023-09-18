@@ -1075,7 +1075,7 @@ RSpec.describe DescriptiveMetadataIndexer do
       end
     end
 
-    context 'when groupedValue' do
+    context 'when groupedValue (which would be from MODS)' do
       let(:description) do
         {
           title: [
@@ -1093,12 +1093,12 @@ RSpec.describe DescriptiveMetadataIndexer do
                 {
                   value: '1 audiocassette',
                   type: 'extent'
-                },
-                {
-                  value: 'sound recording',
-                  type: 'resource type'
                 }
               ]
+            },
+            {
+              value: 'sound recording',
+              type: 'resource type'
             },
             {
               groupedValue: [
@@ -1109,12 +1109,12 @@ RSpec.describe DescriptiveMetadataIndexer do
                 {
                   value: '5 pages',
                   type: 'extent'
-                },
-                {
-                  value: 'text',
-                  type: 'resource type'
                 }
               ]
+            },
+            {
+              value: 'text',
+              type: 'resource type'
             }
           ]
         }
