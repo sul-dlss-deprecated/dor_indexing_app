@@ -106,6 +106,31 @@ RSpec.describe DescriptiveMetadataIndexer do
               }
             }
           ]
+        },
+        {
+          name: [
+            {
+              value: 'Wiles, Simon'
+            }
+          ],
+          type: 'person',
+          role: [
+            {
+              value: 'Data Curator',
+              source: {
+                code: 'datacite'
+              }
+            }
+          ],
+          identifier: [
+            {
+              value: 'https://orcid.org/0000-0001-5321-289X',
+              type: 'ORCID',
+              source: {
+                code: 'orcid'
+              }
+            }
+          ]
         }
       ],
       event: [{
@@ -368,7 +393,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         'originInfo_place_placeTerm_tesim' => 'Garden City, N. Y',
         'topic_ssim' => %w[cats Economics],
         'topic_tesim' => %w[cats Economics],
-        'contributor_orcids_ssim' => ['https://orcid.org/0000-1111-2222-3333', 'https://orcid.org/1111-2222-3333-4444']
+        'contributor_orcids_ssim' => ['https://orcid.org/0000-1111-2222-3333', 'https://orcid.org/1111-2222-3333-4444', 'https://orcid.org/0000-0001-5321-289X']
       )
     end
     # rubocop:enable Style/StringHashKeys

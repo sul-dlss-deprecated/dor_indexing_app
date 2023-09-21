@@ -40,6 +40,7 @@ class OrcidBuilder
 
     # some records have the full ORCID URI in the data, just return it if so, e.g. druid:gf852zt8324
     return identifier.uri if identifier.uri
+    return identifier.value if identifier.value.start_with?('https://orcid.org/')
 
     URI.join(identifier.source.uri, identifier.value).to_s
   end
