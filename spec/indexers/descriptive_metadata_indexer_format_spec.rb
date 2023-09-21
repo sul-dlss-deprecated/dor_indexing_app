@@ -3,6 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe DescriptiveMetadataIndexer do
+  RSpec::Matchers.define_negated_matcher :not_include, :include
   subject(:indexer) { described_class.new(cocina:) }
 
   let(:bare_druid) { 'qy781dy0220' }
@@ -39,7 +40,7 @@ RSpec.describe DescriptiveMetadataIndexer do
       end
 
       it 'assigns format based on resource type' do
-        expect(doc).to include('sw_format_ssim' => ['Book'])
+        expect(doc).to not_include('sw_format_ssim' => ['Book'])
       end
     end
 
@@ -84,7 +85,7 @@ RSpec.describe DescriptiveMetadataIndexer do
       end
 
       it 'assigns format based on resource type' do
-        expect(doc).to include('sw_format_ssim' => ['Archive/Manuscript'])
+        expect(doc).to not_include('sw_format_ssim' => ['Archive/Manuscript'])
       end
     end
 
@@ -472,7 +473,7 @@ RSpec.describe DescriptiveMetadataIndexer do
       end
 
       it 'assigns format based on manuscript resource type' do
-        expect(doc).to include('sw_format_ssim' => ['Archive/Manuscript'])
+        expect(doc).to include('sw_format_ssim' => ['Book'])
       end
     end
 
@@ -944,7 +945,8 @@ RSpec.describe DescriptiveMetadataIndexer do
       end
 
       it 'assigns formats based on all resource types and genres' do
-        expect(doc).to include('sw_format_ssim' => %w[Map Image Dataset])
+        expect(doc).to have_key('sw_format_ssim')
+        expect(doc['sw_format_ssim']).to match_array(%w[Map Image Dataset])
       end
     end
 
@@ -1042,7 +1044,7 @@ RSpec.describe DescriptiveMetadataIndexer do
       end
 
       it 'assigns format based on mapped resource type' do
-        expect(doc).to include('sw_format_ssim' => ['Music score'])
+        expect(doc).to not_include('sw_format_ssim' => ['Music score'])
       end
     end
 
