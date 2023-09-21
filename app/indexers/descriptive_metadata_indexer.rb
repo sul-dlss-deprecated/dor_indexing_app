@@ -96,6 +96,7 @@ class DescriptiveMetadataIndexer
   # rubocop:disable Metrics/CyclomaticComplexity
   # rubocop:disable Metrics/PerceivedComplexity
   def sw_format
+    return stanford_mods_record.format_main unless stanford_mods_record.format_main.empty?
     return ['Map'] if has_resource_type?('software, multimedia') && has_resource_type?('cartographic')
     return ['Dataset'] if has_resource_type?('software, multimedia') && has_genre?('dataset')
     return ['Archived website'] if has_resource_type?('text') && has_genre?('archived website')

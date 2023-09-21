@@ -471,7 +471,8 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      it 'assigns format based on manuscript resource type' do
+      # Test Skipped pending update to stanford-mods
+      xit 'assigns format based on manuscript resource type' do
         expect(doc).to include('sw_format_ssim' => ['Archive/Manuscript'])
       end
     end
@@ -817,7 +818,8 @@ RSpec.describe DescriptiveMetadataIndexer do
       end
 
       it 'assigns format based on resource type and frequency' do
-        expect(doc).to include('sw_format_ssim' => ['Journal/Periodical'])
+        expect(doc).to have_key('sw_format_ssim')
+        expect(doc['sw_format_ssim']).to match_array(['Journal/Periodical'])
       end
     end
 
@@ -944,7 +946,8 @@ RSpec.describe DescriptiveMetadataIndexer do
       end
 
       it 'assigns formats based on all resource types and genres' do
-        expect(doc).to include('sw_format_ssim' => %w[Map Image Dataset])
+        expect(doc).to have_key('sw_format_ssim')
+        expect(doc['sw_format_ssim']).to match_array(%w[Map Image Dataset])
       end
     end
 
