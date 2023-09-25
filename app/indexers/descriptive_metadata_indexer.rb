@@ -23,7 +23,7 @@ class DescriptiveMetadataIndexer
       'sw_author_tesim' => author,
       'contributor_orcids_ssim' => orcids,
       'sw_display_title_tesim' => title,
-      'sw_subject_temporal_ssim' => subject_temporal,
+      'sw_subject_temporal_ssim' => stanford_mods_record.era_facet, # subject_temporal,
       'sw_subject_geographic_ssim' => stanford_mods_record.geographic_facet, # subject_geographic,
       'sw_pub_date_facet_ssi' => stanford_mods_record.pub_year_int.to_s,
       'originInfo_date_created_tesim' => creation_date,
