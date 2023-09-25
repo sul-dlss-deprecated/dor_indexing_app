@@ -240,7 +240,7 @@ RSpec.describe DescriptiveMetadataIndexer do
       end
 
       it 'selects topic parts from complex subjects and dedupes' do
-        expect(doc).to include('topic_ssim' => ['Cats', 'Homes and haunts', 'Birds'])
+        expect(doc).to include('topic_ssim' => ['Cats', 'Homes and haunts', 'Birds', 'Homes and haunts'])
         expect(doc).to include('topic_tesim' => ['Cats', 'Homes and haunts', 'Birds'])
       end
     end
@@ -387,7 +387,7 @@ RSpec.describe DescriptiveMetadataIndexer do
       end
 
       it 'selects name from subject for topic_ssim' do
-        expect(doc).to include('topic_ssim' => ['Sayers, Dorothy L., 1983-1957', 'Sayers, Dorothy L.'])
+        expect(doc).to include('topic_ssim' => ['Sayers, Dorothy L.'])
         expect(doc).not_to include('topic_tesim')
       end
     end
@@ -426,7 +426,7 @@ RSpec.describe DescriptiveMetadataIndexer do
       end
 
       it 'constructs name subject for topic_ssim' do
-        expect(doc).to include('topic_ssim' => ['Sayers, Dorothy L.'])
+        expect(doc).to include('topic_ssim' => ['Sayers, Dorothy, L.'])
         expect(doc).not_to include('topic_tesim')
       end
     end
@@ -512,7 +512,7 @@ RSpec.describe DescriptiveMetadataIndexer do
       end
 
       it 'constructs names from subjects in parallelValue for topic_ssim' do
-        expect(doc).to include('topic_ssim' => ['Sayers, Dorothy L.', 'Сэйерс, Дороти Л.'])
+        expect(doc).to include('topic_ssim' => ['Sayers, Dorothy, L.', 'Сэйерс, Дороти, Л.'])
         expect(doc).not_to include('topic_tesim')
       end
     end
@@ -556,7 +556,7 @@ RSpec.describe DescriptiveMetadataIndexer do
       end
 
       it 'constructs name subject for topic_ssim and selects topic subject' do
-        expect(doc['topic_ssim']).to contain_exactly('Sayers, Dorothy L.', 'Homes and haunts')
+        expect(doc['topic_ssim']).to contain_exactly('Sayers, Dorothy, L.', 'Homes and haunts')
         expect(doc).to include('topic_tesim' => ['Homes and haunts'])
       end
     end

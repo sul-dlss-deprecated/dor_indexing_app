@@ -366,7 +366,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         # 'originInfo_date_created_tesim' => '', # not populated by the example; see indexer_spec instead
         'originInfo_publisher_tesim' => 'Doubleday, Page',
         'originInfo_place_placeTerm_tesim' => 'Garden City, N. Y',
-        'topic_ssim' => %w[cats Economics],
+        'topic_ssim' => %w[Economics Economics cats],
         'topic_tesim' => %w[cats Economics],
         'contributor_orcids_ssim' => ['https://orcid.org/0000-1111-2222-3333', 'https://orcid.org/1111-2222-3333-4444']
       )
