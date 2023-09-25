@@ -25,7 +25,7 @@ class DescriptiveMetadataIndexer
       'sw_display_title_tesim' => title,
       'sw_subject_temporal_ssim' => subject_temporal,
       'sw_subject_geographic_ssim' => subject_geographic,
-      'sw_pub_date_facet_ssi' => pub_year,
+      'sw_pub_date_facet_ssi' => stanford_mods_record.pub_year_int.to_s,
       'originInfo_date_created_tesim' => creation_date,
       'originInfo_publisher_tesim' => publisher_name,
       'originInfo_place_placeTerm_tesim' => event_place,
