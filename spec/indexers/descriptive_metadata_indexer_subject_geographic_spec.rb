@@ -233,8 +233,8 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      it 'maps the code to text' do
-        expect(doc).to include('sw_subject_geographic_ssim' => ['Russia (Federation)'])
+      it 'does not map the code to text' do
+        expect(doc).not_to include('sw_subject_geographic_ssim' => ['Russia (Federation)'])
       end
     end
 
@@ -318,8 +318,8 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      it 'maps the code to text' do
-        expect(doc).to include('sw_subject_geographic_ssim' => ['Russia (Federation)'])
+      it 'does not map the code to text' do
+        expect(doc).not_to include('sw_subject_geographic_ssim' => ['Russia (Federation)'])
       end
     end
 
@@ -416,8 +416,8 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      it 'includes term once' do
-        expect(doc).to include('sw_subject_geographic_ssim' => ['Russia (Federation)'])
+      it 'does not include the term' do
+        expect(doc).not_to include('sw_subject_geographic_ssim' => ['Russia (Federation)'])
       end
     end
 
@@ -442,8 +442,8 @@ RSpec.describe DescriptiveMetadataIndexer do
         }
       end
 
-      it 'includes both terms' do
-        expect(doc).to include('sw_subject_geographic_ssim' => ['Russia', 'Russia (Federation)'])
+      it 'does not include both terms' do
+        expect(doc).not_to include('sw_subject_geographic_ssim' => ['Russia', 'Russia (Federation)'])
       end
     end
 
@@ -656,31 +656,6 @@ RSpec.describe DescriptiveMetadataIndexer do
 
       it 'drops the punctuation before deduping' do
         expect(doc).to include('sw_subject_geographic_ssim' => ['Europe'])
-      end
-    end
-
-    context 'when terminal punctuation should be dropped from code' do
-      let(:description) do
-        {
-          title: [
-            {
-              value: 'title'
-            }
-          ],
-          subject: [
-            {
-              code: 'e-ru;',
-              type: 'place',
-              source: {
-                code: 'marcgac'
-              }
-            }
-          ]
-        }
-      end
-
-      it 'drops the punctuation' do
-        expect(doc).to include('sw_subject_geographic_ssim' => ['Russia (Federation)'])
       end
     end
   end
