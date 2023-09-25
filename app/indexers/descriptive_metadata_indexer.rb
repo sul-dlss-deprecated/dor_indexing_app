@@ -29,7 +29,7 @@ class DescriptiveMetadataIndexer
       'originInfo_date_created_tesim' => creation_date,
       'originInfo_publisher_tesim' => publisher_name,
       'originInfo_place_placeTerm_tesim' => event_place,
-      'topic_ssim' => nonstemmable_topics,
+      'topic_ssim' => stanford_mods_record.topic_facet.uniq,
       'topic_tesim' => stemmable_topics,
       'metadata_format_ssim' => 'mods' # NOTE: seriously? for cocina????
     }.select { |_k, v| v.present? }
@@ -166,13 +166,6 @@ class DescriptiveMetadataIndexer
 
   def stemmable_topics
     TopicBuilder.build(Array(cocina.description.subject), filter: 'topic')
-  end
-
-  def nonstemmable_topics
-    (
-      TopicBuilder.build(Array(cocina.description.subject), filter: 'topic', remove_trailing_punctuation: true) +
-      TopicBuilder.build(Array(cocina.description.subject), filter: 'name')
-    ).compact
   end
 
   def publication_event
