@@ -16,7 +16,7 @@ class DescriptiveMetadataIndexer
   # @return [Hash] the partial solr document for descriptive metadata
   def to_solr
     {
-      'sw_language_ssim' => language,
+      'sw_language_ssim' => stanford_mods_record.sw_language_facet,
       'mods_typeOfResource_ssim' => resource_type,
       'sw_format_ssim' => sw_format,
       'sw_genre_ssim' => stanford_mods_record.sw_genre,
@@ -37,10 +37,6 @@ class DescriptiveMetadataIndexer
   # rubocop:enable Metrics/MethodLength
 
   private
-
-  def language
-    LanguageBuilder.build(Array(cocina.description.language))
-  end
 
   def subject_temporal
     TemporalBuilder.build(subjects)
