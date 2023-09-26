@@ -162,7 +162,7 @@ RSpec.describe DescriptiveMetadataIndexer do
       end
 
       it 'selects primary name of contributor' do
-        expect(doc).to include('sw_author_tesim' => 'Sayers, Dorothy L.')
+        expect(doc).to include('sw_author_tesim' => 'Sayers, Dorothy L. Sayers, Dorothy L. (Dorothy Leigh), 1893-1957')
       end
     end
 
@@ -190,7 +190,7 @@ RSpec.describe DescriptiveMetadataIndexer do
       end
 
       it 'selects first name of contributor' do
-        expect(doc).to include('sw_author_tesim' => 'Sayers, Dorothy L.')
+        expect(doc).to include('sw_author_tesim' => 'Sayers, Dorothy L. Sayers, Dorothy L. (Dorothy Leigh), 1893-1957')
       end
     end
 
@@ -223,7 +223,7 @@ RSpec.describe DescriptiveMetadataIndexer do
       end
 
       it 'selects primary name from parallelValue' do
-        expect(doc).to include('sw_author_tesim' => 'Bulgakov, Mikhail Afanasʹevich')
+        expect(doc).to include('sw_author_tesim' => 'Булгаков, Михаил Афанасьевич')
       end
     end
 
@@ -352,7 +352,7 @@ RSpec.describe DescriptiveMetadataIndexer do
 
       it 'constructs name of contributor' do
         # No comma between name and term of address because also used for e.g. Elizabeth I
-        expect(doc).to include('sw_author_tesim' => 'Sayers Fleming, Dorothy Leigh B.A. (Oxon.), M.A. (Oxon.), 1893-1957')
+        expect(doc).to include('sw_author_tesim' => 'Dorothy Leigh Sayers Fleming B.A. (Oxon.) M.A. (Oxon.), 1893-1957')
       end
     end
 
@@ -398,7 +398,7 @@ RSpec.describe DescriptiveMetadataIndexer do
 
       it 'constructs name of contributor' do
         # No comma between name and term of address because also used for e.g. Elizabeth I
-        expect(doc).to include('sw_author_tesim' => 'Sayers, Dorothy L. B.A. (Oxon.), M.A. (Oxon.), 1893-1957')
+        expect(doc).to include('sw_author_tesim' => 'Sayers, Dorothy L. B.A. (Oxon.) M.A. (Oxon.), 1893-1957')
       end
     end
 
@@ -433,7 +433,7 @@ RSpec.describe DescriptiveMetadataIndexer do
 
       it 'constructs name of contributor' do
         # Concatenate in order given, period space delimiter
-        expect(doc).to include('sw_author_tesim' => 'United States. Office of Foreign Investment in the United States')
+        expect(doc).to include('sw_author_tesim' => 'United States Office of Foreign Investment in the United States')
       end
     end
   end

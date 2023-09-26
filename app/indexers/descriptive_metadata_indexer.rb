@@ -20,7 +20,7 @@ class DescriptiveMetadataIndexer
       'mods_typeOfResource_ssim' => resource_type,
       'sw_format_ssim' => sw_format,
       'sw_genre_ssim' => stanford_mods_record.sw_genre,
-      'sw_author_tesim' => author,
+      'sw_author_tesim' => stanford_mods_record.sw_main_author, # author,
       'contributor_orcids_ssim' => orcids,
       'sw_display_title_tesim' => title,
       'sw_subject_temporal_ssim' => subject_temporal,
