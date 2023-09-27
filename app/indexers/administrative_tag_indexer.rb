@@ -27,7 +27,12 @@ class AdministrativeTagIndexer
       next if SPECIAL_TAG_TYPES_TO_INDEX.exclude?(tag_prefix) || rest.nil?
 
       prefix = tag_prefix.downcase.strip.gsub(/\s/, '_')
+
       (solr_doc["#{prefix}_tag_ssim"] ||= []) << rest.strip
+      if prefix == 'project'
+        solr_doc['exploded_project_tag_ssim'] ||= []
+        solr_doc['exploded_project_tag_ssim'] += exploded_tags_from(rest.strip)
+      end
     end
     solr_doc
   end
