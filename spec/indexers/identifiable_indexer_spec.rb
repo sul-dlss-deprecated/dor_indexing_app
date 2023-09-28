@@ -33,7 +33,7 @@ RSpec.describe IdentifiableIndexer do
 
   describe '#identity_metadata_sources' do
     it 'indexes metadata sources' do
-      expect(indexer.identity_metadata_sources).to eq %w[Folio Symphony]
+      expect(indexer.identity_metadata_sources).to eq %w[Folio]
     end
   end
 
@@ -68,7 +68,7 @@ RSpec.describe IdentifiableIndexer do
       end
 
       it 'indexes metadata sources' do
-        expect(doc).to match a_hash_including('metadata_source_ssim' => %w[Folio Symphony]) # rubocop:disable Style/StringHashKeys
+        expect(doc).to match a_hash_including('metadata_source_ssim' => %w[Folio]) # rubocop:disable Style/StringHashKeys
       end
     end
 

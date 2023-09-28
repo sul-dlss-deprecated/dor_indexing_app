@@ -3,6 +3,8 @@
 class IdentifiableIndexer
   attr_reader :cocina
 
+  CURRENT_CATALOG_TYPE = 'folio'
+
   def initialize(cocina:, **)
     @cocina = cocina
   end
@@ -48,7 +50,7 @@ class IdentifiableIndexer
             .map(&:catalog)
             .uniq
             .sort
-            .reject { |catalog_type| catalog_type.include?('previous') }
+            .select { |catalog_type| catalog_type == CURRENT_CATALOG_TYPE }
   end
 
   # @param [Hash] solr_doc
