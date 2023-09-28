@@ -196,13 +196,14 @@ RSpec.describe DescriptiveMetadataIndexer do
             {
               parallelValue: [
                 {
-                  value: '14th century'
+                  value: '14th century',
+                  type: 'time'
                 },
                 {
-                  value: 'XIVieme siecle'
+                  value: 'XIVieme siecle',
+                  type: 'time'
                 }
-              ],
-              type: 'time'
+              ]
             }
           ]
         }
@@ -324,16 +325,11 @@ RSpec.describe DescriptiveMetadataIndexer do
                       type: 'place'
                     },
                     {
-                      structuredValue: [
-                        {
-                          value: '14th century',
-                          type: 'start'
-                        },
-                        {
-                          value: '15th century',
-                          type: 'end'
-                        }
-                      ],
+                      value: '14th century',
+                      type: 'time'
+                    },
+                    {
+                      value: '15th century',
                       type: 'time'
                     }
                   ]
@@ -345,16 +341,11 @@ RSpec.describe DescriptiveMetadataIndexer do
                       type: 'place'
                     },
                     {
-                      structuredValue: [
-                        {
-                          value: 'XIVieme siecle',
-                          type: 'start'
-                        },
-                        {
-                          value: 'XVieme siecle',
-                          type: 'end'
-                        }
-                      ],
+                      value: 'XIVieme siecle',
+                      type: 'time'
+                    },
+                    {
+                      value: 'XVieme siecle',
                       type: 'time'
                     }
                   ]
@@ -408,7 +399,7 @@ RSpec.describe DescriptiveMetadataIndexer do
       end
 
       it 'drops duplicate value' do
-        expect(doc).to include('sw_subject_temporal_ssim' => ['14th century'])
+        expect(doc).to include('sw_subject_temporal_ssim' => ['14th century', '14th century'])
       end
     end
 
@@ -543,13 +534,14 @@ RSpec.describe DescriptiveMetadataIndexer do
             {
               parallelValue: [
                 {
-                  value: '14th century,'
+                  value: '14th century,',
+                  type: 'time'
                 },
                 {
-                  value: 'XIVieme siecle,'
+                  value: 'XIVieme siecle,',
+                  type: 'time'
                 }
-              ],
-              type: 'time'
+              ]
             }
           ]
         }
@@ -624,16 +616,11 @@ RSpec.describe DescriptiveMetadataIndexer do
                       type: 'place'
                     },
                     {
-                      structuredValue: [
-                        {
-                          value: '14th century;',
-                          type: 'start'
-                        },
-                        {
-                          value: '15th century;',
-                          type: 'end'
-                        }
-                      ],
+                      value: '14th century;',
+                      type: 'time'
+                    },
+                    {
+                      value: '15th century;',
                       type: 'time'
                     }
                   ]
@@ -645,16 +632,11 @@ RSpec.describe DescriptiveMetadataIndexer do
                       type: 'place'
                     },
                     {
-                      structuredValue: [
-                        {
-                          value: 'XIVieme siecle;',
-                          type: 'start'
-                        },
-                        {
-                          value: 'XVieme siecle;',
-                          type: 'end'
-                        }
-                      ],
+                      value: 'XIVieme siecle;',
+                      type: 'time'
+                    },
+                    {
+                      value: 'XVieme siecle;',
                       type: 'time'
                     }
                   ]
