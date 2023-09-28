@@ -13,6 +13,7 @@ RSpec.describe AdministrativeTagIndexer do
         'Google Books : Phase 1',
         'Google Books : Scan source STANFORD',
         'Project : Beautiful Books',
+        'Project : Rare Books : Very Old Books',
         'Registered By : blalbrit',
         'DPG : Beautiful Books : Octavo : newpri',
         'Remediated By : 4.15.4'
@@ -27,13 +28,17 @@ RSpec.describe AdministrativeTagIndexer do
 
     it 'indexes exploded tags' do
       expect(document['exploded_tag_ssim']).to contain_exactly('Google Books', 'Google Books : Phase 1', 'Google Books', 'Google Books : Scan source STANFORD', 'Project',
-                                                               'Project : Beautiful Books', 'Registered By', 'Registered By : blalbrit', 'DPG', 'DPG : Beautiful Books', 'DPG : Beautiful Books : Octavo', 'DPG : Beautiful Books : Octavo : newpri', 'Remediated By', 'Remediated By : 4.15.4')
+                                                               'Project : Beautiful Books', 'Project', 'Project : Rare Books', 'Project : Rare Books : Very Old Books', 'Registered By',
+                                                               'Registered By : blalbrit', 'DPG', 'DPG : Beautiful Books', 'DPG : Beautiful Books : Octavo',
+                                                               'DPG : Beautiful Books : Octavo : newpri', 'Remediated By', 'Remediated By : 4.15.4')
+      expect(document['exploded_project_tag_ssim']).to contain_exactly('Beautiful Books', 'Rare Books', 'Rare Books : Very Old Books')
+      expect(document).not_to have_key('exploded_registered_by_tag_ssim')
     end
 
     it 'indexes prefixed tags' do
       # rubocop:disable Style/StringHashKeys
       expect(document).to include(
-        'project_tag_ssim' => ['Beautiful Books'],
+        'project_tag_ssim' => ['Beautiful Books', 'Rare Books : Very Old Books'],
         'registered_by_tag_ssim' => ['blalbrit']
       )
       # rubocop:enable Style/StringHashKeys

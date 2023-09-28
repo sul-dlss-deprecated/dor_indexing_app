@@ -5,7 +5,7 @@
 #       https://github.com/sul-dlss/dor-services/blob/v9.0.0/lib/dor/datastreams/identity_metadata_ds.rb#L196-L218
 class AdministrativeTagIndexer
   TAG_PART_DELIMITER = ' : '
-  TAGS_TO_INDEX = ['Project', 'Registered By'].freeze
+  SPECIAL_TAG_TYPES_TO_INDEX = ['Project', 'Registered By'].freeze
 
   attr_reader :id
 
@@ -24,10 +24,15 @@ class AdministrativeTagIndexer
       solr_doc['exploded_tag_ssim'] += exploded_tags_from(tag)
 
       tag_prefix, rest = tag.split(TAG_PART_DELIMITER, 2)
-      next if TAGS_TO_INDEX.exclude?(tag_prefix) || rest.nil?
+      next if SPECIAL_TAG_TYPES_TO_INDEX.exclude?(tag_prefix) || rest.nil?
 
       prefix = tag_prefix.downcase.strip.gsub(/\s/, '_')
+
       (solr_doc["#{prefix}_tag_ssim"] ||= []) << rest.strip
+      if prefix == 'project'
+        solr_doc['exploded_project_tag_ssim'] ||= []
+        solr_doc['exploded_project_tag_ssim'] += exploded_tags_from(rest.strip)
+      end
     end
     solr_doc
   end
