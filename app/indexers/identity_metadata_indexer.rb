@@ -13,11 +13,10 @@ class IdentityMetadataIndexer
 
     {
       'objectType_ssim' => [object_type],
-      'dor_id_tesim' => [source_id_value, barcode, catkey, folio_instance_hrid, previous_ils_ids].flatten.compact,
+      'dor_id_tesim' => [source_id_value, barcode, folio_instance_hrid, previous_ils_ids].flatten.compact,
       'identifier_ssim' => prefixed_identifiers,
       'identifier_tesim' => prefixed_identifiers,
       'barcode_id_ssim' => [barcode].compact,
-      'catkey_id_ssim' => [catkey].compact,
       'source_id_ssim' => [source_id].compact,
       'folio_instance_hrid_ssim' => [folio_instance_hrid].compact,
       'doi_ssim' => [doi].compact
@@ -38,15 +37,6 @@ class IdentityMetadataIndexer
     @barcode ||= object_type == 'collection' ? nil : cocina_object.identification.barcode
   end
 
-  def catkey
-    @catkey ||= Array(cocina_object.identification.catalogLinks).find { |link| link.catalog == 'symphony' }&.catalogRecordId
-  end
-
-  def previous_catkeys
-    @previous_catkeys ||=
-      Array(cocina_object.identification.catalogLinks).filter_map { |link| link.catalogRecordId if link.catalog == 'previous symphony' }
-  end
-
   def doi
     @doi ||= object_type == 'item' ? cocina_object.identification.doi : nil
   end
@@ -61,7 +51,7 @@ class IdentityMetadataIndexer
   end
 
   def previous_ils_ids
-    @previous_ils_ids ||= previous_catkeys + previous_folio_instance_hrids
+    @previous_ils_ids ||= previous_folio_instance_hrids
   end
 
   def object_type
@@ -79,7 +69,6 @@ class IdentityMetadataIndexer
     [].tap do |identifiers|
       identifiers << source_id if source_id
       identifiers << "barcode:#{barcode}" if barcode
-      identifiers << "catkey:#{catkey}" if catkey
       identifiers << "folio:#{folio_instance_hrid}" if folio_instance_hrid
     end
   end
