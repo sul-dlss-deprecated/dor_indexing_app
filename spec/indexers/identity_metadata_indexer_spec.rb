@@ -51,13 +51,12 @@ RSpec.describe IdentityMetadataIndexer do
       it 'has the fields used by argo' do
         expect(doc).to include(
           'barcode_id_ssim' => ['36105049267078'],
-          'catkey_id_ssim' => ['129483625'],
           'folio_instance_hrid_ssim' => ['a129483625'],
-          'dor_id_tesim' => %w[STANFORD_342837261527 36105049267078 129483625 a129483625 666 999 a777],
+          'dor_id_tesim' => %w[STANFORD_342837261527 36105049267078 a129483625 a777],
           'identifier_ssim' => ['google:STANFORD_342837261527', 'barcode:36105049267078',
-                                'catkey:129483625', 'folio:a129483625'],
+                                'folio:a129483625'],
           'identifier_tesim' => ['google:STANFORD_342837261527', 'barcode:36105049267078',
-                                 'catkey:129483625', 'folio:a129483625'],
+                                 'folio:a129483625'],
           'objectType_ssim' => ['item'],
           'source_id_ssim' => ['google:STANFORD_342837261527'],
           'doi_ssim' => ['10.25740/yr775yn6440']
@@ -74,7 +73,6 @@ RSpec.describe IdentityMetadataIndexer do
       it 'has the fields used by argo' do
         expect(doc).to include(
           'barcode_id_ssim' => [],
-          'catkey_id_ssim' => [],
           'dor_id_tesim' => ['1234'],
           'identifier_ssim' => ['sul:1234'],
           'identifier_tesim' => ['sul:1234'],
@@ -110,11 +108,10 @@ RSpec.describe IdentityMetadataIndexer do
       it 'has the fields used by argo' do
         expect(doc).to include(
           'barcode_id_ssim' => [],
-          'catkey_id_ssim' => ['129483625'],
           'folio_instance_hrid_ssim' => ['a129483625'],
-          'dor_id_tesim' => %w[STANFORD_342837261527 129483625 a129483625],
-          'identifier_ssim' => ['google:STANFORD_342837261527', 'catkey:129483625', 'folio:a129483625'],
-          'identifier_tesim' => ['google:STANFORD_342837261527', 'catkey:129483625', 'folio:a129483625'],
+          'dor_id_tesim' => %w[STANFORD_342837261527 a129483625],
+          'identifier_ssim' => ['google:STANFORD_342837261527', 'folio:a129483625'],
+          'identifier_tesim' => ['google:STANFORD_342837261527', 'folio:a129483625'],
           'objectType_ssim' => ['collection'],
           'source_id_ssim' => ['google:STANFORD_342837261527']
         )
