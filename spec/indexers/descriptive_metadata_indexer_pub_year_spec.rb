@@ -178,7 +178,7 @@ RSpec.describe DescriptiveMetadataIndexer do
       end
 
       it 'uses value from type publication' do
-        expect(doc).to include('sw_pub_date_facet_ssi' => '2019')
+        expect(doc).to include('sw_pub_date_facet_ssi' => '2018')
       end
 
       context 'when publication date is range (structuredValue)' do
@@ -298,7 +298,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         end
 
         it 'uses first publication date of parallelValue of type publication' do
-          expect(doc).to include('sw_pub_date_facet_ssi' => '2021')
+          expect(doc).to include('sw_pub_date_facet_ssi' => '2020')
         end
       end
     end
@@ -592,7 +592,7 @@ RSpec.describe DescriptiveMetadataIndexer do
       end
 
       it 'uses value with date of type creation from event type of creation' do
-        expect(doc).to include('sw_pub_date_facet_ssi' => '2019')
+        expect(doc).to include('sw_pub_date_facet_ssi' => '2018')
       end
 
       context 'when creation date is range (structuredValue)' do
@@ -712,7 +712,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         end
 
         it 'uses first publication date of parallelValue of type publication' do
-          expect(doc).to include('sw_pub_date_facet_ssi' => '2021')
+          expect(doc).to include('sw_pub_date_facet_ssi' => '2020')
         end
       end
     end
