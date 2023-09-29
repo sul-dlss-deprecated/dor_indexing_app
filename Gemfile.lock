@@ -407,7 +407,7 @@ GEM
     sshkit (1.21.5)
       net-scp (>= 1.1.2)
       net-ssh (>= 2.8.0)
-    stanford-mods (3.3.4)
+    stanford-mods (3.3.5)
       activesupport
       mods (~> 3.0, >= 3.0.3)
     super_diff (0.10.0)
