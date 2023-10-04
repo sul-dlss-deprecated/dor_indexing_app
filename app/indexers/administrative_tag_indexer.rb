@@ -18,17 +18,20 @@ class AdministrativeTagIndexer
   def to_solr
     Rails.logger.debug { "In #{self.class}" }
 
-    solr_doc = { 'tag_ssim' => [], 'exploded_tag_ssim' => [] }
+    solr_doc = { 'tag_ssim' => [], 'exploded_tag_ssim' => [], 'exploded_nonproject_tag_ssim' => [] }
     administrative_tags.each do |tag|
+      tag_prefix, rest = tag.split(TAG_PART_DELIMITER, 2)
+      prefix = tag_prefix.downcase.strip.gsub(/\s/, '_')
+
       solr_doc['tag_ssim'] << tag
       solr_doc['exploded_tag_ssim'] += exploded_tags_from(tag)
 
-      tag_prefix, rest = tag.split(TAG_PART_DELIMITER, 2)
+      solr_doc['exploded_nonproject_tag_ssim'] += exploded_tags_from(tag) unless prefix == 'project'
+
       next if SPECIAL_TAG_TYPES_TO_INDEX.exclude?(tag_prefix) || rest.nil?
 
-      prefix = tag_prefix.downcase.strip.gsub(/\s/, '_')
-
       (solr_doc["#{prefix}_tag_ssim"] ||= []) << rest.strip
+
       if prefix == 'project'
         solr_doc['exploded_project_tag_ssim'] ||= []
         solr_doc['exploded_project_tag_ssim'] += exploded_tags_from(rest.strip)
