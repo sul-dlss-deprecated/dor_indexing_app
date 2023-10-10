@@ -36,6 +36,11 @@ $ sudo systemctl restart rolling-index
 
 See https://sul-dlss.github.io/dor_indexing_app/
 
+## Solr configuration
+The Solr configuration is https://github.com/sul-dlss/sul-solr-configs/tree/master/argo_prod
+
+To update this configuration, see the [README](https://github.com/sul-dlss/sul-solr-configs#updating-configurations).
+
 ## Index Field Semantics
 
 DOR indexing app indexes data into dynamic Solr fields that have semantics originally adopted by Stanford and the Samvera community, e.g., `_ssi`, `_tesim`, & `_dtsi`. These are documented in a [common Solr schema](https://github.com/sul-dlss/argo/blob/main/solr_conf/conf/schema.xml#L19-L151). The general scheme is one or two characters indicating the field type (e.g., string, integer, datetime) with the rest of the characters indicating whether the field is stored or not, indexed or not, and multi-valued or not.
