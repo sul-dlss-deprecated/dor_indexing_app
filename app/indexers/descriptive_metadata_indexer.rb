@@ -20,7 +20,9 @@ class DescriptiveMetadataIndexer
       'mods_typeOfResource_ssim' => resource_type,
       'sw_format_ssim' => sw_format,
       'sw_genre_ssim' => stanford_mods_record.sw_genre,
-      'sw_author_tesim' => author,
+      'contributor_text_nostem_im' => author_all, # author names should be tokenized but not stemmed
+      'author_text_nostem_im' => author_primary, # primary author tokenized but not stemmed
+      'sw_author_tesim' => author_primary,
       'contributor_orcids_ssim' => orcids,
       'sw_display_title_tesim' => title,
       'sw_subject_temporal_ssim' => stanford_mods_record.era_facet,
@@ -53,8 +55,16 @@ class DescriptiveMetadataIndexer
     @subjects ||= Array(cocina.description.subject)
   end
 
-  def author
-    AuthorBuilder.build(Array(cocina.description.contributor))
+  def author_primary
+    author_builder.build_primary
+  end
+
+  def author_all
+    author_builder.build_all
+  end
+
+  def author_builder
+    @author_builder ||= AuthorBuilder.new(Array(cocina.description.contributor))
   end
 
   def orcids
