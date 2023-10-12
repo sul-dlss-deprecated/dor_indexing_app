@@ -32,7 +32,9 @@ class DescriptiveMetadataIndexer
       'topic_ssim' => stanford_mods_record.topic_facet.uniq,
       'topic_tesim' => stemmable_topics,
       'metadata_format_ssim' => 'mods', # NOTE: seriously? for cocina????
-      'all_text_timv' => all_text
+      'descriptive_tiv' => all_search_text, # ICU tokenized, ICU folded
+      'descriptive_text_nostem_i' => all_search_text, # whitespace tokenized, ICU folded, word delimited
+      'descriptive_teiv' => all_search_text # ICU tokenized, ICU folded, minimal stemming
     }.select { |_k, v| v.present? }
   end
   # rubocop:enable Metrics/MethodLength
@@ -185,8 +187,8 @@ class DescriptiveMetadataIndexer
     value.parallelValue.presence || value.groupedValue.presence || value.structuredValue.presence || Array(value)
   end
 
-  def all_text
-    AllTextBuilder.build(cocina.description)
+  def all_search_text
+    @all_search_text ||= AllSearchTextBuilder.build(cocina.description)
   end
 end
 # rubocop:enable Metrics/ClassLength

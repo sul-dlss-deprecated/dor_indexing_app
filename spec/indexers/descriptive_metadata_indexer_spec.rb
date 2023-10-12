@@ -378,34 +378,17 @@ RSpec.describe DescriptiveMetadataIndexer do
   describe '#to_solr' do
     # rubocop:disable Style/StringHashKeys
     it 'populates expected fields' do
+      all_search_text = 'The complete works of Henry George 4 George, Henry 1839-1897 George, Henry 1862-1916 George, Bush ' \
+                        'Wiles, Simon Doubleday, Page [Library ed.] monographic Garden City, N. Y text electronic ' \
+                        'preservation reformatted digital On cover: Complete works of Henry George. Fels fund. ' \
+                        'Library edition. I. Progress and poverty.--II. Social problems.--III. The land question. ' \
+                        'Property in land. blah blah print 10 v. fronts (v. 1-9) ports. 21 cm. Economics 1800-1900 ' \
+                        'Economics Europe cats'
       expect(doc).to eq(
         'metadata_format_ssim' => 'mods',
-        'all_text_timv' => [
-          'The',
-          'complete works of Henry George',
-          '4',
-          'George, Henry',
-          '1839-1897',
-          '1862-1916',
-          'George, Bush',
-          'Wiles, Simon',
-          'Doubleday, Page',
-          '[Library ed.]',
-          'monographic',
-          'Garden City, N. Y',
-          'text',
-          'electronic',
-          'preservation',
-          'reformatted digital',
-          'On cover: Complete works of Henry George. Fels fund. Library edition.',
-          'I. Progress and poverty.--II. Social problems.--III. The land question. Property in land. blah blah',
-          'print',
-          '10 v. fronts (v. 1-9) ports. 21 cm.',
-          'Economics',
-          '1800-1900',
-          'Europe',
-          'cats'
-        ],
+        'descriptive_tiv' => all_search_text,
+        'descriptive_teiv' => all_search_text,
+        'descriptive_text_nostem_i' => all_search_text,
         'sw_language_ssim' => ['English'],
         'sw_format_ssim' => ['Book'],
         'mods_typeOfResource_ssim' => ['text'],
@@ -473,16 +456,17 @@ RSpec.describe DescriptiveMetadataIndexer do
       end
 
       it 'populates expected fields' do
+        all_search_text = 'Toldot ha-Yehudim be-artsot ha-Islam ha-ʻet ' \
+                          'ha-ḥadashah-ʻad emtsaʻ ha-meʼah ha-19 ' \
+                          'תולדות היהודים בארצות האיסלאם ' \
+                          'העת החדשה עד אמצע המאה ה־19 History of the ' \
+                          'Jews in the Islamic countries'
         # rubocop:disable Style/StringHashKeys
         expect(doc).to eq(
           'metadata_format_ssim' => 'mods',
-          'all_text_timv' => [
-            'Toldot ha-Yehudim be-artsot ha-Islam',
-            'ha-ʻet ha-ḥadashah-ʻad emtsaʻ ha-meʼah ha-19',
-            'תולדות היהודים בארצות האיסלאם',
-            'העת החדשה עד אמצע המאה ה־19',
-            'History of the Jews in the Islamic countries'
-          ],
+          'descriptive_tiv' => all_search_text,
+          'descriptive_teiv' => all_search_text,
+          'descriptive_text_nostem_i' => all_search_text,
           'sw_display_title_tesim' => 'Toldot ha-Yehudim be-artsot ha-Islam : ha-ʻet ha-ḥadashah-ʻad emtsaʻ ha-meʼah ha-19'
         )
         # rubocop:enable Style/StringHashKeys

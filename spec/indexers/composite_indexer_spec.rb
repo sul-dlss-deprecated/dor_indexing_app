@@ -44,7 +44,9 @@ RSpec.describe CompositeIndexer do
       # rubocop:disable Style/StringHashKeys
       expect(doc).to eq(
         'metadata_format_ssim' => 'mods',
-        'all_text_timv' => ['Test item', 'word'],
+        'descriptive_tiv' => 'Test item word',
+        'descriptive_teiv' => 'Test item word',
+        'descriptive_text_nostem_i' => 'Test item word',
         'sw_display_title_tesim' => 'Test item',
         'nonhydrus_apo_title_ssim' => ['test admin policy'],
         'apo_title_ssim' => ['test admin policy'],
