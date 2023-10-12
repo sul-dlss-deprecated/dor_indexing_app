@@ -13,7 +13,6 @@ class DataIndexer
       Rails.logger.debug { "In #{self.class}" }
       solr_doc[:id] = cocina.externalIdentifier
       solr_doc['current_version_isi'] = cocina.version # Argo Facet field "Version"
-      solr_doc['obj_label_tesim'] = cocina.label
 
       solr_doc['modified_latest_dttsi'] = modified_latest
       solr_doc['created_at_dttsi'] = created_at
