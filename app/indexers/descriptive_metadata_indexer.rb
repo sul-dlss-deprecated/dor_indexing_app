@@ -31,7 +31,8 @@ class DescriptiveMetadataIndexer
       'originInfo_place_placeTerm_tesim' => event_place,
       'topic_ssim' => stanford_mods_record.topic_facet.uniq,
       'topic_tesim' => stemmable_topics,
-      'metadata_format_ssim' => 'mods' # NOTE: seriously? for cocina????
+      'metadata_format_ssim' => 'mods', # NOTE: seriously? for cocina????
+      'all_text_timv' => all_text
     }.select { |_k, v| v.present? }
   end
   # rubocop:enable Metrics/MethodLength
@@ -182,6 +183,10 @@ class DescriptiveMetadataIndexer
 
   def flat_value(value)
     value.parallelValue.presence || value.groupedValue.presence || value.structuredValue.presence || Array(value)
+  end
+
+  def all_text
+    AllTextBuilder.build(cocina.description)
   end
 end
 # rubocop:enable Metrics/ClassLength
