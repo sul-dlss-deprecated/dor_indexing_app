@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-# Extracts useful text from Cocina Description
-class AllTextBuilder
+# Extracts useful text for searching from Cocina Description
+class AllSearchTextBuilder
   def self.build(cocina_description)
     new(cocina_description).build
   end
@@ -13,15 +13,15 @@ class AllTextBuilder
   def build
     @text = []
     recurse(cocina_description)
-    text.uniq
+    text.join(' ')
   end
 
   private
 
   attr_reader :cocina_description, :text
 
+  # this originally had displayLabel, but Arcadia recommends against it
   TEXT_KEYS = %i[
-    displayLabel
     value
   ].freeze
 
