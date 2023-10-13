@@ -34,6 +34,7 @@ RSpec.describe DataIndexer do
 
       it 'makes a solr doc' do
         expect(doc).to eq(
+          'obj_label_tesim' => 'item label',
           'current_version_isi' => 4,
           'milestones_ssim' => %w[foo bar],
           'has_constituents_ssim' => nil,
@@ -53,6 +54,7 @@ RSpec.describe DataIndexer do
 
       it 'makes a solr doc' do
         expect(doc).to eq(
+          'obj_label_tesim' => 'item label',
           'current_version_isi' => 4,
           'milestones_ssim' => %w[foo bar],
           'is_governed_by_ssim' => 'info:fedora/druid:vv888vv8888',
@@ -72,6 +74,7 @@ RSpec.describe DataIndexer do
 
       it 'makes a solr doc' do
         expect(doc).to eq(
+          'obj_label_tesim' => 'item label',
           'current_version_isi' => 4,
           'milestones_ssim' => %w[foo bar],
           'has_constituents_ssim' => ['druid:bb777bb7777', 'druid:dd666dd6666'],
