@@ -18,7 +18,7 @@ class DescriptiveMetadataIndexer
     {
       'sw_language_ssim' => stanford_mods_record.sw_language_facet,
       'mods_typeOfResource_ssim' => resource_type,
-      'sw_format_ssim' => sw_format,
+      'sw_format_ssim' => stanford_mods_record.format_main,
       'sw_genre_ssim' => stanford_mods_record.sw_genre,
       'sw_author_tesim' => author,
       'contributor_orcids_ssim' => orcids,
@@ -91,27 +91,6 @@ class DescriptiveMetadataIndexer
     'three dimensional object' => 'Object',
     'text' => 'Book'
   }.freeze
-
-  # rubocop:disable Metrics/CyclomaticComplexity
-  # rubocop:disable Metrics/PerceivedComplexity
-  def sw_format
-    return ['Map'] if has_resource_type?('software, multimedia') && has_resource_type?('cartographic')
-    return ['Dataset'] if has_resource_type?('software, multimedia') && has_genre?('dataset')
-    return ['Archived website'] if has_resource_type?('text') && has_genre?('archived website')
-    return ['Book'] if has_resource_type?('text') && has_issuance?('monographic')
-    return ['Journal/Periodical'] if has_resource_type?('text') && (has_issuance?('continuing') || has_issuance?('serial') || has_frequency?)
-
-    resource_type_formats = flat_forms_for('resource type').map { |form| FORMAT[form.value&.downcase] }.uniq.compact
-    resource_type_formats.delete('Book') if resource_type_formats.include?('Archive/Manuscript')
-
-    return resource_type_formats if resource_type_formats == ['Book']
-
-    genre_formats = flat_forms_for('genre').map { |form| form.value&.capitalize }.uniq
-
-    (resource_type_formats + genre_formats).presence
-  end
-  # rubocop:enable Metrics/CyclomaticComplexity
-  # rubocop:enable Metrics/PerceivedComplexity
 
   def has_resource_type?(type)
     flat_forms_for('resource type').any? { |form| form.value == type }
