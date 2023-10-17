@@ -2,6 +2,7 @@
 
 require_relative '../config/environment'
 require 'daemons'
+require 'parallel'
 
 QUERY = { q: '*:*', sort: 'timestamp asc', fl: 'id', rows: '500' }
 
@@ -9,20 +10,26 @@ Daemons.run_proc('rolling index') do
   loop do
     solr_conn = RSolr.connect(timeout: 120, open_timeout: 120, url: Settings.solrizer_url)
     response = solr_conn.get 'select', params: QUERY
-    response['response']['docs'].each do |doc|
+    solr_docs = Parallel.map(response['response']['docs'], in_processes: 8) do |doc|
       identifier = doc['id'].scrub('')
       # Occasionally, we've seen invalid bytes in the identifier, so try to catch those:
       Honeybadger.notify("Identifier isn't valid utf-8", { identifier: identifier, bytes: identifier.unpack('C*') }) unless doc['id'].valid_encoding?
       begin
+        # This returns a Solr doc instance
         Indexer.load_and_index(solr: solr_conn, identifier: identifier)
       rescue Dor::Services::Client::NotFoundResponse
         Honeybadger.notify('Rolling indexer cannot reindex since not found.', { druid: identifier })
         # Clean up cruft in QA and stage
         Indexer.delete(solr: solr_conn, identifier: identifier) if ['stage', 'qa'].include?(ENV['HONEYBADGER_ENV'])
+        # Return `nil`, which is compacted, so the Solr add isn't grumpy
+        nil
       rescue Dor::Services::Client::UnexpectedResponse
         Honeybadger.notify('Unexpected response from Dor Services App.', { druid: identifier })
+        # Return `nil`, which is compacted, so the Solr add isn't grumpy
+        nil
       end
-    end
+    end.compact
+    solr_conn.add(solr_docs, add_attributes: { commitWithin: 1000 })
     sleep(5) # This was just a wild guess.  We can turn this up/down as necessary.
   end
 end
