@@ -4,18 +4,27 @@ require_relative '../config/environment'
 require 'daemons'
 require 'parallel'
 
-QUERY = { q: '*:*', sort: 'timestamp asc', fl: 'id', rows: '500' }
+QUERY = { q: '*:*', sort: 'timestamp asc', fl: 'id', rows: Settings.rolling_indexer.batch_size }
 
-Daemons.run_proc('rolling index') do
+Daemons.run_proc(
+  File.basename(__FILE__),
+  dir: "tmp/pids",
+  log_dir: "#{File.expand_path(__dir__)}/../log",
+  log_output: true,
+  logfilename: 'rolling_index.log',
+  output_logfilename: 'rolling_index.log'
+) do
   loop do
+    start_time = Time.now
+
     solr_conn = RSolr.connect(timeout: 120, open_timeout: 120, url: Settings.solrizer_url)
     response = solr_conn.get 'select', params: QUERY
-    solr_docs = Parallel.map(response['response']['docs'], in_processes: 8) do |doc|
+    solr_docs = Parallel.map(response['response']['docs'], in_processes: Settings.rolling_indexer.processes) do |doc|
       identifier = doc['id'].scrub('')
       # Occasionally, we've seen invalid bytes in the identifier, so try to catch those:
       Honeybadger.notify("Identifier isn't valid utf-8", { identifier: identifier, bytes: identifier.unpack('C*') }) unless doc['id'].valid_encoding?
       begin
-        # This returns a Solr doc instance
+        # This returns a Solr doc hash
         Indexer.load_and_build(identifier: identifier)
       rescue Dor::Services::Client::NotFoundResponse
         Honeybadger.notify('Rolling indexer cannot reindex since not found.', { druid: identifier })
@@ -29,7 +38,14 @@ Daemons.run_proc('rolling index') do
         nil
       end
     end.compact
+
     solr_conn.add(solr_docs, add_attributes: { commitWithin: 1000 })
-    sleep(5) # This was just a wild guess.  We can turn this up/down as necessary.
+
+    end_time = Time.now
+    batch_run_seconds = (end_time - start_time).round(3)
+    # The Daemons gem will redirect this to its log
+    puts "#{end_time}\tIndexed #{Settings.rolling_indexer.batch_size} documents in #{batch_run_seconds}"
+
+    sleep(Settings.rolling_indexer.pause_seconds)
   end
 end
