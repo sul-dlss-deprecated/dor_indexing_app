@@ -1,34 +1,26 @@
 # frozen_string_literal: true
 
 class AuthorBuilder
-  ALLOWED_ROLES = %w[Author creator].freeze
-
-  # @param [Array<Cocina::Models::Contributor>] contributors
-  # @return [String] the author value for Solr
-  def self.build(contributors)
-    new(contributors).build
+  def initialize(cocina_contributors)
+    @cocina_contributors = Array(cocina_contributors)
   end
 
-  def initialize(contributors)
-    @contributors = Array(contributors)
+  def build_primary
+    contributor = primary_cocina_contributor || cocina_contributors.first
+    return unless contributor
+
+    NameBuilder.build_primary_name(contributor.name) if contributor
   end
 
-  def build
-    contributor = primary_contributor || contributors.first
-    build_contributor(contributor)
+  def build_all
+    NameBuilder.build_all(cocina_contributors.filter_map(&:name))
   end
 
   private
 
-  attr_reader :contributors
+  attr_reader :cocina_contributors
 
-  def build_contributor(contributor)
-    return if contributor.nil?
-
-    NameBuilder.build(contributor.name).first
-  end
-
-  def primary_contributor
-    contributors.find { |contributor| contributor.status == 'primary' }
+  def primary_cocina_contributor
+    cocina_contributors.find { |cocina_contributor| cocina_contributor.status == 'primary' }
   end
 end

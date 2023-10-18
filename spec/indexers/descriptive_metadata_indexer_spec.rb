@@ -396,6 +396,8 @@ RSpec.describe DescriptiveMetadataIndexer do
         'sw_subject_geographic_ssim' => ['Europe'],
         'sw_pub_date_facet_ssi' => '1911',
         'sw_author_tesim' => 'George, Henry, 1839-1897',
+        'author_text_nostem_im' => 'George, Henry, 1839-1897',
+        'contributor_text_nostem_im' => ['George, Henry, 1839-1897', 'George, Henry, 1862-1916', 'George, Bush', 'Wiles, Simon'],
         'sw_display_title_tesim' => 'The complete works of Henry George',
         # 'originInfo_date_created_tesim' => '', # not populated by the example; see indexer_spec instead
         'originInfo_publisher_tesim' => 'Doubleday, Page',

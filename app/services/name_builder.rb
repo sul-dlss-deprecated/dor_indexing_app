@@ -3,13 +3,21 @@
 class NameBuilder
   # @param [Symbol] strategy ":first" is the strategy for how to choose a name if primary and display name is not found
   # @return [Array<String>] names
-  def self.build(names, strategy: :first)
+  def self.build_all(cocina_contributors)
+    flat_names = cocina_contributors.filter_map { |cocina_contributor| flat_names_for(cocina_contributor) }.flatten
+    flat_names.filter_map { |name| build_name(name) }
+  end
+
+  # @param [Symbol] strategy ":first" is the strategy for how to choose a name if primary and display name is not found
+  # @return [String] name
+  def self.build_primary_name(names, strategy: :first)
+    names = Array(names) unless names.is_a?(Array)
     flat_names = flat_names_for(names)
     name = display_name_for(flat_names) || primary_name_for(flat_names)
     name ||= flat_names.first if strategy == :first
-    return Array(build_name(name)) if name
+    return build_name(name) if name
 
-    flat_names.map { |one| build_name(one) }
+    flat_names.filter_map { |one| build_name(one) }.first
   end
 
   def self.build_name(name)
@@ -26,7 +34,6 @@ class NameBuilder
       joined_name = join_parts([joined_name, terms_of_address], ' ')
       joined_name = join_parts([joined_name, life_dates], ', ')
       join_parts([joined_name, activity_dates], ', ')
-
     else
       name.value
     end
