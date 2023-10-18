@@ -11,6 +11,14 @@ class Indexer
     new(solr:, commit_within:).load_and_index(identifier:)
   end
 
+  # @param [String] identifier for cocina object
+  # @raise [Dor::Services::Client::NotFoundResponse]
+  # @raise [Dor::Services::Client::UnexpectedResponse]
+  # @return [Hash] solr document
+  def self.load_and_build(identifier:)
+    new(solr: nil).load_and_build(identifier:)
+  end
+
   # @param [RSolr::Client] solr
   # @param [Cocina::Models::DROWithMetadata|CollectionWithMetadata|AdminPolicyWithMetadata] cocina object to index
   # @param [Integer] commit within milliseconds; if nil, then immediately committed.
@@ -32,9 +40,24 @@ class Indexer
     @commit_within = commit_within
   end
 
+  def load(identifier:)
+    Honeybadger.context({ identifier: })
+    Dor::Services::Client.object(identifier).find
+  end
+
+  def build(cocina_with_metadata:)
+    Honeybadger.context({ identifier: cocina_with_metadata.externalIdentifier })
+    DocumentBuilder.for(model: cocina_with_metadata).to_solr
+  end
+
+  def load_and_build(identifier:)
+    cocina_with_metadata = load(identifier:)
+    build(cocina_with_metadata:)
+  end
+
   def load_and_index(identifier:)
     Honeybadger.context({ identifier: })
-    cocina_with_metadata = Dor::Services::Client.object(identifier).find
+    cocina_with_metadata = load(identifier:)
     reindex(cocina_with_metadata:)
   end
 
@@ -42,7 +65,7 @@ class Indexer
   def reindex(cocina_with_metadata:)
     Honeybadger.context({ identifier: cocina_with_metadata.externalIdentifier })
 
-    solr_doc = DocumentBuilder.for(model: cocina_with_metadata).to_solr
+    solr_doc = build(cocina_with_metadata:)
     logger.debug 'solr doc created'
     solr.add(solr_doc, add_attributes: { commitWithin: commit_within || 1000 })
     solr.commit if commit_within.nil?
