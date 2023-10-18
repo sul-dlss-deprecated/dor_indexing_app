@@ -13,6 +13,48 @@ RSpec.describe Indexer do
     allow(DocumentBuilder).to receive(:for).and_return(doc_builder)
   end
 
+  describe '#load_and_build' do
+    subject(:load_and_build) { described_class.load_and_build(identifier:) }
+
+    before do
+      allow(Dor::Services::Client).to receive(:object).and_return(object_client)
+    end
+
+    context 'when object is found' do
+      let(:object_client) { instance_double(Dor::Services::Client::Object, find: model) }
+
+      it 'is properly indexed' do
+        expect(load_and_build).to eq(doc)
+        expect(DocumentBuilder).to have_received(:for).with(model:)
+        expect(doc_builder).to have_received(:to_solr)
+      end
+    end
+
+    context 'when object is not found' do
+      let(:object_client) { instance_double(Dor::Services::Client::Object) }
+
+      before do
+        allow(object_client).to receive(:find).and_raise(Dor::Services::Client::NotFoundResponse)
+      end
+
+      it 'raises an exception' do
+        expect { load_and_build }.to raise_error Dor::Services::Client::NotFoundResponse
+      end
+    end
+
+    context 'when unexpected response' do
+      let(:object_client) { instance_double(Dor::Services::Client::Object) }
+
+      before do
+        allow(object_client).to receive(:find).and_raise(Dor::Services::Client::UnexpectedResponse.new(response: nil))
+      end
+
+      it 'raises an exception' do
+        expect { load_and_build }.to raise_error Dor::Services::Client::UnexpectedResponse
+      end
+    end
+  end
+
   describe '#load_and_index' do
     subject(:load_and_index) { described_class.load_and_index(solr:, identifier:) }
 

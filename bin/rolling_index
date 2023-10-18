@@ -16,7 +16,7 @@ Daemons.run_proc('rolling index') do
       Honeybadger.notify("Identifier isn't valid utf-8", { identifier: identifier, bytes: identifier.unpack('C*') }) unless doc['id'].valid_encoding?
       begin
         # This returns a Solr doc instance
-        Indexer.load_and_index(solr: solr_conn, identifier: identifier)
+        Indexer.load_and_build(identifier: identifier)
       rescue Dor::Services::Client::NotFoundResponse
         Honeybadger.notify('Rolling indexer cannot reindex since not found.', { druid: identifier })
         # Clean up cruft in QA and stage
