@@ -1,5 +1,9 @@
 # General
 date_format_str: '%Y-%m-%d %H:%M:%S.%L'
+rolling_indexer:
+  processes: 2
+  batch_size: 500
+  pause_time_between_batches: 5 # This is a wild guess. We can turn this up/down as necessary.
 
 ssl:
   cert_file: ~
@@ -18,7 +22,6 @@ workflow_url: 'https://workflow.example.edu/'
 dor_services:
   url: 'http://localhost:3003'
   token: 'not-a-real-token'
-
 
 rabbitmq:
   hostname: localhost
