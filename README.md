@@ -32,6 +32,8 @@ $ sudo systemctl restart rolling-index
 
 **NOTE 2**: The rolling indexer runs only on one node per environment. Conventionally, this is the `-a` node.
 
+**NOTE 3**: The rolling indexer logs to `{capistrano_shared_dir}/log/rolling_indexer.log`
+
 ## API
 
 See https://sul-dlss.github.io/dor_indexing_app/
