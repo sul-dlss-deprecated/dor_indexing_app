@@ -16,24 +16,33 @@ class DescriptiveMetadataIndexer
   # @return [Hash] the partial solr document for descriptive metadata
   def to_solr
     {
-      'sw_language_ssim' => stanford_mods_record.sw_language_facet,
-      'mods_typeOfResource_ssim' => resource_type,
-      'sw_format_ssim' => sw_format,
-      'sw_genre_ssim' => stanford_mods_record.sw_genre,
-      'contributor_text_nostem_im' => author_all, # author names should be tokenized but not stemmed
+      # title
+      'sw_display_title_tesim' => title,
+      # contributor
       'author_text_nostem_im' => author_primary, # primary author tokenized but not stemmed
       'sw_author_tesim' => author_primary,
+      'contributor_text_nostem_im' => author_all, # author names should be tokenized but not stemmed
       'contributor_orcids_ssim' => orcids,
-      'sw_display_title_tesim' => title,
-      'sw_subject_temporal_ssim' => stanford_mods_record.era_facet,
-      'sw_subject_geographic_ssim' => subject_geographic,
-      'sw_pub_date_facet_ssi' => stanford_mods_record.pub_year_int.to_s,
-      'originInfo_date_created_tesim' => creation_date,
-      'originInfo_publisher_tesim' => publisher_name,
-      'originInfo_place_placeTerm_tesim' => event_place,
+      # topic
       'topic_ssim' => stanford_mods_record.topic_facet.uniq,
       'topic_tesim' => stemmable_topics,
-      'metadata_format_ssim' => 'mods', # NOTE: seriously? for cocina????
+      # publication
+      'originInfo_date_created_tesim' => creation_date,
+      'originInfo_publisher_tesim' => publisher_name,
+      'originInfo_place_placeTerm_tesim' => event_place, # do we want this?
+      'sw_pub_date_facet_ssi' => stanford_mods_record.pub_year_int.to_s, # SW Date facet
+
+      'metadata_format_ssim' => 'mods', # no longer used? https://github.com/search?q=org%3Asul-dlss+metadata_format_ssim&type=code
+
+      # SW facets plus a friend facet
+      'sw_format_ssim' => sw_format, # SW Resource Type facet
+      'mods_typeOfResource_ssim' => resource_type, # MODS Resource Type facet
+      'sw_genre_ssim' => stanford_mods_record.sw_genre, # SW Genre facet
+      'sw_language_ssim' => stanford_mods_record.sw_language_facet, # SW Language facet
+      'sw_subject_temporal_ssim' => stanford_mods_record.era_facet, # SW Era facet
+      'sw_subject_geographic_ssim' => subject_geographic, # SW Region facet
+
+      # all the descriptive data that we want to search on, with different flavors for better recall and precision
       'descriptive_tiv' => all_search_text, # ICU tokenized, ICU folded
       'descriptive_text_nostem_i' => all_search_text, # whitespace tokenized, ICU folded, word delimited
       'descriptive_teiv' => all_search_text # ICU tokenized, ICU folded, minimal stemming

@@ -24,7 +24,7 @@ class AdministrativeTagIndexer
       prefix = tag_prefix.downcase.strip.gsub(/\s/, '_')
 
       solr_doc['tag_ssim'] << tag
-      solr_doc['exploded_tag_ssim'] += exploded_tags_from(tag)
+      solr_doc['exploded_tag_ssim'] += exploded_tags_from(tag) # deprecated; facet field to be replaced by other exploded_xxx_tag fields
 
       solr_doc['exploded_nonproject_tag_ssim'] += exploded_tags_from(tag) unless prefix == 'project'
 

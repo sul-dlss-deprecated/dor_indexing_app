@@ -14,10 +14,10 @@ class CollectionTitleIndexer
 
     {}.tap do |solr_doc|
       parent_collections.each do |related_obj|
-        title = Cocina::Models::Builders::TitleBuilder.build(related_obj.description.title)
+        coll_title = Cocina::Models::Builders::TitleBuilder.build(related_obj.description.title)
 
         # create/append collection_title_tesim and collection_title_ssim
-        ::Solrizer.insert_field(solr_doc, 'collection_title', title, :stored_searchable, :symbol)
+        ::Solrizer.insert_field(solr_doc, 'collection_title', coll_title, :stored_searchable, :symbol)
       end
     end
   end
