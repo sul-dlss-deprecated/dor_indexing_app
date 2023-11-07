@@ -27,10 +27,6 @@ RSpec.describe AdministrativeTagIndexer do
     end
 
     it 'indexes exploded tags' do
-      expect(document['exploded_tag_ssim']).to contain_exactly('Google Books', 'Google Books : Phase 1', 'Google Books', 'Google Books : Scan source STANFORD', 'Project',
-                                                               'Project : Beautiful Books', 'Project', 'Project : Rare Books', 'Project : Rare Books : Very Old Books', 'Registered By',
-                                                               'Registered By : blalbrit', 'DPG', 'DPG : Beautiful Books', 'DPG : Beautiful Books : Octavo',
-                                                               'DPG : Beautiful Books : Octavo : newpri', 'Remediated By', 'Remediated By : 4.15.4')
       expect(document['exploded_nonproject_tag_ssim']).to contain_exactly('Google Books', 'Google Books : Phase 1', 'Google Books', 'Google Books : Scan source STANFORD',
                                                                           'Registered By',
                                                                           'Registered By : blalbrit', 'DPG', 'DPG : Beautiful Books', 'DPG : Beautiful Books : Octavo',

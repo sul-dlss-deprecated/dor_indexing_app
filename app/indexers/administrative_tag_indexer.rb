@@ -18,13 +18,12 @@ class AdministrativeTagIndexer
   def to_solr
     Rails.logger.debug { "In #{self.class}" }
 
-    solr_doc = { 'tag_ssim' => [], 'exploded_tag_ssim' => [], 'exploded_nonproject_tag_ssim' => [] }
+    solr_doc = { 'tag_ssim' => [], 'exploded_nonproject_tag_ssim' => [] }
     administrative_tags.each do |tag|
       tag_prefix, rest = tag.split(TAG_PART_DELIMITER, 2)
       prefix = tag_prefix.downcase.strip.gsub(/\s/, '_')
 
       solr_doc['tag_ssim'] << tag
-      solr_doc['exploded_tag_ssim'] += exploded_tags_from(tag) # deprecated; facet field to be replaced by other exploded_xxx_tag fields
 
       solr_doc['exploded_nonproject_tag_ssim'] += exploded_tags_from(tag) unless prefix == 'project'
 
