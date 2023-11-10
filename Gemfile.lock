@@ -73,7 +73,7 @@ GEM
     amq-protocol (2.3.2)
     ast (2.4.2)
     attr_extras (7.1.0)
-    base64 (0.1.1)
+    base64 (0.2.0)
     bootsnap (1.17.0)
       msgpack (~> 1.2)
     builder (3.2.4)
@@ -100,7 +100,7 @@ GEM
     capistrano-passenger (0.2.1)
       capistrano (~> 3.0)
     capistrano-shared_configs (0.2.2)
-    cocina-models (0.92.0)
+    cocina-models (0.93.0)
       activesupport
       deprecation
       dry-struct (~> 1.0)
@@ -140,9 +140,9 @@ GEM
       capistrano-one_time_key
       capistrano-shared_configs
     docile (1.4.0)
-    dor-services-client (13.2.0)
+    dor-services-client (13.3.0)
       activesupport (>= 4.2, < 8)
-      cocina-models (~> 0.92.0)
+      cocina-models (~> 0.93.0)
       deprecation
       faraday (~> 2.0)
       faraday-retry
