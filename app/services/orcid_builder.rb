@@ -48,6 +48,6 @@ class OrcidBuilder
     return identifier.uri if identifier.uri
     return identifier.value if identifier.value.start_with?('https://orcid.org/')
 
-    URI.join(identifier.source.uri, identifier.value).to_s
+    URI.join('https://orcid.org/', identifier.value).to_s
   end
 end
