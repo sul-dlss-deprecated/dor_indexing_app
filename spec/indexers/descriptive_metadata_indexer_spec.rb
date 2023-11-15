@@ -124,7 +124,7 @@ RSpec.describe DescriptiveMetadataIndexer do
           ],
           identifier: [
             {
-              value: 'https://orcid.org/0000-0001-5321-289X',
+              value: '0000-0001-5321-289X',
               type: 'ORCID',
               source: {
                 code: 'orcid'
