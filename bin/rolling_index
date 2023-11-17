@@ -2,7 +2,6 @@
 
 require_relative '../config/environment'
 require 'daemons'
-require 'parallel'
 
 QUERY = { q: '*:*', sort: 'timestamp asc', fl: 'id', rows: Settings.rolling_indexer.batch_size }
 
@@ -19,7 +18,7 @@ Daemons.run_proc(
 
     solr_conn = RSolr.connect(timeout: 120, open_timeout: 120, url: Settings.solrizer_url)
     response = solr_conn.get 'select', params: QUERY
-    solr_docs = Parallel.map(response['response']['docs'], in_processes: Settings.rolling_indexer.processes) do |doc|
+    solr_docs = response['response']['docs'].map do |doc|
       identifier = doc['id'].scrub('')
       # Occasionally, we've seen invalid bytes in the identifier, so try to catch those:
       Honeybadger.notify("Identifier isn't valid utf-8", { identifier: identifier, bytes: identifier.unpack('C*') }) unless doc['id'].valid_encoding?
@@ -36,6 +35,8 @@ Daemons.run_proc(
         Honeybadger.notify('Unexpected response from Dor Services App.', { druid: identifier })
         # Return `nil`, which is compacted, so the Solr add isn't grumpy
         nil
+      ensure
+        sleep(Settings.rolling_indexer.pause_time_between_docs)
       end
     end.compact
 

@@ -17,7 +17,6 @@ gem 'iso-639', '~> 0.3.5'
 gem 'language_list'
 gem 'marc-vocab', '~> 0.3.0'
 gem 'okcomputer' # for monitoring
-gem 'parallel'
 gem 'puma', '~> 5.3' # app server
 gem 'rack-timeout', '~> 0.5.1'
 gem 'rails', '~> 7.0.0'

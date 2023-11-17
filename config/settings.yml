@@ -1,9 +1,9 @@
 # General
 date_format_str: '%Y-%m-%d %H:%M:%S.%L'
 rolling_indexer:
-  processes: 1
   batch_size: 500
-  pause_time_between_batches: 5 # This is a wild guess. We can turn this up/down as necessary.
+  pause_time_between_docs: .2
+  pause_time_between_batches: 0
 
 ssl:
   cert_file: ~
