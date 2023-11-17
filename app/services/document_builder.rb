@@ -45,25 +45,46 @@ class DocumentBuilder
     Cocina::Models::ObjectType.collection => COLLECTION_INDEXER
   }.freeze
 
-  # @param [Cocina::Models::DROWithMetadata,Cocina::Models::CollectionWithMetadata,Cocina::Model::AdminPolicyWithMetadata] model
+  @@parent_collections = {} # rubocop:disable Style/ClassVars
+
   def self.for(model:)
-    id = model.externalIdentifier
+    new(model:).for
+  end
+
+  def self.reset_parent_collections
+    @@parent_collections = {} # rubocop:disable Style/ClassVars
+  end
+
+  def initialize(model:)
+    @model = model
+  end
+
+  # @param [Cocina::Models::DROWithMetadata,Cocina::Models::CollectionWithMetadata,Cocina::Model::AdminPolicyWithMetadata] model
+  def for
     Rails.logger.debug { "Fetching indexer for #{model.type}" }
     indexer_for_type(model.type).new(id:,
                                      cocina: model,
-                                     parent_collections: load_parent_collections(model),
-                                     administrative_tags: administrative_tags(id))
+                                     parent_collections:,
+                                     administrative_tags:)
   end
 
-  def self.indexer_for_type(type)
+  private
+
+  attr_reader :model
+
+  def id
+    model.externalIdentifier
+  end
+
+  def indexer_for_type(type)
     INDEXERS.fetch(type, ITEM_INDEXER)
   end
 
-  def self.load_parent_collections(model)
+  def parent_collections
     return [] unless model.dro?
 
     Array(model.structural&.isMemberOf).filter_map do |rel_druid|
-      Dor::Services::Client.object(rel_druid).find
+      @@parent_collections[rel_druid] ||= Dor::Services::Client.object(rel_druid).find
     rescue Dor::Services::Client::UnexpectedResponse, Dor::Services::Client::NotFoundResponse
       Honeybadger.notify("Bad association found on #{model.externalIdentifier}. #{rel_druid} could not be found")
       # This may happen if the referenced Collection does not exist (bad data)
@@ -71,7 +92,7 @@ class DocumentBuilder
     end
   end
 
-  def self.administrative_tags(id)
+  def administrative_tags
     Dor::Services::Client.object(id).administrative_tags.list
   rescue Dor::Services::Client::NotFoundResponse
     []

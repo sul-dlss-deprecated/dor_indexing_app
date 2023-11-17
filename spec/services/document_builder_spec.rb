@@ -29,6 +29,7 @@ RSpec.describe DocumentBuilder do
   end
 
   before do
+    described_class.reset_parent_collections
     allow(Dor::Services::Client).to receive(:object).and_return(object_client)
     # rubocop:disable Style/StringHashKeys
     allow(WorkflowFields).to receive(:for).and_return({ 'milestones_ssim' => %w[foo bar] })
@@ -60,7 +61,27 @@ RSpec.describe DocumentBuilder do
       let(:related) { build(:collection) }
       let(:collections) { ['druid:bc999df2323'] }
 
-      it { is_expected.to be_instance_of CompositeIndexer::Instance }
+      it 'returns indexer' do
+        expect(indexer).to be_instance_of CompositeIndexer::Instance
+        expect(object_client).to have_received(:find).once
+      end
+    end
+
+    context 'with a cached collections' do
+      let(:object_client) do
+        instance_double(Dor::Services::Client::Object, find: related, administrative_tags: admin_tags_client)
+      end
+      let(:related) { build(:collection) }
+      let(:collections) { ['druid:bc999df2323'] }
+
+      before do
+        described_class.for(model: cocina_with_metadata)
+      end
+
+      it 'uses the cached collection' do
+        expect(indexer).to be_instance_of CompositeIndexer::Instance
+        expect(object_client).to have_received(:find).once
+      end
     end
 
     context "with collections that can't be resolved" do
