@@ -99,7 +99,7 @@ RSpec.describe DescriptiveMetadataIndexer do
           type: 'person',
           identifier: [
             {
-              uri: 'https://orcid.org/1111-2222-3333-4444',
+              uri: 'https://sandbox.orcid.org/1111-2222-3333-4444',
               type: 'ORCID',
               source: {
                 code: 'orcid'
@@ -404,7 +404,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         'originInfo_place_placeTerm_tesim' => 'Garden City, N. Y',
         'topic_ssim' => %w[Economics cats],
         'topic_tesim' => %w[cats Economics],
-        'contributor_orcids_ssim' => ['https://orcid.org/0000-1111-2222-3333', 'https://orcid.org/1111-2222-3333-4444', 'https://orcid.org/0000-0001-5321-289X']
+        'contributor_orcids_ssim' => ['https://orcid.org/0000-1111-2222-3333', 'https://sandbox.orcid.org/1111-2222-3333-4444', 'https://orcid.org/0000-0001-5321-289X']
       )
     end
     # rubocop:enable Style/StringHashKeys
