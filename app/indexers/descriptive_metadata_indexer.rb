@@ -20,7 +20,7 @@ class DescriptiveMetadataIndexer
       'sw_display_title_tesim' => title,
       # contributor
       'author_text_nostem_im' => author_primary, # primary author tokenized but not stemmed
-      'sw_author_tesim' => author_primary,
+      'sw_author_tesim' => author_primary, # used for author display in Argo
       'contributor_text_nostem_im' => author_all, # author names should be tokenized but not stemmed
       'contributor_orcids_ssim' => orcids,
       # topic
