@@ -201,7 +201,7 @@ GEM
       nokogiri (>= 1.4.3)
     erubi (1.12.0)
     erubis (2.7.0)
-    faraday (2.7.11)
+    faraday (2.7.12)
       base64
       faraday-net_http (>= 2.0, < 3.1)
       ruby2_keywords (>= 0.0.4)
@@ -246,7 +246,7 @@ GEM
       nom-xml (~> 1.0)
     msgpack (1.7.2)
     multi_json (1.15.0)
-    net-imap (0.4.5)
+    net-imap (0.4.6)
       date
       net-protocol
     net-pop (0.1.2)
@@ -258,7 +258,7 @@ GEM
     net-smtp (0.4.0)
       net-protocol
     net-ssh (7.2.0)
-    nio4r (2.6.0)
+    nio4r (2.6.1)
     nokogiri (1.15.5-x86_64-darwin)
       racc (~> 1.4)
     nokogiri (1.15.5-x86_64-linux)
