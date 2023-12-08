@@ -22,7 +22,8 @@ RSpec.describe AdministrativeTagIndexer do
 
     it 'indexes all administrative tags' do
       # rubocop:disable Style/StringHashKeys
-      expect(document).to include('tag_ssim' => tags)
+      expect(document).to include('tag_ssim' => tags) # Deprecated in favor of tag_text_unstemmed_sim for searchability
+      expect(document).to include('tag_text_unstemmed_sim' => tags)
       # rubocop:enable Style/StringHashKeys
     end
 

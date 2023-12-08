@@ -15,15 +15,20 @@ class AdministrativeTagIndexer
   end
 
   # @return [Hash] the partial solr document for administrative tags
-  def to_solr
+  def to_solr # rubocop:disable Metrics/MethodLength
     Rails.logger.debug { "In #{self.class}" }
 
-    solr_doc = { 'tag_ssim' => [], 'exploded_nonproject_tag_ssim' => [] }
+    solr_doc = {
+      'tag_ssim' => [], # deprecated in favor of tag_text_unstemmed_sim for searchability
+      'tag_text_unstemmed_sim' => [],
+      'exploded_nonproject_tag_ssim' => []
+    }
     administrative_tags.each do |tag|
       tag_prefix, rest = tag.split(TAG_PART_DELIMITER, 2)
       prefix = tag_prefix.downcase.strip.gsub(/\s/, '_')
 
-      solr_doc['tag_ssim'] << tag
+      solr_doc['tag_ssim'] << tag # deprecated in favor of tag_text_unstemmed_sim for searchability
+      solr_doc['tag_text_unstemmed_sim'] << tag
 
       solr_doc['exploded_nonproject_tag_ssim'] += exploded_tags_from(tag) unless prefix == 'project'
 
