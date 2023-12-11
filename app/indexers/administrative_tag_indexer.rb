@@ -19,16 +19,16 @@ class AdministrativeTagIndexer
     Rails.logger.debug { "In #{self.class}" }
 
     solr_doc = {
-      'tag_ssim' => [], # deprecated in favor of tag_text_unstemmed_sim for searchability
-      'tag_text_unstemmed_sim' => [],
+      'tag_ssim' => [],
+      'tag_text_unstemmed_im' => [],
       'exploded_nonproject_tag_ssim' => []
     }
     administrative_tags.each do |tag|
       tag_prefix, rest = tag.split(TAG_PART_DELIMITER, 2)
       prefix = tag_prefix.downcase.strip.gsub(/\s/, '_')
 
-      solr_doc['tag_ssim'] << tag # deprecated in favor of tag_text_unstemmed_sim for searchability
-      solr_doc['tag_text_unstemmed_sim'] << tag
+      solr_doc['tag_ssim'] << tag # for facet and display
+      solr_doc['tag_text_unstemmed_im'] << tag # for search
 
       solr_doc['exploded_nonproject_tag_ssim'] += exploded_tags_from(tag) unless prefix == 'project'
 
