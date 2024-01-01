@@ -246,6 +246,7 @@ GEM
       nom-xml (~> 1.0)
     msgpack (1.7.2)
     multi_json (1.15.0)
+    mutex_m (0.2.0)
     net-imap (0.4.9)
       date
       net-protocol
@@ -259,9 +260,9 @@ GEM
       net-protocol
     net-ssh (7.2.1)
     nio4r (2.7.0)
-    nokogiri (1.15.5-x86_64-darwin)
+    nokogiri (1.16.0-x86_64-darwin)
       racc (~> 1.4)
-    nokogiri (1.15.5-x86_64-linux)
+    nokogiri (1.16.0-x86_64-linux)
       racc (~> 1.4)
     nom-xml (1.2.0)
       i18n
@@ -405,7 +406,8 @@ GEM
     sorted_set (1.0.3)
       rbtree
       set (~> 1.0)
-    sshkit (1.21.6)
+    sshkit (1.21.7)
+      mutex_m
       net-scp (>= 1.1.2)
       net-ssh (>= 2.8.0)
     stanford-mods (3.3.9)
