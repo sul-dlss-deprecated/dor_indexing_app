@@ -25,6 +25,7 @@ gem 'sneakers', '~> 2.11'
 gem 'solrizer'
 
 # DLSS gems
+gem 'cocina-models', '= 0.93.0' # naomi has WIP for structured title values in >= 0.93.1 (cocina-models is not a direct DIA dep, and this line can be removed entirely once the pin is no longer needed)
 gem 'dor-services-client', '~> 13.4'
 gem 'dor-workflow-client', '~> 5.0'
 gem 'parse_date'
