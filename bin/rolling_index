@@ -18,6 +18,9 @@ Daemons.run_proc(
 
     solr_conn = RSolr.connect(timeout: 120, open_timeout: 120, url: Settings.solrizer_url)
     response = solr_conn.get 'select', params: QUERY
+
+    have_response_time = Time.now
+
     solr_docs = response['response']['docs'].map do |doc|
       identifier = doc['id'].scrub('')
       # Occasionally, we've seen invalid bytes in the identifier, so try to catch those:
@@ -39,6 +42,10 @@ Daemons.run_proc(
         sleep(Settings.rolling_indexer.pause_time_between_docs)
       end
     end.compact
+
+    build_docs_time = Time.now
+    # The Daemons gem will redirect this to its log
+    puts "#{build_docs_time}\tGot oldest ids from Solr in #{(have_response_time - start_time).round(3)}; Built Solr docs in #{(build_docs_time - have_response_time).round(3)}"
 
     solr_conn.add(solr_docs, add_attributes: { commitWithin: Settings.rolling_indexer.commit_within.to_i })
 

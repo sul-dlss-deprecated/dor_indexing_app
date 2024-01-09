@@ -2,12 +2,12 @@
 date_format_str: '%Y-%m-%d %H:%M:%S.%L'
 rolling_indexer:
   batch_size: 500
-  # in seconds
-  pause_time_between_docs: 0.2
-  # commitWithin does a soft commit by default, so a little more than commitWithin is desired (seconds)
-  pause_time_between_batches: 11
+  # avoid overloading the load balancer (seconds)
+  pause_time_between_docs: 0.1
+  # a little more than softCommit max time is desired (a Solr 'add' with commitWithin does a softCommit) (seconds)
+  pause_time_between_batches: 5.1
   # milliseconds
-  commitWithin: 1000
+  commitWithin: 500
 
 ssl:
   cert_file: ~
@@ -19,7 +19,6 @@ workflow:
   shift_age: 'weekly'
   timeout: 60
 
-fedora_url: 'https://user:password@fedora.example.com:1000/fedora'
 solrizer_url: 'https://solr.example.com/solr/collection'
 workflow_url: 'https://workflow.example.edu/'
 
