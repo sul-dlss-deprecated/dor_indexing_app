@@ -3,7 +3,7 @@
 require_relative '../config/environment'
 require 'daemons'
 
-QUERY = { q: '*:*', sort: 'timestamp asc', fl: 'id', rows: Settings.rolling_indexer.batch_size }
+QUERY = { q: '*:*', sort: 'timestamp asc', fl: 'id,timestamp', rows: Settings.rolling_indexer.batch_size }
 
 Daemons.run_proc(
   File.basename(__FILE__),
@@ -40,12 +40,16 @@ Daemons.run_proc(
       end
     end.compact
 
-    solr_conn.add(solr_docs, add_attributes: { commitWithin: 1000 })
+    solr_conn.add(solr_docs, add_attributes: { commitWithin: Settings.rolling_indexer.commit_within.to_i })
 
     end_time = Time.now
     batch_run_seconds = (end_time - start_time).round(3)
+    first_doc = response['response']['docs'].first
+    first_doc_str = "#{first_doc['id']} (#{first_doc['timestamp']})"
+    last_doc = response['response']['docs'].last
+    last_doc_str = "#{last_doc['id']} (#{last_doc['timestamp']})"
     # The Daemons gem will redirect this to its log
-    puts "#{end_time}\tIndexed #{Settings.rolling_indexer.batch_size} documents in #{batch_run_seconds}"
+    puts "#{end_time}\tIndexed #{Settings.rolling_indexer.batch_size} documents in #{batch_run_seconds} (#{first_doc_str} - #{last_doc_str})"
 
     sleep(Settings.rolling_indexer.pause_time_between_batches)
   end

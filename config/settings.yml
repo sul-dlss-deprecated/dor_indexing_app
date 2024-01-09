@@ -2,8 +2,12 @@
 date_format_str: '%Y-%m-%d %H:%M:%S.%L'
 rolling_indexer:
   batch_size: 500
-  pause_time_between_docs: .2
-  pause_time_between_batches: 0
+  # in seconds
+  pause_time_between_docs: 0.2
+  # commitWithin does a soft commit by default, so a little more than commitWithin is desired (seconds)
+  pause_time_between_batches: 11
+  # milliseconds
+  commitWithin: 1000
 
 ssl:
   cert_file: ~
