@@ -1,11 +1,12 @@
 # General
 date_format_str: '%Y-%m-%d %H:%M:%S.%L'
 rolling_indexer:
+  query_size: 100000
   batch_size: 500
   # avoid overloading the load balancer (seconds)
   pause_time_between_docs: 0.1
   # a little more than softCommit max time is desired (a Solr 'add' with commitWithin does a softCommit) (seconds)
-  pause_time_between_batches: 5.1
+  pause_for_solr: 10
   # milliseconds
   commitWithin: 500
 
