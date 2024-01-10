@@ -58,7 +58,7 @@ RSpec.describe IdentityMetadataIndexer do
           'identifier_tesim' => ['google:STANFORD_342837261527', 'barcode:36105049267078',
                                  'folio:a129483625'],
           'objectType_ssim' => ['item'],
-          'source_id_ssim' => ['google:STANFORD_342837261527'],
+          'source_id_ssi' => 'google:STANFORD_342837261527',
           'doi_ssim' => ['10.25740/yr775yn6440']
         )
       end
@@ -77,7 +77,6 @@ RSpec.describe IdentityMetadataIndexer do
           'identifier_ssim' => ['sul:1234'],
           'identifier_tesim' => ['sul:1234'],
           'objectType_ssim' => ['agreement'],
-          'source_id_ssim' => ['sul:1234'],
           'source_id_ssi' => 'sul:1234',
           'source_id_text_nostem_i' => 'sul:1234'
         )
@@ -115,7 +114,6 @@ RSpec.describe IdentityMetadataIndexer do
           'identifier_ssim' => ['google:STANFORD_342837261527', 'folio:a129483625'],
           'identifier_tesim' => ['google:STANFORD_342837261527', 'folio:a129483625'],
           'objectType_ssim' => ['collection'],
-          'source_id_ssim' => ['google:STANFORD_342837261527'],
           'source_id_ssi' => 'google:STANFORD_342837261527',
           'source_id_text_nostem_i' => 'google:STANFORD_342837261527'
         )
