@@ -17,7 +17,6 @@ class IdentityMetadataIndexer
       'identifier_ssim' => prefixed_identifiers,
       'identifier_tesim' => prefixed_identifiers,
       'barcode_id_ssim' => [barcode].compact,
-      'source_id_ssim' => [source_id].compact, # deprecated; waiting for new fields to populate
       'source_id_ssi' => source_id,
       'source_id_text_nostem_i' => source_id,
       'folio_instance_hrid_ssim' => [folio_instance_hrid].compact,
