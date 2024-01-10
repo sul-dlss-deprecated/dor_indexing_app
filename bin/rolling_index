@@ -14,13 +14,22 @@ Daemons.run_proc(
   output_logfilename: 'rolling_index.log'
 ) do
   loop do
-    start_time = Time.now
+    query_start_time = Time.now
 
     solr_conn = RSolr.connect(timeout: 120, open_timeout: 120, url: Settings.solrizer_url)
     response = solr_conn.get 'select', params: QUERY
-    batches = response['response']['docs'].each_slice(Settings.rolling_indexer.batch_size)
+    response_docs = response['response']['docs']
 
+    query_end_time = Time.now
+    solr_query_seconds = (query_end_time - query_start_time).round(3)
+    first_doc_str = "#{response_docs.first['id']} (#{response_docs.first['timestamp']})"
+    last_doc_str = "#{response_docs.last['id']} (#{response_docs.last['timestamp']})"
+    # The Daemons gem will redirect this to its log
+    puts "#{Time.now}\tGot #{response_docs.size} Solr doc ids in #{solr_query_seconds}\t#{first_doc_str} - #{last_doc_str}"
+
+    batches = response_docs.each_slice(Settings.rolling_indexer.batch_size)
     batches.each.with_index do |batch, index|
+      batch_start_time = Time.now
       solr_docs = batch.map do |doc|
         identifier = doc['id'].scrub('')
         # Occasionally, we've seen invalid bytes in the identifier, so try to catch those:
@@ -45,16 +54,18 @@ Daemons.run_proc(
 
       solr_conn.add(solr_docs, add_attributes: { commitWithin: Settings.rolling_indexer.commit_within.to_i })
 
-      end_time = Time.now
-      batch_run_seconds = (end_time - start_time).round(3)
-      first_doc = response['response']['docs'].first
-      first_doc_str = "#{first_doc['id']} (#{first_doc['timestamp']})"
-      last_doc = response['response']['docs'].last
-      last_doc_str = "#{last_doc['id']} (#{last_doc['timestamp']})"
+      batch_end_time = Time.now
+      batch_run_seconds = (batch_end_time - batch_start_time).round(3)
+      first_doc_str = "#{batch.first['id']} (#{batch.first['timestamp']})"
+      last_doc_str = "#{batch.last['id']} (#{batch.last['timestamp']})"
       # The Daemons gem will redirect this to its log
-      puts "#{end_time}\tIndexed #{Settings.rolling_indexer.batch_size} documents in #{batch_run_seconds}\t#{first_doc_str} - #{last_doc_str}"
+      puts "#{Time.now}\tIndexed #{Settings.rolling_indexer.batch_size} documents in #{batch_run_seconds}\t#{first_doc_str} - #{last_doc_str}"
     end
+    indexing_time = (Time.now - query_end_time).round(3)
+    puts "#{Time.now}\tIndexed #{response_docs.size} documents in #{indexing_time}\t#{first_doc_str} - #{last_doc_str}"
+
     # Pause for the last batch so that solr can commit before querying it again.
-    sleep(Settings.rolling_indexer.pause_for_solr) if index == batches.size - 1
+    puts "#{Time.now}\tsleeping for #{Settings.rolling_indexer.pause_for_solr} seconds to ensure next Solr id query has latest changes"
+    sleep(Settings.rolling_indexer.pause_for_solr)
   end
 end
