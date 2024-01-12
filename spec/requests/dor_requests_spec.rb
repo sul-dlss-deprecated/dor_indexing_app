@@ -9,7 +9,7 @@ RSpec.describe 'DOR' do
     before do
       allow(Logger).to receive(:new).and_return(mock_logger)
       allow(RSolr).to receive(:connect).and_return(mock_solr_conn)
-      allow(DocumentBuilder).to receive(:for).with(model: cocina).and_return(mock_indexer)
+      allow(DorIndexing).to receive(:build).with(cocina_with_metadata: cocina, workflow_client: Dor::Workflow::Client, cocina_repository: CocinaRepository).and_return(mock_solr_doc)
       allow(Dor::Services::Client).to receive(:object).with(druid).and_return(object_service)
     end
 
@@ -17,7 +17,6 @@ RSpec.describe 'DOR' do
     let(:mock_solr_conn) { instance_double(RSolr::Client, add: true, commit: true) }
     let(:cocina) { instance_double(Cocina::Models::DROWithMetadata, externalIdentifier: druid) }
     let(:object_service) { instance_double(Dor::Services::Client::Object, find: cocina) }
-    let(:mock_indexer) { instance_double(CompositeIndexer::Instance, to_solr: mock_solr_doc) }
     let(:mock_solr_doc) { { id: druid, text_field_tesim: 'a field to be searched' } }
 
     describe 'POST #reindex' do

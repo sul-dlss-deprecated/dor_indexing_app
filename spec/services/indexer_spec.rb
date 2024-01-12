@@ -5,12 +5,11 @@ require 'rails_helper'
 RSpec.describe Indexer do
   let(:solr) { instance_double(RSolr::Client, add: true, delete_by_id: true) }
   let(:identifier) { 'druid:bc123df4567' }
-  let(:doc_builder) { instance_double(CompositeIndexer::Instance, to_solr: doc) }
   let(:doc) { instance_double(Hash) }
   let(:model) { instance_double(Cocina::Models::DROWithMetadata, externalIdentifier: identifier) }
 
   before do
-    allow(DocumentBuilder).to receive(:for).and_return(doc_builder)
+    allow(DorIndexing).to receive(:build).and_return(doc)
   end
 
   describe '#load_and_build' do
@@ -25,8 +24,7 @@ RSpec.describe Indexer do
 
       it 'is properly indexed' do
         expect(load_and_build).to eq(doc)
-        expect(DocumentBuilder).to have_received(:for).with(model:)
-        expect(doc_builder).to have_received(:to_solr)
+        expect(DorIndexing).to have_received(:build).with(cocina_with_metadata: model, workflow_client: Dor::Workflow::Client, cocina_repository: CocinaRepository)
       end
     end
 
@@ -67,8 +65,7 @@ RSpec.describe Indexer do
 
       it 'is properly indexed' do
         expect(load_and_index).to eq(doc)
-        expect(DocumentBuilder).to have_received(:for).with(model:)
-        expect(doc_builder).to have_received(:to_solr)
+        expect(DorIndexing).to have_received(:build).with(cocina_with_metadata: model, workflow_client: Dor::Workflow::Client, cocina_repository: CocinaRepository)
         expect(solr).to have_received(:add).with(doc, { add_attributes: { commitWithin: 1000 } })
       end
     end
@@ -105,8 +102,7 @@ RSpec.describe Indexer do
 
     it 'updates solr' do
       expect(reindex).to eq(doc)
-      expect(DocumentBuilder).to have_received(:for).with(model:)
-      expect(doc_builder).to have_received(:to_solr)
+      expect(DorIndexing).to have_received(:build).with(cocina_with_metadata: model, workflow_client: Dor::Workflow::Client, cocina_repository: CocinaRepository)
       expect(solr).to have_received(:add).with(doc, { add_attributes: { commitWithin: 1000 } })
     end
   end
