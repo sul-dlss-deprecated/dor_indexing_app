@@ -11,11 +11,6 @@ gem 'dry-monads', '~> 1.3'
 gem 'erubis'
 gem 'faraday'
 gem 'honeybadger'
-# ISO-639-1 and -2
-gem 'iso-639', '~> 0.3.5'
-# ISO-639-3
-gem 'language_list'
-gem 'marc-vocab', '~> 0.3.0'
 gem 'okcomputer' # for monitoring
 gem 'puma', '~> 5.3' # app server
 gem 'rack-timeout', '~> 0.5.1'
@@ -25,11 +20,9 @@ gem 'sneakers', '~> 2.11'
 gem 'solrizer'
 
 # DLSS gems
-gem 'cocina-models', '= 0.93.0' # naomi has WIP for structured title values in >= 0.93.1 (cocina-models is not a direct DIA dep, and this line can be removed entirely once the pin is no longer needed)
+gem 'dor_indexing', '~> 1.0'
 gem 'dor-services-client', '~> 13.4'
 gem 'dor-workflow-client', '~> 5.0'
-gem 'parse_date'
-gem 'stanford-mods'
 
 group :development, :test do
   gem 'byebug'

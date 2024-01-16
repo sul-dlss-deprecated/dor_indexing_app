@@ -47,7 +47,7 @@ class Indexer
 
   def build(cocina_with_metadata:)
     Honeybadger.context({ identifier: cocina_with_metadata.externalIdentifier })
-    DocumentBuilder.for(model: cocina_with_metadata).to_solr
+    DorIndexing.build(cocina_with_metadata:, workflow_client:, cocina_repository:)
   end
 
   def load_and_build(identifier:)
@@ -80,6 +80,14 @@ class Indexer
     solr.commit if commit_within.nil?
 
     logger.info "successfully deleted #{identifier}"
+  end
+
+  def workflow_client
+    @workflow_client ||= WorkflowClientFactory.build
+  end
+
+  def cocina_repository
+    @cocina_repository ||= CocinaRepository.new
   end
 
   private
