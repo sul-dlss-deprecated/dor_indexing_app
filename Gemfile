@@ -20,8 +20,8 @@ gem 'sneakers', '~> 2.11'
 gem 'solrizer'
 
 # DLSS gems
-gem 'dor_indexing', '~> 1.0'
-gem 'dor-services-client', '~> 13.4'
+gem 'dor_indexing', '~> 1.1'
+gem 'dor-services-client', '~> 14.1'
 gem 'dor-workflow-client', '~> 7.0'
 
 group :development, :test do
