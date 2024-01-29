@@ -128,7 +128,6 @@ GEM
     crack (0.4.5)
       rexml
     crass (1.0.6)
-    daemons (1.4.1)
     date (3.3.4)
     deep_merge (1.2.2)
     deprecation (1.1.0)
@@ -460,7 +459,6 @@ DEPENDENCIES
   capistrano-shared_configs
   committee
   config
-  daemons
   dlss-capistrano
   dor-services-client (~> 14.1)
   dor-workflow-client (~> 7.0)
