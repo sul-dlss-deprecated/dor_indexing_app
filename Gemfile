@@ -6,8 +6,6 @@ gem 'bootsnap', '>= 1.1.0', require: false # Reduces boot times through caching;
 gem 'bunny', '~> 2.19' # for rabbitmq
 gem 'committee' # Validates HTTP requests/responses per OpenAPI specification
 gem 'config'
-gem 'dry-monads', '~> 1.3'
-gem 'erubis'
 gem 'faraday'
 gem 'honeybadger'
 gem 'okcomputer' # for monitoring
@@ -16,7 +14,6 @@ gem 'rack-timeout', '~> 0.5.1'
 gem 'rails', '~> 7.0.0'
 gem 'rsolr', '~> 2.0'
 gem 'sneakers', '~> 2.11'
-gem 'solrizer'
 
 # DLSS gems
 gem 'dor_indexing', '~> 1.2'
@@ -29,7 +26,6 @@ group :development, :test do
   gem 'rspec_junit_formatter'
   gem 'rspec-rails', '~> 5.0'
   gem 'simplecov'
-  gem 'webmock'
 end
 
 group :development do
@@ -41,9 +37,7 @@ group :development do
 end
 
 group :deployment do
-  gem 'capistrano', '~> 3.0'
   gem 'capistrano-bundler'
   gem 'capistrano-passenger'
-  gem 'capistrano-shared_configs'
   gem 'dlss-capistrano', require: false
 end
