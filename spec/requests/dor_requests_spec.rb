@@ -9,7 +9,12 @@ RSpec.describe 'DOR' do
     before do
       allow(Logger).to receive(:new).and_return(mock_logger)
       allow(RSolr).to receive(:connect).and_return(mock_solr_conn)
-      allow(DorIndexing).to receive(:build).with(cocina_with_metadata: cocina, workflow_client: Dor::Workflow::Client, cocina_repository: CocinaRepository).and_return(mock_solr_doc)
+      allow(DorIndexing).to receive(:build).with(
+        cocina_with_metadata: cocina,
+        workflow_client: Dor::Workflow::Client,
+        dor_services_client: Dor::Services::Client,
+        cocina_repository: CocinaRepository
+      ).and_return(mock_solr_doc)
       allow(Dor::Services::Client).to receive(:object).with(druid).and_return(object_service)
     end
 
