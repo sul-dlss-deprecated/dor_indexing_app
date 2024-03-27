@@ -47,7 +47,7 @@ class Indexer
 
   def build(cocina_with_metadata:)
     Honeybadger.context({ identifier: cocina_with_metadata.externalIdentifier })
-    DorIndexing.build(cocina_with_metadata:, workflow_client:, cocina_repository:)
+    DorIndexing.build(cocina_with_metadata:, workflow_client:, dor_services_client:, cocina_repository:)
   end
 
   def load_and_build(identifier:)
@@ -84,6 +84,10 @@ class Indexer
 
   def workflow_client
     @workflow_client ||= WorkflowClientFactory.build
+  end
+
+  def dor_services_client
+    @dor_services_client ||= DorServicesClientFactory.build
   end
 
   def cocina_repository

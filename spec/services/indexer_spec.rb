@@ -24,7 +24,12 @@ RSpec.describe Indexer do
 
       it 'is properly indexed' do
         expect(load_and_build).to eq(doc)
-        expect(DorIndexing).to have_received(:build).with(cocina_with_metadata: model, workflow_client: Dor::Workflow::Client, cocina_repository: CocinaRepository)
+        expect(DorIndexing).to have_received(:build).with(
+          cocina_with_metadata: model,
+          workflow_client: Dor::Workflow::Client,
+          dor_services_client: Dor::Services::Client,
+          cocina_repository: CocinaRepository
+        )
       end
     end
 
@@ -65,7 +70,12 @@ RSpec.describe Indexer do
 
       it 'is properly indexed' do
         expect(load_and_index).to eq(doc)
-        expect(DorIndexing).to have_received(:build).with(cocina_with_metadata: model, workflow_client: Dor::Workflow::Client, cocina_repository: CocinaRepository)
+        expect(DorIndexing).to have_received(:build).with(
+          cocina_with_metadata: model,
+          workflow_client: Dor::Workflow::Client,
+          dor_services_client: Dor::Services::Client,
+          cocina_repository: CocinaRepository
+        )
         expect(solr).to have_received(:add).with(doc, { add_attributes: { commitWithin: 1000 } })
       end
     end
@@ -102,7 +112,12 @@ RSpec.describe Indexer do
 
     it 'updates solr' do
       expect(reindex).to eq(doc)
-      expect(DorIndexing).to have_received(:build).with(cocina_with_metadata: model, workflow_client: Dor::Workflow::Client, cocina_repository: CocinaRepository)
+      expect(DorIndexing).to have_received(:build).with(
+        cocina_with_metadata: model,
+        workflow_client: Dor::Workflow::Client,
+        dor_services_client: Dor::Services::Client,
+        cocina_repository: CocinaRepository
+      )
       expect(solr).to have_received(:add).with(doc, { add_attributes: { commitWithin: 1000 } })
     end
   end
