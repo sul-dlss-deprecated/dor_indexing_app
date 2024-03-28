@@ -148,10 +148,9 @@ GEM
       faraday-retry (~> 2.0)
       nokogiri (~> 1.6)
       zeitwerk (~> 2.1)
-    dor_indexing (1.5.0)
+    dor_indexing (2.0.1)
       activesupport
       cocina-models (~> 0.95.1)
-      dor-services-client (~> 14.0)
       dor-workflow-client (~> 7.0)
       honeybadger
       marc-vocab (~> 0.3.0)
@@ -421,7 +420,7 @@ DEPENDENCIES
   dlss-capistrano
   dor-services-client (~> 14.1)
   dor-workflow-client (~> 7.0)
-  dor_indexing (~> 1.2)
+  dor_indexing (~> 2.0)
   faraday
   honeybadger
   listen (~> 3.0.5)

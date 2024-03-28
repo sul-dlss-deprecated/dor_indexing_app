@@ -16,7 +16,7 @@ gem 'rsolr', '~> 2.0'
 gem 'sneakers', '~> 2.11'
 
 # DLSS gems
-gem 'dor_indexing', '~> 1.2'
+gem 'dor_indexing', '~> 2.0'
 gem 'dor-services-client', '~> 14.1'
 gem 'dor-workflow-client', '~> 7.0'
 
