@@ -47,7 +47,13 @@ class Indexer
 
   def build(cocina_with_metadata:)
     Honeybadger.context({ identifier: cocina_with_metadata.externalIdentifier })
-    DorIndexing.build(cocina_with_metadata:, workflow_client:, dor_services_client:, cocina_repository:)
+    DorIndexing.build(
+      cocina_with_metadata:,
+      workflow_client:,
+      cocina_finder:,
+      administrative_tags_finder:,
+      release_tags_finder:
+    )
   end
 
   def load_and_build(identifier:)
@@ -86,12 +92,28 @@ class Indexer
     @workflow_client ||= WorkflowClientFactory.build
   end
 
-  def dor_services_client
-    @dor_services_client ||= DorServicesClientFactory.build
+  def cocina_finder
+    lambda do |druid|
+      Dor::Services::Client.object(druid).find
+    rescue Dor::Services::Client::Error => e
+      raise DorIndexing::RepositoryError, e.message
+    end
   end
 
-  def cocina_repository
-    @cocina_repository ||= CocinaRepository.new
+  def administrative_tags_finder
+    lambda do |druid|
+      Dor::Services::Client.object(druid).administrative_tags.list
+    rescue Dor::Services::Client::Error => e
+      raise DorIndexing::RepositoryError, e.message
+    end
+  end
+
+  def release_tags_finder
+    lambda do |druid|
+      Dor::Services::Client.object(druid).release_tags.list
+    rescue Dor::Services::Client::Error => e
+      raise DorIndexing::RepositoryError, e.message
+    end
   end
 
   private

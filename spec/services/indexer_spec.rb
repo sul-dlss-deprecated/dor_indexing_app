@@ -27,8 +27,9 @@ RSpec.describe Indexer do
         expect(DorIndexing).to have_received(:build).with(
           cocina_with_metadata: model,
           workflow_client: Dor::Workflow::Client,
-          dor_services_client: Dor::Services::Client,
-          cocina_repository: CocinaRepository
+          cocina_finder: anything,
+          administrative_tags_finder: anything,
+          release_tags_finder: anything
         )
       end
     end
@@ -73,8 +74,9 @@ RSpec.describe Indexer do
         expect(DorIndexing).to have_received(:build).with(
           cocina_with_metadata: model,
           workflow_client: Dor::Workflow::Client,
-          dor_services_client: Dor::Services::Client,
-          cocina_repository: CocinaRepository
+          cocina_finder: anything,
+          administrative_tags_finder: anything,
+          release_tags_finder: anything
         )
         expect(solr).to have_received(:add).with(doc, { add_attributes: { commitWithin: 1000 } })
       end
@@ -115,8 +117,9 @@ RSpec.describe Indexer do
       expect(DorIndexing).to have_received(:build).with(
         cocina_with_metadata: model,
         workflow_client: Dor::Workflow::Client,
-        dor_services_client: Dor::Services::Client,
-        cocina_repository: CocinaRepository
+        cocina_finder: anything,
+        administrative_tags_finder: anything,
+        release_tags_finder: anything
       )
       expect(solr).to have_received(:add).with(doc, { add_attributes: { commitWithin: 1000 } })
     end
@@ -128,6 +131,94 @@ RSpec.describe Indexer do
     it 'updates solr' do
       delete
       expect(solr).to have_received(:delete_by_id).with(identifier, commitWithin: 1000)
+    end
+  end
+
+  describe '#cocina_finder' do
+    subject(:indexer) { described_class.new(solr: nil) }
+
+    before do
+      allow(Dor::Services::Client).to receive(:object).and_return(object_client)
+    end
+
+    let(:model) { build(:dro_with_metadata, id: identifier) }
+    let(:object_client) { instance_double(Dor::Services::Client::Object, find: model) }
+
+    it 'uses dor-services-client to return cocina for a given druid' do
+      indexer.cocina_finder.call(identifier)
+      expect(object_client).to have_received(:find).once
+    end
+
+    context 'when dor-services-client raises' do
+      before do
+        allow(object_client).to receive(:find).and_raise(Dor::Services::Client::NotFoundResponse)
+      end
+
+      it 'raises the exception expected by the dor_indexing gem' do
+        expect { indexer.cocina_finder.call(identifier) }.to raise_error(DorIndexing::RepositoryError)
+      end
+    end
+  end
+
+  describe '#administrative_tags_finder' do
+    subject(:indexer) { described_class.new(solr: nil) }
+
+    before do
+      allow(Dor::Services::Client).to receive(:object).and_return(object_client)
+    end
+
+    let(:model) { build(:dro_with_metadata, id: identifier) }
+    let(:object_client) do
+      instance_double(
+        Dor::Services::Client::Object,
+        administrative_tags: instance_double(Dor::Services::Client::AdministrativeTags, list: [])
+      )
+    end
+
+    it 'uses dor-services-client to return admin tags for a given druid' do
+      indexer.administrative_tags_finder.call(identifier)
+      expect(object_client).to have_received(:administrative_tags).once
+    end
+
+    context 'when dor-services-client raises' do
+      before do
+        allow(object_client).to receive(:administrative_tags).and_raise(Dor::Services::Client::NotFoundResponse)
+      end
+
+      it 'raises the exception expected by the dor_indexing gem' do
+        expect { indexer.administrative_tags_finder.call(identifier) }.to raise_error(DorIndexing::RepositoryError)
+      end
+    end
+  end
+
+  describe '#release_tags_finder' do
+    subject(:indexer) { described_class.new(solr: nil) }
+
+    before do
+      allow(Dor::Services::Client).to receive(:object).and_return(object_client)
+    end
+
+    let(:model) { build(:dro_with_metadata, id: identifier) }
+    let(:object_client) do
+      instance_double(
+        Dor::Services::Client::Object,
+        release_tags: instance_double(Dor::Services::Client::ReleaseTags, list: [])
+      )
+    end
+
+    it 'uses dor-services-client to return admin tags for a given druid' do
+      indexer.release_tags_finder.call(identifier)
+      expect(object_client).to have_received(:release_tags).once
+    end
+
+    context 'when dor-services-client raises' do
+      before do
+        allow(object_client).to receive(:release_tags).and_raise(Dor::Services::Client::NotFoundResponse)
+      end
+
+      it 'raises the exception expected by the dor_indexing gem' do
+        expect { indexer.release_tags_finder.call(identifier) }.to raise_error(DorIndexing::RepositoryError)
+      end
     end
   end
 end
