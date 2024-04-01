@@ -98,7 +98,7 @@ GEM
     capistrano-passenger (0.2.1)
       capistrano (~> 3.0)
     capistrano-shared_configs (0.2.2)
-    cocina-models (0.95.1)
+    cocina-models (0.96.0)
       activesupport
       deprecation
       dry-struct (~> 1.0)
@@ -134,9 +134,9 @@ GEM
       capistrano-one_time_key
       capistrano-shared_configs
     docile (1.4.0)
-    dor-services-client (14.4.0)
+    dor-services-client (14.5.0)
       activesupport (>= 4.2, < 8)
-      cocina-models (~> 0.95.1)
+      cocina-models (~> 0.96.0)
       deprecation
       faraday (~> 2.0)
       faraday-retry
@@ -148,9 +148,9 @@ GEM
       faraday-retry (~> 2.0)
       nokogiri (~> 1.6)
       zeitwerk (~> 2.1)
-    dor_indexing (2.0.1)
+    dor_indexing (2.1.0)
       activesupport
-      cocina-models (~> 0.95.1)
+      cocina-models (~> 0.96.0)
       dor-workflow-client (~> 7.0)
       honeybadger
       marc-vocab (~> 0.3.0)
