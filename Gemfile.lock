@@ -71,6 +71,7 @@ GEM
     amq-protocol (2.3.2)
     ast (2.4.2)
     attr_extras (7.1.0)
+    base64 (0.2.0)
     bigdecimal (3.1.7)
     bootsnap (1.18.3)
       msgpack (~> 1.2)
@@ -134,21 +135,21 @@ GEM
       capistrano-one_time_key
       capistrano-shared_configs
     docile (1.4.0)
-    dor-services-client (14.5.0)
+    dor-services-client (14.6.1)
       activesupport (>= 4.2, < 8)
       cocina-models (~> 0.96.0)
       deprecation
       faraday (~> 2.0)
       faraday-retry
       zeitwerk (~> 2.1)
-    dor-workflow-client (7.0.2)
+    dor-workflow-client (7.2.0)
       activesupport (>= 3.2.1, < 8)
       deprecation (>= 0.99.0)
       faraday (~> 2.0)
       faraday-retry (~> 2.0)
       nokogiri (~> 1.6)
       zeitwerk (~> 2.1)
-    dor_indexing (2.1.0)
+    dor_indexing (2.1.2)
       activesupport
       cocina-models (~> 0.96.0)
       dor-workflow-client (~> 7.0)
@@ -195,7 +196,7 @@ GEM
       concurrent-ruby (~> 1.0)
     ice_nine (0.11.2)
     iso-639 (0.3.6)
-    json (2.7.1)
+    json (2.7.2)
     json_schema (0.21.0)
     jsonpath (1.1.5)
       multi_json
@@ -239,7 +240,7 @@ GEM
       net-ssh (>= 5.0.0, < 8.0.0)
     net-smtp (0.5.0)
       net-protocol
-    net-ssh (7.2.1)
+    net-ssh (7.2.3)
     nio4r (2.7.1)
     nokogiri (1.16.3-x86_64-darwin)
       racc (~> 1.4)
@@ -295,7 +296,7 @@ GEM
       thor (~> 1.0)
       zeitwerk (~> 2.5)
     rainbow (3.1.1)
-    rake (13.1.0)
+    rake (13.2.0)
     rb-fsevent (0.11.2)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
@@ -382,7 +383,8 @@ GEM
     sorted_set (1.0.3)
       rbtree
       set (~> 1.0)
-    sshkit (1.22.0)
+    sshkit (1.22.1)
+      base64
       mutex_m
       net-scp (>= 1.1.2)
       net-sftp (>= 2.1.2)
