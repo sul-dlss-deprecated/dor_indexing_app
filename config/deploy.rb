@@ -19,7 +19,7 @@ set :bundle_without, %w[test development deployment].join(' ')
 set :honeybadger_env, fetch(:stage)
 
 # Manage sneakers via systemd (from dlss-capistrano gem)
-set :sneakers_systemd_use_hooks, true
+# set :sneakers_systemd_use_hooks, true
 
 # update shared_configs before restarting app
 before 'deploy:restart', 'shared_configs:update'

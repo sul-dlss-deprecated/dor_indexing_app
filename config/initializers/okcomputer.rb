@@ -53,4 +53,4 @@ class RabbitQueueExistsCheck < OkComputer::Check
   end
 end
 
-OkComputer::Registry.register 'rabbit-queue', RabbitQueueExistsCheck.new(['dor.indexing-by-druid', 'dor.indexing-with-model', 'dor.deleting-by-druid'])
+# OkComputer::Registry.register 'rabbit-queue', RabbitQueueExistsCheck.new(['dor.indexing-by-druid', 'dor.indexing-with-model', 'dor.deleting-by-druid'])
